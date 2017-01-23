@@ -1,0 +1,261 @@
+\newcommand{\lempredstable}{
+  \begin{lemma}[Conditions are stable under substitution] \
+    \label{aplem:pred-stable}
+    \begin{enumerate}
+    \item 
+      Let $\rulet_1, \rulet_2$ be a rule type and $\theta$ be a type
+      substitution. \\
+      If $\nonoverlap(\rulet_1, \rulet_2)$, 
+      then $\nonoverlap(\theta \rulet_1, \theta \rulet_2)$.
+    \item 
+      Let $\rulesetvar_1$ and $\rulesetvar_2$ be a context and $\theta$
+      be a type substitution. \\
+      If $\disjoint(\rulesetvar_1, \rulesetvar_2)$,
+      then $\disjoint(\theta \rulesetvar_1, \theta \rulesetvar_2)$.
+    \item 
+      Let $\env$ be a type environment, $\type$ be a type and $\theta$
+      be a type substitution. \\
+      If $\coherent(\env, \type)$, 
+      then $\coherent(\theta \env, \theta \type)$.
+    \item 
+      Let $e_1, \dots, e_n$ be a expression, 
+      $v_1, \dots, v_n$ be a value, 
+      $\rulet_1, \dots, \rulet_n$ be a rule type and 
+      $\theta$ be a type substitution.
+      \begin{enumerate}
+      \item 
+        If $\distinctwith(\rulesetexp)$, then 
+        $\distinctwith(
+        \overline{\relation{\theta e}{\theta \rulet}})$.
+      \item 
+        If $\distinctrs(\rulepgm)$, 
+        then $\distinctrs(\grulepgm{\theta \rulet}{\theta v})$. 
+      \item 
+        If $\distinctctx(\rulesetvar)$, 
+        then $\distinctctx(\theta \rulesetvar)$. 
+      \end{enumerate}
+    \end{enumerate}
+  \end{lemma}
+}
+
+\newcommand{\lemresstable}[1]{
+  \begin{lemma}[Static resolution is stable under substitution]
+    \label{#1}
+    Let $\env$ be a type environment, $\rulet$ be a rule type and
+    $\theta$ be a type substitution. If $\env \vturns \rulet$, then
+    $\theta \env \vturns \theta \rulet$.
+  \end{lemma}
+}
+
+\newcommand{\lemtystable}[1]{
+  \begin{lemma}[Expression typing is stable under substitution]
+    \label{#1}
+    Let $\env$ be a type environment, $e$ be an expression, $\type$
+    be a type and $\theta$ be a type substitution. If $\env \turns
+    \relation{e}{\type}$, then
+    $\theta \env \turns \relation{\theta e}{\theta \type}$.
+  \end{lemma}
+}
+
+\newcommand{\lemsemstable}[1]{
+  \begin{lemma}[Semantic typing is stable under substitution]
+    \label{#1}
+    Let $\tstate$ be an environment, $\env$ be a type environment,
+    $\rulepgmvar$ be a rule set, $\rulesetvar$ be a context, $v$
+    be a value, $\rulet$ be a rule type and $\theta$ be a
+    substitution. Then, 
+    \begin{itemize}
+    \item 
+      If $\vtyping \relation{\tstate}{\env}$, then for all $\theta$, 
+      $\vtyping \relation{\theta \tstate}{\theta \env}$;
+    \item 
+      If $\vtyping \relation{\rulepgmvar}{\rulesetvar}$, then for all
+      $\theta$, $\vtyping \relation{\theta \rulepgmvar}{\theta
+        \rulesetvar}$;
+    \item 
+      If $\vtyping \relation{v}{\tau}$, then for all $\theta$,
+      $\vtyping \relation{\theta v}{\theta \tau}$.
+    \end{itemize}
+  \end{lemma}
+}
+
+\newcommand{\lemlookup}[1]{
+  \begin{lemma}
+    \label{#1}
+    Let $\tstate$ be an environment, $\env$ be a type environment, and
+    $\type$ be a type such that $\vtyping \relation{\tstate}{\env}$.
+    If $\lookup{\env}{\type} = \rulet$, then $\lookup{\tstate}{\type}
+    = v$ and $\vtyping \relation{v}{\rulet}$.
+  \end{lemma}
+}
+
+\newcommand{\lemrespreserve}[1]{
+  \begin{lemma}[Preservation of static resolution]
+    \label{#1}
+    Let $\tstate$ be environment, $\env$ be type environment, and
+    $\rulet$ be a rule type such that $\rulet$ is unambiguous, $\env
+    \vturns \rulet$ and $\vtyping \relation{\tstate}{\env}$. If
+    $\tstate \vturns \rulet \eval v$, then $\vtyping
+    \relation{v}{\rulet}$.
+  \end{lemma}
+}
+
+\newcommand{\lemtypreserve}[1]{
+  \begin{lemma}[Preservation]
+    \label{#1}
+    Let $\env$ be an environment, $\tstate$ be a type environment, $e$
+    be a expression and $\type$ be a type such that $\tstate \turns
+    \relation{e}{\type}$ and $\vtyping \relation{\tstate}{\env}$. If
+    $\env \turns e \eval v$, then$\vtyping \relation{v}{\type}$.
+  \end{lemma}
+}
+
+\newcommand{\thmsoundness}{
+  \begin{theorem}[Type Soundness]
+    Let $e$ be an expression and $\type$ be a type such that $\epsilon
+    \turns \relation{e}{\type}$. If $\epsilon \turns e \eval v$, then
+    $\vtyping \relation{v}{\type}$.
+  \end{theorem}
+}
+
+\newcommand{\lemtrestypreserve}[1]{
+  \begin{lemma}[\TrRes{} preserves type]
+    \label{#1}
+    Let $\rulet$ be a rule type, $\denv$ be a
+    translation environment and $E$ be a System F expression. If
+    $\denv \vturns \rulet \leadsto E$, then $|\denv| \turns
+    \relation{E}{|\rulet|}$.
+  \end{lemma}
+}
+
+\newcommand{\lemtranstypreserve}[1]{
+ \begin{lemma}[Translation rules preserve type]
+    \label{#1}
+   Let e be a $\ourlang$ expression, $\type$ be a type, $\denv$ be a
+   translation environment and $E$ be a System F expression. If $\denv
+   \turns \relation{e}{\type} \leadsto E$, then $|\denv| \turns
+   \relation{E}{|\rulet|}$.
+ \end{lemma}
+}
+
+\newcommand{\thmtranstypreserve}{
+  \begin{theorem}[Type-preserving translation]\label{thm:type:preservation} Let $e$ be a $\ourlang$
+    expression, $\rho$ be a type and $E$ be a System F expression. If
+    $\epsilon\mid\epsilon \turns \relation{e}{\rho} \leadsto E$, then $\epsilon \turns
+    \relation{E}{|\rho|}$.
+  \end{theorem}
+}
+
+\newcommand{\thmtranssempreserve}{
+  \begin{conjecture}[Semantic-preserving translation]
+    Let $e$ be a $\ourlang$ expression, $\type$ be a type and $E$ be a
+    System F expression such that $\epsilon \turns \relation{e}{\type}
+    \leadsto E$. If $\epsilon \turns E \eval V$, then $\epsilon \turns e
+    \eval v$ where $\turns v \leadsto V$.
+  \end{conjecture}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\defunrelated}{
+  \begin{definition}
+    \[
+    \myirule
+    {
+      \unify{\tau_1}{\tau_2}{\overline{\alpha_1},\overline{\alpha_2}} 
+      = {\tt error}
+    }
+    {
+      \unrelated
+      (\rulesch{\alpha_1}{\pi_1}{\tau_1},
+      \rulesch{\alpha_2}{\pi_2}{\tau_2})
+    }
+    \]
+  \end{definition}
+}
+
+\newcommand{\lemunrelated}{
+  \begin{lemma}
+    \[
+    \unrelated(\rho_1,\rho_2) 
+    \Leftrightarrow \neg{\overlap}(\rho_1,\rho_2)
+    \]
+  \end{lemma}
+}
+
+\newcommand{\defresolvable}{
+  \begin{definition}[Resolvability Check] \ 
+    \begin{enumerate}
+    \item 
+      Let $P = \{ \rulet \in \env \mid \env(\rhs{\rulet}) =
+      \rulet \}$ bet the set of non-occluded rule types.
+    \item
+      Consider all pairs of rule types $\rulet_1,\rulet_2 \in P$.
+      \begin{enumerate}
+      \item 
+        Let $\theta$ be the most general unifier of $\rhs{\rulet_1}$ and $\rhs{\rulet_2}$
+        with respect to $\ftv{\env}$ and $\qtv{\rulet_1}$. 
+        If $\theta$ does not exist, ignore the pair $\rulet_1,\rulet_2$.
+      \item Consider all substitutions $\theta'$ such that $\exists \theta''. \theta'' \cdot \theta' = \theta$,
+        and $\theta'(\ftv{\env}) = \theta(\ftv{\env})$.
+      \item Consider all $\pi \subseteq \lhs{\rulet_1}$.
+      \item Check that, if
+        $\env \vturns \theta'(\pi \Rightarrow \rhs{\rulet_1})$, then
+        $\env \vturns \theta(\pi \Rightarrow \rhs{\rulet_2})$.
+        If not, report failure of resolvability.
+      \end{enumerate}
+    \end{enumerate}
+  \end{definition}
+}
+
+\newcommand{\thmalgoterm}{
+  \begin{theorem}
+    The algorithm terminates.
+  \end{theorem}
+}
+
+\newcommand{\thmalgosound}{
+  \begin{theorem}
+    If the algorithm accepts $\env$, then $\welldefined(\env)$ holds.
+  \end{theorem}
+}
+
+% \newcommand{\occ}[2]{\mathit{occ}_{#1}(#2)}
+% \newcommand{\tnorm}[1]{|#1|}
+
+\newcommand{\defterm}{
+  \begin{definition}[Termination Condition]
+    An implicit environment $\env$ satisfies the condition, denoted $\mathit{term}(\env)$, iff $\mathit{term}(\rho)$ for every $\rho = (\rulesch{\alpha}{\bar{\rho}}{\tau}) \in \mathit{dom}(\env)$, where:
+    \begin{eqnarray*}
+      \mathit{term}(\rho) 
+      & \stackrel{\mathit{def}}{\Leftrightarrow} 
+      & \occ{\alpha}{\tau'}\leq\occ{\alpha}{\tau} \\
+      & & ~~~(\forall (\rulesch{\alpha'}{\bar{\rho}'}{\tau'}) \in \bar{\rho},\forall \alpha \in \mathit{ftv}(\tau,\tau_i)) \setminus \vec{\alpha}') \\
+      & \wedge & \tnorm{\tau_i} < \tnorm{\tau}~~~(\forall \tau_i \in \bar{\rho}) \\
+      & \wedge & \mathit{term}(\rho')~~~(\forall \rho' \in \bar{\rho})
+    \end{eqnarray*}
+    where
+    \begin{eqnarray*}
+      \occ{\alpha}{\tyint} & = & 0 \\
+      \occ{\alpha}{\alpha} & = & 1 \\
+      \occ{\alpha}{\alpha'} & = & 0\hspace{3cm}(\alpha \neq \alpha') \\
+      \occ{\alpha}{\type_1 \rightarrow \type_2} & = & \occ{\alpha}{\type_1} + \occ{\alpha}{\type_2} \\
+      \occ{\alpha}{\rulesch{\alpha}{\bar{\rho}}{\tau}} & = &  \occ{\alpha}{\tau} + \sum_{\rho\in\bar{\rho}}\occ{\alpha}{\rho} \\
+      \tnorm{\tyint} & = & 1 \\
+      \tnorm{\alpha} & = & 1 \\
+      \tnorm{\type_1 \rightarrow \type_2} & = & 1 + \tnorm{\type_1} + \tnorm{\type_2} \\
+      \tnorm{\rulesch{\alpha}{\bar{\rho}}{\tau}} & = &  1 + \tnorm{\tau} + \sum_{\rho\in\bar{\rho}}\tnorm{\rho}.
+    \end{eqnarray*} 
+  \end{definition}
+}
+
+\newcommand{\thmresterm}{
+  \begin{theorem}[Terminating Resolution]
+    For every implicit environment $\env$ such that $\mathit{term}(\env)$, and for every $\rulet$,
+    all derivations of $\env \vturns \rulet$ are finite.
+  \end{theorem}
+}
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "Main"
+%%% End: 

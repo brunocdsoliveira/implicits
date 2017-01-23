@@ -1,0 +1,34 @@
+\section{Termination of Resolution}
+
+If we are not careful about which rules are made implicit, the recursive
+resolution process may not terminate. This section describes how to impose 
+a set of modular syntactic restrictions that prevents non-termination. 
+%% We have to avoid non-termination of the type checker to ensure soundness.
+
+As an example of non-termination consider 
+\begin{equation*}
+\myset{
+  \myset{\tychar} \To \tyint,
+  \myset{\tyint} \To \tychar} \vturns \tyint
+\end{equation*}
+which loops, using alternatively the first and second rule in the implicit
+environment. 
+
+The problem of non-termination has been widely studied in the context of
+Haskell's type classes, and a set of modular syntactic restrictions
+has been imposed on type class instances to avoid non-termination~\cite{fdchr}. 
+Adapting these restrictions to our setting, we obtain the following termination
+condition.
+
+\defterm
+
+% Haskell's condition is quite severe because the one global scope for all type
+% class instances is \textit{open}: more instances can be added later (in other
+% modules).  The modularity of the condition already anticipates such future
+% additions.
+% 
+% In contrast, our local scopes are \textit{closed}. Later extensions of the
+% program (e.g., new modules) do not affect the existing scopes. Hence, in
+% $\ourlang$, termination of resolution coincides with the traditional program
+% termination problem. So, alternatively, $\ourlang$  may enforce termination in
+% a less stringent manner using available termination checkers like~\cite{approve}.

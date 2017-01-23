@@ -1,0 +1,280 @@
+%% ODER: format ==         = "\mathrel{==}"
+%% ODER: format /=         = "\neq "
+%
+%
+\makeatletter
+\@ifundefined{lhs2tex.lhs2tex.sty.read}%
+  {\@namedef{lhs2tex.lhs2tex.sty.read}{}%
+   \newcommand\SkipToFmtEnd{}%
+   \newcommand\EndFmtInput{}%
+   \long\def\SkipToFmtEnd#1\EndFmtInput{}%
+  }\SkipToFmtEnd
+
+\newcommand\ReadOnlyOnce[1]{\@ifundefined{#1}{\@namedef{#1}{}}\SkipToFmtEnd}
+\usepackage{amstext}
+\usepackage{amssymb}
+\usepackage{stmaryrd}
+\DeclareFontFamily{OT1}{cmtex}{}
+\DeclareFontShape{OT1}{cmtex}{m}{n}
+  {<5><6><7><8>cmtex8
+   <9>cmtex9
+   <10><10.95><12><14.4><17.28><20.74><24.88>cmtex10}{}
+\DeclareFontShape{OT1}{cmtex}{m}{it}
+  {<-> ssub * cmtt/m/it}{}
+\newcommand{\texfamily}{\fontfamily{cmtex}\selectfont}
+\DeclareFontShape{OT1}{cmtt}{bx}{n}
+  {<5><6><7><8>cmtt8
+   <9>cmbtt9
+   <10><10.95><12><14.4><17.28><20.74><24.88>cmbtt10}{}
+\DeclareFontShape{OT1}{cmtex}{bx}{n}
+  {<-> ssub * cmtt/bx/n}{}
+\newcommand{\tex}[1]{\text{\texfamily#1}}	% NEU
+
+\newcommand{\Sp}{\hskip.33334em\relax}
+
+
+\newcommand{\Conid}[1]{\mathit{#1}}
+\newcommand{\Varid}[1]{\mathit{#1}}
+\newcommand{\anonymous}{\kern0.06em \vbox{\hrule\@width.5em}}
+\newcommand{\plus}{\mathbin{+\!\!\!+}}
+\newcommand{\bind}{\mathbin{>\!\!\!>\mkern-6.7mu=}}
+\newcommand{\rbind}{\mathbin{=\mkern-6.7mu<\!\!\!<}}% suggested by Neil Mitchell
+\newcommand{\sequ}{\mathbin{>\!\!\!>}}
+\renewcommand{\leq}{\leqslant}
+\renewcommand{\geq}{\geqslant}
+\usepackage{polytable}
+
+%mathindent has to be defined
+\@ifundefined{mathindent}%
+  {\newdimen\mathindent\mathindent\leftmargini}%
+  {}%
+
+\def\resethooks{%
+  \global\let\SaveRestoreHook\empty
+  \global\let\ColumnHook\empty}
+\newcommand*{\savecolumns}[1][default]%
+  {\g@addto@macro\SaveRestoreHook{\savecolumns[#1]}}
+\newcommand*{\restorecolumns}[1][default]%
+  {\g@addto@macro\SaveRestoreHook{\restorecolumns[#1]}}
+\newcommand*{\aligncolumn}[2]%
+  {\g@addto@macro\ColumnHook{\column{#1}{#2}}}
+
+\resethooks
+
+\newcommand{\onelinecommentchars}{\quad-{}- }
+\newcommand{\commentbeginchars}{\enskip\{-}
+\newcommand{\commentendchars}{-\}\enskip}
+
+\newcommand{\visiblecomments}{%
+  \let\onelinecomment=\onelinecommentchars
+  \let\commentbegin=\commentbeginchars
+  \let\commentend=\commentendchars}
+
+\newcommand{\invisiblecomments}{%
+  \let\onelinecomment=\empty
+  \let\commentbegin=\empty
+  \let\commentend=\empty}
+
+\visiblecomments
+
+\newlength{\blanklineskip}
+\setlength{\blanklineskip}{0.66084ex}
+
+\newcommand{\hsindent}[1]{\quad}% default is fixed indentation
+\let\hspre\empty
+\let\hspost\empty
+\newcommand{\NB}{\textbf{NB}}
+\newcommand{\Todo}[1]{$\langle$\textbf{To do:}~#1$\rangle$}
+
+\EndFmtInput
+\makeatother
+%
+
+\section{Overview} %%of Rule Calculus $\ourlang$}
+\label{sec:overview}
+
+In this section, we motivate and give an overview of the rule calculus and the
+source language described in Section~\cite{}. 
+
+%%The rule calculus is
+%%presented as a simple logic programming language of Horn clauses
+%%and the relation to existing implicit programming mechanisms is
+%%discussed. Then it is shown how a source language built on top 
+%%of the rule calculus can model 
+
+\subsection{Rule Calculus $\ourlang$ Syntax}
+
+\begin{figure}
+
+\begin{center}
+  
+  \[ \begin{array}{llrl}
+    \text{Types} & \type  & ::=  & \alpha \mid \rulet \\
+    \text{Rule Types} & \rulet  & ::= & 
+    \rulesch{\alpha}{\rulesetvar}{\type} \\
+    \text{Context} & \rulesetvar  & ::= & \bar{\rulet} \\
+    \text{Expressions} & e & ::=  & 
+    ?\rulet \mid 
+    \ruleabs{\rulet}{e} \mid
+    e[\overline{\type}] \mid
+    \ruleapp{e}{\rulesetexp} \\
+  \end{array} \]
+\end{center}
+
+\caption{Rule calculus syntax}
+
+\end{figure}
+
+\subsection{Rules and Rule Types}
+
+The key notion of the rule calculus is that of a rule and its
+corresponding rule type. Rule types are 
+
+Relation to type classes; well-known relation between 
+type classes and logic programming.
+
+\paragraph{Horn clauses as rule types}
+
+\Ex{
+  1) \quad \{\} \To \tyint \\
+  2) \quad \{\tybool\} \To \tyint \\
+  3) \quad \{a \to a \to \tybool \} \To [a] \to [a] \to [a]  \\
+  4) \quad \{\Eq~a\} \To [a] \to [a] \to [a] \\
+  5) \quad \{\Eq~a, \Eq~b\} \To \Eq~(a,b)   
+}
+
+\paragraph{Polymorphic and higher-order rules}
+
+\subsection{Resolution and Queries}
+
+\paragraph{Higher-order queries}
+
+\subsection{Scoping}
+
+\paragraph{Local Scoping}
+
+\paragraph{Nested Scoping}
+
+\paragraph{Overlapping}
+
+\subsection{Source Language and Type-Inference}
+
+present $\ourlang$ and its core features using
+some examples. The formal system of the calculus is presented in
+Section~\ref{sec:calculus}. In the rest of this section, we assume
+that the calculus is conservatively extended to have constructs of
+$\lambda$-calculus and several types.
+
+$\ourlang$ is a simple logic programming language of Horn clauses. We
+can compose Horn clauses and resolve a clause under the given set of
+clauses. Consider the following example:
+\\
+\Ex{
+  \relation{f}{\myset{\tyint} \To \tyint} \\
+  f = \ruleabs{(\myset{\tyint} \To \tyint)}{(?\tyint + 1)} \\
+}
+\\
+In the example, $f$ is a {\it rule} whose type corresponds to Horn
+clause $\tyint \To \tyint$. The clause, which we call {\it rule type},
+means that $f$ will give us an integer value if there is an integer
+clause in the assumptions. We call the current set of assumptions as
+{\it rule environment}. In the body, the rule tries to resolve query
+$?\tyint$ which essentially asks whether the rule type $\tyint$ can be
+deduced from the given assumptions. Since $f$ assumes that there must
+be a rule type $\tyint$, the query can be resolved. If we apply this
+rule to a rule of type $\tyint$, we can get the final value like this:
+\\
+\Ex{ \ruleapp{f}{\myset{\relation{1}{\tyint}}} }
+\\
+This program will give us 2 as a result.
+
+The rule type can be polymorphic in $\ourlang$. Consider the following
+example:
+\\
+\Ex{
+  \relation{g}{\myset{\forall \alpha. \alpha \to \alpha} \To 
+    \tyint \to \tyint} \\
+  g = \ruleabs{(\myset{\forall \alpha. \alpha \to \alpha} \To 
+    \tyint \to \tyint)}{(?\tyint \to \tyint)} \\
+}
+\\
+The query $?\tyint \to \tyint$ can be resolved by instantiating the
+assumption $\forall \alpha. \alpha \to \alpha$ for the $\tyint$
+type. 
+
+In the rest of the section, we explain the key features that
+differentiate our calculus from the others. Note that some of these
+features have already existed in the previous systems but none of them
+provides the combination of all.
+
+\subsection{Flexible Implicit Values}
+\label{subsec:flexible}
+
+We allow arbitrary types in rule types. This is different from type
+class-like systems. The type class-like systems can be modeled as
+simple logic language with Horn clauses of predicates on
+types. Rather, our system is closer to Scala implicits~\cite{scala}.
+
+Using arbitrary types for the assumptions has more flexibility than
+using only predicates on types. Because of this limitation, some
+Haskell programs try to encode natural number using type-level Church
+numeral to do the very same thing like this:
+
+\[  
+\begin{array}{l}
+  \relation{f}{\myset{\tyint} \To \tyint} \\ 
+  f = \ruleabs{(\myset{\tyint} \To \tyint)}{(?\tyint + 1)}
+\end{array}
+\]
+\[  
+\begin{array}{l}
+  \ruleapp{f}{\myset{\relation{\ruleabs{(\varnothing \To
+          \tyint)}{1}}{\varnothing \To \tyint}}}
+\end{array}
+\]
+
+\subsection{Lexical Scoping}
+\label{subsec:lexical}
+
+We support lexical scoping of rule environments. Consider the
+following example:
+\\
+\[  
+\begin{array}{l}
+  \ruleapp
+  {\ruleapp{f}{\myset{\relation{2}{\tyint}}}}
+  {\myset{\relation{1}{\tyint}}}
+\end{array}
+\]
+\\
+The rule $f$ is now put under two environments. 
+
+Under the nesting, we choose the closest one from the given rule.
+
+\subsection{Overlapping}
+\label{subsec:overlapping}
+
+We allow overlapping of rules. 
+
+\[
+\begin{array}{l}
+  \relation{f}{\forall \alpha. \alpha \to \alpha} \\
+  f = 
+  \ruleapp
+  {(\ruleabs
+    {(\forall \alpha.
+      \myset{\forall \beta. \beta \to \beta, \tyint \to \tyint}
+      \To \alpha \to \alpha)
+    }
+    {(?\alpha \to \alpha)})\\\quad\quad}
+  {\myset{
+      \relation{\lambda x. x + 1}{\tyint \to \tyint},
+      \relation{\lambda x. x}{\forall \gamma. \gamma \to \gamma}
+    }}
+\end{array}
+\]
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "../Main"
+%%% End: 

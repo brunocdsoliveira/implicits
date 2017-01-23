@@ -1,0 +1,27 @@
+Implicit programming that infers values by using type
+information has proven its benefits in practice. However, 
+years of experience have exposed several limitations in its current practice.
+For example, Haskell's type classes, which are the oldest and most
+prominent form of implicit programming have several
+limitations of its original design: no
+ability to control the \emph{scoping} of instances; the \emph{second
+  class} nature of types classes compared to types; and type class
+constraints being limited to \emph{first-order predicates}.
+
+This paper presents a \textit{implicit calculus}: a powerful and expressive,
+yet minimalistic, calculus that provides an implicit programming model
+without the limitations of the current practice. The implicit calculus
+offers control over scoping, does not suffer from the second class
+nature of type classes, and incoorporates two features which
+have been discussed in the literature but for which there is
+currently no good solution: \emph{higher-order predicates} and
+\emph{coherent support for overlapping instances}.  We present the
+syntax, operational semantics, type system, type-directed translation
+into System F, as well as correctness results. Finally, we show how
+Haskell and Scala's implicit programming constructs are translated
+into our calculus.
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "../Main"
+%%% End: 

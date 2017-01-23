@@ -1,0 +1,80 @@
+\documentclass{rosaecmemo}
+
+\usepackage{color}
+\usepackage{graphicx}
+\usepackage{latexsym}
+\usepackage{stmaryrd}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{stmaryrd}
+\usepackage{mathpartir}
+\usepackage{wasysym}
+\usepackage{url}
+\usepackage{algorithm, algpseudocode}
+
+\bibliographystyle{plain}
+
+%% for comments
+\input{macro-comments}
+\input{macros}
+\input{Preamble}
+\input{lemmas}
+
+\begin{document}
+
+%\conferenceinfo{POPL'11}{}
+% \titlebanner{DRAFT --- Do not distribute} 
+\title{The Implicit Calculus}
+% \subtitle{}
+
+% \authorinfo{}{}{}
+\author{
+  Wontae Choi \\
+  Seoul National University\\
+  wtchoi@ropas.snu.ac.kr \and
+  Wonchan Lee \\
+  Seoul National University\\
+  wclee@ropas.snu.ac.kr \and
+  Bruno C. d. S. Oliveira \\
+  Seoul National University\\
+  bruno@ropas.snu.ac.kr \and
+  Tom Schrijvers \\
+  Universiteit Gent\\
+  tom.schrijvers@ugent.be \and
+  Kwangkeun Yi \\
+  Seoul National University\\
+  kwang@ropas.snu.ac.kr
+}
+
+\notenum{2011-DRAFT}
+\maketitle
+
+\begin{abstract}
+
+\input{src/Abstract}
+
+\end{abstract}
+
+\input{src/Introduction}
+
+\input{src/Semantics}
+
+\input{src/Types}
+
+\input{src/Translation}
+
+\input{src/SourceLang}
+
+\input{src/Related}
+
+\input{src/Conclusion}
+
+% \acks
+% We are grateful to Jeremy Gibbons and Phil Wadler.
+
+\bibliography{papers}
+
+\input{src/Appendix}
+
+\end{document}

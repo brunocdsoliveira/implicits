@@ -1,0 +1,361 @@
+
+\section{Resolution with Overlapping Rules}
+\label{sec:resolution}
+
+An essential property of resolution is \textit{coherence}, which ensures that
+the result of resolution is predictable and consistent. Incoherent programs,
+where resolution cannot be resolved unambiguously, should be rejected.
+
+%- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+\subsection{Overlap}
+Overlapping rules are a well-known source of incoherence. Consider
+\begin{equation*}
+\left\{ \forall \alpha. \alpha \rightarrow \tyint,  
+        \forall \alpha. \tyint \rightarrow \alpha \right\} \vturns \tyint \rightarrow \tyint
+\end{equation*}
+Both the first and the second rule can be used to discharge this judgement.
+In general, we have incoherence when there are multiple possible resolution derivations.
+
+In order to avoid incoherence, existing approaches in the literature take a the
+Draconian measure of forbidding overlap altogether. However, overlap
+is a highly useful features, as illustrated by the many practical
+applications in GHC/Haskell.\footnote{despite the fact that Haskell
+implementations do not truly rule out incoherence}
+Hence, we adopt a less conservative approach.
+
+%- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+\subsection{Overlap Resolution}
+To avoid the potential incoherence, we provide a two-level priority scheme to
+specify which one of several overlapping rules is selected during resolution. 
+
+The first priority is the natural priotirization in the implicit environment.
+This environment behaves as a stack of sets. A rule in a set closer to the top
+of the stack has priority over one further down in the stack. For instance,
+\begin{equation*}
+\left\{ \forall \alpha. \alpha \rightarrow \tyint \right\},  
+\left\{ \forall \alpha. \tyint \rightarrow \alpha \right\} \vturns \tyint \rightarrow \tyint
+\end{equation*}
+is uniquely resolved using the second rule, which is at the top of the stack.
+
+The second level, in case of
+overlapping rules within the same set in the implicit environment, is to
+select the most specific matching rule. For instance,
+\begin{equation*}
+\left\{ \forall \alpha. \alpha \rightarrow \alpha,  
+        \forall \alpha. \alpha \rightarrow \tyint \right\} \vturns \tyint \rightarrow \tyint
+\end{equation*}
+is uniquely resolved using the second rule, which is more specific than the first.
+
+While this approach allows us to make effective use of overlapping rules in many
+cases, we must still avoid situations where no most specific rule can be determined,
+such as the first example.
+This overlap resolution also raises concerns with respect to type safety. Consider:
+\begin{equation*}
+\left\{ \forall \alpha. \alpha \rightarrow \alpha,  
+        \{\textit{Char}\} \To  \tyint \rightarrow \tyint \right\} \vturns \beta \rightarrow \beta
+\end{equation*}
+Regardless of whether $\beta$ is \tyint or not, there is a rule to select
+in the implicit environment. However, when $\beta$ is \tyint, resolution
+gets stuck, because there is no rule to produce a value of type \texttt{Char}.
+In contrast, resolution does not get stuck for other instantiations.
+As we wish to claim that well-typed programs do not get stuck, we need to make
+sure that situations like this do not happen. 
+
+%- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+\subsection{Condition Specifications} 
+
+In order to avoid unsafe and incoherent overlap in a ruleset, we impose three
+conditions.
+
+%~~~
+\paragraph{Most Specific Rule}
+Firstly, there must always be a most specific rule.
+\begin{definition}[Existence of Most Specific Rule Condition]
+We say that a ruleset $\pi$ always has a most specific rule iff
+\[
+\begin{array}{l}
+  \forall \theta.\forall \tau.\rho_1,\rho_2\in\pi.
+  \theta|\rho_1| \succeq \theta\tau \wedge \theta|\rho_2| \succeq \theta\tau \\
+  \implies \exists \rho \in \pi. \theta|\rho| = \theta(|\rho_1| \sqcap |\rho_2|)
+\end{array}
+\]
+We use $\mathit{exists}(\pi)$ to denote such ruleset.
+\end{definition}
+
+Note that the order between types can be affected by type type substitution.
+A pair of types on which no order relationship exists may have an order after 
+applying substiution. So we have to consider every possible substitutions.
+See following example.
+\[
+\{
+  \forall \alpha. \alpha \rightarrow {\tt int} \rightarrow a,
+  \forall \alpha. {\tt int} \rightarrow \alpha  \rightarrow {\tt int} 
+\} 
+\vturns {\tt int} \rightarrow {\tt int} \rightarrow {\tt int}
+\]
+
+The resolution will be ambiguous if type variable $a$ is substituted with ${\tt int}$.
+
+%~~~
+\paragraph{Uniqueness}
+Secondly, the most specific instance must be unique. This avoids situations
+where multiple rules \textit{statically} have the same result type.
+\begin{equation*}
+\left\{ \texttt{int}, \texttt{char} \Rightarrow \texttt{int}, \texttt{char} \right\} 
+\vturns \texttt{int}
+\end{equation*}
+However, we should also consider the effect of a type substitution, and make
+sure that uniqueness remains true \textit{dynamically}. Consider this case:
+\begin{equation*}
+\left\{ \alpha, \tyint \right\} \vturns \tyint
+\end{equation*}
+It statically appears that the second is the only appropriate one to resolve
+\tyint. However, at runtime, the type variable $\alpha$ may well be
+instantiated to \tyint, which would mean that there are actually two
+implicit \tyint values.
+
+The following condition makes sure of both static and dynamic uniqueness.
+\begin{definition}[Uniqueness of Instances]
+We say that the ruleset $\pi$ is consistent with unique instances iff 
+\[
+\forall \rho_1,\rho_2 \in \pi, \theta. 
+  \rho_1 \neq \rho_2
+  \implies \theta |\rho_1| \neq \theta |\rho_2|
+\]
+We use $\mathit{unique}(\pi)$ to denote such ruleset.
+\end{definition}
+
+%~~~
+\paragraph{Type Safety}
+We must ensure that every resolution that succeeds for a general type also
+succeeds for a more specific type.
+\begin{definition}[Type Safety Condition]
+An implicit environment $\env$ is type safe iff
+\begin{equation*}
+\forall \rulet, \theta  . \env \vturns \rulet \wedge \mathit{dom}(\theta) = \mathit{fv}(\rulet) \cup \mathit{fv}(\env)
+~~\Longrightarrow~~ 
+\theta\env \vturns \theta\rulet
+\end{equation*}
+\end{definition}
+
+We may need restricted algorithmic check. Naively restricting specific instances to
+have less constraint then general instances will not work. Assume we have the most
+general pretty printer that prints $``\dots''$ for any input and polymorphic pretty
+printer for lists which takes a pretty printer for an elemetns type implicitly.
+A program having such pretty printers is natural but it will be rejected by naive
+restriction 
+
+\tom{Algorithm}
+
+
+%~~~
+\paragraph{Coherent Environment} We now combine the above conditions
+on rulesets and extend them to environments.
+\begin{theorem}[Coherent Environment]
+An environment $\env$ has a unique most specific instance for any query if
+every stack element of the environment has unique most specific instances.
+\tom{formal statement}
+\end{theorem}
+\wt{PROOF}
+
+%-------------------------------------------------------------------------------
+\subsection{Static Condition Checking}
+
+We have formulated coherence conditions on the implicit environment, but not
+yet stated where in the type system these conditions are imposed.
+
+One approach is to impose the conditions throughout, on every 
+environment and ruleset in all type system rules. This approach not only burdens the
+formulation of the type system, it also unnecessarily rejects many useful
+programs, like the following rule\footnote{similar to 
+an \texttt{instance (C a, C b) => C (a,b)} of a type class \texttt{C} in Haskell}
+\begin{equation*}
+f \stackrel{\mathit{def}}{\equiv}\ruleabs{(\forall a,b.\{a,b\} \Rightarrow a \times b)}{(?a,?b)}
+\end{equation*}
+where $\{a,b\}$ violates the uniqueness condition (as $\theta a = \theta b$ for $\theta = [a \mapsto \type, b \mapsto \type]$). It would be a shame if we could
+not use this rule in safe situations, like
+\begin{equation*}
+\ruleapp{f[\tyint,\texttt{Bool}]}{\{1:\tyint,\texttt{true}:\texttt{Bool}\}}
+\end{equation*}
+In the same vain, we would like to accept
+\begin{equation*}
+\ruleapp{f[\tyint,\tyint]}{\{1:\tyint\}}
+\end{equation*}
+where the substitution collapses the set of required implicit rules to a
+singleton.
+In order to avoid rejecting these programs, we must not check for uniqueness
+at rule abstraction sites (\textbf{rule}), but defer them to a \textit{later} point.
+In particular, we do want to reject programs like
+\begin{equation*}
+g \stackrel{\mathit{def}}{\equiv}
+\ruleabs{(\forall a.\{a\} \Rightarrow a \times \tyint)}
+      {\ruleapp
+        {f[a,\tyint]}
+        {\{?a:a,3:\tyint\}}}
+\end{equation*}
+which dynamically does not have a unique most general rule in a context like 
+$\ruleapp{ g[\tyint]}{\{ 4 : \tyint\}}$. Deferring the check beyond
+$g$'s definition leaves us with too little information. Hence, we must perform
+the existence check at rule application (\textbf{with}).
+
+Finally, we need another existence check at resolution ($?\rulet$). Consider
+the program
+\[\begin{array}{l}
+\tstate \vturns 
+\ruleapp{(?(\forall a.\{a\}\Rightarrow a \times \texttt{int}))[\texttt{int}]}
+  {\{4:\texttt{int}\}}
+\end{array}\]
+where $\tstate = \{f:\forall a,b.\{a,b\}\Rightarrow (a, b) ,3:\texttt{int}\}$.
+In this program, the two \texttt{int} values are supplied by different means to $f$,
+$4$ through the \texttt{with} construct, but $3$ through recursive resolution. Hence,
+the latter also requires a check.
+
+\paragraph{Summary}
+Our type system checks:  
+\textit{existence} of most specific instances at rule definitions (\texttt{rule}), and
+\textit{uniqueness} of instances at resolution ($?\rulet$) and rule application (\texttt{with}).
+% If the ruleset in rule signatures statically ensures the existence of most specific instances, 
+% then the runtime environment will always have most specific instances.
+% Furthermore, if a static check prevents every attempt to make an environment with duplicate
+% entries at rule application and sites, then we will always have unambiguous environments at runtime.
+% There are only two such positions : rule applications and resolutions.
+
+\begin{definition}[Coherent Program]
+Program $e$ with type $\tau$ is coherent iff the following conditions hold throughout
+the derivation tree of $\epsilon \turns e:\tau$.
+\begin{itemize}
+\item 
+  For all subexpression $\ruleabs{\forall \overline{\alpha}.\pi\Rightarrow \tau}{e}$ :
+    $\texttt{exists}(\pi)$
+\item
+  For all subexpression $\ruleapp{e}{\overline{e}:\overline{\rho}}$ :
+    \mbox{$\texttt{unique}$}$(\overline{\rho})$
+\item
+  For all sub-derivations 
+  $\Gamma \turns \forall \overline{\alpha}. \pi_1 \Rightarrow \tau$ :
+    Assume $\Gamma(\forall \overline{\alpha}.\tau) 
+    = \forall \overline{\beta}.\pi_2 \Rightarrow \tau_2$
+    and $\theta$ is a substitution such that $\theta \tau_2 = \tau_1$.
+    The the followings should hold : $\texttt{unique}(\theta\pi_2 - \pi_1)$
+    and $\forall \rho_1 \in \pi_1.\rho_2 \in \pi_2. \theta\rho_2 \nsucceq \rho_1$.
+\end{itemize}
+\end{definition}
+
+
+% Statically checking an argument at rule application sites is enough 
+% to reject following ambiguous program. 
+% \[\begin{array}{l}
+% \texttt{let } f=\ruleabs{(\forall a,b.\{a,b\} \Rightarrow a \times b)}{(?a,?b)} \\
+% \texttt{in let } g=
+%   {\ruleabs{(\forall a.\{a\} \Rightarrow a \times \texttt{int})}
+%     {\ruleapp
+%       {f[a,\texttt{int}]}
+%       {\{?a,3\}}}} \\
+% \texttt{in } \ruleapp{g[\texttt{int}]}{\{4\}}
+% \end{array}\]
+
+% Static check at a resolution site can also prevent following ambiguous program.
+% Let $I = \{(?a,?b):\forall a,b.\{a,b\}\Rightarrow a \times b  ,3:\texttt{int}\}$
+% \[\begin{array}{l}
+% I \vturns 
+% \ruleapp{(\forall a.\{a\}\Rightarrow a \times \texttt{int})[\texttt{int}]}
+%   {\{4:\texttt{int}\}}
+% \end{array}\]
+
+% Our checking algorithm can accept following case since we delay unambiguouty check to
+% the use point.
+% \[
+% \ruleapp
+%   {(\ruleabs{\forall a,b.\{a,b\} \Rightarrow (a,b)}{(?a,?b)})
+%     [\texttt{int},\texttt{int}]}
+%   {\{3:\texttt{int}\}}
+% \]
+
+\wt{THEOREM : Type Safe Program Never Generates Ambiguous Environment}
+\tom{The theorem should just be type saftey.}
+\wt{Mentioning other possible options}
+
+%\begin{definition}[Most Specific Rule Condition]
+%We say that an environment $\env$ always has a most specific rule iff
+%\begin{multline*}
+%\forall \tau.
+%\forall \rho_1, 
+%        \rho_2 \in \env^*(\tau).
+%        \exists (\rulesch{\alpha_3}{\ruleset_3}{\tau_3}) \in \env^{*}(\tau).\\
+%        \{\rho_1,\rho_2\} \subseteq \env^*(\tau_3)
+%\end{multline*}
+%where
+%\begin{equation*}
+%\left\{\begin{array}{rcl}
+%(\env,\bar{\rho})^*(\tau) & = & \{(\rulesch{\alpha'}{\ruleset'}{\tau'}) \in \bar{\rho} \mid \tau \preceq_{\bar{\alpha}'} \tau' \} \lhd \env^*(\tau)\\
+%\epsilon^*(\tau)          & = & \emptyset 
+%\end{array}\right.
+%\end{equation*}
+%with
+%\begin{equation*}
+%\left\{\begin{array}{rcl}
+%\emptyset \lhd \bar{\rho}_2      & = & \bar{\rho}_2\\
+%\bar{\rho}_1 \lhd \bar{\rho}_2   & = & \bar{\rho}_1 \hspace{1cm}, \rho_1 \neq \emptyset
+%\end{array}\right.
+%\end{equation*}
+%and
+%begin{equation*}
+%
+%\tau_1 \preceq_{\bar{\alpha}} \tau_2 \stackrel{\mathit{def}}{\Longleftrightarrow}  
+%\exists \bar{\tau}. [\bar{\alpha} \mapsto \bar{\tau}]\tau_2 = \tau_1
+%\end{equation*}
+%\end{definition}
+%
+%\tom{define lookup}
+%
+%
+%The above condition only makes sure that every most step in the recursive
+%resolution process either fails or succeeds deterministically.
+%
+%% and
+%% \begin{multline*}
+%% \forall (\rulesch{\alpha_1}{\kappa_1}{\ruleset_1}{\tau_1}), 
+%%         (\rulesch{\alpha_2}{\kappa_2}{\ruleset_2}{\tau_2}) \in \ruleset.\\
+%%         \tau_2 \preceq \tau_1 \wedge
+%%         \tau_1 \preceq \tau_2 \Longrightarrow \\
+%%         \rulesch{\alpha_1}{\kappa_1}{\ruleset_1}{\tau_1} = 
+%%         \rulesch{\alpha_2}{\kappa_2}{\ruleset_2}{\tau_2}
+%% \end{multline*}
+%
+%
+
+%- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+\subsection{Operational versus Elaboration Semantics}
+Our informal notion of coherent overlap always allows us to select
+the appropriate implicit rule \textit{at runtime}, which is perfect
+for the operational semantics.
+Not so for the elaboration semantics, which (by definition) has to select the
+appropriate rule statically. For instance,
+\begin{equation*}
+\left\{ \forall \alpha. \alpha \rightarrow \alpha,  
+        \tyint \rightarrow \tyint \right\} \vturns \beta \rightarrow \beta
+\end{equation*}
+Statically, we do not know whether $\beta$ equals \tyint or not.  For the
+operational semantics this is fine: statically we only check that there is a
+unique resolution in both cases. At runtime we will know which of these to
+chose, as the type variable $\beta$ will be instantiated.
+However, the elaboration semantics must chose at compile time, and thus cannot
+resolve this situation.  
+
+As a consequence, the elaboration semantics is forced to accept fewer programs
+than the operational semantics.  In particular, if we insist that the implicit
+environment is able to resolve every possible query coherently, then the
+elaboration semantics cannot tolerate any overlap at all. A more liberal
+approach only considers whether the queries $\env \vturns \rulet$ that actually
+appear in the program (originating from the $?\rulet$ construct) are resolved
+coherently. GHC takes a similar approach for overlapping type class instances,
+yet coherence is not guaranteed across multiple modules. Note that only
+checking coherence for program queries also makes sense for the operational
+semantics.
+
+
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "../Main"
+%%% End: 
