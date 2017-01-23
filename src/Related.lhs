@@ -17,13 +17,6 @@ recursive resolution. Furthermore, although there have been some
 informal proposals for higher-order rules, the implicit calculus 
 is the first system providing a full formalization of this feature.
 
-
-%%Throughout the paper we have already discussed a lot of related work. 
-%%In what follows, we offer a more
-%%detailed technical comparison of $\ourlang$ versus System $F^{G}$ and Scala 
-%%implicits, which are the closest to our work. Then we discuss the
-%%relation with other work in the literature.  
-
 %format model = "{\bf model}"
 %format p2
 %format p1
@@ -143,6 +136,7 @@ our notion of scoping is closed at a particular resolution point, but
 the scopes can still be extended in other resolution
 points.
 
+
 \subsection{Local Scoping}
 
 \emph{Implicit parameters}~\cite{implicit_param} are a proposal for a
@@ -225,6 +219,8 @@ Program |p1| could be modelled as follows in System $F^{G}$:
 >
 > let p1 = model Eq<int> {dots} in eq[int] 3 4
 
+%}
+
 \vspace{3pt}
 
 \noindent The |concept| declaration provides the interface for |Eq<t>|
@@ -241,17 +237,6 @@ concepts cannot be used as types; and types cannot be used as
 concepts. As a consequence, models implementing concepts can only 
 be passed as implicit parameters, and regular values can only be
 passed as explicit parameters. 
-
-%if False
-System $F^{G}$ does not support recursive resolution, so to write
-program |p2| we must create a model:
-
-model Eq<Maybe[Maybe[Int]]> {dots}
-
-\noinclude that manually composes rules and can then be used by the 
-(non-recursive) resolution mechanism. Recursive resolution is
-implemented in the $G$ language,  
-%endif
 
 In contrast to $\ourlang$, System $F^{G}$ has both a notion of concepts
 and implicit instantiation of concepts\footnote{Note
@@ -277,11 +262,6 @@ To create program |p2| a model:
 
 \noindent that manually composes rules must first be created in System
 $F^{G}$. 
-
-%}
-
-%% G~\cite{G} is a programming language that is based on and considerably
-%% extends the functionality of System $F^{G}$. However, G is not formalized.
 
 \textit{Modular type classes}~\cite{modular} are a language design
 that uses ML-modules to model type classes.  The main novelty of this
@@ -314,8 +294,8 @@ of the mechanism are tailored for the particularities of the Scala language.
 
 %format . = "."
 
-\begin{figure}
-\small
+%\begin{figure}
+%\small
 \begin{code}
    trait A {
      implicit def id[a] : a => a = x => x
@@ -330,11 +310,11 @@ of the mechanism are tailored for the particularities of the Scala language.
      val v2 = (?[Char => Char]).apply('a')  // evaluates to 'a'
   }
 \end{code}
-\caption{Nested Scoping with Overlapping Rules in Scala}
+%\caption{Nested Scoping with Overlapping Rules in Scala}
 
-\label{fig:scala}
+%\label{fig:scala}
 
-\end{figure} 
+%\end{figure} 
 
 %}
 
@@ -548,146 +528,7 @@ resolution is limited in its expressive power, to avoid introducing
 a different computational model in Agda. Finally, the issue of
 coherence in the presence of overlapping rules is not discussed.
 
-%endif
 
-%
-%
-%%if False
-%
-%The fact that $\ourlang$ does not provide a special type of ``type
-%class'' interface, does not preclude the definition of source
-%languages which have such interfaces. In fact, $\ourlang$ is a
-%good target language for a language with type classes, or some other
-%form of interfaces (such as modules or object-oriented classes).  The
-%main challenges of provide a source language with type classes are
-%type-inference and subclassing. In Section~\ref{} we have already
-%discussed how the issue of type-inference can be overcome for a simple
-%language with records. In a source language with type classes, type
-%inference could be dealt pretty much in the same way. Furthermore,
-%subclassing is not hard to translate to $\ourlang$~\bruno{Tom, say
-%  more about this?}. 
-%
-%Another advantage of allowing any types in resolution is that
-%higher-order predicates come essentially for free. Since we can query
-%any types and have any types in the implicit environment, supporting
-%higher-order predicates amounts to allowing polymorphic rule types to
-%be queried.
-% 
-%One way in which our calculus is closer to type classes is that 
-%implicit arguments are sets rather than lists (as in Scala). 
-%
-%> let f : {Int} => 
-%
-%> let f   
-%
-%Compared with type classes, this
-%design is, in some sense, more primitive as it  
-%
-%and it has some drawbacks in terms of usability. Namely and refinement
-%(subclass) relations between class interfaces allow programmers to
-%express certain constraints more conveniently. Scala implicits are
-%expressive enough to encode the same essential programming patterns
-%expressible with types classes~\cite{implicits}, but the encoding can
-%make the programming-style more low level than type classes due to
-%type-inference limitations, and the need to encode subclassing.
-%
-%Usability concerns are not so important in a core calculus, where
-%expressiveness and simplicity of the design are more relevant. 
-%
-%By allowing any types to be involved in the resolution process, 
-%the implicit calculus  
-%
-%%endif
-%
-%%%Another important different to previous work is the minimalistic 
-%%%and core nature of our calculu
-%
-%%if False
-%
-%% Scoring:
-%\newcommand{\scri}[1]{\quad\small #1}% sub-criterion
-%\newcommand{\scgood}{\CIRCLE}% good
-%\newcommand{\scsuf}{\LEFTcircle}% sufficient
-%\newcommand{\scbad}{\Circle}% bad
-%
-%\newcommand{\latexhline}{\hline}
-%
-%\begin{figure*}
-%\tabcolsep\arraycolsep
-%\def\tallstrut{\vrule width0pt height 2.5ex}
-%\def\deepstrut{\vrule width0pt height 0pt depth 1.5ex}
-%\begin{center}
-%\begin{tabular}{l||c||cccc||ccc||cc||c}
-%& \multicolumn{1}{c}{\textit{Scala}} & \multicolumn{4}{c}{\textit{Type Classes}} & \multicolumn{3}{c}{\textit{Overloading}} &  \multicolumn{2}{c}{\textit{Others}} & \multicolumn{1}{c}{\textit{$\ourlang$}} \\
-%                                          &                 & Wad89       & \textit{Kah01}     & \textit{Dij05}  & \textit{Dre07}    & \textit{O} & \textit{CT} & \textit{Sul05} & \textit{Lew00} & \textit{Gar05} & 
-%\deepstrut \\
-%\latexhline % ---------------------------------------------------------------
-%\tallstrut
-%Design choices:                                 &                 &             &                    &                 &                   &                  &                &                &                &           & \\
-%\scri{Overloaded Entities}                & Type            & Name        &  Name              & Name            & Name                 & Name             & Name           & Name           & Name              & Name        & Type \\
-%\scri{Constraint Semantics}               & [T]             & \{C\}       &  [C$\mid$\{C\}]        & [C]           & \{M\}             & \{N$\times$T\}   & \{N$\times$T\} & \{N$\times$T\} & \{N$\mapsto$T\}& -        & \{T\}   \\
-%% \scri{First-class Types}                  & \scgood         & \scbad      &  \scbad            & \scbad          & \scbad            & \scgood          & \scgood        & \scgood        & \scgood        & \scbad  & \scgood \\
-%\scri{Implicit Values}                    & \scgood         & \scbad      &  \scbad            & \scbad          & \scbad            & \scgood          & \scgood        & \scgood        & \scgood        & \scbad  & \scgood \\
-%\scri{Any Values}                         & \scgood         & \scgood     &  \scgood                 & \scgood               & \scgood           & \scbad           & \scgood        & \scgood        & \scgood              & \scbad        & \scgood \\
-%\scri{Overloaded Results}                 & \scgood         & \scgood     &  \scgood                 & \scgood               & \scgood           & \scbad           & \scgood        & \scgood        & -              & \scbad   & \scgood \\
-%Resolution:                                    &                 &             &                    &                 &                   &                  &                &                &                &           & \\
-%\scri{Recursive Resolution}               & \scgood         & \scgood     &  \scgood           & \scgood         & \scgood           & \scgood         & \scgood              & \scgood       & \scbad         & \scgood        & \scgood \\
-%\scri{Higher-order Predicates}               & \scbad             & \scbad       &  \scbad        & \scbad           & \scbad             & \scbad   & \scbad & \scbad & \scbad & \scbad        & \scgood   \\
-%% \scri{Contextual Overloading}             & \scbad          & \scbad      &  \scbad            & \scbad          & \scbad            & \scbad           & \scgood        & \scbad         & -         & -        & \scbad \\
-%% \scri{Polymorphic Type}                   & \scgood         & \scgood     &  \scgood                 & \scgood               & \scgood           & \scgood          & \scgood         & \scgood        & \scbad              & -     & \scgood \\
-%Scoping:                                    &                 &             &                    &                 &                   &                  &                &                &                &           & \\
-%\scri{Lexical Scoping}                    & \scgood         & \scbad      &  \scbad            & \scgood         & \scgood           & \scbad           & \scgood        & \scbad         & \scgood        & \scgood  & \scgood \\
-%\scri{Nested Scoping}                     & \scsuf          & \scbad      &  \scbad            & \scgood         & \scbad           & \scbad           & \scgood         & \scbad         & \scgood        & \scgood  & \scgood \\
-%\scri{Overlapping}                       & -         & -      &  -            & -         & -           & -           & -         & -         & -        & -  & - \\
-%Semantics and Coherence:                                    &                 &             &                    &                 &                   &                  &                &                &                &           & \\
-%\scri{Coherence}                         & -         & -      &  -            & -         & -           & -           & -         & -         & -        & -  & - \\
-%\scri{Resolution Time}                & -         & -      &  -            & -         & -           & -           & -         & -         & -        & -  & - \\
-%\scri{Semantics}                          & -               & E           & -                  & E               & E                 & E/D              & -              & E              & E/A            & -        & O/E     \\     
-%Source Language:                                    &                 &             &                    &                 &                   &                  &                &                &                &           & \\
-%\scri{Overriding}                         & \scgood         & \scbad      &  \scgood           & \scgood         & \scbad           & \scbad           & \scsuf         & \scbad         & \scgood        & \scbad & \scsuf       \\
-%\scri{Constraint Inference}               & \scbad          & \scgood     &  \scgood           & \scgood         & \scgood                 & \scgood          & \scgood        & \scgood        & \scgood        & -        & \scgood \\
-%\scri{Context Reduction}                  & \scbad          & \scgood     &  \scbad           & \scgood         & \scgood           & \scbad         & \scgood              & \scgood       & \scbad         & -        & \scgood \\
-%\scri{Late Binding}                       & \scgood         & \scbad      &  \scgood           & \scgood               & \scgood                 & \scbad           & \scbad         & \scbad         & \scbad         & \scgood  & \scgood \\
-%%%Others:                                    &                 &             &                    &                 &                   &                  &                &                &                &           & \\
-%%%\scri{Flexible Type                     & -               & \scbad      &  \scbad                 & \scbad               & \scbad                 & \scgood          & \scsuf             & \scbad         & -              & -        & - \\
-%%%\latexhline % ---------------------------------------------------------------
-%%%Formalization:                            & \scbad          & \scgood     & \scsuf             & \scsuf          & \scgood           & \scgood          & \scsuf         & \scgood        & \scgood        & \scbad   & \scgood \\
-%%%\scri{Metatheory Results}                 & -               & \scgood     & \scsuf             & \scbad          & \scgood           & \scgood          & \scsuf         & \scgood        & \scgood        & -        & \scgood \\     
-%%%\scri{Machine Checked}                    & -               & \scbad      & \scbad             & \scbad          & \scbad            & \scbad           & \scbad         & \scbad         & \scbad         & -        & \scgood \\     
-%\deepstrut \\
-%\end{tabular}
-%\end{center}
-%
-%\begin{tabular}{c||c}
-%Abbreviations used in the Constraint semantics row & Abbreviations used in the Semantics row \\
-%\begin{tabular}{c||l}
-%T & Type\\
-%C & Type Class\\
-%M & Module\\
-%N & Name\\
-%\end{tabular}&
-%\begin{tabular}{c||l}
-%E & Elaboration Semantics\\
-%A & Axiomatic Semantics\\
-%D & Denotational Semantics\\
-%O & Operational Semantics\\
-%\end{tabular}\\
-%\end{tabular}
-%
-%\caption{The design space of mechanisms related to implicit
-%  programming.\bruno{Need to adapt the figure to fit with the
-%    structure of the overview.}}
-%\label{fig:evaluation}
-%\end{figure*}
-%
-%To aid with the comparison to related work we summarize the features  
-%available in various systems in Figure~\ref{}, and compare it with our 
-%own work. In the table, only features related to scoping and
-%resolution are discussed. 
-%
-%%endif
-
-%if False
 
 \paragraph{Scoping, Overlapping, and Coherence}
 %Several works have discussed scoping mechanisms for IP. 
@@ -829,8 +670,3 @@ and consider different evaluation strategies to deal with overlapping rules.
 With \emph{Constraint Handling Rules}, Stuckey and Sulzmann~\shortcite{theory_over} use \textit{Constraint Logic Programming}
 to implement type classes.
 
-
-%%% Local Variables: 
-%%% mode: latex
-%%% TeX-master: "../Main"
-%%% End: 
