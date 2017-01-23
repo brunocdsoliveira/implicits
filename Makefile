@@ -24,8 +24,8 @@ GHCFLAGS      := -Wall -O
 LHS2TEX_FLAGS := --poly -s dvipdfm
 SPELL         := ispell -d british -t -l -p
 
-all: $(MAIN).dvi
-	dvipdf $<
+all: $(MAIN).pdf
+#	dvipdf $<
 #	ps2pdf $< 
 
 # $(MAINTECH).pdf
@@ -52,13 +52,13 @@ $(MAINTECH).pdf: $(MAINTECH).tex lhs $(TEXFILES) force
 # Rules
 #-----------------------------------------------------------------------------
 
-$(MAIN).dvi: $(MAIN).tex lhs $(TEXFILES) force
-	$(LATEX) $(<)
+$(MAIN).pdf: $(MAIN).tex lhs $(TEXFILES) force
+	$(PDFLATEX) $(<)
 	if grep -s '^LaTeX Warning: Citation' $(<:.tex=.log); \
-	then $(BIBTEX) $(<:.tex=); $(LATEX) $(<); \
+	then $(BIBTEX) $(<:.tex=); $(PDFLATEX) $(<); \
 	fi
 	while grep -s "Warning.*Rerun" $(<:.tex=.log); \
-	  do $(LATEX) $<; done;
+	  do $(PDFLATEX) $<; done;
 
 lhs: $(LHSFILES:.lhs=.tex)
 
