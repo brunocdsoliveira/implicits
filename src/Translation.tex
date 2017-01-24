@@ -1,262 +1,6 @@
 \section{Type-Directed Translation to System F}
 \label{sec:trans}
 
-\begin{comment}
-
-\figtwocol{f:trans}{Type-directed Translation to System F}{
-\small
-\bda{llrl} 
-\text{Type Environments} & \tenv & ::= & \epsilon \mid \tenv,
-\relation{x}{\rulet} \\
-\text{Singleton Environments} & \Theta & ::= & \rulet \leadsto E\\
-\text{Translation Environments} & \env & ::= & \epsilon \mid \env, \rulet \leadsto x \\
-\eda \\
-\bda{lc} 
-
-& \multicolumn{1}{c}{
-  \myruleform{\tenv \mid \denv \turns \relation{e}{\rulet} \leadsto E}} \\
-\\
-\TrInt &
-{ \tenv \mid \denv \turns \relation{n}{\tyint} \leadsto n } 
-\\ \\
-
-\TrVar &
-\myirule
-{ (\relation{x}{\rulet}) \in \tenv}
-{ \tenv \mid \denv \turns \relation{x}{\rulet} \leadsto x
-} 
-\\ \\
-
-\TrAbs &
-\myirule
-{ \tenv;\relation{x}{\rulet_1}\mid \denv \turns \relation{e}{\rulet_2} \leadsto E
-}
-{ \tenv\mid\denv \turns \relation{\lambda \relation{x}{\rulet_1}.e}{\rulet_1 \arrow \rulet_2}
-  \leadsto \lambda \relation{x}{|\rulet_1|}.E } 
-\\ \\
-
-\TrApp &
-\myirule
-{ \tenv\mid \denv \turns \relation{e_1}{\rulet_1 \arrow \rulet_2} \leadsto E_1 \\
-  \tenv\mid \denv \turns \relation{e_2}{\rulet_1} \leadsto E_2
-}
-{ \tenv\mid\denv \turns \relation{e_1\,e_2}{\rulet_2} \leadsto E_1\,E_2} 
-\\ \\
-
-\TrTAbs&
-  \myirule { \tenv,\alpha \mid \env \turns \relation{e}{\rho} \leadsto
-    E_1 }
-           { \tenv\mid\env \turns \relation{\Lambda \alpha.e}{\forall
-               \alpha.\rho} \leadsto \Lambda \alpha.E_1 } \quad\quad\quad
-\\ \\
-\TrTApp&
-  \myirule { \tenv\mid \env \turns \relation{e}{\forall \alpha.\rho_2} \leadsto
-    E}
-           { \tenv\mid\env \turns \relation{e\,\rho_1}{\rho_2 [\rho_1 /\alpha]} \leadsto
-    E~|\rho_1|} 
-\\ \\
-\TrIAbs&
-  \myirule { \tenv \mid \env, \rho_1 \leadsto x \turns \relation{e}{\rho_2}  \leadsto
-    E}
-           { \tenv\mid\env \turns \relation{\ilambda \rho_1.e}{\rho_1 \iarrow \rho_2}  \leadsto
-    \lambda \relation{x}{|\rulet_1|}. E}
-\\ \\
-\TrIApp&
-  \myirule { \tenv \mid \env \turns \relation{e_1}{\rho_2 \iarrow
-      \rho_1 \leadsto E_1} \\
-             \tenv \mid \env \turns \relation{e_2}{\rho_2} \leadsto E_2}
-           { \tenv\mid\env \turns \relation{e_1 \with e_2}{\rho_1} \leadsto
-    E_1~E_2}
-\\ \\
-\TrQuery &
-\myirule
-{ \denv \vturns \rulet \leadsto E}
-{ \tenv\mid\denv \turns \relation{?\rulet}{\rulet} \leadsto E
-} 
-
-%%\TrRule &
-%%\myirule
-%%{ \rulet = \rulesch{\alpha}{\ruleset}{\type} \quad
-%%  \vec{\alpha} \cap \mathit{ftv}(\tenv,\env) = \emptyset \\
-%%  \tenv\mid\denv; \overline{\relation{\rulet}{x}} \turns 
-%%  \relation{e}{\type} \leadsto E \quad\quad
-%%  \bar{x}\text{~fresh} 
-%%}
-%%{ \tenv\mid\denv \turns 
-%%  \relation{\ruleabs{\rulet}{e}}{\rulet} \leadsto
-%%  \Abs{\vec{\alpha}}{\abs{({\relation{\vec{x}}{|\vec{\rulet}|}})}{E}}
-%%} 
-%%\\ \\
-
-%%\TrInst &
-%%\myirule
-%%{ \tenv\mid\denv \turns \relation{e}{\rulesch{\alpha}{\rulesetvar}{\type}} \leadsto E
-%%}
-%%{ \tenv\mid\denv \turns 
-%%  \relation
-%%  {e[\vec{\type}]}
-%%  {\subst{\vec{\alpha}}{\vec{\type}}(\rulesetvar \To \type)} 
-%%  \leadsto E\;|\vec{\type}|
-%%  
-%%} 
-%%\\ \\
-
-%%\TrRApp &
-%%\myirule
-%%{ \tenv\mid\denv \turns \relation{e}{\ruleset \To \type} \leadsto E \\
-%%  \tenv\mid\denv \turns \relation{e_i}{\rulet_i} \leadsto E_i \quad 
-%%  (\forall \relation{e_i}{\rulet_i} \in \rulesetexp)
-%%}
-%%{ \tenv\mid\denv \turns \relation{(\ruleapp{e}{\rulesetexp})}{\type}
-%%  \leadsto E~\vec{E}}
-%%\\ \\
-
-%%\multicolumn{2}{l}{\myruleform{\denv \vturns \rho \leadsto E}} \\ \\
-
-%%\TrRes &
-%%\myirule
-%%{ 
-%%  \denv(\type) = 
-%%  \relation{\rulesetvar' \Rightarrow \type}{E} \quad\quad
-%%  \bar{x}\text{~fresh} \\
-  
-%%  \forall \rulet_i \in \rulesetvar': 
-%%  \left\{
-%%    \begin{array}{ll}
-%%      \denv \vturns \rulet_i \leadsto E_i &
-%%      , \rulet_i \not \in \rulesetvar  \\
-%%      E_i = x_i &
-%%      , \rulet_i \in \rulesetvar
-%%    \end{array}
-%%  \right.
-%%}
-%%{ \denv \vturns \rulesch{\alpha}{\rulesetvar}{\type} \leadsto
-%%  \Abs
-%%  {\vec{\alpha}}
-%%  {\abs
-%%    {(\relation{\vec{x}}{|\vec{\rulet}|})}
-%%    {(E\,\vec{E})}}
-%%}
-
-% \multicolumn{2}{c}{
-%   \coherent(\denv, \type) \defeq 
-%   \forall \theta. \theta \denv(\type) = (\theta \denv)(\theta \type) 
-% }
-
-%%\eda
-%%\bda{llc}
-%%\myruleform{\lookup{\env}{\type} = \rulet : E} &  
-%%\myirule
-%%{
-%%  \lookup{\overline{\relation{\rulet}{x}}}{\type} = \rulet : E
-%%}
-%%{
-%%  \lookup{(\env;\overline{\relation{\rulet}{x}})}{\type} = \rulet : E
-%%} \\ \\
-%% & 
-%%\myirule
-%%{
-%%  \lookup{\overline{\relation{\rulet}{x}}}{\type} = \bot \quad 
-%%  \lookup{\env}{\type} = \rulet
-%%}
-%%{
-%%  \lookup{(\env;\overline{\relation{\rulet}{x}})}{\type} = \rulet
-%%} \\ \\ 
-
-%%\myruleform{\lookup{\overline{\relation{\rulet}{x}}}{\type} = \rulet : E} &
-%% \myirule
-%%{
-%%  (\relation{\rulet}{x}) \in \overline{\relation{\rulet}{x}} \quad\quad \rulet = \ruleschr{\vec{\alpha}'}{\rulesetvar'}{\type'} \\
-%%  \theta\type' = \type  \quad\quad \theta = [\vec{\alpha}' \mapsto \vec{\type} ]
-%%}
-%%{
-%%  \lookup{\overline{\relation{\rulet}{x}}}{\type} = \theta\bar{\rulet}' \Rightarrow \type : x\,|\vec{\type}|
-%%} 
-
-\eda \\
-\begin{eqnarray*}
-|\alpha| & = & \alpha \\
-|\tyint| & = & \tyint \\
-|\rulet_1 \arrow \rulet_2| & = & |\rulet_1| \arrow |\rulet_2| \\
-|\forall \alpha. \rulet| & = & \forall \alpha. |\rulet| \\
-|\rulet_1 \iarrow \rulet_2| & = & |\rulet_1| \arrow
-|\rulet_2| %\\
-%%|\type|_\rulet & = & |\type|_\type \\ 
-%%|\forall \vec{\alpha}.\myset{\rulet_1, \cdots, \rulet_n} \To \type| & = & 
-%%\forall \vec{\alpha}.|\rulet_1| \to \cdots \to |\rulet_n| \to |\type| \\
-%|\tenv| & = & \myset{ (\relation{x}{|\rulet|})  ~|~ (\relation{x}{\rulet}) \in \tenv } \\
-%|\denv| & = & 
-%\myset{ (\relation{x}{|\rulet|}) ~|~ 
-%  (\relation{\rulet}{x}) \in \denv }
-\end{eqnarray*}
-}
-
-\figtwocol{fig:resolution2}{Deterministic Resolution Translation}{
-\begin{center}
-\framebox{$
-\ba{c}
-\myruleform{\env \vturns \rho \leadsto E}
-\quad\quad\quad
-\TrRTAbs \quad
-  \myirule{\env, \rho_1 \leadsto x \vturns \rho_2 \leadsto E \quad\quad x~\mathit{fresh}}
-          {\env \vturns \rho_1 \iarrow \rho_2 \leadsto
-            \lambda\relation{x}{|\rho_1|}.E} 
-\\ \\
-\TrRIAbs \quad
-  \myirule{\env \vturns \rho \leadsto E}
-          {\env \vturns \forall \alpha. \rho \leadsto \Lambda\alpha.E} 
-\quad\quad\quad
-\TrRSimpl \quad
- \myirule{\env\langle\type\rangle = \Theta \quad\quad \env; \Theta
-   \turns_\downarrow \type \leadsto E}
-          {\env \vturns \type \leadsto E} 
-\\ \\ \\
-\myruleform{\env; \Theta \turns_\downarrow \type \leadsto E}
-\quad\quad\quad
-\TrIIAbs \quad
-  \myirule{\env \vturns \rho_1 \leadsto E_2 \quad\quad \env; \rho_2
-    \leadsto E_1~E_2
-    \turns_\downarrow \type \leadsto E_3}
-          {\env; \rho_1 \iarrow \rho_2 \leadsto E_1 \turns_\downarrow \type
-            \leadsto E_3}  
-\\ \\
-\TrIDone \quad
-  \myirule{}
-          {\env; \type \leadsto E \turns_\downarrow \type \leadsto E}  
-\quad\quad\quad
-\TrITAbs \quad
-  \myirule{\env; \rho[\rulet'/\alpha] \leadsto E_1~|\rulet'|\turns_\downarrow \type \leadsto
-  E_2}
-          {\env; \forall \alpha.\rho \leadsto E_1 \turns_\downarrow
-            \type \leadsto E_2}  
-\\ \\ \\
-\myruleform{\env\langle\type\rangle = \Theta}
-\quad\quad
-\TrLHere \quad
-  \myirule{\rulet \lhd \type}
-          {(\env,\rulet \leadsto E)\langle\type\rangle = \rulet \leadsto E}  
-\quad\quad
-\TrLThere \quad
-  \myirule{\rulet \mathop{\not\!\!\lhd} \type \quad\quad \env\langle\type\rangle = \Theta}
-          {(\env,\rulet \leadsto E)\langle\type\rangle = \Theta}  
-%%\\ \\
-%%\myruleform{\rho\lhd\type} \\ \\
-%%  \myirule{}
-%%          {\type \leadsto E \lhd \type}
-%%\quad\quad\quad
-%%  \myirule{\rho[\rulet'/\alpha] \lhd \type}
-%%          {\forall \alpha.\rho \lhd \type}
-%%\quad\quad\quad
-%%  \myirule{\rho' \lhd \type}
-%%          {\rho'' \iarrow \rho' \lhd \type}
-\ea
-$
-}
-\end{center}
-}
-
-\end{comment}
-
 In this section we explain the dynamic semantics of $\ourlang$ in terms
 of System F's dynamic semantics, by means of a type-directed translation. 
 This translation turns implicit contexts into explicit parameters and
@@ -274,10 +18,8 @@ corresponds to the grayed parts of Figures~\ref{fig:type}, \ref{fig:resolution1}
 \subsection{Type-Directed Translation}
 Figure~\ref{fig:type} presents the translation rules that convert $\ourlang$
 expressions into ones of System F. 
-The gray parts of the figure essentially extend the type system with the necessary
+The gray parts of the figure extend the type system with the necessary
 information for the translation.
-%%, but for readability we have omitted the
-%%earlier gray-shaded conditions.
 
 The syntax of System F is as follows: 
 {\small
@@ -288,203 +30,103 @@ The syntax of System F is as follows:
     \mid \Lambda \alpha . E \mid E\;T 
   \end{array} \]}
 
-With respect to the type system the type environments $\Gamma$ remain
-the same. However, implicit environments $\env$ need to be extended with
-evidence information for the translation, thus becoming
-\emph{translation} environments:
+The gray extension to the syntax of type environments annotates very
+implicit rule type with explicit System F evidence in the form of a 
+term variable $x$.
 
-{\small
-  \[ \begin{array}{llrl}
-\text{Translation Environments} & \env & ::= & \epsilon \mid \env, \rulet~\gbox{\leadsto E} \\
-  \end{array} \]}
-
-The main translation judgment, which adapts the typing judgment, is 
-\begin{center}
-  $\tenv \mid \denv \turns \relation{e}{\rho}~\gbox{\leadsto E}$
-\end{center}
-This judgment states that the translation of $\ourlang$ expression $e$ with
-type $\rho$ is System~F expression $E$, with respect to type environment
-$\tenv$ and translation
-environment $\denv$. The translation environment $\denv$ relates each
-rule type in the earlier implicit environment to a System~F variable
-$x$; %\bruno{This should be System F expression, right?};
-% \bruno{In general it is an expression right? Not limited to variables.}\tom{
-% The implicit abstraction rule always introduces a variable and there is no
-% other rule that extends the implicit environment.
-% }
-this
-variable serves as explicit value-level evidence for the implicit rule.
-Lookup
-in the translation environment is defined similarly to lookup in the
-implicit environment, except that the lookup now returns a pair of a rule type
-and an evidence variable.
+%- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+\paragraph{Translation of Types}
 
 The function $|\cdot|$ takes 
-$\ourlang$ types $\rho$ to System F types T: 
-\begin{center}
-\colorbox{light}{\parbox{0.3\textwidth}{\begin{eqnarray*}
+$\ourlang$ types $\rulet$ to System F types T: 
+\begin{eqnarray*}
 |\alpha| & = & \alpha \\
-%%|\tyint| & = & \tyint \\
 |\rulet_1 \arrow \rulet_2| & = & |\rulet_1| \arrow |\rulet_2| \\
 |\forall \alpha. \rulet| & = & \forall \alpha. |\rulet| \\
 |\rulet_1 \iarrow \rulet_2| & = & |\rulet_1| \arrow |\rulet_2| %\\
 \end{eqnarray*}
-% \end{mdframed}
-}}
-\end{center}
+Its reveals that implicit $\ourlang$ arrows are translated to explicit System F function arrows.
 
-
-%Note that an empty context is translated to \tyunit{} in order to delay the
-%evaluation of the rule.l
 %- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-%\paragraph{Translating Empty Contexts}
+\paragraph{Translation of Terms}
 
-% WC: I commented out the following paragraph because I thought this
-% is too much
-% For simplicity of presentation, Figure~\ref{f:trans} ignores the
-% issue of empty contexts $\varnothing$. The simplified translation
-% does not distinguish a rule with an empty context
-% $\ruleabs{(\varnothing \To \type)}{e}$ from its body $e$.
-% Nevertheless, in the operational semantics these two are different:
-% a rule defers the evaluation of the rule body until explicit rule
-% application. To properly capture this ``lazy'' evaluation strategy,
-% we turn an empty context into an explicit \tyunit{} function
-% parameter:
+The type-directed translation judgment, which extends the typing judgment, is 
+\begin{center}
+  $\tenv \turns \relation{e}{\rulet}~\gbox{\leadsto E}$
+\end{center}
+This judgment states that the translation of $\ourlang$ expression $e$ with
+type $\rulet$ is System~F expression $E$, with respect to type environment
+$\tenv$.
 
 Variables, lambda abstractions and applications
 are translated straightforwardly. Perhaps the only noteworthy 
-rule is \TyIAbs. This rule associates the type $\rho_1$ with 
-the fresh variable $x$ in the translation environment ($\denv$). 
+rule is \TyIAbs. This rule associates the type $\rulet_1$ with 
+the fresh variable $x$ in the type environment. 
 This creates the necessary evidence that can be used by resolutions 
-in the body of the rule abstraction to construct System F terms of type $|\rho_1|$. 
-% The resolution process 
-% will lookup the translation environment for a suitably matching rule. 
-% If a suitable rule is found, the associated variable will then 
-% be used to construct the evidence term.
+in the body of the rule abstraction to construct System F terms of type $|\rulet_1|$. 
 
+%- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 \paragraph{Resolution}
-The more interesting part of the translation happens when 
-resolving queries. Queries are translated by rule $\TyQuery$ using the auxiliary
-resolution judgment $\vturns$:
-\begin{center}
-$\bar{\alpha}; \env \vturns \rho~\gbox{\leadsto E}$
-\end{center}
-
-\noindent which is shown, in deterministic form, in Figure~\ref{fig:resolution2}.
-%%
-%% defined by rule $\TrRes$\bruno{Need to add names 
-%%to the figures!}. 
-The translation of resolution basically extends the type-checking
-process with simultaneously building System F evidence terms. The mechanism that builds
-evidence dualizes the process of peeling off abstractions and universal 
+The more interesting part of the translation happens when resolving queries.
+Queries are translated by rule $\TyQuery$ using the auxiliary resolution
+judgment $\vturns$:
+\begin{equation*}
+\tenv \vturns \rulet~\gbox{\leadsto E}
+\end{equation*}
+which is shown, in deterministic form, in Figure~\ref{fig:resolution2}.
+The translation builds a System F term as evidence for the resolution.
+The mechanism that builds evidence dualizes the process of peeling off
+abstractions and universal 
 quantifiers. The rule \mylabel{R-IAbs}~wraps a lambda binder with a fresh variable 
 $x$ around a System F expression $E$, which is generated from the resolution 
-for the head of the rule ($\rho_2$). The rule \mylabel{R-TAbs}~wraps a type lambda binder 
-around the System F expression resulting from the resolution of $\rho$.
+for the head of the rule ($\rulet_2$). The rule \mylabel{R-TAbs}~wraps a type lambda binder 
+around the System F expression resulting from the resolution of $\rulet$.
+
+TODO
+
 For simple types \mylabel{R-Simp}, evidence $E_1$ is retrieved from matching 
 $\type$ and then used in the resolution process of the simple type 
 $\type$ with rule $\turns_\downarrow$:
 
 \begin{center}
-$\bar{\alpha};\env; \rho~\gbox{\leadsto E_1} \turns_\downarrow \type~\gbox{\leadsto E_2}$
+$\bar{\alpha};\env; \rulet~\gbox{\leadsto E_1} \turns_\downarrow \type~\gbox{\leadsto E_2}$
 \end{center}
 
 The rules \mylabel{I-IAbs}~and \mylabel{I-TAbs}~are the most interesting in the translation. 
-In rule \mylabel{I-IAbs}~we need evidence for $\rho_2$ to build evidence for $\type$, 
-but all we have is evidence $E_1$ for $\rho_1 \iarrow \rho_2$. However, we can 
-construct evidence for $\rho_2$, by generating evidence $E_2$ for $\rho_1$
+In rule \mylabel{I-IAbs}~we need evidence for $\rulet_2$ to build evidence for $\type$, 
+but all we have is evidence $E_1$ for $\rulet_1 \iarrow \rulet_2$. However, we can 
+construct evidence for $\rulet_2$, by generating evidence $E_2$ for $\rulet_1$
 and then simply applying $E_1$ to $E_2$. Rule \mylabel{I-TAbs}~is similar: we need 
-evidence for $\rho$, but all we have is evidence $E_1$ for $\forall \alpha. \rho$. 
-To create evidence for $\rho$ we can substitute $\alpha$ by some type 
-$\rho'$ in $\rho$ and generate a term which is the type application of 
-$E_1$ to $|\rho'|$. 
+evidence for $\rulet$, but all we have is evidence $E_1$ for $\forall \alpha. \rulet$. 
+To create evidence for $\rulet$ we can substitute $\alpha$ by some type 
+$\rulet'$ in $\rulet$ and generate a term which is the type application of 
+$E_1$ to $|\rulet'|$. 
 
 Finally, matching ($\elookup{\env}{\type}$) also needs to be
 extended with evidence generation, but this extension is
 straightforward.
 
-%- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-% Note how empty type contexts are also treated specially in the translation rules.
-% They are translated respectively to $\tyunit$ abstractions and $\unit$ applications.
+\paragraph{Meta-Theory} The type-directed translation of $\ourlang$ to System F exhibits a number
+of desirable properties.
 
-% \paragraph{Coherence of Translation}
-
-% The type system of Section~\ref{s:types} imposes the condition
-% $\welldefined(\env)$ to ensure coherence. Because translation performs
-% resolution statically, it requires a stronger condition, $\stable{(\Delta)}$.
-% Consider the following query:
-% \begin{center}
-%   $\myset{\relation{\forall \alpha. \alpha \to \alpha}{x}};
-%   \myset{\relation{\tyint \to \tyint}{y}} \vturns \qask(\beta \to
-%   \beta)$
-% \end{center}
-% where $\beta$ is a free type variable. By design, the operational semantics
-% always chooses the most specific rule in the environment at runtime. For the
-% sake of coherence, the \welldefined predicate in the type system
-% guarantees that all possible runtime instantiations of $\beta\to\beta$ can be
-% resolved. 
-
-% In contrast, the translation must decide statically on a single rule
-% that is the most specific one for all possible instantiations.
-% In the example, this decision cannot be made statically without knowing more about $\beta$. 
-% The rule $\forall \alpha. \alpha\to\alpha$ covers all possible cases, but when
-% $\beta$ is $\tyint$, it is not the most specific one. Hence, static resolution
-% cannot be performed in a coherent manner. 
-% The \stable{} predicate enforces static coherence, and is responsible for
-% rejecting this problematic example.
-
-% \paragraph{Incompleteness of the Translation}
-% As the example above shows, not all well-typed $\ourlang$ programs
-% have a translation; i.e. \\
-% $\exists \denv. \welldefined(\dom(\denv)) \wedge \neg
-% \stable(\denv)$. It is because $\ourlang$ does not respect
-% parametricity, whereas System F does. 
-
-% From this remark on parametricity we can conclude that the operational
-% semantics is a viable choice for systems where parametricity is not a
-% concern and run-time type information is available. Mainstream
-% object-oriented languages like Java and C\# fit this category.  On the
-% other hand the elaboration semantics is a better match for functional
-% programming languages concerned about parametricity (such as Haskell).
-
-% As a remark we note that the elaboration semantics respects
-% \emph{parametricity}~\cite{}, whereas the operational semantics does
-% not. The example |f1| is a good representative of this fact. In
-% System~F the only function that can inhabit the type |forall b . b ->
-% b| is the identity function. As such, the selection of the most
-% general instance in the two examples is the only possible choice for
-% an elaboration into System~F. However, as we have just argued, this
-% choice would be incoherent.
-
-% The availability of run-time type information in the operational
-% semantics, allows resolution to depend on that information. This 
-% means that resolution can be more powerful and yet retain 
-% coherence, but it also means that we lose parametricity. 
-% Indeed, despite having the type |forall b . b -> b|, when applied 
-% to an integer, the function |f1| is the successor (and not the
-% identity) function.
-
-%\paragraph{Correctness of Translation}
-
-% The correctness of the translation is captured in two properties: type
-% preservation and semantics preservation.
-% Type preservation relates the type systems of $\ourlang$ and
-% System~F. The translated expression of a well typed $\ourlang$
-% expression is well typed.
-
-\thmtranstypreserve
-\begin{proof} (Sketch)
-  We first prove\footnote{in the technical report} the more general lemma ``if $\tenv \mid \denv \turns
-  \relation{e}{\rho} \leadsto E$, then $|\tenv|,|\denv| \turns
-  \relation{E}{|\rho|}$'' by induction on the derivation of
-  translation. Then, the theorem trivially follows.
-\end{proof}
+\begin{theorem}[Type-preserving translation]\label{thm:type:preservation} Let $e$ be an $\ourlang$
+  expression, $\rulet$ be a type, $\tenv$ a type environment and $E$ be a System F expression. If
+  $\tenv \turns \relation{e}{\rulet} \leadsto E$, then $|\tenv| \turns \relation{E}{|\rulet|}$.
+\end{theorem}
+Here we define the translation of the type environment form $\ourlang$ to System F as:
+\begin{equation*}
+\begin{array}{rcl@{\hspace{2cm}}rcl}
+|\epsilon| & = & \epsilon & |\tenv,\alpha| & = & |\tenv|, \alpha \\
+|\tenv,x : \rulet| & = & |\tenv|, x : |\rulet| &
+|\tenv, \rulet \leadsto x| & = & |\tenv|, x : |\rulet|
+\end{array}
+\end{equation*}
 
 An important lemma in the theorem's proof is the type preservation of 
 resolution.
 \begin{lemma}[Type-Preserving Resolution]
-Let $\env$ be an implicit environment, $\rho$ be a type and E be a System F expression.
-If $\bar{\alpha};\env \vdash_r \rho \leadsto E$, then $|\env| \vdash E : |\rho|$.
+Let $\tenv$ be a type environment, $\rulet$ be a type and E be a System F expression.
+If $\tenv \vturns \rulet \leadsto E$, then $|\tenv| \vdash E : |\rulet|$.
 \end{lemma}
 % Both the theorem and the lemma are proven in Appendix~\ref{proof:preservation}.
 
@@ -492,17 +134,19 @@ Moreover, we can express three key properties of Figure~\ref{fig:resolution2}'s
 definition of resolution in terms of the generated evidence.
 \begin{lemma}[Determinacy]
 The generated evidence of resolution is uniquely determined.
-\[\forall \env, \rho, E_1, E_2, \bar{\alpha}: \quad\quad \bar{\alpha};\env \vdash_r \rho \leadsto E_1 ~\wedge~ \bar{\alpha};\env \vdash_r \rho \leadsto E_2 \quad\Rightarrow\quad E_1 = E_2 \]
+\[\forall \tenv, \rulet, E_1, E_2: \quad\quad \tenv \ivturns \rulet \leadsto E_1 ~\wedge~ \tenv \ivturns \rulet \leadsto E_2 \quad\Rightarrow\quad E_1 = E_2 \]
 \end{lemma}
 \begin{lemma}[Soundness]
-Figure~\ref{fig:resolution2}'s definition of resolution (here denoted $\vdash_r^3$)
-is sound (but incomplete) with respect to Figure~\ref{fig:resolution1}'s definition
-(here denoted $\vdash_r^2$).
-\[\forall \env, \rho, E: \quad\quad \env \vdash_r^3 \rho \leadsto E \quad\Rightarrow\quad \env \vdash_r^2 \rho \leadsto E \]
+Figure~\ref{fig:resolution2}'s definition of resolution is sound (but
+incomplete) with respect to Figure~\ref{fig:resolution1}'s definition.
+\[\forall \tenv, \rulet, E: \quad\quad \tenv \ivturns \rulet \leadsto E \quad\Rightarrow\quad \tenv \vturns \rulet \leadsto E \]
 \end{lemma}
 \begin{lemma}[Coherence]
 Resolution is stable under substitution.
-\[\forall \env, \rho, E, \bar{\alpha}, \theta: \quad\quad \bar{\alpha};\env \vdash_r \rho \leadsto E ~\wedge~ \mathit{dom}(\theta) \cap \bar{\alpha} = \emptyset \quad\Rightarrow\quad \bar{\alpha};\theta(\env) \vdash_r \theta(\rho) \leadsto \theta(E) \]
+\[\forall \tenv,\alpha,\tenv',\sigma,\rulet, E: \quad\quad 
+\tenv,\alpha,\tenv' \ivturns \rulet \leadsto E \quad\wedge\quad \tenv \vdash \sigma
+\quad\Rightarrow\quad 
+\tenv,\tenv'[\sigma/\alpha] \ivturns \rulet[\sigma/\alpha] \leadsto E[|\sigma|/\alpha] \]
 \end{lemma}
 
 %-------------------------------------------------------------------------------
@@ -512,46 +156,46 @@ The evidence generation in Figure~\ref{fig:algorithm} is largely similar to
 that in the deterministic specification of resolution in
 Figure~\ref{fig:resolution2}.
 
-The main difference, and complication, is due to the fact that the evidence for
-type instantiation and recursive resolution is needed before these operations
-actually take place, as the algorithm has to postpone them. For this reason, the
-algorithm first produces placeholders that are later substituted for the actual
-evidence.
+% The main difference, and complication, is due to the fact that the evidence for
+% type instantiation and recursive resolution is needed before these operations
+% actually take place, as the algorithm has to postpone them. For this reason, the
+% algorithm first produces placeholders that are later substituted for the actual
+% evidence.
+% 
+% The central relation is $\rulet; \bar{\rulet}; \bar{\alpha} \gbox{; \bar{\omega};
+% E}\turns_{\mathit{match}} \tau \hookrightarrow \bar{\rulet}' \gbox{;
+% \bar{\omega}'; E'}$. It captures the matching instantiation of context type
+% $\rulet$ against simple type $\tau$.  The input evidence for $\rulet$ is $E$, and
+% the output evidence for the instantiation is $E'$. The accumulating parameters
+% $\bar{\alpha}$ and $\bar{\rulet}$ denote that the instantiation of type variables
+% $\bar{\alpha}$ and the recursive resolution of $\bar{\rulet}$ have been
+% postponed. We use the $\bar{\alpha}$ themselves as convenient placeholders for
+% the instantiating types, and we use the synthetic $\bar{\omega}$ as placeholders for
+% the evidence of the $\bar{\rulet}$. The rules \mylabel{MTC-Abs} and \mylabel{MTC-Abs} 
+% introduce these two kinds of placeholders in the evidence. The former kind, $\bar{\alpha}$,
+% are substituted in rule \mylabel{MTC-Simp} where the actual type instantiatons $\bar{\theta}$
+% are computed. The latter kind, $\bar{\omega}$, are substituted later in rule \mylabel{Alg-Simp} where
+% the recursive resolutions take place.
 
-The central relation is $\rho; \bar{\rho}; \bar{\alpha} \gbox{; \bar{\omega};
-E}\turns_{\mathit{match}} \tau \hookrightarrow \bar{\rho}' \gbox{;
-\bar{\omega}'; E'}$. It captures the matching instantiation of context type
-$\rho$ against simple type $\tau$.  The input evidence for $\rho$ is $E$, and
-the output evidence for the instantiation is $E'$. The accumulating parameters
-$\bar{\alpha}$ and $\bar{\rho}$ denote that the instantiation of type variables
-$\bar{\alpha}$ and the recursive resolution of $\bar{\rho}$ have been
-postponed. We use the $\bar{\alpha}$ themselves as convenient placeholders for
-the instantiating types, and we use the synthetic $\bar{\omega}$ as placeholders for
-the evidence of the $\bar{\rho}$. The rules \mylabel{MTC-Abs} and \mylabel{MTC-Abs} 
-introduce these two kinds of placeholders in the evidence. The former kind, $\bar{\alpha}$,
-are substituted in rule \mylabel{MTC-Simp} where the actual type instantiatons $\bar{\theta}$
-are computed. The latter kind, $\bar{\omega}$, are substituted later in rule \mylabel{Alg-Simp} where
-the recursive resolutions take place.
-
-Now we can state the correctness of the algorithm.
+With the evidence we can state the correctness of the algorithm.
 \begin{theorem}[Partial Correctness]
-Let $\env$ be an implicit environment, $\rho$ be a type, E be a System F expression and $\bar{\alpha}$ a set of type variables.
-Assume that $\epsilon \vdash_{\mathit{unamb}} \rho$ and also $\forall \rho_i \in \env: \epsilon \vdash_{\mathit{unamb}} \rho_i$.
-Then $\bar{\alpha};\env \vdash_r \rho \leadsto E$ if and only if $\bar{\alpha};\env \vdash_{\mathit{alg}} \rho \leadsto E$,
+Let $\tenv$ be a type environment, $\rulet$ be a type and E be a System F expressions.
+Assume that $\epsilon \vdash_{\mathit{unamb}} \rulet$ and also $\forall \rulet_i \in \tenv: \epsilon \vdash_{\mathit{unamb}} \rulet_i$.
+Then $\tenv \ivturns \rulet \leadsto E$ if and only if $\tenv \vdash_{\mathit{alg}} \rulet \leadsto E$,
 provided that the algorithm terminates.
 \end{theorem}
 
 %-------------------------------------------------------------------------------
 \subsection{Dynamic Semantics}
-Finally, we define the dynamic semantics of $\ourlang$ as the composition
-of the type-directed translation and System F's dynamic semantics. 
-Following Siek's notation~\cite{systemfg}, this dynamic semantics is:
-\[ \mathit{eval}(e) = V \quad\quad \textit{where } \epsilon\mid\epsilon \turns \relation{e}{\rho} \leadsto E \textit{ and } E \rightarrow^* V  \]
+Finally, we define the dynamic semantics of $\ourlang$ as the composition of
+the type-directed translation and System F's dynamic semantics.  Following
+Siek's notation~\cite{systemfg}, this dynamic semantics is:
+\[ \mathit{eval}(e) = V \quad\quad \textit{where } \epsilon \turns \relation{e}{\rulet} \leadsto E \textit{ and } E \rightarrow^* V  \]
 with $\rightarrow^*$ the reflexive, transitive closure of System F's standard single-step call-by-value reduction relation (see \cite[Chapter 23]{tapl}).
 
 Now we can state the conventional type safety theorem for $\ourlang$:
 \begin{theorem}[Type Safety]
-If $\epsilon \mid \epsilon \turns \relation{e}{\rho}$, then $\mathit{eval}(e) = V$ for
+If $\epsilon \turns \relation{e}{\rulet}$, then $\mathit{eval}(e) = V$ for
 some System F value $V$.
 \end{theorem}
 The proof follows trivially from Theorem~\ref{thm:type:preservation}.
