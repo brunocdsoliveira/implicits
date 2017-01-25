@@ -317,26 +317,63 @@ resolution renders the meaning of a program ambiguous.
 %-------------------------------------------------------------------------------
 \subsection{Deterministic Resolution}\label{subsec:det}
 
-To help define deterministic resolution, we provide a variant of the syntax of the calculus:
+In order to eradicate the non-determinism in resolution we implement the following
+measures:
+\begin{enumerate}
+\item We provide a syntax-directed definition of resolution where at most one
+      rule applies in any given situation. This approach organizes resolution into
+      two alternating phases that pivots on an environment lookup (\mylabel{R-IVar}):
+      the first phase only allows  only elimination rules
+      (\mylabel{R-TAbs},\mylabel{R-IAbs}) and the second phase only introduction
+      rules (\mylabel{R-TApp},\mylabel{R-IApp}).
+
+\item We make environment lookup (\mylabel{R-IVar}) deterministic by implementing
+      a stack discipline: only the first (in LIFO order) matching rule type can be selected.
+
+\item We rule out two forms of non-determinism in the instantiation of
+      polymorphic types:
+      \begin{enumerate}
+      \item We disallow ambiguous types where quantified type variables
+            are not determined by the head of the type, such as 
+            $\forall \alpha.\tyint$ or $\forall \alpha. \alpha \iarrow \tyint$.
+
+      \item We do not allow type variables to be instantiated by types with
+            abstractions (universal quantifiers or implicit arrows) as these
+            may subsequently be eliminated again (possibly by instantiation 
+            with other abstractions). For instance, $\forall \alpha. \alpha \iarrow \alpha$
+	    can be instantiated directly with $[\tyint/\alpha]$ to $\tyint
+\iarrow \tyint$.  Alternatively, it could be first instantiated with $[(\forall
+\beta. \beta \iarrow \beta)/\alpha]$ to $(\forall \beta. \beta \iarrow \beta)
+\iarrow \forall \beta'. \beta' \iarrow \beta'$, and then after further
+instantiation of the outer context and of $\beta'$ with $[\tyint/\beta']$ also
+to $\tyint \iarrow \tyint$.
+ 
+      \end{enumerate}
+
+\end{enumerate}
+
+To help define deterministic resolution, we provide a variant of the syntax of
+the calculus:
 
 {\bda{llrl}
-    \text{Simple Types} & \type  & ::=  & \alpha \mid \rulet_1 \arrow \rulet_2 \\
     \text{Context Types} & \rulet \hide{\in 2^\meta{RType}} & ::= & 
     \forall \alpha. \rulet \mid \rulet_1 \iarrow \rulet_2 \mid \type \\
-    \textcolor{blue}{\text{Substitution Types}} & \suty & ::=  & \alpha \mid \suty \arrow \suty
+    \text{Simple Types}  & \type                            & ::=  & \alpha \mid \rulet_1 \arrow \rulet_2 \\
+    \text{Monotypes}     & \suty                            & ::=  & \alpha \mid \suty \arrow \suty
     % \text{Expressions} & |e| & ::=  &
     % x \mid \lambda (x:\rulet).e \mid e_1\,e_2 \mid \Lambda \alpha. e \mid e\,\rulet \mid \query \rulet \mid \ilambda \rulet. e \mid e_1 \with e_2 \\
   \eda }
-\bruno{Should we call substitution types, monotypes instead?}
 
-This variant of the syntax splits types into \emph{simple} types and \emph{context} types. 
-\textit{Simple types} $\type$ comprise two type constructs (type variables
-$\alpha$ and function types $\rulet_1 \arrow \rulet_2$). 
-\textit{Context types} $\rulet$ comprise the types which participate in the 
-(recursive) resolution of rules. The type abstraction $\forall \alpha. \rulet$
-as well as the \emph{rule types} $\rulet_1 \iarrow \rulet_2$ are the main 
-constructs, while other (simple) types act as base cases in the resolution process. 
-Expressions remain unchanged.
+This variant of the syntax splits types into three different sorts:
+\emph{context} types, \emph{simple} types and \emph{monotypes}.  \emph{Context
+types} $\rulet$ correspond to the original types $\rulet$.  \emph{Simple types}
+$\type$ are a restricted form of context types without toplevel quantifiers and
+toplevel implicit arrows. \emph{Monotypes} $\suty$ are a further refinement of
+simple types without universal quantifiers and implicit arrows anywhere.
+
+
+
+TODO
 
 % \bruno{Had to remove $\Theta$ (singleton environment) to unify the figures.}
 
