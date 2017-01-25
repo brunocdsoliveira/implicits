@@ -69,43 +69,30 @@ in the body of the rule abstraction to construct System F terms of type $|\rulet
 \paragraph{Resolution}
 The more interesting part of the translation happens when resolving queries.
 Queries are translated by rule $\TyQuery$ using the auxiliary resolution
-judgment $\vturns$:
+judgment $\ivturns$:
 \begin{equation*}
-\tenv \vturns \rulet~\gbox{\leadsto E}
+\tenv \ivturns \rulet~\gbox{\leadsto E}
 \end{equation*}
-which is shown, in deterministic form, in Figure~\ref{fig:resolution2}.
-The translation builds a System F term as evidence for the resolution.
+which is shown, in deterministic form, in Figure~\ref{fig:resolution2}.  The
+translation builds a System F term as evidence for the resolution.  
+
 The mechanism that builds evidence dualizes the process of peeling off
-abstractions and universal 
-quantifiers. The rule \mylabel{R-IAbs}~wraps a lambda binder with a fresh variable 
-$x$ around a System F expression $E$, which is generated from the resolution 
-for the head of the rule ($\rulet_2$). The rule \mylabel{R-TAbs}~wraps a type lambda binder 
-around the System F expression resulting from the resolution of $\rulet$.
+abstractions and universal quantifiers: Rule \mylabel{R-IAbs}~wraps a lambda
+binder with a fresh variable $x$ around a System F expression $E$, which is
+generated from the resolution for the head of the rule ($\rulet_2$). Similarly,
+rule \mylabel{R-TAbs}~wraps a type lambda binder around the System F expression
+resulting from the resolution of $\rulet$.
 
-TODO
+For simple types rule $\type$ rule \mylabel{R-Simp} delegates the work of
+building evidence, when a matching rule $\rulet$ type is found in the
+environment, to rule \mylabel{L-RuleMatch}. The evidence consists of two parts:
+$E$ is the evidence of matching $\type$ against $\rulet$. This match contains
+placeholders $\bar{x}$ for the contexts whose resolution is postponed by rule
+\mylabel{M-IAbs}. It falls to rule \mylabel{L-RuleMatch} to perform these
+postponed resolutions, obtain their evidence $\bar{E}$ and fill in the
+placeholders.
 
-For simple types \mylabel{R-Simp}, evidence $E_1$ is retrieved from matching 
-$\type$ and then used in the resolution process of the simple type 
-$\type$ with rule $\turns_\downarrow$:
-
-\begin{center}
-$\bar{\alpha};\env; \rulet~\gbox{\leadsto E_1} \turns_\downarrow \type~\gbox{\leadsto E_2}$
-\end{center}
-
-The rules \mylabel{I-IAbs}~and \mylabel{I-TAbs}~are the most interesting in the translation. 
-In rule \mylabel{I-IAbs}~we need evidence for $\rulet_2$ to build evidence for $\type$, 
-but all we have is evidence $E_1$ for $\rulet_1 \iarrow \rulet_2$. However, we can 
-construct evidence for $\rulet_2$, by generating evidence $E_2$ for $\rulet_1$
-and then simply applying $E_1$ to $E_2$. Rule \mylabel{I-TAbs}~is similar: we need 
-evidence for $\rulet$, but all we have is evidence $E_1$ for $\forall \alpha. \rulet$. 
-To create evidence for $\rulet$ we can substitute $\alpha$ by some type 
-$\rulet'$ in $\rulet$ and generate a term which is the type application of 
-$E_1$ to $|\rulet'|$. 
-
-Finally, matching ($\elookup{\env}{\type}$) also needs to be
-extended with evidence generation, but this extension is
-straightforward.
-
+%- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 \paragraph{Meta-Theory} The type-directed translation of $\ourlang$ to System F exhibits a number
 of desirable properties.
 
