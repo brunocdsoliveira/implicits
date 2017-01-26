@@ -352,8 +352,12 @@ to $\tyint \iarrow \tyint$.
 
 \end{enumerate}
 
-To help define deterministic resolution, we provide a variant of the syntax of
-the calculus:
+
+%- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+\paragraph{Revised Syntax}
+
+To implement measures (1) and (3b), we provide a variant of the syntax of the
+calculus:
 
 {\bda{llrl}
     \text{Context Types} & \rulet \hide{\in 2^\meta{RType}} & ::= & 
@@ -365,17 +369,17 @@ the calculus:
   \eda }
 
 This variant of the syntax splits types into three different sorts:
-\emph{context} types, \emph{simple} types and \emph{monotypes}.  \emph{Context
-types} $\rulet$ correspond to the original types $\rulet$.  \emph{Simple types}
+\emph{context} types, \emph{simple} types and \emph{monotypes}. \emph{Context
+types} $\rulet$ correspond to the original types $\rulet$. \emph{Simple types}
 $\type$ are a restricted form of context types without toplevel quantifiers and
-toplevel implicit arrows. \emph{Monotypes} $\suty$ are a further refinement of
-simple types without universal quantifiers and implicit arrows anywhere.
+toplevel implicit arrows. We will see that the distinction between context
+types $\rulet$ and simple types $\type$ convenient for measure (1).
+\emph{Monotypes} $\suty$ are a further refinement of simple types without
+universal quantifiers and implicit arrows anywhere; they help us to implement
+measure (3b).
 
-
-
-TODO
-
-% \bruno{Had to remove $\Theta$ (singleton environment) to unify the figures.}
+%- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+\paragraph{Revised Resolution Rules}
 
 \newcommand{\elookup}[3][\bar{\alpha}]{{#2}_{#1}\langle{#3}\rangle}
 \newcommand{\ivturns}{\mathop{\dot{\turns}_{r}}}
@@ -385,7 +389,8 @@ TODO
 \framebox{$
 \ba{c}
 \Sigma ::= \epsilon \mid \Sigma, \rulet~\gbox{\leadsto x} \\ \\
-\multicolumn{1}{c}{\myruleform{\tenv \ivturns \rulet~\gbox{\leadsto E}}} \\ \\
+\myruleform{\tenv \ivturns \rulet~\gbox{\leadsto E}}
+\quad\quad\quad 
 \mylabel{R-Main} \quad
   \myirule{\mathit{tyvars}(\tenv);\tenv \ivturns \rulet~\gbox{\leadsto E}}
           {\tenv \ivturns \rulet~\gbox{\leadsto E}} \\ \\
@@ -429,12 +434,12 @@ TODO
 \myruleform{\tenv; \rulet~\gbox{\leadsto E} \ivturns \type~\gbox{\leadsto E'}; \Sigma}\\ \\
 \mylabel{M-Simp} \quad
           {\tenv; \type~\gbox{\leadsto E} \ivturns \type~\gbox{\leadsto E}; \epsilon} \\ \\
-\mylabel{M-IAbs} \quad
+\mylabel{M-IApp} \quad
   \myirule{\tenv, \rulet_1 \gbox{\leadsto x}; \rulet_2 ~\gbox{\leadsto E\,x} \ivturns \type~\gbox{\leadsto E'}; \Sigma 
            \quad\quad\quad \gbox{x~\mathit{fresh}}
           }
           {\tenv; \rulet_1 \iarrow \rulet_2 ~\gbox{\leadsto E} \ivturns \type~\gbox{\leadsto E'}; \Sigma, \rulet_1~\gbox{\leadsto x}} \\ \\ 
-\mylabel{M-TAbs} \quad
+\mylabel{M-TApp} \quad
   \myirule{\tenv; \rulet[\suty/\alpha] ~\gbox{\leadsto E\,||\suty||} \ivturns \type~\gbox{\leadsto E'; \Sigma}
            \quad\quad\quad
            \tenv \turns \suty
@@ -446,92 +451,68 @@ $
 \end{center}
 }
 
-%if False
+Figure~\ref{fig:resolution2} shows our syntax-directed and unambiguous variant
+of resolution. 
 
-\figtwocol{fig:resolution2}{Deterministic Resolution}{
-\begin{center}
-\framebox{$
-\ba{c}
-\multicolumn{1}{c}{\myruleform{\env \vturns \rulet}} \\ \\
+The main judgement $\env \ivturns \rulet$ is simply a wrapper around the
+auxiliary judgement $\bar{\alpha};\env \ivturns \rulet$ that poulates $\bar{\alpha}$
+with the type variables in the environment at the point of the query:
+\newcommand{\tyvars}[1]{\mathit{tyvars}(#1)}
+\begin{equation*}
+\begin{array}{rcl@@{\hspace{2cm}}rcl}
+\tyvars{\epsilon}     & = & \epsilon &
+\tyvars{\tenv,\alpha} & = & \tyvars{\tenv},\alpha \\
+\tyvars{\tenv,x : \rulet} & = & \tyvars{\tenv} &
+\tyvars{\tenv,\rulet~\gbox{\leadsto x}} & = & \tyvars{\tenv} 
+\end{array}
+\end{equation*}
 
-\mylabel{R-TAbs} \quad  \myirule{\env \vturns \rulet}
-          {\env \vturns \forall \alpha. \rulet} 
-\quad\quad
-\mylabel{R-IAbs}\quad  \myirule{\env, \rulet_1 \vturns \rulet_2}
-          {\env \vturns \rulet_1 \iarrow \rulet_2} 
-\quad\quad
-\mylabel{R-Simp}\quad \myirule{\env\langle\type\rangle = \rulet \quad\quad \env; \rulet \turns_\downarrow \type}
-          {\env \vturns \type} 
-\\ \\
-\myruleform{\env; \rulet \turns_\downarrow \type} \\ \\
-\mylabel{I-Simp} \quad  \myirule{}
-          {\env; \type \turns_\downarrow \type}  
-\quad\quad
-\mylabel{I-TAbs} \quad  \myirule{\env; \rulet[\rulet'/\alpha] \turns_\downarrow \type}
-          {\env; \forall \alpha.\rulet \turns_\downarrow \type}  
-\quad\quad
-\mylabel{I-IAbs} \quad \myirule{\env \vturns \rulet_1 \quad\quad \env; \rulet_2 \turns_\downarrow \type}
-          {\env; \rulet_1 \iarrow \rulet_2 \turns_\downarrow \type}  
-\\ \\
-\myruleform{\env\langle\type\rangle = \rulet} \\ \\
-\mylabel{L-Head} \quad  \myirule{\rulet \lhd \type}
-          {(\env,\rulet)\langle\type\rangle = \rulet}  
-\quad\quad\quad
-\mylabel{L-Tail} \quad \myirule{\rulet'' \mathop{\not\!\!\lhd} \type \quad\quad \env\langle\type\rangle = \rulet'}
-          {(\env,\rulet'')\langle\type\rangle = \rulet'}  
-\\ \\
-\myruleform{\rulet\lhd\type} \\ \\
-\mylabel{M-Simp} \quad   \myirule{}
-          {\type \lhd \type}
-\quad\quad\quad
-\mylabel{M-TAbs} \quad \myirule{\rulet[\rulet'/\alpha] \lhd \type}
-          {\forall \alpha.\rulet \lhd \type}
-\quad\quad\quad
-\mylabel{M-IAbs} \quad \myirule{\rulet' \lhd \type}
-          {\rulet'' \iarrow \rulet' \lhd \type}
-\ea
-$
-}
-\end{center}
-}
+The judgement $\bar{\alpha};\tenv \ivturns \rulet$ is syntax-directed (measure (1)) on
+$\rulet$. Its job is to strip $\rulet$ down to a simple type $\type$ using
+literal copies of the original rules \mylabel{R-TAbs} and \mylabel{R-IAbs}, and
+then hand it off to the next judgement in rule \mylabel{R-Simp}.
 
-%endif
+The next judgement, $\bar{\alpha}; \tenv; \tenv' \ivturns \type$, scans for a
+rule type $\rulet$ in the environment $\tenv'$ that matches the simple type
+$\type$. Note that we maintain the invariant that $\tenv'$ is a prefix of
+$\tenv$ and thus $\rulet \in \tenv$.  The judgement's definition is
+syntax-directed on $\tenv'$ (measure (1)) and presents a deterministic
+alternative to the original rule \mylabel{R-IVar} by committing to the first
+matching rule type (measure (2)). Rules \mylabel{L-Var} and \mylabel{L-TyVar}
+skip the irrelevant entries in the environment.  Rule \mylabel{L-RuleMatch}
+identifies a matching rule type $\rulet$ with the third auxiliary judgement and
+takes care of recursively resolving its context types; details follow below.
+Finally, rule \mylabel{L-RuleNoMatch} skips a rule type in the environment if
+it does not match. If we take the empty substitution for $\theta$, then the
+rule's first condition implies the opposite of rule \mylabel{L-RuleMatch}'s
+first condition:
+\begin{equation*}
+\not\exists \Sigma:\quad\tenv;\rulet \ivturns \type; \Sigma
+\end{equation*}
+We come back to the reason why the condition is stronger than this in Section~\ref{sec:coherence}.
 
-To solve the two problems Figure~\ref{fig:resolution2} shows a syntax-directed and 
-unambiguous variant of resolution. 
-The main judgement $\bar{\alpha};\env \vturns \rulet$ is defined by
-mutual recursion with the auxiliary judgement $\bar{\alpha};\env;\rulet \turns_\downarrow \type$.
-The former judgement handles proper context types $\rulet$ in the obvious way
-and delegates to the latter judgement for simple types $\type$. Note that the 
-stratification of types into context and simple types makes all rules syntax-directed.
+Finally, the third auxiliary judgement, $\tenv;\rulet \ivturns \type; \Sigma$,
+determines whether the rule type $\rulet$ matches the simple type~$\type$. The
+judgement is defined by structural induction on $\rulet$, which is step by step
+instantiated to a simple type. Any recursive resolutions are deferred in this
+process -- the postponed resolvents are captured in the $\Sigma$ argument; this
+way they do not influence the matching decision and backtracking is avoided.
+Instead, the recursive resolutions are executed, as part of rule
+\mylabel{L-RuleMatch}, after the rule has been committed to
+Rule \mylabel{M-Simp} constitutes the base case where the ruletype equals the
+target type. Rule \mylabel{M-IApp} is the counterpart of the original
+rule \mylabel{R-IApp} where the impliciation arrow $\rulet_1 \iarrow \rulet_2$
+is instantiated to $\rulet_2$; the resolution of $\rulet_1$ is deferred.
+Lastly, rule \mylabel{M-TApp} is the couterpart of the original rule \mylabel{R-TApp}.
+The main difference is that, in keeping with measure (3b), it only uses
+monotypes $\suty$ to substitute the type variable.
 
-Rule types $\rulet_1 \Rightarrow \rulet_2$ are resolved by pushing $\rulet_1$ 
-to the implicit environment and then resolving $\rulet_2$ under that environment 
-\mylabel{R-IAbs}. Type abstractions $\forall \alpha. \rulet$ are resolved by peeling off 
-the universal quantifier and then resolving $\rulet$ against the implicit environment \mylabel{R-TAbs}. 
-A simple type $\type$ is resolved in terms of the \emph{first} matching context type
-$\rulet$ found in the implicit environment $\mylabel{R-Simp}$. The bias towards the first avoids ambiguity when
-there are multiple matching context type.
+%- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+\paragraph{Non-Ambiguity Constraints}
 
-The partial function $\env\langle\type\rangle$ returns the
-\emph{first} matching context type found in the implicit environment.
-Whether a context type $\rulet$
-matches a simple type $\type$ is defined by $\rulet \lhd \type$.  In essence, a
-context type matches a simple type if the simple type is an instance of its
-right-most head. 
+TODO
 
-The judgement $\bar{\alpha};\env;\rulet \turns_\downarrow \type$ is defined by three rules
-that mirror the three rules of the judgement $\rulet \lhd \type$. These rules
-peel off from left to right the universal quantifiers and rule contexts
-until the target simple type is obtained: 
-\begin{itemize}
-\item Universal quantifiers are eliminated by means of appropriate instantiation \mylabel{I-TAbs}. 
-      Note that thanks to the well-formedness condition on types, the type instantiation
-      is unambiguous.
-\item Contexts are eliminated by means of recursive resolution \mylabel{I-IAbs}.
-\end{itemize}
-
-Note that while the rules \mylabel{I-TAbs} and \mylabel{M-TAbs} do not explain
+Note that while the rules \mylabel{I-TAbs} and \mylabel{M-TApp} do not explain
 how the substitution $[\rulet'/\alpha]$ should be obtained, there is in fact no
 ambiguity here. Indeed, there is at most one substitution for which the judgement holds.
 Consider the case of matching $\forall \alpha. \alpha \arrow \tyint$ with the
@@ -576,8 +557,9 @@ Finally, the unambiguity condition is also imposed on the queried type $\rulet$ 
 rule \mylabel{Ty-Query} because this type too may extend the implicit environment
 in rule \mylabel{R-IAbs}.
 
+
 %-------------------------------------------------------------------------------
-\subsection{Coherence Enforcement}
+\subsection{Coherence Enforcement}\label{sec:coherence}
 
 In order to enforce coherence, rule \mylabel{L-Tail} makes sure that the
 decision to not select a context type is stable under all possible
@@ -840,11 +822,11 @@ could happen when computing for example $\mathit{mgu}_{\alpha}(\forall \beta.\be
         }
         {\bar{\alpha}; \tenv; \type'~\gbox{\leadsto E}; \Sigma \alg \type~\gbox{\leadsto ||\theta||(E)}; \theta(\Sigma)}  \\ \\
 
-\mylabel{AM-IAbs}\quad
+\mylabel{AM-IApp}\quad
 \myirule{\bar{\alpha}; \tenv, \rulet_1~\gbox{\leadsto x}; \rulet_2~\gbox{\leadsto E\,x}; \rulet_1~\gbox{\leadsto x}, \Sigma \alg \type~\gbox{\leadsto E'}; \Sigma'\quad\quad \gbox{x~\mathit{fresh}}}
         {\bar{\alpha}; \tenv; \rulet_1 \iarrow \rulet_2~\gbox{\leadsto E}; \Sigma \alg \type~\gbox{\leadsto E'}; \Sigma'}  \\ \\
 
-\mylabel{AM-TAbs}\quad
+\mylabel{AM-TApp}\quad
 \myirule{\bar{\alpha},\alpha; \tenv; \rulet~\gbox{\leadsto E\,\alpha}; \Sigma \alg \type~\gbox{\leadsto E'}; \Sigma'}
         {\bar{\alpha}; \tenv; \forall \alpha. \rulet~\gbox{\leadsto E}; \Sigma \alg \type~\gbox{\leadsto E'}; \Sigma'}  \\ \\
 
