@@ -165,28 +165,6 @@ literals and types.
 { \tenv \turns \relation{?\rulet}{\rulet}~\gbox{\leadsto E}
 } 
 \eda
-\bda{c}
-\myruleform{\bar{\alpha} \vdash_{\mathit{unamb}} \rulet} \\ \\
-\mylabel{UA-TAbs} \quad
-\myirule{\bar{\alpha},\alpha \vdash_{\mathit{unamb}} \rulet}
-        {\bar{\alpha} \vdash_{\mathit{unamb}} \forall \alpha.\rulet} 
-\quad\quad\quad
-\mylabel{UA-IAbs} \quad
-\myirule{\epsilon \vdash_{\mathit{unamb}} \rulet_1 \quad\quad \bar{\alpha} \vdash_{\mathit{unamb}} \rulet_2}
-        {\bar{\alpha} \vdash_{\mathit{unamb}} \rulet_1 \iarrow \rulet_2} \\ \\
-% \mylabel{UA-TAbsAlt} \quad
-% \myirule{\bar{\alpha} \vdash_{\mathit{unamb}} \rulet}
-%         {\bar{\alpha} \vdash_{\mathit{unamb}} \forall \alpha.\rulet}
-% \quad\quad\quad
-% \mylabel{UA-IAbsAlt} \quad
-% \myirule{\epsilon \vdash_{\mathit{unamb}} \rulet_1 \quad\quad \bar{\alpha},\mathit{ftv}(\rulet_1) \vdash_{\mathit{unamb}} \rulet_2}
-%         {\bar{\alpha} \vdash_{\mathit{unamb}} \rulet_1 \iarrow \rulet_2} \\ \\
-\mylabel{UA-Simp} \quad
-\myirule{\bar{\alpha} \subseteq \mathit{ftv}(\type)}
-        {\bar{\alpha} \vdash_{\mathit{unamb}} \type}
-\quad\quad\quad
-\text{TODO: postpone until $\type$ is introduced}
-\eda
 \end{minipage}
 }
 \end{center}
@@ -521,17 +499,19 @@ monotypes $\suty$ to substitute the type variable.
 %- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 \paragraph{Non-Ambiguity Constraints}
 
-TODO
+The rule \mylabel{M-TApp} does not explain how the substitution
+$[\suty/\alpha]$ for the rule type $\forall \alpha.\rulet$ should be obtained.
+At first sight it seems that the choice of $\suty$ is free and thus a source of
+non-determinism. However, in many cases the choice is not free at all, but is
+instead determined fully by the simple type $\type$ that we want to match.
 
-Note that while the rules \mylabel{I-TAbs} and \mylabel{M-TApp} do not explain
-how the substitution $[\rulet'/\alpha]$ should be obtained, there is in fact no
-ambiguity here. Indeed, there is at most one substitution for which the judgement holds.
 Consider the case of matching $\forall \alpha. \alpha \arrow \tyint$ with the
-simple type $\tyint \arrow \tyint$. Here the type $\rulet'$ is determined to be
-$\tyint$ by the need for $(\alpha \arrow \tyint)[\rulet'/\alpha]$ to be equal to
-$\tyint \arrow \tyint$.
-
-However, for the context type $\forall \alpha. \tyint$ ambiguity arises. When
+simple type $\tyint \arrow \tyint$. Here we can only choose to instantiate
+$\alpha$ with $\suty=\tyint$ if we want $(\alpha \arrow \tyint)[\suty/\alpha]$ to
+be equal to $\tyint \arrow \tyint$.
+However, the choice is not always forced by the matching. This
+is for instance the case with the 
+context type $\forall \alpha. \tyint$. When
 we match the head of this type $\tyint$ with the simple type $\tyint$, the
 matching succeeds without actually determining how the type variable $\alpha$
 should be instantiated. In fact, the matching succeeds under any possible
@@ -543,80 +523,90 @@ type encodes the well-known ambiguous Haskell type |forall a. (Show a, Read a) =
 of the expression |read . show|.} Again the
 choice of $\alpha$ is ambiguous when matching against the simple type $\tystr
 \arrow \tystr$. Yet, now the choice is critical for two reasons. Firstly, if we
-guess the wrong instantiation $\rulet$ for $\alpha$, then it may not be possible
-to recursively resolve $(\tystr \arrow \alpha)[\alpha/\rulet]$ or $(\alpha \arrow
-\tystr)[\alpha/\rulet]$, while with a lucky guess both can be resolved.
-Secondly, for different choices of $\rulet$ the types $(\tystr \arrow
-\alpha)[\alpha/\rulet]$ and $(\alpha \arrow \tystr)[\alpha/\rulet]$ can be resolved
+guess the wrong instantiation $\suty$ for $\alpha$, then it may not be possible
+to recursively resolve $(\tystr \arrow \alpha)[\suty/\alpha]$ or $(\alpha \arrow
+\tystr)[\suty/\alpha]$, while with a lucky guess both can be resolved.
+Secondly, for different choices of $\suty$ the types $(\tystr \arrow
+\alpha)[\suty/\alpha]$ and $(\alpha \arrow \tystr)[\suty/\alpha]$ can be resolved
 in completely different ways.
 
+\newcommand{\unamb}{\vdash_{\mathit{unamb}}}
+
 In order to avoid any problems, we conservatively forbid all ambiguous context
-types in the implicit environment with the $\epsilon \vdash_{\mathit{unamb}}
-\rulet_1$ side-condition in rule \mylabel{Ty-IAbs} of Figure~\ref{fig:type}.\footnote{
-An alternative design to avoid such ambiguity would instantiate unused type
+types in the implicit environment with the $\epsilon \unamb \rulet_1$
+side-condition in rule \mylabel{Ty-IAbs} of Figure~\ref{fig:type}.\footnote{An
+alternative design to avoid such ambiguity would instantiate unused type
 variables to a dummy type, like GHC's \texttt{GHC.Prim.Any}, which is only used
-for this purpose.}
-The definition of $\bar{\alpha} \vdash_{\textit{unamb}}$ is also given in
-Figure~\ref{fig:type}. Rule
-\mylabel{UA-TAbs} takes care of accumulating the bound type variables
-$\bar{\alpha}$ before the head. Rule \mylabel{UA-IAbs} skips over any contexts on the way to the head,
-but also recursively requires that these contexts are unambiguous. 
-When the head is reached, the central rules \mylabel{UA-TVar} and \mylabel{UA-TFun} check whether
-all bound type variables $\bar{\alpha}$ occur in that type.
+for this purpose.} This judgement is defined as follows: 
+\bda{c}
+\myruleform{\bar{\alpha} \vdash_{\mathit{unamb}} \rulet} 
+\quad\quad\quad
+\mylabel{UA-Simp} \quad
+\myirule{\bar{\alpha} \subseteq \mathit{ftv}(\type)}
+        {\bar{\alpha} \vdash_{\mathit{unamb}} \type}
+\\ \\
+\mylabel{UA-TAbs} \quad
+\myirule{\bar{\alpha},\alpha \vdash_{\mathit{unamb}} \rulet}
+        {\bar{\alpha} \vdash_{\mathit{unamb}} \forall \alpha.\rulet} 
+\quad\quad\quad
+\mylabel{UA-IAbs} \quad
+\myirule{\epsilon \vdash_{\mathit{unamb}} \rulet_1 \quad\quad \bar{\alpha} \vdash_{\mathit{unamb}} \rulet_2}
+        {\bar{\alpha} \vdash_{\mathit{unamb}} \rulet_1 \iarrow \rulet_2} \\ \\
+% \mylabel{UA-TAbsAlt} \quad
+% \myirule{\bar{\alpha} \vdash_{\mathit{unamb}} \rulet}
+%         {\bar{\alpha} \vdash_{\mathit{unamb}} \forall \alpha.\rulet}
+% \quad\quad\quad
+% \mylabel{UA-IAbsAlt} \quad
+% \myirule{\epsilon \vdash_{\mathit{unamb}} \rulet_1 \quad\quad \bar{\alpha},\mathit{ftv}(\rulet_1) \vdash_{\mathit{unamb}} \rulet_2}
+%         {\bar{\alpha} \vdash_{\mathit{unamb}} \rulet_1 \iarrow \rulet_2} \\ \\
+\eda
 
-Finally, the unambiguity condition is also imposed on the queried type $\rulet$ in
-rule \mylabel{Ty-Query} because this type too may extend the implicit environment
-in rule \mylabel{R-IAbs}.
+The base case, rule \mylabel{UA-Simp}, expresses that fixing the simple type
+$\type$ also fixes the type variables $\bar{\alpha}$. Inductive rule \mylabel{UA-TAbs}
+accumulates the bound type variables $\bar{\alpha}$ before the
+head. Rule \mylabel{UA-IAbs} skips over any contexts
+on the way to the head, but also recursively requires that these contexts are
+unambiguous. 
 
+Finally, the unambiguity condition is also imposed on the queried type $\rulet$
+in rule \mylabel{Ty-Query} because this type too may extend the implicit
+environment in rule \mylabel{R-IAbs}.
 
 %-------------------------------------------------------------------------------
-\subsection{Coherence Enforcement}\label{sec:coherence}
+\paragraph{Coherence Enforcement}\label{sec:coherence}
 
-TODO
-
-In order to enforce coherence, rule \mylabel{L-Tail} makes sure that the
+In order to enforce coherence, rule \mylabel{L-RuleNoMatch} makes sure that the
 decision to not select a context type is stable under all possible
-substitutions $\theta$.  For instance, when looking up |a -> a|, the context
-type |Int -> Int| does not match and is skipped. Yet, under the substitution
+substitutions $\theta$.  For instance, when looking up $\alpha \arrow \alpha$, the context
+type $\tyInt \arrow \tyInt$ does not match and is otherwise skipped. Yet, under the substitution
 $\theta = [\alpha \mapsto |Int|]$ the context type would match after all. In
-order to avoid this unstable situation, \mylabel{L-Tail} only skips a context
+order to avoid this unstable situation, rule \mylabel{L-RuleNoMatch} only skips a context
 type in the implicit environment, if there is no substitution $\theta$ for
 which the type would match the context type.
 
-This approach is similar to that of overlapping type class instances or
-overlapping type family instances in Haskell. However, there is one important
-complicating factor here: the query type may contain universal qantifiers.
-Consider a query for |forall a. a -> a|. In this case we wish to rule out
-entirely the context type |Int -> Int| as a potential match. Even though it matches
-under the substitution $\theta = [\alpha \mapsto |Int|]$, that covers only one
-instantiation while the query requires a resolvent that covers all possible
-instantiations at the same time.
+This approach is similar to the treatment of overlapping type class instances
+or overlapping type family instances in Haskell. However, there is one
+important complicating factor here: the query type may contain universal
+qantifiers.  Consider a query for |forall a. a -> a|. In this case we wish to
+rule out entirely the context type |Int -> Int| as a potential match. Even
+though it matches under the substitution $\theta = [\alpha \mapsto |Int|]$,
+that covers only one instantiation while the clearly query requires a resolvent that
+covers all possible instantiations at the same time.
 
-In order to bar the set of universally quantified type variables $\bar{\alpha}$ in the query from consideration
-for substitution, the matching function $\elookup{\env}{\type}$ is parameterized
-by this set. Rule \mylabel{L-Tail}
-only considers substitutions $\theta$ whose domain is disjoint from $\bar{\alpha}$.
-The two mutually recursive judgements $\bar{\alpha};\env \vturns \rulet$ 
-and $\bar{\alpha} \env;\rulet \turns_\downarrow \type$ propagate the universally
-quantified type variables $\bar{\alpha}$ to the matching function; rule \tlabel{R-TAbs}
-in particular extends $\bar{\alpha}$ whenever going under a universal quantifier.
-
-At the top-level query in rule \mylabel{Ty-Query} the set $\bar{\alpha}$ starts
-out empty: $\epsilon;\env \vdash_r \tau$. We typically omit this empty set and
-just write $\env \turns_r \tau$ intead.
+We clearly identify which type variables $\bar{\alpha}$ are to be considered
+for substitution by rule \mylabel{L-RuleNoMatch} by parameterising the
+judgements by this set. These are the type variables that occur in the environment
+$\tenv$ at the point of the query. The main resolution judgement $\ivturns \rulet$
+grabs them and passes them on to all uses of rule \mylabel{L-RuleNoMatch}.
 
 
-%   -------------------------------------------------
-%   forall b. b -> b, Int -> Int |-r a -> a
-%   -------------------------------------------------
-%   forall b. b -> b, Int -> Int |-r forall a. a -> a
   
 
 
 %-------------------------------------------------------------------------------
 \subsection{Power of Resolution}
 
-TODO
+TODO: Do we still need this to appear here for the conference paper? Is it even still true with all the determinism and coherence enforcement?
 
 The rules for deterministic resolution presented in this paper support all the
 examples described in Section~\ref{sec:overview}. They are strictly more powerful than
@@ -654,17 +644,68 @@ the above can now be resolved.
 
 Figure~\ref{fig:algorithm} contains an algorithm that implements the
 non-algorithmic deterministic resolution rules of Figure~\ref{fig:resolution2}.
-It differs from the latter in two important ways: 1) it computes rather than
-guesses type substitutions, and 2) it replaces explicit enumeration of
-substitutions with a tractable approach to coherence checking.
+It differs from the latter in two important ways: 
+1) it replaces explicit quantification over all substitutions $\theta$ in rule
+\mylabel{L-RuleNoMatch} with a tractable approach to coherence checking.
+and 2) it computes rather than guesses type substitutions in rule
+\mylabel{M-TApp}. 
+
+The definition of the algorithm is structured in much the same way
+as the declarative specification: with one main judgement and three
+auxiliary ones that have similar roles. In fact, since the differences
+are not situated in the main and first auxiliary judgement, these are
+actually identical.
+
+The first difference is situated in rule \mylabel{AL-RuleNoMatch} of the second
+judgement. Instead of an explicit quantification over all possible
+substitutions, this rule uses the more algorithmic judgement
+$\bar{\alpha};\rulet\coh\type$. This auxiliary judgement checks algorithmically
+whether there context type $\rulet$ matches $\type$ under any possible instantiation
+of the type variables $\bar{\alpha}$.
+\bda{c}
+\myruleform{\bar{\alpha};\rulet\coh \tau}
+\quad\quad\quad
+\mylabel{COH-Simp}\quad
+\myirule{\theta = \textit{mgu}_{\bar{\alpha}}(\tau,\tau')
+        }
+        {\bar{\alpha};\tau'\coh \tau}  \\ \\
+\mylabel{Coh-TApp}\quad
+\myirule{\bar{\alpha},\alpha;\rulet \coh \tau}
+        {\bar{\alpha};\forall \alpha. \rulet\coh \tau}  
+\quad\quad\quad
+\mylabel{Coh-IApp}\quad
+\myirule{\bar{\alpha};\rulet_2 \coh \tau}
+        {\bar{\alpha};\rulet_1 \iarrow \rulet_2\coh \tau}
+\eda
+
+The definition of $\bar{\alpha};\rulet \coh \type$ is a variation on that of
+the declarative judgement $\tenv; \rulet \ivturns \type; \Sigma$. There are
+three differences: 
+\begin{enumerate}
+\item
+Since the judgement is only concerned with matchability, no recursive
+resolvents $\Sigma$ are collected. 
+\item
+Instead of guessing the type instantiation ahead of time in rule
+$\mylabel{M-TApp}$, rule $\mylabel{Coh-TApp}$ defers the instantiation to the
+base case, rule \mylabel{Coh-Simp}. This last rule performs the deferred
+instantiation of type variables $\bar{\alpha}$ by computing the most general
+unifier $\theta$ between $\type'$ and $\type$ that substitutes $\bar{\alpha}$.
+If this unifier exists, a match has been established.
+\item
+Since the coherence check considers the substitution of the type variables
+$\bar{\alpha}$ that occur in the environment at the point of the query, rule
+\mylabel{AL-RuleNoMatch} pre-populates the substitutable variables of the
+$\coh$ judgement with them.
+\end{enumerate}
+
+TODO
 
 The toplevel relation of the algorithm is $\tenv \alg \rulet$ delegates, in a
 similar manner as its declarative counterpart, to the first auxiliary
 judgement, $\tyvars{\tenv};\tenv \alg \rulet$, which is also similar to its
 declarative counterpart. The main differences are found in the other two
 judgements.
-
-TODO
 
 The second major change is that recursive invocations of $\turns_{r}$ are no
 longer performed where the recursive contexts $\bar{\rulet}$ are encountered in
@@ -838,20 +879,7 @@ could happen when computing for example $\mathit{mgu}_{\alpha}(\forall \beta.\be
 
 \mylabel{AM-TApp}\quad
 \myirule{\bar{\alpha},\alpha; \tenv; \rulet~\gbox{\leadsto E\,\alpha}; \Sigma \alg \type~\gbox{\leadsto E'}; \Sigma'}
-        {\bar{\alpha}; \tenv; \forall \alpha. \rulet~\gbox{\leadsto E}; \Sigma \alg \type~\gbox{\leadsto E'}; \Sigma'}  \\ \\
-
-
-\multicolumn{1}{c}{\myruleform{\bar{\alpha};\rulet\coh \tau}} \\ \\
-\mylabel{COH-TAbs}\quad
-\myirule{\bar{\alpha},\alpha;\rulet \coh \tau}
-        {\bar{\alpha};\forall \alpha. \rulet\coh \tau}  \quad\quad\quad
-\mylabel{COH-IAbs}\quad
-\myirule{\bar{\alpha};\rulet_2 \coh \tau}
-        {\bar{\alpha};\rulet_1 \iarrow \rulet_2\coh \tau}  \\ \\
-\mylabel{COH-Simp}\quad
-\myirule{\theta = \textit{mgu}_{\bar{\alpha}}(\tau,\tau')
-        }
-        {\bar{\alpha};\tau'\coh \tau}  \\ \\
+        {\bar{\alpha}; \tenv; \forall \alpha. \rulet~\gbox{\leadsto E}; \Sigma \alg \type~\gbox{\leadsto E'}; \Sigma'} 
 \ea
 $
 }
