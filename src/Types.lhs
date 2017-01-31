@@ -299,16 +299,20 @@ In order to eradicate the non-determinism in resolution we implement the followi
 measures:
 \begin{enumerate}
 \item We provide a syntax-directed definition of resolution, based on the idea of
-      \emph{focused proof search} in logic~\cite{}, where at most one
+      \emph{focused proof search} in logic~\cite{focusing,Miller91b,Liang:2009}, where at most one
       rule applies in any given situation. 
 
       This approach organizes resolution into two alternating phases that
       pivots on an environment lookup (\mylabel{R-IVar}) which shifts
-      the focus from the queried type to an implicit rule type in the environment: 
-      the first phase only allows only elimination rules
-      (\mylabel{R-TAbs},\mylabel{R-IAbs}), and the second phase only introduction
-      rules (\mylabel{R-TApp},\mylabel{R-IApp}) which are applied in inverted
-      form on the focused rule type rather than the query type.
+      the focus from the queried type to an implicit rule type in the environment. 
+      The first phase performs \emph{backward chaining}: it applies only
+      elimination rules (\mylabel{R-TAbs},\mylabel{R-IAbs}) to the query type
+      to reason towards the given rules in the environment.
+
+      In constrast, the second phase performs \emph{forward chaining}; it
+      reasons from the selected environment rule towards the query type. It does so
+      by applying only introduction rules (\mylabel{R-TApp},\mylabel{R-IApp}), but in
+      \emph{inverted form}, i.e., from the environment type towards the query type.
 
 \item Our approach differs from focused proof search in the selection of the focus.
       This is typically a nondeterminstic choice in focused proof search, but we make
