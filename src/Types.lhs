@@ -38,7 +38,7 @@ $\forall \alpha. \rulet$; and the novel \emph{rule type} $\rulet_1 \iarrow
 called the \textit{context} and type $\rulet_2$ the \textit{head}.
 
 Expressions $e$ include three
-abstraction-eliminination pairs. The
+abstraction-elimination pairs. The
 binder $\lambda (x:\rulet). e$ abstracts expression $e$ over values of type $\rulet$, is eliminated by
 application $e_1\,e_2$ and refers to the bound value with variable $x$.
 The binder $\Lambda \alpha.e$ abstracts expression $e$ over types, is eliminated
@@ -255,7 +255,7 @@ and the important twist on the traditional correspondence is that we choose to t
 rules as implications, leaving functions as uninterpreted predicates.
 
 Figure~\ref{fig:resolution1} provides a first (ambiguous) definition of the
-resolution judgement $\env \vturns \rulet$ that corresponds to the intuition of
+resolution judgement $\tenv \vturns \rulet$ that corresponds to the intuition of
 logical implication checking. However, it suffers from two problems: 
 \begin{enumerate}
 \item 
@@ -443,8 +443,8 @@ $
 Figure~\ref{fig:resolution2} shows our syntax-directed and unambiguous variant
 of resolution. 
 
-The main judgement $\env \ivturns \rulet$ is simply a wrapper around the
-auxiliary judgement $\bar{\alpha};\env \ivturns \rulet$ that poulates $\bar{\alpha}$
+The main judgement $\tenv \ivturns \rulet$ is simply a wrapper around the
+auxiliary judgement $\bar{\alpha};\tenv \ivturns \rulet$ that populates $\bar{\alpha}$
 with the type variables in the environment at the point of the query:
 \newcommand{\tyvars}[1]{\mathit{tyvars}(#1)}
 \begin{equation*}
@@ -488,11 +488,11 @@ process (measure (2b)) -- the postponed resolvents are captured in the $\Sigma$ 
 way they do not influence the matching decision and backtracking is avoided.
 Instead, the recursive resolutions are executed, as part of rule
 \mylabel{L-RuleMatch}, after the rule has been committed to
-Rule \mylabel{M-Simp} constitutes the base case where the ruletype equals the
+Rule \mylabel{M-Simp} constitutes the base case where the rule type equals the
 target type. Rule \mylabel{M-IApp} is the counterpart of the original
-rule \mylabel{R-IApp} where the impliciation arrow $\rulet_1 \iarrow \rulet_2$
+rule \mylabel{R-IApp} where the implication arrow $\rulet_1 \iarrow \rulet_2$
 is instantiated to $\rulet_2$; the resolution of $\rulet_1$ is deferred.
-Lastly, rule \mylabel{M-TApp} is the couterpart of the original rule \mylabel{R-TApp}.
+Lastly, rule \mylabel{M-TApp} is the counterpart of the original rule \mylabel{R-TApp}.
 The main difference is that, in keeping with measure (3b), it only uses
 monotypes $\suty$ to substitute the type variable.
 
@@ -594,7 +594,7 @@ that covers only one instantiation while the clearly query requires a resolvent 
 covers all possible instantiations at the same time.
 
 We clearly identify which type variables $\bar{\alpha}$ are to be considered
-for substitution by rule \mylabel{L-RuleNoMatch} by parameterising the
+for substitution by rule \mylabel{L-RuleNoMatch} by parametrising the
 judgements by this set. These are the type variables that occur in the environment
 $\tenv$ at the point of the query. The main resolution judgement $\ivturns \rulet$
 grabs them and passes them on to all uses of rule \mylabel{L-RuleNoMatch}.
@@ -605,8 +605,8 @@ grabs them and passes them on to all uses of rule \mylabel{L-RuleNoMatch}.
 
 %-------------------------------------------------------------------------------
 \subsection{Power of Resolution}
-
-TODO: Do we still need this to appear here for the conference paper? Is it even still true with all the determinism and coherence enforcement?
+\tom{TODO: Do we still need this to appear here for the conference paper? Is
+it even still true with all the determinism and coherence enforcement?}
 
 The rules for deterministic resolution presented in this paper support all the
 examples described in Section~\ref{sec:overview}. They are strictly more powerful than
@@ -710,7 +710,7 @@ substitution, which is computed in rule \mylabel{AM-Simp}, the judgement
 makes use of an accumulating parameter $\Sigma$.  This accumulator $\Sigma$
 represents all the obligations collected so far in which type variables
 have not been substituted yet. In contrast, $\Sigma'$ denotes all obligations
-with type variabels already substituted.
+with type variables already substituted.
 Finally, note that rule \mylabel{AL-RuleMatch} does not pre-populate the 
 type variables with those of the environment: we only want to instantiate
 the type variables that appear in the context type $\rulet$ itself for an 
@@ -899,7 +899,7 @@ ignores the fact that the size may increase dramatically when the type variable
 is instantiated with a large type. The rule $\TermRule$ makes up for this problem
 by requiring a size decrease for all possible instantiations of free type variables.
 However, rather than to specify this property non-constructively as 
-\[ \forall \bar{\rulet}. \||[\bar{\alpha}\mapsto\bar{\rulet}]\tau_1\|| < \||[\bar{\alpha}\mapsto\bar{\rulet}]\tau_2\|| \]
+\[ \forall \bar{\rulet}: \quad \||[\bar{\alpha}\mapsto\bar{\rulet}]\tau_1\|| < \||[\bar{\alpha}\mapsto\bar{\rulet}]\tau_2\|| \]
 it provides a more practical means to verify this condition by way of free variable occurrences.
 The number of occurrences $\occ{\alpha}{\tau_1}$ of free variable $\alpha$ in type $\tau_1$ should be less than the number
 of occurrences 
