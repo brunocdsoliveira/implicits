@@ -689,8 +689,8 @@ resolvents $\Sigma$ are collected.
 Instead of guessing the type instantiation ahead of time in rule
 $\mylabel{M-TApp}$, rule $\mylabel{Coh-TApp}$ defers the instantiation to the
 base case, rule \mylabel{Coh-Simp}. This last rule performs the deferred
-instantiation of type variables $\bar{\alpha}$ by computing the most general
-unifier $\theta$ between $\type'$ and $\type$ that substitutes $\bar{\alpha}$.
+instantiation of type variables $\bar{\alpha}$ by computing the \emph{most general
+unifier} $\theta = \mgu{\type'}{\type}$ of $\type'$ and $\type$ that substitutes $\bar{\alpha}$.
 If this unifier exists, a match has been established.
 \item
 Since the coherence check considers the substitution of the type variables
@@ -699,98 +699,22 @@ $\bar{\alpha}$ that occur in the environment at the point of the query, rule
 $\coh$ judgement with them.
 \end{enumerate}
 
-TODO
-
-The toplevel relation of the algorithm is $\tenv \alg \rulet$ delegates, in a
-similar manner as its declarative counterpart, to the first auxiliary
-judgement, $\tyvars{\tenv};\tenv \alg \rulet$, which is also similar to its
-declarative counterpart. The main differences are found in the other two
-judgements.
-
-The second major change is that recursive invocations of $\turns_{r}$ are no
-longer performed where the recursive contexts $\bar{\rulet}$ are encountered in
-the auxiliary relation. Instead, the $\bar{\rulet}$ involved are accumulated and
-returned by $\turns_{\mathit{match1st}}$, to be resolved afterwards. In a sense,
-we change from a post-order to a pre-order traversal of the conceptual
-resolution tree. This change in schedule is an outflow of the change from
-guessing to computing context type instantiations, which is explained below.
-
-The two rules for the $\bar{\alpha};\env \turns_{\mathit{match1st}} \tau \hookrightarrow
-\bar{\rulet}$ are similar to those of $\elookup{\env}{\tau}=\rulet$: they are set
-up to commit to the first matching $\rulet$ in the environment $\env$. The first one is 
-defined in terms of the auxiliary relation $\rulet;\bar{\rulet};\bar{\alpha}
-\turns_\mathit{match} \tau \rightarrow \bar{\rulet}'$. The latter relation
-is the algorithmic counterpart that combines $\rulet \lhd \tau$ and $\bar{\alpha};\env;\rulet \turns_\downarrow \tau$.
-As already indicated, the part not included in this relation are the recursive invocations $\bar{\alpha};\env \turns_{r} \rulet_i~(\rulet_i \in \bar{\rulet}')$.
-Instead $\bar{\rulet}$ is an accumulating parameter for the $\rulet_i$ so they can be returned in $\bar{\rulet}'$.
-
-Essentially, the relation $\turns_{\mathit{match}}$ peels off the universal
-quantifiers and rule contexts from the context type $\rulet$ until it hits the simple
-type $\tau'$. The algorithm proceeds in this way because it can compute (rather than guess) the
-necessary type instantiation for the universal quantifiers by matching the
-context type's head $\tau'$ against the target simple type $\tau$. This
-explains why type instantiation is postponed, and, since recursive resolution
-depends on type instantiation, also why recursive resolution is postponed even
-further. 
-\begin{example}
-Consider for instance the matching of simple type $\tyint \arrow
-\tyint$ against context type $\forall \alpha. \alpha \iarrow (\alpha \arrow
-\alpha)$. Just by looking at the outer quantifier $\forall \alpha$ we do not
-know what $\alpha$ should be. Hence, we peel off the quantifier, postpone $\alpha$'s instantiation and proceed
-with $\alpha \iarrow (\alpha \arrow \alpha)$. At this point, we cannot recursively resolve the context
-$\alpha$ because we have not determined $\alpha$ yet. Hence, we must postpone its
-resolution and proceed with $\alpha \arrow \alpha$. Now we can determine the substitution
-$\theta = [\alpha/\tyint]$ by performing a matching unification with the target simple type $\tyint \arrow \tyint$.
-This substitution $\theta$ enables the postponed recursive resolution of $\alpha\theta = \tyint$.
-\end{example}
-
-The above informal description is formalized as follows.
-There is one rule for each of the three cases: peeling off a context,
-peeling off a universal quantifier and handling the simple type $\tau'$:
-\begin{enumerate}
-\item
-As already said, the contexts are collected in the accumulating parameter $\bar{\rulet}$ and
-are returned in $\bar{\rulet}'$
-\item
-In the $\forall \alpha$ rule of $\turns_{\mathit{match}}$ we find the main
-difference between the algorithmic and the non-algorithmic definitions. The non-algorithmic definition
-\emph{guesses} an appropriate instantiation $\rulet'$ for the type variable $\alpha$, while the algorithmic
-definition \emph{computes} this instantiation. This computation does not happen in the $\forall \alpha$ rule;
-that rule only accumulates the type variables in the parameter $\bar{\alpha}$ of the relation.
-\item
-The simple type rule checks whether the target type $\tau$ matches the simple
-type $\tau'$. Matching means that the rule checks whether there is a most
-general unifier $\theta'$ (see below) of $\tau$ and $\tau'$ whose domain consists only of
-the accumulated type variables $\bar{\alpha}$. 
-% The ambiguity problem handled by the $\vdash_{\mathit{unamb}}$
-% judgement in Figure~\ref{fig:} manifests itself here as the matching unifier $\theta$
-% not instantiating all of the 
-% type variables $\bar{\alpha}$, because they do not appear in $\tau'$. In order not to introduce any
-% unbound type variables, \mylabel{MTC-Simp} rejects this situation by requiring
-% that the domain of $\theta$ exactly coincides with $\bar{\alpha}$.
-The rule returns the accumulated
-contexts $\bar{\rulet}$, but is careful to apply the unifier $\theta$ to them 
-in order to take the matching into account.
-\end{enumerate}
-
-Finally, the third major change is a tractable approach to enforcing coherence.
-It is infeasible to take rule \mylabel{L-Tail} literally and enumerate
-infinitely many substitutions. Fortunately, considering all possible
-substitutions explicitly is entirely unnecessary. After all, the check $\rulet
-\lhd \tau$ essentially considers whether $\tau$ matches the head $\tau'$ of
-$\rulet$: \[ \exists \theta. \theta(\tau') = \tau\] We need to establish whether
-this check fails for all possible substitutions $\theta'$; in other words, we
-want to know whether 
-\[ \exists \theta'.\exists \theta. \theta(\theta'(\tau')) = \theta'(\tau) \]
-holds. Since the domain of $\theta$ is
-disjoint from the free variables of $\tau$, the latter is equivalent to:
-\[ \exists \theta'. \exists \theta. \theta(\theta'(\tau')) = \theta(\theta'(\tau)) \]
-Of course this is equivalent to the simpler:
-\[ \exists \theta. \theta(\tau') = \theta(\tau) \]
-which expresses that $\tau$ and $\tau'$ have a most general unifier.
-This check is captured in the judgement $\bar{\alpha}; \rulet \vdash_{\mathit{coh}} \tau$,
-where $\bar{\alpha}$ are the universally quantified type variables that should not be 
-substituted.
+The second main difference is situated in the third auxiliary judgement
+$\bar{\alpha};\tenv;\rulet;\Sigma \alg \type ; \Sigma'$. This judgement is 
+in fact an extended version of $\bar{\alpha};\rulet\coh\type$ that does 
+collect the recursive resolution obligations in $\Sigma'$ just like the 
+corresponding judgement in the declarative specification. The main difference
+with the latter is that it uses the deferred approach to instantiating 
+type variables. In order to subject the resolution obligations to this
+substitution, which is computed in rule \mylabel{AM-Simp}, the judgement
+makes use of an accumulating parameter $\Sigma$.  This accumulator $\Sigma$
+represents all the obligations collected so far in which type variables
+have not been substituted yet. In contrast, $\Sigma'$ denotes all obligations
+with type variabels already substituted.
+Finally, note that rule \mylabel{AL-RuleMatch} does not pre-populate the 
+type variables with those of the environment: we only want to instantiate
+the type variables that appear in the context type $\rulet$ itself for an 
+actual match.
 
 %- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 \paragraph{Restricted Unification}
