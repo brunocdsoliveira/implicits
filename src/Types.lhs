@@ -861,14 +861,9 @@ $
 %-------------------------------------------------------------------------------
 \subsection{Termination of Resolution}
 
-TODO
-
-If we are not careful about which rules are added to the implicit environment, then
-the resolution process may not terminate.
-This section describes how to impose 
-a set of modular syntactic restrictions that prevents non-termination. 
-%% We have to avoid non-termination of the type checker to ensure soundness.
-
+If we are not careful about which rules are added to the implicit environment,
+then the resolution process may not terminate.  This section describes how to
+impose a set of modular syntactic restrictions that prevents non-termination. 
 As an example of non-termination consider 
 \begin{equation*}
   \tychar \To \tyint,
@@ -876,15 +871,16 @@ As an example of non-termination consider
 \end{equation*}
 which loops, using alternatively the first and second rule in the implicit
 environment. The source of this non-termination are the mutually recursive 
-definitions of the $\vturns$ and $\turns_\downarrow$ relations: a type is resolved
+definitions of the first two auxiliary judgements: a simple type can be resolved
 in terms of a rule type whose head it matches, but this requires further 
-resolution of the rule type's body. 
+resolution of the rule type's context. 
 
 \newcommand{\term}[1]{\turns_\mathit{term} #1}
 \newcommand{\occ}[2]{\mathit{occ}_{#1}(#2)}
 \newcommand{\tnorm}[1]{\||#1\||}
 
-\subsubsection{Termination Condition}
+%- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+\paragraph{Termination Condition}
 The problem of non-termination has been widely studied in the context of
 Haskell's type classes, and a set of modular syntactic restrictions
 has been imposed on type class instances to avoid non-termination~\cite{fdchr}. 
@@ -909,17 +905,16 @@ The number of occurrences $\occ{\alpha}{\tau_1}$ of free variable $\alpha$ in ty
 of occurrences 
 $\occ{\alpha}{\tau_2}$ in $\tau_2$. It is easy to see that the non-constructive property follows from this requirement.
 
-\subsubsection{Integration in the Type System}
+\paragraph{Integration in the Type System}
 There are various ways to integrate the termination condition in the type system. 
 The most generic approach is to require that all types satisfy the termination condition.
 This can be done by making the condition part of the well-formedness relation for types.
-
 
 \figtwocol{fig:termination}{Termination Condition}{
 \begin{center}
 \framebox{
 \begin{minipage}{.81\textwidth}
-$
+\begin{equation*}
 \ba{c}
 \myruleform{\term{\rulet}}
 \quad\quad\quad
@@ -933,27 +928,36 @@ $
 \\ \\
 \TermRule \quad
   \myirule{\term{\rulet_1} \quad\quad \term{\rulet_2} \\ 
-           \rulet_1 \lhd \tau_1 \quad\quad \rulet_2 \lhd \tau_2 \quad\quad \tnorm{\tau_1} < \tnorm{\tau_2} \\
+           \tau_1 = \head{\rulet_1} \quad\quad \tau_2 = \head{\rulet_2} \quad\quad \tnorm{\tau_1} < \tnorm{\tau_2} \\
            \forall \alpha \in \ftv{\rulet_1} \cup \ftv{\rulet_2}: \quad \occ{\alpha}{\tau_1} \leq \occ{\alpha}{\tau_2}}  
           {\term{\rulet_1 \iarrow \rulet_2}} 
-\\ \\
+  \\ \\
 \ea
-$
-    \begin{eqnarray*}
-      \occ{\alpha}{\tyint} & = & 0 \\
+\end{equation*}
+\begin{equation*}
+    \ba{rcl@@{\hspace{7mm}}rcl@@{\hspace{7mm}}rcl}
+      \head{\type} & = & \type &
+      \head{\forall \alpha.\rulet} & = & \head{\rulet} &
+      \head{\rulet_1 \iarrow \rulet_2} & = & \head{\rulet_2}
+      \\ \\
+    \ea
+\end{equation*}
+\begin{equation*}
+    \ba{rcl@@{\hspace{7mm}}rcl}
       \occ{\alpha}{\beta} & = & \left\{ \begin{array}{ll} 
          1 & \hspace{1cm}(\alpha = \beta) \\
          0 & \hspace{1cm}(\alpha \neq \beta)
-         \end{array}\right. \\
-      \occ{\alpha}{\rulet_1 \arrow \rulet_2} & = & \occ{\alpha}{\rulet_1} + \occ{\alpha}{\rulet_2} \\
-      \occ{\alpha}{\rulet_1 \iarrow \rulet_2} & = & \occ{\alpha}{\rulet_1} + \occ{\alpha}{\rulet_2} \\
-      \occ{\alpha}{\forall \beta.\rulet} & = & \occ{\alpha}{\rulet} \\ \\
-      \tnorm{\tyint} & = & 1 \\
-      \tnorm{\alpha} & = & 1 \\
-      \tnorm{\rulet_1 \arrow \rulet_2} & = & 1 + \tnorm{\rulet_1} + \tnorm{\rulet_2} \\
-      \tnorm{\rulet_1 \iarrow \rulet_2} & = & 1 + \tnorm{\rulet_1} + \tnorm{\rulet_2} \\
-      \tnorm{\forall \alpha.\rulet} & = & \tnorm{\rulet}
-    \end{eqnarray*} 
+         \end{array}\right. &
+      \occ{\alpha}{\forall \beta.\rulet} & = & \occ{\alpha}{\rulet}  \\
+      \occ{\alpha}{\rulet_1 \arrow \rulet_2} & = & \occ{\alpha}{\rulet_1} + \occ{\alpha}{\rulet_2} &
+      \occ{\alpha}{\rulet_1 \iarrow \rulet_2} & = & \occ{\alpha}{\rulet_1} + \occ{\alpha}{\rulet_2} 
+      \\ \\
+      \tnorm{\alpha} & = & 1 &
+      \tnorm{\forall \alpha.\rulet} & = & \tnorm{\rulet} \\
+      \tnorm{\rulet_1 \arrow \rulet_2} & = & 1 + \tnorm{\rulet_1} + \tnorm{\rulet_2} &
+      \tnorm{\rulet_1 \iarrow \rulet_2} & = & 1 + \tnorm{\rulet_1} + \tnorm{\rulet_2} 
+    \ea
+\end{equation*}
 \end{minipage}
 }
 \end{center}
