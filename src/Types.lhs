@@ -219,8 +219,8 @@ is explained next.
           {\tenv \vturns \forall \alpha. \rulet~\gbox{\leadsto \Lambda\alpha.E}} 
 \quad\quad\quad
 \mylabel{R-TApp} \quad
-  \myirule{\tenv \vturns \forall \alpha. \rulet~\gbox{\leadsto E} \quad\quad \Gamma \turns \suty}
-          {\tenv \vturns \rulet[\suty/\alpha]~\gbox{\leadsto E~||\suty||}}
+  \myirule{\tenv \vturns \forall \alpha. \rulet~\gbox{\leadsto E} \quad\quad \Gamma \turns \rulet'}
+          {\tenv \vturns \rulet[\rulet'/\alpha]~\gbox{\leadsto E~||\rulet'||}}
 \\ \\
 \mylabel{R-IVar} \quad
   \myirule{\rulet~\gbox{\leadsto x} \in \tenv}
@@ -247,12 +247,10 @@ from resolution in logic.
 Intuitively, $\tenv\vdash_r \rulet$ holds if $\tenv$ entails $\rulet$, where the types in $\tenv$ and
 $\rulet$ are read as propositions.
 Following the Curry-Howard correspondence, we read
-$\alpha$ as a propositional variable, $\forall \alpha.\rulet$ as universal quantification, and
-rule types $\rulet_1 \iarrow \rulet_2$ as implication. We do not give a special interpretation to
-the function type $\rulet_1 \arrow \rulet_2$, treating it as an uninterpreted predicate.
-Unlike traditional Curry-Howard, we have two forms of arrow, functions and rules,
+$\alpha$ as a propositional variable and $\forall \alpha.\rulet$ as universal quantification.
+Unlike traditional Curry-Howard, we have two forms of arrow, functions $\rulet_1 \arrow \rulet_2$ and rules $\rulet_1 \iarrow \rulet_2$,
 and the important twist on the traditional correspondence is that we choose to treat
-rules as implications, leaving functions as uninterpreted predicates.
+only rules as implications, leaving functions as uninterpreted predicates.
 
 Figure~\ref{fig:resolution1} provides a first (ambiguous) definition of the
 resolution judgement $\tenv \vturns \rulet$ that corresponds to the intuition of
@@ -366,7 +364,7 @@ This variant of the syntax splits types into three different sorts:
 types} $\rulet$ correspond to the original types $\rulet$. \emph{Simple types}
 $\type$ are a restricted form of context types without toplevel quantifiers and
 toplevel implicit arrows. We will see that the distinction between context
-types $\rulet$ and simple types $\type$ convenient for measure (1).
+types $\rulet$ and simple types $\type$ is convenient for measure (1).
 \emph{Monotypes} $\suty$ are a further refinement of simple types without
 universal quantifiers and implicit arrows anywhere; they help us to implement
 measure (3b).
@@ -460,7 +458,8 @@ with the type variables in the environment at the point of the query:
 \end{array}
 \end{equation*}
 
-The judgement $\bar{\alpha};\tenv \ivturns \rulet$ is syntax-directed (measure (1)) on
+The judgement $\bar{\alpha};\tenv \ivturns \rulet$ implements
+the backward chaining phase of measure (1); it is syntax-directed on
 $\rulet$. Its job is to strip $\rulet$ down to a simple type $\type$ using
 literal copies of the original rules \mylabel{R-TAbs} and \mylabel{R-IAbs}, and
 then hand it off to the next judgement in rule \mylabel{R-Simp}.
@@ -487,8 +486,10 @@ We come back to the reason why the condition is stronger than this in Section~\r
 Finally, the third auxiliary judgement, $\tenv;\rulet \ivturns \type; \Sigma$,
 determines whether the rule type $\rulet$ matches the simple type~$\type$. The
 judgement is defined by structural induction on $\rulet$, which is step by step
-instantiated to a simple type. Any recursive resolutions are deferred in this
-process (measure (2b)) -- the postponed resolvents are captured in the $\Sigma$ argument; this
+instantiated to a simple type to realise the forward chaining phase of measure
+(1). 
+Any recursive resolutions are deferred in this process (measure (2b)) -- the
+postponed resolvents are captured in the $\Sigma$ argument; this
 way they do not influence the matching decision and backtracking is avoided.
 Instead, the recursive resolutions are executed, as part of rule
 \mylabel{L-RuleMatch}, after the rule has been committed to
@@ -591,7 +592,7 @@ which the type would match the context type.
 This approach is similar to the treatment of overlapping type class instances
 or overlapping type family instances in Haskell. However, there is one
 important complicating factor here: the query type may contain universal
-qantifiers.  Consider a query for |forall a. a -> a|. In this case we wish to
+quantifiers.  Consider a query for |forall a. a -> a|. In this case we wish to
 rule out entirely the context type |Int -> Int| as a potential match. Even
 though it matches under the substitution $\theta = [\alpha \mapsto |Int|]$,
 that covers only one instantiation while the clearly query requires a resolvent that
@@ -602,42 +603,6 @@ for substitution by rule \mylabel{L-RuleNoMatch} by parametrising the
 judgements by this set. These are the type variables that occur in the environment
 $\tenv$ at the point of the query. The main resolution judgement $\ivturns \rulet$
 grabs them and passes them on to all uses of rule \mylabel{L-RuleNoMatch}.
-
-
-  
-
-
-%-------------------------------------------------------------------------------
-\subsection{Power of Resolution}
-\tom{TODO: Do we still need this to appear here for the conference paper? Is
-it even still true with all the determinism and coherence enforcement?}
-
-The rules for deterministic resolution presented in this paper support all the
-examples described in Section~\ref{sec:overview}. They are strictly more powerful than
-the rules presented in the conference version of the paper~\cite{oliveira12implicit}.
-In other words, strictly more queries resolve with this article's rules than
-with the rules of the previous paper.
-For example, 
-the query:
-
-\begin{equation*}
-  \tychar \To \tybool,
-  \tybool \To \tyint \vturns \tychar \To \tyint
-\end{equation*}
-
-\noindent does not resolve under the deterministic resolution rules of
-the conference paper. In order to resolve such rule types, it is 
-necessary to add the rule type's context to the implicit
-environment in the course of the resolution process: 
-
-\begin{equation*}
-  \tychar \To \tybool,
-  \tybool \To \tyint, \tychar \vturns \tyint
-\end{equation*}
-
-\noindent but this was not supported by our previous set of rules. The new set
-of resolution rules do support this by means of rule \RIAbs, and queries like
-the above can now be resolved.
 
 %-------------------------------------------------------------------------------
 \subsection{Algorithm}
