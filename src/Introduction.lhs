@@ -28,6 +28,69 @@
 %%* Type classes, C++ concepts, Scala implicits, JavaGI
 %%* resolution, type-based
 
+Programming language design is usually guided by two, often competing, 
+goals: \emph{flexibility} and \emph{ease of reasoning}.
+Many programming languages aim at providing powerful, 
+flexible language constructs that allow programmers to achieve reuse, 
+and develop programs rapidely and concisely. Other programming languages aim 
+easily reasoning about programs, as well as avoid programming
+pitfalls. Very often the two goals are at odds with each other, since 
+very flexible programming mechanisms make reasoning harder. 
+Arguably the art in programming language design is to combine  
+both goals.\bruno{Optional paragraph I guess, but it sets the tone 
+for what this paper is about: working out how to deal with the tension
+between the flexibility of implicits, and strong reasoning properties
+such as coherence.}
+
+Implicit programming (IP) denotes a class of language mechanisms,
+which infers values by using type information. Examples of IP
+mechanisms include Haskell’s type classes~\cite{}, Scala’s
+implicits~\cite{}, JavaGI’s generalized interfaces~\cite{}, C++’s
+concepts~\cite{}, Agda's \emph{instance arguments}, Coq's type
+classes~\cite{} and others~\cite{}. IP can also be viewed as a form of
+(type-directed) program synthesis~\cite{}. The programming is said to
+be “implicit” because expressions (e.g., those for function
+parameters) can be ommitted and instead provided automaticaly via a
+\emph{type-directed resolution} process, producing the necessary
+values. Implicit values are either fetched by type from the current
+(implicit) environment or constructed by type-directed rules.
+
+Currently there are \bruno{at least?} two schools of thought regarding
+the design of IP mechanisms. Haskell's original design for type
+classes~\cite{} is guided by the strong reasoning qualities of pure
+functional languages. In particular, in purely functional programming,
+``\emph{substituting equals by equals}'' is expected to hold. That is,
+when given two equivalent expressions then replacing one by the other
+in \emph{any context} will always lead to two programs that yield the
+same result.  Haskell type classes preserve this property, but not for
+free.  Haskell imposes several restrictions on type classes to
+guarantee this property. For example, the expression:
+
+> show (read ''3'') == ''3'' 
+
+\noindent where functions |show| and |read| have the types: 
+
+> show :: Show a => a -> String
+> read :: Read a => String -> a
+
+\noindent is rejected in Haskell due to \emph{ambiguity} of resolution.
+
+
+
+as well some design's that closely follow the original design, treat
+type classes as special entities in the language
+
+The design of IP mechanisms has led to heated debate~\cite{} about 
+the pros/cons of each mechanisms. On the one hand, traditional type 
+classes .... On the other hand implicits... 
+
+
+Type classes 
+
+Programming language design is often guided by two goals. 
+On the hand we want programming languages to be as flexible 
+and powerful as they can be.   
+
 Generic programming (GP)~\cite{musser88genericprogramming} is a
 programming style that decouples algorithms from the concrete types on
 which they operate. Decoupling is achieved through
