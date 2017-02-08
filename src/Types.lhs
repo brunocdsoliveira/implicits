@@ -38,7 +38,7 @@ $\forall \alpha. \rulet$; and the novel \emph{rule type} $\rulet_1 \iarrow
 called the \textit{context} and type $\rulet_2$ the \textit{head}.
 
 Expressions $e$ include three
-abstraction-eliminination pairs. The
+abstraction-elimination pairs. The
 binder $\lambda (x:\rulet). e$ abstracts expression $e$ over values of type $\rulet$, is eliminated by
 application $e_1\,e_2$ and refers to the bound value with variable $x$.
 The binder $\Lambda \alpha.e$ abstracts expression $e$ over types, is eliminated
@@ -165,28 +165,6 @@ literals and types.
 { \tenv \turns \relation{?\rulet}{\rulet}~\gbox{\leadsto E}
 } 
 \eda
-\bda{c}
-\myruleform{\bar{\alpha} \vdash_{\mathit{unamb}} \rulet} \\ \\
-\mylabel{UA-TAbs} \quad
-\myirule{\bar{\alpha},\alpha \vdash_{\mathit{unamb}} \rulet}
-        {\bar{\alpha} \vdash_{\mathit{unamb}} \forall \alpha.\rulet} 
-\quad\quad\quad
-\mylabel{UA-IAbs} \quad
-\myirule{\epsilon \vdash_{\mathit{unamb}} \rulet_1 \quad\quad \bar{\alpha} \vdash_{\mathit{unamb}} \rulet_2}
-        {\bar{\alpha} \vdash_{\mathit{unamb}} \rulet_1 \iarrow \rulet_2} \\ \\
-% \mylabel{UA-TAbsAlt} \quad
-% \myirule{\bar{\alpha} \vdash_{\mathit{unamb}} \rulet}
-%         {\bar{\alpha} \vdash_{\mathit{unamb}} \forall \alpha.\rulet}
-% \quad\quad\quad
-% \mylabel{UA-IAbsAlt} \quad
-% \myirule{\epsilon \vdash_{\mathit{unamb}} \rulet_1 \quad\quad \bar{\alpha},\mathit{ftv}(\rulet_1) \vdash_{\mathit{unamb}} \rulet_2}
-%         {\bar{\alpha} \vdash_{\mathit{unamb}} \rulet_1 \iarrow \rulet_2} \\ \\
-\mylabel{UA-Simp} \quad
-\myirule{\bar{\alpha} \subseteq \mathit{ftv}(\type)}
-        {\bar{\alpha} \vdash_{\mathit{unamb}} \type}
-\quad\quad\quad
-\text{TODO: postpone until $\type$ is introduced}
-\eda
 \end{minipage}
 }
 \end{center}
@@ -241,8 +219,8 @@ is explained next.
           {\tenv \vturns \forall \alpha. \rulet~\gbox{\leadsto \Lambda\alpha.E}} 
 \quad\quad\quad
 \mylabel{R-TApp} \quad
-  \myirule{\tenv \vturns \forall \alpha. \rulet~\gbox{\leadsto E} \quad\quad \Gamma \turns \suty}
-          {\tenv \vturns \rulet[\suty/\alpha]~\gbox{\leadsto E~||\suty||}}
+  \myirule{\tenv \vturns \forall \alpha. \rulet~\gbox{\leadsto E} \quad\quad \Gamma \turns \rulet'}
+          {\tenv \vturns \rulet[\rulet'/\alpha]~\gbox{\leadsto E~||\rulet'||}}
 \\ \\
 \mylabel{R-IVar} \quad
   \myirule{\rulet~\gbox{\leadsto x} \in \tenv}
@@ -269,15 +247,13 @@ from resolution in logic.
 Intuitively, $\tenv\vdash_r \rulet$ holds if $\tenv$ entails $\rulet$, where the types in $\tenv$ and
 $\rulet$ are read as propositions.
 Following the Curry-Howard correspondence, we read
-$\alpha$ as a propositional variable, $\forall \alpha.\rulet$ as universal quantification, and
-rule types $\rulet_1 \iarrow \rulet_2$ as implication. We do not give a special interpretation to
-the function type $\rulet_1 \arrow \rulet_2$, treating it as an uninterpreted predicate.
-Unlike traditional Curry-Howard, we have two forms of arrow, functions and rules,
+$\alpha$ as a propositional variable and $\forall \alpha.\rulet$ as universal quantification.
+Unlike traditional Curry-Howard, we have two forms of arrow, functions $\rulet_1 \arrow \rulet_2$ and rules $\rulet_1 \iarrow \rulet_2$,
 and the important twist on the traditional correspondence is that we choose to treat
-rules as implications, leaving functions as uninterpreted predicates.
+only rules as implications, leaving functions as uninterpreted predicates.
 
 Figure~\ref{fig:resolution1} provides a first (ambiguous) definition of the
-resolution judgement $\env \vturns \rulet$ that corresponds to the intuition of
+resolution judgement $\tenv \vturns \rulet$ that corresponds to the intuition of
 logical implication checking. However, it suffers from two problems: 
 \begin{enumerate}
 \item 
@@ -321,16 +297,20 @@ In order to eradicate the non-determinism in resolution we implement the followi
 measures:
 \begin{enumerate}
 \item We provide a syntax-directed definition of resolution, based on the idea of
-      \emph{focused proof search} in logic~\cite{}, where at most one
+      \emph{focused proof search} in logic~\cite{focusing,Miller91b,Liang:2009}, where at most one
       rule applies in any given situation. 
 
       This approach organizes resolution into two alternating phases that
       pivots on an environment lookup (\mylabel{R-IVar}) which shifts
-      the focus from the queried type to an implicit rule type in the environment: 
-      the first phase only allows only elimination rules
-      (\mylabel{R-TAbs},\mylabel{R-IAbs}), and the second phase only introduction
-      rules (\mylabel{R-TApp},\mylabel{R-IApp}) which are applied in inverted
-      form on the focused rule type rather than the query type.
+      the focus from the queried type to an implicit rule type in the environment. 
+      The first phase performs \emph{backward chaining}: it applies only
+      elimination rules (\mylabel{R-TAbs},\mylabel{R-IAbs}) to the query type
+      to reason towards the given rules in the environment.
+
+      In constrast, the second phase performs \emph{forward chaining}; it
+      reasons from the selected environment rule towards the query type. It does so
+      by applying only introduction rules (\mylabel{R-TApp},\mylabel{R-IApp}), but in
+      \emph{inverted form}, i.e., from the environment type towards the query type.
 
 \item Our approach differs from focused proof search in the selection of the focus.
       This is typically a nondeterminstic choice in focused proof search, but we make
@@ -384,7 +364,7 @@ This variant of the syntax splits types into three different sorts:
 types} $\rulet$ correspond to the original types $\rulet$. \emph{Simple types}
 $\type$ are a restricted form of context types without toplevel quantifiers and
 toplevel implicit arrows. We will see that the distinction between context
-types $\rulet$ and simple types $\type$ convenient for measure (1).
+types $\rulet$ and simple types $\type$ is convenient for measure (1).
 \emph{Monotypes} $\suty$ are a further refinement of simple types without
 universal quantifiers and implicit arrows anywhere; they help us to implement
 measure (3b).
@@ -465,8 +445,8 @@ $
 Figure~\ref{fig:resolution2} shows our syntax-directed and unambiguous variant
 of resolution. 
 
-The main judgement $\env \ivturns \rulet$ is simply a wrapper around the
-auxiliary judgement $\bar{\alpha};\env \ivturns \rulet$ that poulates $\bar{\alpha}$
+The main judgement $\tenv \ivturns \rulet$ is simply a wrapper around the
+auxiliary judgement $\bar{\alpha};\tenv \ivturns \rulet$ that populates $\bar{\alpha}$
 with the type variables in the environment at the point of the query:
 \newcommand{\tyvars}[1]{\mathit{tyvars}(#1)}
 \begin{equation*}
@@ -478,7 +458,8 @@ with the type variables in the environment at the point of the query:
 \end{array}
 \end{equation*}
 
-The judgement $\bar{\alpha};\tenv \ivturns \rulet$ is syntax-directed (measure (1)) on
+The judgement $\bar{\alpha};\tenv \ivturns \rulet$ implements
+the backward chaining phase of measure (1); it is syntax-directed on
 $\rulet$. Its job is to strip $\rulet$ down to a simple type $\type$ using
 literal copies of the original rules \mylabel{R-TAbs} and \mylabel{R-IAbs}, and
 then hand it off to the next judgement in rule \mylabel{R-Simp}.
@@ -505,33 +486,37 @@ We come back to the reason why the condition is stronger than this in Section~\r
 Finally, the third auxiliary judgement, $\tenv;\rulet \ivturns \type; \Sigma$,
 determines whether the rule type $\rulet$ matches the simple type~$\type$. The
 judgement is defined by structural induction on $\rulet$, which is step by step
-instantiated to a simple type. Any recursive resolutions are deferred in this
-process (measure (2b)) -- the postponed resolvents are captured in the $\Sigma$ argument; this
+instantiated to a simple type to realise the forward chaining phase of measure
+(1). 
+Any recursive resolutions are deferred in this process (measure (2b)) -- the
+postponed resolvents are captured in the $\Sigma$ argument; this
 way they do not influence the matching decision and backtracking is avoided.
 Instead, the recursive resolutions are executed, as part of rule
 \mylabel{L-RuleMatch}, after the rule has been committed to
-Rule \mylabel{M-Simp} constitutes the base case where the ruletype equals the
+Rule \mylabel{M-Simp} constitutes the base case where the rule type equals the
 target type. Rule \mylabel{M-IApp} is the counterpart of the original
-rule \mylabel{R-IApp} where the impliciation arrow $\rulet_1 \iarrow \rulet_2$
+rule \mylabel{R-IApp} where the implication arrow $\rulet_1 \iarrow \rulet_2$
 is instantiated to $\rulet_2$; the resolution of $\rulet_1$ is deferred.
-Lastly, rule \mylabel{M-TApp} is the couterpart of the original rule \mylabel{R-TApp}.
+Lastly, rule \mylabel{M-TApp} is the counterpart of the original rule \mylabel{R-TApp}.
 The main difference is that, in keeping with measure (3b), it only uses
 monotypes $\suty$ to substitute the type variable.
 
 %- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 \paragraph{Non-Ambiguity Constraints}
 
-TODO
+The rule \mylabel{M-TApp} does not explain how the substitution
+$[\suty/\alpha]$ for the rule type $\forall \alpha.\rulet$ should be obtained.
+At first sight it seems that the choice of $\suty$ is free and thus a source of
+non-determinism. However, in many cases the choice is not free at all, but is
+instead determined fully by the simple type $\type$ that we want to match.
 
-Note that while the rules \mylabel{I-TAbs} and \mylabel{M-TApp} do not explain
-how the substitution $[\rulet'/\alpha]$ should be obtained, there is in fact no
-ambiguity here. Indeed, there is at most one substitution for which the judgement holds.
 Consider the case of matching $\forall \alpha. \alpha \arrow \tyint$ with the
-simple type $\tyint \arrow \tyint$. Here the type $\rulet'$ is determined to be
-$\tyint$ by the need for $(\alpha \arrow \tyint)[\rulet'/\alpha]$ to be equal to
-$\tyint \arrow \tyint$.
-
-However, for the context type $\forall \alpha. \tyint$ ambiguity arises. When
+simple type $\tyint \arrow \tyint$. Here we can only choose to instantiate
+$\alpha$ with $\suty=\tyint$ if we want $(\alpha \arrow \tyint)[\suty/\alpha]$ to
+be equal to $\tyint \arrow \tyint$.
+However, the choice is not always forced by the matching. This
+is for instance the case with the 
+context type $\forall \alpha. \tyint$. When
 we match the head of this type $\tyint$ with the simple type $\tyint$, the
 matching succeeds without actually determining how the type variable $\alpha$
 should be instantiated. In fact, the matching succeeds under any possible
@@ -543,107 +528,81 @@ type encodes the well-known ambiguous Haskell type |forall a. (Show a, Read a) =
 of the expression |read . show|.} Again the
 choice of $\alpha$ is ambiguous when matching against the simple type $\tystr
 \arrow \tystr$. Yet, now the choice is critical for two reasons. Firstly, if we
-guess the wrong instantiation $\rulet$ for $\alpha$, then it may not be possible
-to recursively resolve $(\tystr \arrow \alpha)[\alpha/\rulet]$ or $(\alpha \arrow
-\tystr)[\alpha/\rulet]$, while with a lucky guess both can be resolved.
-Secondly, for different choices of $\rulet$ the types $(\tystr \arrow
-\alpha)[\alpha/\rulet]$ and $(\alpha \arrow \tystr)[\alpha/\rulet]$ can be resolved
+guess the wrong instantiation $\suty$ for $\alpha$, then it may not be possible
+to recursively resolve $(\tystr \arrow \alpha)[\suty/\alpha]$ or $(\alpha \arrow
+\tystr)[\suty/\alpha]$, while with a lucky guess both can be resolved.
+Secondly, for different choices of $\suty$ the types $(\tystr \arrow
+\alpha)[\suty/\alpha]$ and $(\alpha \arrow \tystr)[\suty/\alpha]$ can be resolved
 in completely different ways.
 
+\newcommand{\unamb}{\vdash_{\mathit{unamb}}}
+
 In order to avoid any problems, we conservatively forbid all ambiguous context
-types in the implicit environment with the $\epsilon \vdash_{\mathit{unamb}}
-\rulet_1$ side-condition in rule \mylabel{Ty-IAbs} of Figure~\ref{fig:type}.\footnote{
-An alternative design to avoid such ambiguity would instantiate unused type
+types in the implicit environment with the $\epsilon \unamb \rulet_1$
+side-condition in rule \mylabel{Ty-IAbs} of Figure~\ref{fig:type}.\footnote{An
+alternative design to avoid such ambiguity would instantiate unused type
 variables to a dummy type, like GHC's \texttt{GHC.Prim.Any}, which is only used
-for this purpose.}
-The definition of $\bar{\alpha} \vdash_{\textit{unamb}}$ is also given in
-Figure~\ref{fig:type}. Rule
-\mylabel{UA-TAbs} takes care of accumulating the bound type variables
-$\bar{\alpha}$ before the head. Rule \mylabel{UA-IAbs} skips over any contexts on the way to the head,
-but also recursively requires that these contexts are unambiguous. 
-When the head is reached, the central rules \mylabel{UA-TVar} and \mylabel{UA-TFun} check whether
-all bound type variables $\bar{\alpha}$ occur in that type.
+for this purpose.} This judgement is defined as follows: 
+\bda{c}
+\myruleform{\bar{\alpha} \vdash_{\mathit{unamb}} \rulet} 
+\quad\quad\quad
+\mylabel{UA-Simp} \quad
+\myirule{\bar{\alpha} \subseteq \mathit{ftv}(\type)}
+        {\bar{\alpha} \vdash_{\mathit{unamb}} \type}
+\\ \\
+\mylabel{UA-TAbs} \quad
+\myirule{\bar{\alpha},\alpha \vdash_{\mathit{unamb}} \rulet}
+        {\bar{\alpha} \vdash_{\mathit{unamb}} \forall \alpha.\rulet} 
+\quad\quad\quad
+\mylabel{UA-IAbs} \quad
+\myirule{\epsilon \vdash_{\mathit{unamb}} \rulet_1 \quad\quad \bar{\alpha} \vdash_{\mathit{unamb}} \rulet_2}
+        {\bar{\alpha} \vdash_{\mathit{unamb}} \rulet_1 \iarrow \rulet_2} \\ \\
+% \mylabel{UA-TAbsAlt} \quad
+% \myirule{\bar{\alpha} \vdash_{\mathit{unamb}} \rulet}
+%         {\bar{\alpha} \vdash_{\mathit{unamb}} \forall \alpha.\rulet}
+% \quad\quad\quad
+% \mylabel{UA-IAbsAlt} \quad
+% \myirule{\epsilon \vdash_{\mathit{unamb}} \rulet_1 \quad\quad \bar{\alpha},\mathit{ftv}(\rulet_1) \vdash_{\mathit{unamb}} \rulet_2}
+%         {\bar{\alpha} \vdash_{\mathit{unamb}} \rulet_1 \iarrow \rulet_2} \\ \\
+\eda
 
-Finally, the unambiguity condition is also imposed on the queried type $\rulet$ in
-rule \mylabel{Ty-Query} because this type too may extend the implicit environment
-in rule \mylabel{R-IAbs}.
+The base case, rule \mylabel{UA-Simp}, expresses that fixing the simple type
+$\type$ also fixes the type variables $\bar{\alpha}$. Inductive rule \mylabel{UA-TAbs}
+accumulates the bound type variables $\bar{\alpha}$ before the
+head. Rule \mylabel{UA-IAbs} skips over any contexts
+on the way to the head, but also recursively requires that these contexts are
+unambiguous. 
 
+Finally, the unambiguity condition is also imposed on the queried type $\rulet$
+in rule \mylabel{Ty-Query} because this type too may extend the implicit
+environment in rule \mylabel{R-IAbs}.
 
 %-------------------------------------------------------------------------------
-\subsection{Coherence Enforcement}\label{sec:coherence}
+\paragraph{Coherence Enforcement}\label{sec:coherence}
 
-TODO
-
-In order to enforce coherence, rule \mylabel{L-Tail} makes sure that the
+In order to enforce coherence, rule \mylabel{L-RuleNoMatch} makes sure that the
 decision to not select a context type is stable under all possible
-substitutions $\theta$.  For instance, when looking up |a -> a|, the context
-type |Int -> Int| does not match and is skipped. Yet, under the substitution
+substitutions $\theta$.  For instance, when looking up $\alpha \arrow \alpha$, the context
+type $\tyInt \arrow \tyInt$ does not match and is otherwise skipped. Yet, under the substitution
 $\theta = [\alpha \mapsto |Int|]$ the context type would match after all. In
-order to avoid this unstable situation, \mylabel{L-Tail} only skips a context
+order to avoid this unstable situation, rule \mylabel{L-RuleNoMatch} only skips a context
 type in the implicit environment, if there is no substitution $\theta$ for
 which the type would match the context type.
 
-This approach is similar to that of overlapping type class instances or
-overlapping type family instances in Haskell. However, there is one important
-complicating factor here: the query type may contain universal qantifiers.
-Consider a query for |forall a. a -> a|. In this case we wish to rule out
-entirely the context type |Int -> Int| as a potential match. Even though it matches
-under the substitution $\theta = [\alpha \mapsto |Int|]$, that covers only one
-instantiation while the query requires a resolvent that covers all possible
-instantiations at the same time.
+This approach is similar to the treatment of overlapping type class instances
+or overlapping type family instances in Haskell. However, there is one
+important complicating factor here: the query type may contain universal
+quantifiers.  Consider a query for |forall a. a -> a|. In this case we wish to
+rule out entirely the context type |Int -> Int| as a potential match. Even
+though it matches under the substitution $\theta = [\alpha \mapsto |Int|]$,
+that covers only one instantiation while the clearly query requires a resolvent that
+covers all possible instantiations at the same time.
 
-In order to bar the set of universally quantified type variables $\bar{\alpha}$ in the query from consideration
-for substitution, the matching function $\elookup{\env}{\type}$ is parameterized
-by this set. Rule \mylabel{L-Tail}
-only considers substitutions $\theta$ whose domain is disjoint from $\bar{\alpha}$.
-The two mutually recursive judgements $\bar{\alpha};\env \vturns \rulet$ 
-and $\bar{\alpha} \env;\rulet \turns_\downarrow \type$ propagate the universally
-quantified type variables $\bar{\alpha}$ to the matching function; rule \tlabel{R-TAbs}
-in particular extends $\bar{\alpha}$ whenever going under a universal quantifier.
-
-At the top-level query in rule \mylabel{Ty-Query} the set $\bar{\alpha}$ starts
-out empty: $\epsilon;\env \vdash_r \tau$. We typically omit this empty set and
-just write $\env \turns_r \tau$ intead.
-
-
-%   -------------------------------------------------
-%   forall b. b -> b, Int -> Int |-r a -> a
-%   -------------------------------------------------
-%   forall b. b -> b, Int -> Int |-r forall a. a -> a
-  
-
-
-%-------------------------------------------------------------------------------
-\subsection{Power of Resolution}
-
-TODO
-
-The rules for deterministic resolution presented in this paper support all the
-examples described in Section~\ref{sec:overview}. They are strictly more powerful than
-the rules presented in the conference version of the paper~\cite{oliveira12implicit}.
-In other words, strictly more queries resolve with this article's rules than
-with the rules of the previous paper.
-For example, 
-the query:
-
-\begin{equation*}
-  \tychar \To \tybool,
-  \tybool \To \tyint \vturns \tychar \To \tyint
-\end{equation*}
-
-\noindent does not resolve under the deterministic resolution rules of
-the conference paper. In order to resolve such rule types, it is 
-necessary to add the rule type's context to the implicit
-environment in the course of the resolution process: 
-
-\begin{equation*}
-  \tychar \To \tybool,
-  \tybool \To \tyint, \tychar \vturns \tyint
-\end{equation*}
-
-\noindent but this was not supported by our previous set of rules. The new set
-of resolution rules do support this by means of rule \RIAbs, and queries like
-the above can now be resolved.
+We clearly identify which type variables $\bar{\alpha}$ are to be considered
+for substitution by rule \mylabel{L-RuleNoMatch} by parametrising the
+judgements by this set. These are the type variables that occur in the environment
+$\tenv$ at the point of the query. The main resolution judgement $\ivturns \rulet$
+grabs them and passes them on to all uses of rule \mylabel{L-RuleNoMatch}.
 
 %-------------------------------------------------------------------------------
 \subsection{Algorithm}
@@ -654,102 +613,77 @@ the above can now be resolved.
 
 Figure~\ref{fig:algorithm} contains an algorithm that implements the
 non-algorithmic deterministic resolution rules of Figure~\ref{fig:resolution2}.
-It differs from the latter in two important ways: 1) it computes rather than
-guesses type substitutions, and 2) it replaces explicit enumeration of
-substitutions with a tractable approach to coherence checking.
+It differs from the latter in two important ways: 
+1) it replaces explicit quantification over all substitutions $\theta$ in rule
+\mylabel{L-RuleNoMatch} with a tractable approach to coherence checking.
+and 2) it computes rather than guesses type substitutions in rule
+\mylabel{M-TApp}. 
 
-The toplevel relation of the algorithm is $\tenv \alg \rulet$ delegates, in a
-similar manner as its declarative counterpart, to the first auxiliary
-judgement, $\tyvars{\tenv};\tenv \alg \rulet$, which is also similar to its
-declarative counterpart. The main differences are found in the other two
-judgements.
+The definition of the algorithm is structured in much the same way
+as the declarative specification: with one main judgement and three
+auxiliary ones that have similar roles. In fact, since the differences
+are not situated in the main and first auxiliary judgement, these are
+actually identical.
 
-TODO
+The first difference is situated in rule \mylabel{AL-RuleNoMatch} of the second
+judgement. Instead of an explicit quantification over all possible
+substitutions, this rule uses the more algorithmic judgement
+$\bar{\alpha};\rulet\coh\type$. This auxiliary judgement checks algorithmically
+whether there context type $\rulet$ matches $\type$ under any possible instantiation
+of the type variables $\bar{\alpha}$.
+\bda{c}
+\myruleform{\bar{\alpha};\rulet\coh \tau}
+\quad\quad\quad
+\mylabel{COH-Simp}\quad
+\myirule{\theta = \textit{mgu}_{\bar{\alpha}}(\tau,\tau')
+        }
+        {\bar{\alpha};\tau'\coh \tau}  \\ \\
+\mylabel{Coh-TApp}\quad
+\myirule{\bar{\alpha},\alpha;\rulet \coh \tau}
+        {\bar{\alpha};\forall \alpha. \rulet\coh \tau}  
+\quad\quad\quad
+\mylabel{Coh-IApp}\quad
+\myirule{\bar{\alpha};\rulet_2 \coh \tau}
+        {\bar{\alpha};\rulet_1 \iarrow \rulet_2\coh \tau}
+\eda
 
-The second major change is that recursive invocations of $\turns_{r}$ are no
-longer performed where the recursive contexts $\bar{\rulet}$ are encountered in
-the auxiliary relation. Instead, the $\bar{\rulet}$ involved are accumulated and
-returned by $\turns_{\mathit{match1st}}$, to be resolved afterwards. In a sense,
-we change from a post-order to a pre-order traversal of the conceptual
-resolution tree. This change in schedule is an outflow of the change from
-guessing to computing context type instantiations, which is explained below.
-
-The two rules for the $\bar{\alpha};\env \turns_{\mathit{match1st}} \tau \hookrightarrow
-\bar{\rulet}$ are similar to those of $\elookup{\env}{\tau}=\rulet$: they are set
-up to commit to the first matching $\rulet$ in the environment $\env$. The first one is 
-defined in terms of the auxiliary relation $\rulet;\bar{\rulet};\bar{\alpha}
-\turns_\mathit{match} \tau \rightarrow \bar{\rulet}'$. The latter relation
-is the algorithmic counterpart that combines $\rulet \lhd \tau$ and $\bar{\alpha};\env;\rulet \turns_\downarrow \tau$.
-As already indicated, the part not included in this relation are the recursive invocations $\bar{\alpha};\env \turns_{r} \rulet_i~(\rulet_i \in \bar{\rulet}')$.
-Instead $\bar{\rulet}$ is an accumulating parameter for the $\rulet_i$ so they can be returned in $\bar{\rulet}'$.
-
-Essentially, the relation $\turns_{\mathit{match}}$ peels off the universal
-quantifiers and rule contexts from the context type $\rulet$ until it hits the simple
-type $\tau'$. The algorithm proceeds in this way because it can compute (rather than guess) the
-necessary type instantiation for the universal quantifiers by matching the
-context type's head $\tau'$ against the target simple type $\tau$. This
-explains why type instantiation is postponed, and, since recursive resolution
-depends on type instantiation, also why recursive resolution is postponed even
-further. 
-\begin{example}
-Consider for instance the matching of simple type $\tyint \arrow
-\tyint$ against context type $\forall \alpha. \alpha \iarrow (\alpha \arrow
-\alpha)$. Just by looking at the outer quantifier $\forall \alpha$ we do not
-know what $\alpha$ should be. Hence, we peel off the quantifier, postpone $\alpha$'s instantiation and proceed
-with $\alpha \iarrow (\alpha \arrow \alpha)$. At this point, we cannot recursively resolve the context
-$\alpha$ because we have not determined $\alpha$ yet. Hence, we must postpone its
-resolution and proceed with $\alpha \arrow \alpha$. Now we can determine the substitution
-$\theta = [\alpha/\tyint]$ by performing a matching unification with the target simple type $\tyint \arrow \tyint$.
-This substitution $\theta$ enables the postponed recursive resolution of $\alpha\theta = \tyint$.
-\end{example}
-
-The above informal description is formalized as follows.
-There is one rule for each of the three cases: peeling off a context,
-peeling off a universal quantifier and handling the simple type $\tau'$:
+The definition of $\bar{\alpha};\rulet \coh \type$ is a variation on that of
+the declarative judgement $\tenv; \rulet \ivturns \type; \Sigma$. There are
+three differences: 
 \begin{enumerate}
 \item
-As already said, the contexts are collected in the accumulating parameter $\bar{\rulet}$ and
-are returned in $\bar{\rulet}'$
+Since the judgement is only concerned with matchability, no recursive
+resolvents $\Sigma$ are collected. 
 \item
-In the $\forall \alpha$ rule of $\turns_{\mathit{match}}$ we find the main
-difference between the algorithmic and the non-algorithmic definitions. The non-algorithmic definition
-\emph{guesses} an appropriate instantiation $\rulet'$ for the type variable $\alpha$, while the algorithmic
-definition \emph{computes} this instantiation. This computation does not happen in the $\forall \alpha$ rule;
-that rule only accumulates the type variables in the parameter $\bar{\alpha}$ of the relation.
+Instead of guessing the type instantiation ahead of time in rule
+$\mylabel{M-TApp}$, rule $\mylabel{Coh-TApp}$ defers the instantiation to the
+base case, rule \mylabel{Coh-Simp}. This last rule performs the deferred
+instantiation of type variables $\bar{\alpha}$ by computing the \emph{most general
+unifier} $\theta = \mgu{\type'}{\type}$ of $\type'$ and $\type$ that substitutes $\bar{\alpha}$.
+If this unifier exists, a match has been established.
 \item
-The simple type rule checks whether the target type $\tau$ matches the simple
-type $\tau'$. Matching means that the rule checks whether there is a most
-general unifier $\theta'$ (see below) of $\tau$ and $\tau'$ whose domain consists only of
-the accumulated type variables $\bar{\alpha}$. 
-% The ambiguity problem handled by the $\vdash_{\mathit{unamb}}$
-% judgement in Figure~\ref{fig:} manifests itself here as the matching unifier $\theta$
-% not instantiating all of the 
-% type variables $\bar{\alpha}$, because they do not appear in $\tau'$. In order not to introduce any
-% unbound type variables, \mylabel{MTC-Simp} rejects this situation by requiring
-% that the domain of $\theta$ exactly coincides with $\bar{\alpha}$.
-The rule returns the accumulated
-contexts $\bar{\rulet}$, but is careful to apply the unifier $\theta$ to them 
-in order to take the matching into account.
+Since the coherence check considers the substitution of the type variables
+$\bar{\alpha}$ that occur in the environment at the point of the query, rule
+\mylabel{AL-RuleNoMatch} pre-populates the substitutable variables of the
+$\coh$ judgement with them.
 \end{enumerate}
 
-Finally, the third major change is a tractable approach to enforcing coherence.
-It is infeasible to take rule \mylabel{L-Tail} literally and enumerate
-infinitely many substitutions. Fortunately, considering all possible
-substitutions explicitly is entirely unnecessary. After all, the check $\rulet
-\lhd \tau$ essentially considers whether $\tau$ matches the head $\tau'$ of
-$\rulet$: \[ \exists \theta. \theta(\tau') = \tau\] We need to establish whether
-this check fails for all possible substitutions $\theta'$; in other words, we
-want to know whether 
-\[ \exists \theta'.\exists \theta. \theta(\theta'(\tau')) = \theta'(\tau) \]
-holds. Since the domain of $\theta$ is
-disjoint from the free variables of $\tau$, the latter is equivalent to:
-\[ \exists \theta'. \exists \theta. \theta(\theta'(\tau')) = \theta(\theta'(\tau)) \]
-Of course this is equivalent to the simpler:
-\[ \exists \theta. \theta(\tau') = \theta(\tau) \]
-which expresses that $\tau$ and $\tau'$ have a most general unifier.
-This check is captured in the judgement $\bar{\alpha}; \rulet \vdash_{\mathit{coh}} \tau$,
-where $\bar{\alpha}$ are the universally quantified type variables that should not be 
-substituted.
+The second main difference is situated in the third auxiliary judgement
+$\bar{\alpha};\tenv;\rulet;\Sigma \alg \type ; \Sigma'$. This judgement is 
+in fact an extended version of $\bar{\alpha};\rulet\coh\type$ that does 
+collect the recursive resolution obligations in $\Sigma'$ just like the 
+corresponding judgement in the declarative specification. The main difference
+with the latter is that it uses the deferred approach to instantiating 
+type variables. In order to subject the resolution obligations to this
+substitution, which is computed in rule \mylabel{AM-Simp}, the judgement
+makes use of an accumulating parameter $\Sigma$.  This accumulator $\Sigma$
+represents all the obligations collected so far in which type variables
+have not been substituted yet. In contrast, $\Sigma'$ denotes all obligations
+with type variables already substituted.
+Finally, note that rule \mylabel{AL-RuleMatch} does not pre-populate the 
+type variables with those of the environment: we only want to instantiate
+the type variables that appear in the context type $\rulet$ itself for an 
+actual match.
 
 %- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 \paragraph{Restricted Unification}
@@ -838,20 +772,7 @@ could happen when computing for example $\mathit{mgu}_{\alpha}(\forall \beta.\be
 
 \mylabel{AM-TApp}\quad
 \myirule{\bar{\alpha},\alpha; \tenv; \rulet~\gbox{\leadsto E\,\alpha}; \Sigma \alg \type~\gbox{\leadsto E'}; \Sigma'}
-        {\bar{\alpha}; \tenv; \forall \alpha. \rulet~\gbox{\leadsto E}; \Sigma \alg \type~\gbox{\leadsto E'}; \Sigma'}  \\ \\
-
-
-\multicolumn{1}{c}{\myruleform{\bar{\alpha};\rulet\coh \tau}} \\ \\
-\mylabel{COH-TAbs}\quad
-\myirule{\bar{\alpha},\alpha;\rulet \coh \tau}
-        {\bar{\alpha};\forall \alpha. \rulet\coh \tau}  \quad\quad\quad
-\mylabel{COH-IAbs}\quad
-\myirule{\bar{\alpha};\rulet_2 \coh \tau}
-        {\bar{\alpha};\rulet_1 \iarrow \rulet_2\coh \tau}  \\ \\
-\mylabel{COH-Simp}\quad
-\myirule{\theta = \textit{mgu}_{\bar{\alpha}}(\tau,\tau')
-        }
-        {\bar{\alpha};\tau'\coh \tau}  \\ \\
+        {\bar{\alpha}; \tenv; \forall \alpha. \rulet~\gbox{\leadsto E}; \Sigma \alg \type~\gbox{\leadsto E'}; \Sigma'} 
 \ea
 $
 }
@@ -909,14 +830,9 @@ $
 %-------------------------------------------------------------------------------
 \subsection{Termination of Resolution}
 
-TODO
-
-If we are not careful about which rules are added to the implicit environment, then
-the resolution process may not terminate.
-This section describes how to impose 
-a set of modular syntactic restrictions that prevents non-termination. 
-%% We have to avoid non-termination of the type checker to ensure soundness.
-
+If we are not careful about which rules are added to the implicit environment,
+then the resolution process may not terminate.  This section describes how to
+impose a set of modular syntactic restrictions that prevents non-termination. 
 As an example of non-termination consider 
 \begin{equation*}
   \tychar \To \tyint,
@@ -924,15 +840,16 @@ As an example of non-termination consider
 \end{equation*}
 which loops, using alternatively the first and second rule in the implicit
 environment. The source of this non-termination are the mutually recursive 
-definitions of the $\vturns$ and $\turns_\downarrow$ relations: a type is resolved
+definitions of the first two auxiliary judgements: a simple type can be resolved
 in terms of a rule type whose head it matches, but this requires further 
-resolution of the rule type's body. 
+resolution of the rule type's context. 
 
 \newcommand{\term}[1]{\turns_\mathit{term} #1}
 \newcommand{\occ}[2]{\mathit{occ}_{#1}(#2)}
 \newcommand{\tnorm}[1]{\||#1\||}
 
-\subsubsection{Termination Condition}
+%- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+\paragraph{Termination Condition}
 The problem of non-termination has been widely studied in the context of
 Haskell's type classes, and a set of modular syntactic restrictions
 has been imposed on type class instances to avoid non-termination~\cite{fdchr}. 
@@ -951,23 +868,22 @@ ignores the fact that the size may increase dramatically when the type variable
 is instantiated with a large type. The rule $\TermRule$ makes up for this problem
 by requiring a size decrease for all possible instantiations of free type variables.
 However, rather than to specify this property non-constructively as 
-\[ \forall \bar{\rulet}. \||[\bar{\alpha}\mapsto\bar{\rulet}]\tau_1\|| < \||[\bar{\alpha}\mapsto\bar{\rulet}]\tau_2\|| \]
+\[ \forall \bar{\rulet}: \quad \||[\bar{\alpha}\mapsto\bar{\rulet}]\tau_1\|| < \||[\bar{\alpha}\mapsto\bar{\rulet}]\tau_2\|| \]
 it provides a more practical means to verify this condition by way of free variable occurrences.
 The number of occurrences $\occ{\alpha}{\tau_1}$ of free variable $\alpha$ in type $\tau_1$ should be less than the number
 of occurrences 
 $\occ{\alpha}{\tau_2}$ in $\tau_2$. It is easy to see that the non-constructive property follows from this requirement.
 
-\subsubsection{Integration in the Type System}
+\paragraph{Integration in the Type System}
 There are various ways to integrate the termination condition in the type system. 
 The most generic approach is to require that all types satisfy the termination condition.
 This can be done by making the condition part of the well-formedness relation for types.
-
 
 \figtwocol{fig:termination}{Termination Condition}{
 \begin{center}
 \framebox{
 \begin{minipage}{.81\textwidth}
-$
+\begin{equation*}
 \ba{c}
 \myruleform{\term{\rulet}}
 \quad\quad\quad
@@ -981,27 +897,36 @@ $
 \\ \\
 \TermRule \quad
   \myirule{\term{\rulet_1} \quad\quad \term{\rulet_2} \\ 
-           \rulet_1 \lhd \tau_1 \quad\quad \rulet_2 \lhd \tau_2 \quad\quad \tnorm{\tau_1} < \tnorm{\tau_2} \\
+           \tau_1 = \head{\rulet_1} \quad\quad \tau_2 = \head{\rulet_2} \quad\quad \tnorm{\tau_1} < \tnorm{\tau_2} \\
            \forall \alpha \in \ftv{\rulet_1} \cup \ftv{\rulet_2}: \quad \occ{\alpha}{\tau_1} \leq \occ{\alpha}{\tau_2}}  
           {\term{\rulet_1 \iarrow \rulet_2}} 
-\\ \\
+  \\ \\
 \ea
-$
-    \begin{eqnarray*}
-      \occ{\alpha}{\tyint} & = & 0 \\
+\end{equation*}
+\begin{equation*}
+    \ba{rcl@@{\hspace{7mm}}rcl@@{\hspace{7mm}}rcl}
+      \head{\type} & = & \type &
+      \head{\forall \alpha.\rulet} & = & \head{\rulet} &
+      \head{\rulet_1 \iarrow \rulet_2} & = & \head{\rulet_2}
+      \\ \\
+    \ea
+\end{equation*}
+\begin{equation*}
+    \ba{rcl@@{\hspace{7mm}}rcl}
       \occ{\alpha}{\beta} & = & \left\{ \begin{array}{ll} 
          1 & \hspace{1cm}(\alpha = \beta) \\
          0 & \hspace{1cm}(\alpha \neq \beta)
-         \end{array}\right. \\
-      \occ{\alpha}{\rulet_1 \arrow \rulet_2} & = & \occ{\alpha}{\rulet_1} + \occ{\alpha}{\rulet_2} \\
-      \occ{\alpha}{\rulet_1 \iarrow \rulet_2} & = & \occ{\alpha}{\rulet_1} + \occ{\alpha}{\rulet_2} \\
-      \occ{\alpha}{\forall \beta.\rulet} & = & \occ{\alpha}{\rulet} \\ \\
-      \tnorm{\tyint} & = & 1 \\
-      \tnorm{\alpha} & = & 1 \\
-      \tnorm{\rulet_1 \arrow \rulet_2} & = & 1 + \tnorm{\rulet_1} + \tnorm{\rulet_2} \\
-      \tnorm{\rulet_1 \iarrow \rulet_2} & = & 1 + \tnorm{\rulet_1} + \tnorm{\rulet_2} \\
-      \tnorm{\forall \alpha.\rulet} & = & \tnorm{\rulet}
-    \end{eqnarray*} 
+         \end{array}\right. &
+      \occ{\alpha}{\forall \beta.\rulet} & = & \occ{\alpha}{\rulet}  \\
+      \occ{\alpha}{\rulet_1 \arrow \rulet_2} & = & \occ{\alpha}{\rulet_1} + \occ{\alpha}{\rulet_2} &
+      \occ{\alpha}{\rulet_1 \iarrow \rulet_2} & = & \occ{\alpha}{\rulet_1} + \occ{\alpha}{\rulet_2} 
+      \\ \\
+      \tnorm{\alpha} & = & 1 &
+      \tnorm{\forall \alpha.\rulet} & = & \tnorm{\rulet} \\
+      \tnorm{\rulet_1 \arrow \rulet_2} & = & 1 + \tnorm{\rulet_1} + \tnorm{\rulet_2} &
+      \tnorm{\rulet_1 \iarrow \rulet_2} & = & 1 + \tnorm{\rulet_1} + \tnorm{\rulet_2} 
+    \ea
+\end{equation*}
 \end{minipage}
 }
 \end{center}

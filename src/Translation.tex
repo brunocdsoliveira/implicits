@@ -39,12 +39,14 @@ term variable $x$.
 
 The function $|\cdot|$ takes 
 $\ourlang$ types $\rulet$ to System F types T: 
-\begin{eqnarray*}
-|\alpha| & = & \alpha \\
-|\rulet_1 \arrow \rulet_2| & = & |\rulet_1| \arrow |\rulet_2| \\
+\begin{equation*}
+\begin{array}{rcl@{\hspace{1cm}}rcl}
+|\alpha| & = & \alpha &
 |\forall \alpha. \rulet| & = & \forall \alpha. |\rulet| \\
+|\rulet_1 \arrow \rulet_2| & = & |\rulet_1| \arrow |\rulet_2| &
 |\rulet_1 \iarrow \rulet_2| & = & |\rulet_1| \arrow |\rulet_2| %\\
-\end{eqnarray*}
+\end{array}
+\end{equation*}
 Its reveals that implicit $\ourlang$ arrows are translated to explicit System F function arrows.
 
 %- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
