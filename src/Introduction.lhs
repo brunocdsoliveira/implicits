@@ -28,15 +28,15 @@
 %%* Type classes, C++ concepts, Scala implicits, JavaGI
 %%* resolution, type-based
 
-Programming language design is usually guided by two, often competing, 
+Programming language design is usually guided by two, often conflicting, 
 goals: \emph{flexibility} and \emph{ease of reasoning}.
 Many programming languages aim at providing powerful, 
 flexible language constructs that allow programmers to achieve reuse, 
-and develop programs rapidely and concisely. Other programming languages aim 
-easily reasoning about programs, as well as avoid programming
+and develop programs rapidly and concisely. Other programming languages aim 
+at easy reasoning about programs, as well as avoid programming
 pitfalls. Very often the two goals are at odds with each other, since 
-very flexible programming mechanisms make reasoning harder. 
-Arguably the art in programming language design is to combine  
+highly flexible programming mechanisms make reasoning harder. 
+Arguably the art of programming language design is to reconcile
 both goals.\bruno{Optional paragraph I guess, but it sets the tone 
 for what this paper is about: working out how to deal with the tension
 between the flexibility of implicits, and strong reasoning properties
@@ -44,39 +44,39 @@ such as coherence.}
 
 Implicit programming (IP) denotes a class of language mechanisms,
 which infers values by using type information. Examples of IP
-mechanisms include Haskell’s type classes~\cite{}, Scala’s
-implicits~\cite{}, JavaGI’s generalized interfaces~\cite{}, C++’s
-concepts~\cite{}, Agda's \emph{instance arguments}, Coq's type
-classes~\cite{} and others~\cite{}. IP can also be viewed as a form of
+mechanisms include Haskell's type classes~\cite{}, Scala's
+implicits~\cite{}, JavaGI's generalized interfaces~\cite{}, C++'s
+concepts~\cite{}, Agda's \emph{instance arguments}~\cite{}, Coq's type
+classes~\cite{} and Rust's ???~\cite{}. IP can also be viewed as a form of
 (type-directed) program synthesis~\cite{}. The programming is said to
-be “implicit” because expressions (e.g., those for function
-parameters) can be ommitted and instead provided automaticaly via a
-\emph{type-directed resolution} process, producing the necessary
-values. Implicit values are either fetched by type from the current
-(implicit) environment or constructed by type-directed rules.
+be \emph{implicit} because expressions (e.g., those for function
+parameters) can be omitted by the programmer. Instead the necessary values are
+provided automatically via a \emph{type-directed resolution} process. 
+These implicit values are either fetched by type from the current (implicit)
+environment or constructed by type-directed rules.
 
-Currently there are \bruno{at least?} two schools of thought regarding
+Currently there are two main schools of thought regarding
 the design of IP mechanisms.  Haskell's type classes~\cite{} embodies
-a first school of thought, which is guided by the \emph{easy of
+a first school of thought, which is guided by the \emph{ease of
   reasoning} qualities of pure functional languages, and the
-\emph{predicability} of programs. To ensure these goals the semantics
+\emph{predictability} of programs. To ensure these goals the semantics
 of the language should be \emph{coherent}~\cite{reynolds}. Coherence
 means that any valid program must have exactly one meaning (that is,
 the semantics is not ambiguous).  Haskell type classes preserve
-coherence, but not for free. Since the first implementations of type
+coherence, but at a cost. Since the first implementations of type
 classes, Haskell imposes several restrictions to guarantee
 coherence. Advanced features of type classes, such as overlapping
-instances~\cite{}, pose even more severe problems. In purely
+instances~\cite{}, pose severe problems for coherence. In purely
 functional programming, ``\emph{substituting equals by equals}'' is
-expected to hold. That is, when given two equivalent expressions then
-replacing one by the other in \emph{any context} will always lead to
+expected to hold. That is, when given two equivalent expressions, then
+replacing one by the other in \emph{any context} always leads to
 two programs that yield the same result. Special care (via
-restriuctions) is needed to preserve coherence and the ability of
+restrictions) is needed to preserve coherence and the ability of
 substituting equals by equals in the presence of overlapping
 instances. 
 
 Various past work has pointed out limitations of type classes~\cite{}. 
-In particular type classes, require one instance per type (or severely 
+In particular type classes allow at most one instance per type (or severely 
 restrict overlapping instances) to exist in a program. This means  
 that all instances must be visible globally, and local scoping of
 instances is not allowed. Other restrictions of type classes are 
@@ -85,45 +85,47 @@ cannot be higher-order~\cite{}.
 
 \bruno{Need to talk, at some point, about global coherence.}
 
-An alternative school of thought, embodied by several other
-programming languages mechanisms~\cite{}, favours \emph{flexibility}.
-Mechanisms such as Scala implicits, Agda's instance arguments \bruno{others}
-remove many of those limitations. For example, Scala supports local
-scoping of instances, which can be used to allow multiple
-``instances'' to exists for the same type under different scopes in a
+An alternative school of thought, embodied by several other programming
+languages mechanisms~\cite{}, favours \emph{flexibility}.  Mechanisms such as
+Scala implicits, Agda's instance arguments \bruno{others} do not impose all of
+the type class restrictions. For example, Scala supports local scoping of
+instances, which can be used to allow distinct 
+``instances'' to exists for the same type in different scopes in the same
 program. Scala also allows a powerful form of overlapping 
-implicits~\cite{}. The essence of such style of implicit
-programming is has been modelled by the \emph{implicit calculus}. The
+implicits~\cite{}. The essence of this style of implicit
+programming is modelled by the \emph{implicit calculus}. The
 implicit calculus has show to be type-safe.
-Unfortunatelly, both the implicit calculus and the various existing
+Unfortunately, both the implicit calculus and the various existing
 language mechanisms that embody flexibility do not preserve
-coherence and the ability to substitute equals by equals. 
+coherence and the ability to substitute equals for equals. 
 
 The design of IP mechanisms has led to heated debate~\cite{} about 
-the pros/cons of each school of thought: ease of reasoning versus
+the pros and cons of each school of thought: ease of reasoning versus
 flexibility. The current state-of-affairs seems to indicate that both
-goals are at odds with each other, and cannot be easily reconsiled.  
+goals are at odds with each other, and cannot be easily reconciled.  
 
 \bruno{Should we give the new calculus a name?}
-This paper presents an improved variant of the implicit calculus that
-preserves \emph{coherence}. Our calculus supports local scoping,
+This paper presents \name, an improved variant of the implicit calculus that
+preserves \emph{coherence}. \name supports local scoping,
 overlapping instances, first-class instances and higher-order
-rules. Yet, in constrast to most previous work that supports such
-features, the calculus is not only type-safe, but also coherent. The
-resulting calculus has much in common with approaches to \emph{focused
-  proof search}~\cite{}, which have partly inspired our work.
-However, in contrast to focused proof search, which employs a
-non-deterministic resolution process to find proofs, resolution in our
-calculus is deterministic. Key to retaining detreminism and coherence
-are several techniques employed by the resolution process. In
-particular, unlike focused proof search, our resilution uses of a
-stack disciplined to prioratize rules, and removes any recursive
-resolutions from matching decisions.
+rules. Yet, in contrast to most previous work that supports such
+features, the calculus is not only type-safe, but also coherent. 
+
+The overlapping and higher-order nature of rules pose significant challenges
+for the coherence and determinism of \name's resolution. To overcome
+non-determinism due to higher-order rules, we borrow
+ideas from \emph{focused proof search}~\cite{}. to obtain determinism in the presence of higher-order
+rules. However, unlike focused proof search, which is still essentially
+non-deterministic, \name's resolution employs additional techniques
+to be entirely deterministic and coherent. 
+In particular, unlike focused proof search, our resolution uses a stack
+discipline to prioritize rules, and removes any recursive resolutions from
+matching decisions.
 
 In summary, our contributions are as follows.
 
 \begin{itemize}
-\item Our \emph{implicit calculus} $\ourlang$ 
+\item \name
   provides a \emph{coherent} (and type-safe) minimal formal model for
   implicit programming that supports local scoping, overlapping rules,
   first-class instances and higher-order rules.
@@ -131,9 +133,9 @@ In summary, our contributions are as follows.
 \item We identify the connection between the type-directed resolution
   process of IP and focused proof search. The design of resolution in
   our calculus is directly inspired by focused proof search, but
-  employs verious techniques to ensure determinism.
+  employs various additional techniques to ensure determinism.
 
-\item We provide a semantics in the form of a translation from $\ourlang$
+\item We provide a semantics in the form of a translation from \name
    to System F. We prove our translation to be type-safe, and
    coherent. The full proofs are available at: \url{http://fill.me}. 
 
@@ -147,7 +149,7 @@ Section 3 describes a polymorphic type system that
 statically excludes ill-behaved programs. Section 4 provides the elaboration 
 semantics of our calculus into System F and correctness results. 
 %Section 5 presents the source language and its encoding into $\ourlang$. 
-Section 6 discusses comparisons and related work. Section 7 concludes.
+Section 6 discusses related work and Section 7 concludes.
 
 %if False
 This paper is a rewrite and expansion of the conference paper by Oliveira et
