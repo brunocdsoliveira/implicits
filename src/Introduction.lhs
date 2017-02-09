@@ -36,11 +36,10 @@ and develop programs rapidly and concisely. Other programming languages aim
 at easy reasoning about programs, as well as avoid programming
 pitfalls. Very often the two goals are at odds with each other, since 
 highly flexible programming mechanisms make reasoning harder. 
+A concrete example where this issue manifests itself is in the design of
+Implicit Programming (IP) mechanisms.
 Arguably the art of programming language design is to reconcile
-both goals.\bruno{Optional paragraph I guess, but it sets the tone 
-for what this paper is about: working out how to deal with the tension
-between the flexibility of implicits, and strong reasoning properties
-such as coherence.}
+both goals. 
 
 Implicit programming (IP) denotes a class of language mechanisms,
 which infers values by using type information. Examples of IP
@@ -62,7 +61,7 @@ a first school of thought, which is guided by the \emph{ease of
 \emph{predictability} of programs. To ensure these goals the semantics
 of the language should be \emph{coherent}~\cite{reynolds}. Coherence
 means that any valid program must have exactly one meaning (that is,
-the semantics is not ambiguous).  Haskell type classes preserve
+the semantics is not ambiguous/non-deterministic).  Haskell type classes preserve
 coherence, but at a cost. Since the first implementations of type
 classes, Haskell imposes several restrictions to guarantee
 coherence. Advanced features of type classes, such as overlapping
