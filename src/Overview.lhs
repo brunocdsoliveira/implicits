@@ -61,7 +61,16 @@ instances. The following program illustrates the issues:
 > bad :: a -> a
 > bad x = trans x  -- incoherent definition!
 
-Consider the following reasoning steps:
+\noindent This program declares a type class 
+|Trans a| for defining transformations on some 
+type |a|. A default implementation for any types, which 
+simply implements the identity transformation is defined 
+by the first instance. A second instance defines a 
+transformation on integers. Finally the function 
+|bad| simply calls the transformation function. 
+
+Now, consider the following reasoning steps, where |bad| 
+is applied to the integer |1|:
 
 > bad 1
 > = {- definition of |bad| -}
@@ -71,7 +80,25 @@ Consider the following reasoning steps:
 > = {- arithmetic -}
 > 2
 
-< bad :: a -> a
+\noindent The reasoning steps substitute equals-by-equals. 
+Importantly, in the second step, since we use an integer, 
+we chose the implementation of trans on the second instance. 
+Thus the outcome of this simple equational reasoning is |2|. 
+
+Unfortunatelly the result of |bad 1| is actually |1|. 
+The problem is that |bad 1| has already committed to the 
+first implementation of |trans|, since type class resolution 
+is done statically: the only possible instance that can satisfy 
+the type |a -> a| is the first one. However, such bbehaviour is counter-intuitive since 
+|bad 1| and |trans 1| give different results, even though
+the definition of |bad| blatently says that |bad x = trans x|. 
+In other words substituting equals-by-equals would be lost 
+if the program is accepted. 
+To prevent this, Haskell implementations reject such program by default. 
+If programmers really want such incoherent behaviour, they can activate 
+a flag (\emph{incoherent instances}), which allows the program to type-check.  
+
+
 
 \subsection{Our Calculus}
 
