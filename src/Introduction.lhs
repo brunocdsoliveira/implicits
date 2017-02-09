@@ -57,8 +57,42 @@ values. Implicit values are either fetched by type from the current
 
 Currently there are \bruno{at least?} two schools of thought regarding
 the design of IP mechanisms. Haskell's original design for type
-classes~\cite{} is guided by the strong reasoning qualities of pure
-functional languages. In particular, in purely functional programming,
+classes~\cite{} is guided by the \emph{strong reasoning} qualities of pure
+functional languages, and the \emph{predicability} of programs.
+Haskell type classes preserve these properties, but not for
+free. Since the first implementations of type classes, 
+Haskell imposes several restrictions to
+guarantee such desirable properties. For example, the expression:
+
+> show (read ''3'') == ''3'' 
+
+\noindent where functions |show| and |read| have the types: 
+
+> show :: Show a => a -> String
+> read :: Read a => String -> a
+
+\noindent is rejected in Haskell due to \emph{ambiguity} of 
+\emph{type class resolution}~\cite{jones}. The functions |show| and
+|read| respectively print and parse values of a certain type |a|. 
+The type |a| can be any type that implements the classes |Show| 
+and |Read|. For example, it could be |Int|, |Float| or |Char|. The
+reason for rejecting the program is precisely that multiple choices 
+exists for instantiating the type |a|. Depending on such choice, the 
+result of the expression could be different. For example, chosing 
+|a=Float| leads to |False|, since showing the float 3 would result 
+in the ``3.0''. In contrast chosing |a=Int| leads to |True|, since the
+string is the same.
+
+> class Trans a where trans :: a -> a
+>
+> instance Trans a where trans x = x
+>
+> instance Trans Int where trans x = x+1
+>
+> test :: a -> a
+> test = trans
+
+ In particular, in purely functional programming,
 ``\emph{substituting equals by equals}'' is expected to hold. That is,
 when given two equivalent expressions then replacing one by the other
 in \emph{any context} will always lead to two programs that yield the
