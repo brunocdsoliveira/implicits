@@ -96,8 +96,58 @@ In other words substituting equals-by-equals would be lost
 if the program is accepted. 
 To prevent this, Haskell implementations reject such program by default. 
 If programmers really want such incoherent behaviour, they can activate 
-a flag (\emph{incoherent instances}), which allows the program to type-check.  
+a flag (\emph{incoherent instances}), which allows the program to type-check.
+But the use of incoherent instances is discouraged.  
 
+\paragraph{Global coherence} \bruno{Set example should come here.}
+
+\subsection{Incoherence in Implicits}
+
+Scala implicits~\cite{implicits}
+are an interesting alternative in IP
+design. Unlike type classes, implicits have locally scoped rules. Moreover,
+values of any type can be used as implicit parameters; there is no special 
+separate type-class-like interface. Instead, such interfaces are
+modeled with regular types, they can be abstracted over and do 
+not suffer from the second class nature of type classes. In $\ourlang$
+we also make similar design choices.
+
+%format v1 = "\Varid{v_1}"
+%format v2 = "\Varid{v_2}"
+
+\begin{figure}
+\small
+\begin{code}
+   trait A {
+     implicit def id[a] : a => a = x => x
+
+     def ?[a](implicit x: a) = x
+  }
+
+  object B extends A {
+     implicit def succ : Int => Int = x => x + 1
+
+     def bad[a](x : a) = (?[a => a]).apply(x)
+
+     val v1 = bad[Int](3)  // evaluates to 3
+     val v2 = (?[Int => Int]).apply(3) // evaluates to 4
+  }
+\end{code}
+\caption{Nested Scoping with Overlapping Rules in Scala}
+
+\label{fig:scala}
+
+\end{figure} 
+
+In particular, although Scala allows \emph{nested} local scoping and overlapping rules,
+\textit{coherence} is not guaranteed. Figure~\ref{fig:scala} illustrates
+the issue briefly, using the example that was presented in
+Section~\ref{subsec:over}. Scala's subclassing creates nested
+implicit scopes. The program is accepted, but Scala incoherently
+selects the more general implicit value (|id|) for |v1|. In contrast, |v2|,
+which (naively) inlines |func[Int]|, picks |succ|. As a result, despite
+looking equivalent, the two expressions yield different results.
+This makes such programs quite hard to understand. 
 
 
 \subsection{Our Calculus}
