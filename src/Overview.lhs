@@ -5,8 +5,70 @@
 
 %format === = "\cong"
 
-\section{Overview of the Implicit Calculus $\ourlang$}
+\section{Overview}
 \label{sec:overview}
+
+This section presents relevant background on type classes, IP 
+and coherence, and it introduces the key features of our calculus.
+
+\subsection{Implicit Programming}
+
+\subsection{(In)Coherence}
+
+For example, the expression:
+
+> show (read ''3'') == ''3'' 
+
+\noindent where functions |show| and |read| have the types: 
+
+> show :: Show a => a -> String
+> read :: Read a => String -> a
+
+\noindent is rejected in Haskell due to \emph{ambiguity} of 
+\emph{type class resolution}~\cite{jones}. The functions |show| and
+|read| respectively print and parse values of a certain type |a|. 
+The type |a| can be any type that implements the classes |Show| 
+and |Read|. For example, it could be |Int|, |Float| or |Char|. The
+reason for rejecting the program is precisely that multiple choices 
+exists for instantiating the type |a|. Depending on such choice, the 
+semantics of the expression could be different. For example, chosing 
+|a=Float| leads to |False|, since showing the float 3 would result 
+in the ``3.0''. In contrast chosing |a=Int| leads to |True|, since the
+string is the same.
+
+Advanced features of type classes, such as overlapping
+instances~\cite{}, pose even more severe problems. In purely
+functional programming, ``\emph{substituting equals by equals}'' is
+expected to hold. That is, when given two equivalent expressions then
+replacing one by the other in \emph{any context} will always lead to
+two programs that yield the same result. Special care is needed to
+preserve coherence and the ability of substituting equals by equals in
+the presence of overlapping instances. The following porgram
+illustrates the issues:
+
+> class Trans a where trans :: a -> a
+>
+> instance Trans a where trans x = x
+>
+> instance Trans Int where trans x = x+1
+>
+> test :: a -> a
+> test = trans
+
+
+The issue can be illustrated with a simple program:
+
+> class Trans a where trans :: a -> a
+>
+> instance Trans a where trans x = x
+>
+> instance Trans Int where trans x = x+1
+>
+> test :: a -> a
+> test = trans
+
+\bruno{Move to Overview}
+
 
 Our calculus $\ourlang$ combines standard scoping mechanisms 
 (abstractions and applications) and types \`a la System F, with a

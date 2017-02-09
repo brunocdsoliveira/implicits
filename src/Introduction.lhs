@@ -120,61 +120,6 @@ particular, unlike focused proof search, our resilution uses of a
 stack disciplined to prioratize rules, and removes any recursive
 resolutions from matching decisions.
 
-
-The issue can be illustrated with a simple program:
-
-> class Trans a where trans :: a -> a
->
-> instance Trans a where trans x = x
->
-> instance Trans Int where trans x = x+1
->
-> test :: a -> a
-> test = trans
-
-\bruno{Move to Overview}
-For example, the expression:
-
-> show (read ''3'') == ''3'' 
-
-\noindent where functions |show| and |read| have the types: 
-
-> show :: Show a => a -> String
-> read :: Read a => String -> a
-
-\noindent is rejected in Haskell due to \emph{ambiguity} of 
-\emph{type class resolution}~\cite{jones}. The functions |show| and
-|read| respectively print and parse values of a certain type |a|. 
-The type |a| can be any type that implements the classes |Show| 
-and |Read|. For example, it could be |Int|, |Float| or |Char|. The
-reason for rejecting the program is precisely that multiple choices 
-exists for instantiating the type |a|. Depending on such choice, the 
-semantics of the expression could be different. For example, chosing 
-|a=Float| leads to |False|, since showing the float 3 would result 
-in the ``3.0''. In contrast chosing |a=Int| leads to |True|, since the
-string is the same.
-
-Advanced features of type classes, such as overlapping
-instances~\cite{}, pose even more severe problems. In purely
-functional programming, ``\emph{substituting equals by equals}'' is
-expected to hold. That is, when given two equivalent expressions then
-replacing one by the other in \emph{any context} will always lead to
-two programs that yield the same result. Special care is needed to
-preserve coherence and the ability of substituting equals by equals in
-the presence of overlapping instances. The following porgram
-illustrates the issues:
-
-> class Trans a where trans :: a -> a
->
-> instance Trans a where trans x = x
->
-> instance Trans Int where trans x = x+1
->
-> test :: a -> a
-> test = trans
-
-
-
 In summary, our contributions are as follows.
 
 \begin{itemize}
@@ -201,9 +146,10 @@ Section 2 presents an informal overview of our calculus.
 Section 3 describes a polymorphic type system that
 statically excludes ill-behaved programs. Section 4 provides the elaboration 
 semantics of our calculus into System F and correctness results. 
-Section 5 presents the source language and its encoding into $\ourlang$. 
+%Section 5 presents the source language and its encoding into $\ourlang$. 
 Section 6 discusses comparisons and related work. Section 7 concludes.
 
+%if False
 This paper is a rewrite and expansion of the conference paper by Oliveira et
 al. \shortcite{oliveira12implicit}.  It has one additional author
 (Wadler), whose main contribution was to suggest a simplification to
@@ -224,7 +170,7 @@ resolution. Neither of these were discussed in the conference
 version. Finally, our formalization is more detailed, having several
 additional lemmas proving properties of the calculus; and we have 
 significantly expanded our discussion of related work.
-
+%endif
 
 
 %%The companion technical report~\cite{oliveira12implicit} provides additional technical material
