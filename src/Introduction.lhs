@@ -36,18 +36,18 @@ and develop programs rapidly and concisely. Other programming languages aim
 at easy reasoning about programs, as well as avoid programming
 pitfalls. Very often the two goals are at odds with each other, since 
 highly flexible programming mechanisms make reasoning harder. 
-A concrete example where this issue manifests itself is in the design of
-Implicit Programming (IP) mechanisms.
 Arguably the art of programming language design is to reconcile
 both goals. 
 
-Implicit programming (IP) denotes a class of language mechanisms,
-which infers values by using type information. Examples of IP
-mechanisms include Haskell's type classes~\cite{}, Scala's
-implicits~\cite{}, JavaGI's generalized interfaces~\cite{}, C++'s
-concepts~\cite{}, Agda's \emph{instance arguments}~\cite{}, Coq's type
-classes~\cite{} and Rust's ???~\cite{}. IP can also be viewed as a form of
-(type-directed) program synthesis~\cite{}. The programming is said to
+A concrete case where this issue manifests itself is in the design of
+\emph{Implicit Programming} (IP) mechanisms.
+Implicit programming denotes a class of language mechanisms,
+which infer values by using type information. Examples of IP
+mechanisms include Haskell's type classes~\cite{adhoc}, Scala's
+implicits~\cite{scala}, JavaGI's generalized interfaces~\cite{javagi}, C++'s
+concepts~\cite{concepts}, Agda's \emph{instance arguments}~\cite{instanceargs}, Coq's type
+classes~\cite{coqclasses} and Rust's \emph{traits}~\cite{rust}. IP can also be viewed as a form of
+(type-directed) program synthesis~\cite{Manna:1980:DAP:357084.357090}. The programming is said to
 be \emph{implicit} because expressions (e.g., those for function
 parameters) can be omitted by the programmer. Instead the necessary values are
 provided automatically via a \emph{type-directed resolution} process. 
@@ -55,8 +55,8 @@ These implicit values are either fetched by type from the current (implicit)
 environment or constructed by type-directed rules.
 
 Currently there are two main schools of thought regarding
-the design of IP mechanisms.  Haskell's type classes~\cite{} embodies
-a first school of thought, which is guided by the \emph{ease of
+the design of IP mechanisms.  Haskell's type classes~\cite{adhoc} embody
+the first school of thought, which is guided by the \emph{ease of
   reasoning} qualities of pure functional languages, and the
 \emph{predictability} of programs. To ensure these goals the semantics
 of the language should be \emph{coherent}~\cite{reynolds}. Coherence
@@ -65,7 +65,8 @@ the semantics is not ambiguous/non-deterministic).  Haskell type classes preserv
 coherence, but at a cost. Since the first implementations of type
 classes, Haskell imposes several restrictions to guarantee
 coherence. Advanced features of type classes, such as overlapping
-instances~\cite{}, pose severe problems for coherence. In purely
+instances,\footnote{\url{https://downloads.haskell.org/~ghc/latest/docs/html/users\_guide/glasgow\_exts.html\#overlapping-instances}} 
+pose severe problems for coherence. In purely
 functional programming, ``\emph{substituting equals by equals}'' is
 expected to hold. That is, when given two equivalent expressions, then
 replacing one by the other in \emph{any context} always leads to
@@ -84,9 +85,8 @@ cannot be higher-order~\cite{}.
 
 \bruno{Need to talk, at some point, about global coherence.}
 
-An alternative school of thought, embodied by several other programming
-languages mechanisms~\cite{}, favours \emph{flexibility}.  Mechanisms such as
-Scala implicits, Agda's instance arguments \bruno{others} do not impose all of
+An alternative school of thought favours \emph{flexibility}. For instance, 
+Scala implicits and Agda's instance arguments \bruno{others} do not impose all of
 the type class restrictions. For example, Scala supports local scoping of
 instances, which can be used to allow distinct 
 ``instances'' to exists for the same type in different scopes in the same
@@ -112,14 +112,12 @@ features, the calculus is not only type-safe, but also coherent.
 
 The overlapping and higher-order nature of rules pose significant challenges
 for the coherence and determinism of \name's resolution. To overcome
-non-determinism due to higher-order rules, we borrow
-ideas from \emph{focused proof search}~\cite{}. to obtain determinism in the presence of higher-order
-rules. However, unlike focused proof search, which is still essentially
-non-deterministic, \name's resolution employs additional techniques
-to be entirely deterministic and coherent. 
-In particular, unlike focused proof search, our resolution uses a stack
-discipline to prioritize rules, and removes any recursive resolutions from
-matching decisions.
+non-determinism due to higher-order rules, we borrow ideas from \emph{focused
+proof search}~\cite{focusing,Miller91b,Liang:2009}. However, unlike focused proof search, which is still
+essentially non-deterministic, \name's resolution employs additional techniques
+to be entirely deterministic and coherent.  In particular, unlike focused proof
+search, our resolution uses a stack discipline to prioritize rules, and removes
+any recursive resolutions from matching decisions.
 
 In summary, our contributions are as follows.
 
