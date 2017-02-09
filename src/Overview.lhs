@@ -67,7 +67,7 @@ The issue can be illustrated with a simple program:
 > test :: a -> a
 > test = trans
 
-\bruno{Move to Overview}
+\subsection{Our Calculus}
 
 
 Our calculus $\ourlang$ combines standard scoping mechanisms 
@@ -625,3 +625,89 @@ n.n+1$ and the second $f$ must be $\lambda x.x$.
 %\emph{rules} determine which values resolution infers. 
 
 %endif
+
+\subsection{Runtime Errors and Coherence Failures}
+\label{subsec:error}
+In $\ourlang$, ill-behaved programs either raise runtime errors or are
+incoherent. The principal source of runtime errors is query failure,
+which is caused by either lookup failure or ambiguous instantiation
+during resolution. Coherence failure happens when a query in a
+program does not have a single nearest match or its single nearest
+match is not the one used at runtime.
+
+\paragraph{Lookup Failures}
+A lookup fails if there is no matching rule in the rule environment,
+or there are multiple matching rules.
+
+The first cause, no matching rule, is the simplest, illustrated by the
+following two examples:
+\[\begin{array}{rl}
+\myset{} &\turns  |query Int| \\
+\myset{|{Bool} => Int : -|}& \turns |query Int|
+\end{array}
+\noindent \]
+In the first example, resolution does not find a matching rule for the
+given |Int| type in the environment. In the second example,
+resolution finds a matching rule for |Int| in the first step, but
+does not find one in the recursive step for |Bool|.
+
+The second cause are multiple matching rules, which is the case in the
+following two examples:
+
+> {Int : 1, Int : 2} turns (query Int)
+> {forall a.a -> Int : -, forall a.Int -> a : - } turns (query (Int -> Int))
+\noindent
+
+In the first example, two different rules produce a value for the same
+type |Int|; arbitrarily choosing one of 1 and 2
+makes the program's behavior unpredictable. To avoid this ambiguity,
+the lookup fails instead. The second example shows that two rules can
+be used to produce a value of the same type, even though the rule
+types are different. The two polymorphic rule types can be instantiated to the
+same type, in this case to |Int -> Int|.
+
+\paragraph{Ambiguous Instantiations}
+In some cases, resolution does not determine how to instantiate a
+fetched rule. Consider the following example:\footnote{$\rclos{n}$
+  denotes a closure value; distinct numbers mean distinct values.}\[
+\begin{array}{rl}
+  \myset{\quad 
+    |forall a.{a -> a} => Int : rclos 1| &, \\
+    |Bool -> Bool : rclos 2|&, \\
+    |forall b. b -> b : rclos 3|&} \turns |query Int|
+\end{array}\]
+% > { forall a. {a -> a} => Int : (rclos 1), Int -> Int : (rclos 2),
+% >  Bool -> Bool : (rclos 3) } turns (query Int)
+The |query Int| matches the first rule without determining an
+instantiation for |a|. However, the runtime behavior could actually
+depend on the choice between |rclos 2| and |rclos 3|. Thus the query
+is ambiguous.
+
+\paragraph{Coherence Failures}
+A program is coherent iff every query in the program has a single,
+lexically nearest match, which is the same statically and at runtime. This
+means that all the runtime queries instantiated from the original
+query should have the same resolution result. Consider the following
+example:
+
+> let f : forall b.b -> b =
+>   implicit {fun (x) (x) : forall a. a -> a} in
+>       query (b -> b)
+\noindent
+This program is coherent because no matter which type the type
+variable |b| will have at runtime, the resolution results for all
+those queries are the same (|forall a. a -> a|). However, the following program is
+incoherent:
+
+> let f : forall b.b -> b =
+>   implicit {fun (x) (x) : forall a. a -> a} in
+>      implicit {fun (n) (n + 1) : Int -> Int} in 
+>       query (b -> b)
+\noindent
+There are two possible results for the query |query (b -> b)|
+depending on the type of |b| at runtime. If the query is instantiated
+by the substitution $\subst{|b|}{|Int|}$, then the nearest result is
+|Int -> Int| and otherwise, |forall a. a -> a| is the one.
+
+Our static type system will safely reject such programs that can have
+the aforementioned runtime errors or coherence failures.
