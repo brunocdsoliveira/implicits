@@ -9,13 +9,18 @@
 \label{sec:overview}
 
 This section presents relevant background on type classes, IP 
-and coherence, and it introduces the key features of our calculus.
+and coherence, and it introduces the key features of our calculus for ensuring coherence.
 
-\subsection{Implicit Programming}
+\subsection{Type Classes and Implicit Programming}
 
-\subsection{(In)Coherence}
+\subsection{Coherence in Type Classes}
 
-For example, the expression:
+A programming language is said to be coherent if
+any valid program has exactly one meaning (that is,
+the semantics is not ambiguous). Haskell type classes preserve
+coherence, but not for free. Since the first implementations of type
+classes, Haskell imposes several restrictions to guarantee
+coherence. For example, the expression:
 
 > show (read ''3'') == ''3'' 
 
@@ -36,15 +41,16 @@ semantics of the expression could be different. For example, chosing
 in the ``3.0''. In contrast chosing |a=Int| leads to |True|, since the
 string is the same.
 
+\paragraph{Overlapping and Incoherent Instances} 
 Advanced features of type classes, such as overlapping
 instances~\cite{}, pose even more severe problems. In purely
 functional programming, ``\emph{substituting equals by equals}'' is
 expected to hold. That is, when given two equivalent expressions then
 replacing one by the other in \emph{any context} will always lead to
-two programs that yield the same result. Special care is needed to
-preserve coherence and the ability of substituting equals by equals in
-the presence of overlapping instances. The following porgram
-illustrates the issues:
+two programs that yield the same result. Special care (via
+restrictions) is needed to preserve coherence and the ability of
+substituting equals by equals in the presence of overlapping
+instances. The following program illustrates the issues:
 
 > class Trans a where trans :: a -> a
 >
@@ -52,23 +58,22 @@ illustrates the issues:
 >
 > instance Trans Int where trans x = x+1
 >
-> test :: a -> a
-> test = trans
+> bad :: a -> a
+> bad x = trans x  -- incoherent definition!
 
+Consider the following reasoning steps:
 
-The issue can be illustrated with a simple program:
+> bad 1
+> = {- definition of |bad| -}
+> trans 1
+> = {- definition of |trans| -}
+> 1+1
+> = {- arithmetic -}
+> 2
 
-> class Trans a where trans :: a -> a
->
-> instance Trans a where trans x = x
->
-> instance Trans Int where trans x = x+1
->
-> test :: a -> a
-> test = trans
+< bad :: a -> a
 
 \subsection{Our Calculus}
-
 
 Our calculus $\ourlang$ combines standard scoping mechanisms 
 (abstractions and applications) and types \`a la System F, with a
