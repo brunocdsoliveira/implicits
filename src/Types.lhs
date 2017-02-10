@@ -296,7 +296,7 @@ measures:
       \emph{focused proof search} in logic~\cite{focusing,Miller91b,Liang:2009}, where at most one
       rule applies in any given situation. 
 
-      This approach organizes resolution into two alternating phases that
+      Our approach organizes resolution into two alternating phases that
       pivots on an environment lookup (\mylabel{R-IVar}) which shifts
       the focus from the queried type to an implicit rule type in the environment. 
       The first phase performs \emph{backward chaining}: it applies only
@@ -591,7 +591,7 @@ important complicating factor here: the query type may contain universal
 quantifiers.  Consider a query for |forall a. a -> a|. In this case we wish to
 rule out entirely the context type |Int -> Int| as a potential match. Even
 though it matches under the substitution $\theta = [\alpha \mapsto |Int|]$,
-that covers only one instantiation while the clearly query requires a resolvent that
+that covers only one instantiation while the query clearly requires a resolvent that
 covers all possible instantiations at the same time.
 
 We clearly identify which type variables $\bar{\alpha}$ are to be considered
@@ -610,9 +610,9 @@ grabs them and passes them on to all uses of rule \mylabel{L-RuleNoMatch}.
 Figure~\ref{fig:algorithm} contains an algorithm that implements the
 non-algorithmic deterministic resolution rules of Figure~\ref{fig:resolution2}.
 It differs from the latter in two important ways: 
-1) it replaces explicit quantification over all substitutions $\theta$ in rule
-\mylabel{L-RuleNoMatch} with a tractable approach to coherence checking.
-and 2) it computes rather than guesses type substitutions in rule
+firstly, it replaces explicit quantification over all substitutions $\theta$ in rule
+\mylabel{L-RuleNoMatch} with a tractable approach to coherence checking;
+and, secondly, it computes rather than guesses type substitutions in rule
 \mylabel{M-TApp}. 
 
 The definition of the algorithm is structured in much the same way
@@ -755,7 +755,7 @@ could happen when computing for example $\mathit{mgu}_{\alpha}(\forall \beta.\be
           {\bar{\alpha};\tenv;\tenv',\alpha \alg \type~\gbox{\leadsto E}} 
 \\ \\ \\
 
-\multicolumn{1}{c}{\myruleform{\alpha; \tenv; \rulet~\gbox{\leadsto E}; \Sigma \alg \type~\gbox{\leadsto E'}; \Sigma'}} \\ \\
+\multicolumn{1}{c}{\myruleform{\bar{\alpha}; \tenv; \rulet~\gbox{\leadsto E}; \Sigma \alg \type~\gbox{\leadsto E'}; \Sigma'}} \\ \\
 
 \mylabel{AM-Simp}\quad
 \myirule{\theta = \textit{mgu}_{\bar{\alpha}}(\type,\type')
@@ -834,7 +834,7 @@ As an example of non-termination consider
   \tychar \To \tyint,
   \tyint \To \tychar \vturns \tyint
 \end{equation*}
-which loops, using alternatively the first and second rule in the implicit
+which loops, using alternatively the first and second rule in the
 environment. The source of this non-termination are the mutually recursive 
 definitions of the first two auxiliary judgements: a simple type can be resolved
 in terms of a rule type whose head it matches, but this requires further 
@@ -894,7 +894,7 @@ This can be done by making the condition part of the well-formedness relation fo
 \TermRule \quad
   \myirule{\term{\rulet_1} \quad\quad \term{\rulet_2} \\ 
            \tau_1 = \head{\rulet_1} \quad\quad \tau_2 = \head{\rulet_2} \quad\quad \tnorm{\tau_1} < \tnorm{\tau_2} \\
-           \forall \alpha \in \ftv{\rulet_1} \cup \ftv{\rulet_2}: \quad \occ{\alpha}{\tau_1} \leq \occ{\alpha}{\tau_2}}  
+           \forall \alpha \in \ftv{\rulet_1} \cup \ftv{\rulet_2}: \; \occ{\alpha}{\tau_1} \leq \occ{\alpha}{\tau_2}}  
           {\term{\rulet_1 \iarrow \rulet_2}} 
   \\ \\
 \ea
@@ -913,7 +913,7 @@ This can be done by making the condition part of the well-formedness relation fo
          1 & \hspace{1cm}(\alpha = \beta) \\
          0 & \hspace{1cm}(\alpha \neq \beta)
          \end{array}\right. &
-      \occ{\alpha}{\forall \beta.\rulet} & = & \occ{\alpha}{\rulet}  \\
+      \occ{\alpha}{\forall \beta.\rulet} & = & \occ{\alpha}{\rulet} \quad (\alpha \neq \beta)  \\
       \occ{\alpha}{\rulet_1 \arrow \rulet_2} & = & \occ{\alpha}{\rulet_1} + \occ{\alpha}{\rulet_2} &
       \occ{\alpha}{\rulet_1 \iarrow \rulet_2} & = & \occ{\alpha}{\rulet_1} + \occ{\alpha}{\rulet_2} 
       \\ \\

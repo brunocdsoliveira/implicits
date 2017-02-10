@@ -2,6 +2,9 @@ Notes on The Implicit Calculus
 
 p<page>.<line>
 
+Throughout: Please use author-name citations rather than numeric;
+            see ICFP call for papers.
+
 p10.2--3   Instead, perhaps say we use Barendregt convention?
         It implies the condition given here.
 
@@ -12,90 +15,160 @@ p10.34  Give a citation for Curry-Howard, possibly my CACM Dec 2015 paper.
         make that change here.
 
 p10.38  Instead of writing |- with a dot over it in Fig 3, why don't we write
-        |-^a_r in Fig 2 (the a is for ambiguous) and leave out the dots in Fig 3.
-        Fig 3 is the more complex, so better if it uses simpler symbols.
-
-p10.44  I mistakenly read (Int, Bool, Bool => Int) as ((Int, Bool, Bool) => Int) rather
-        than (Int, Bool, (Bool => Int)).  Possible fixes:
-          (a) put additional space after each comma, and less around =>.
-          (b) put parens around (Bool => Int) wherever it appears.
-        I prefer (b). Might also introduce
-           \Gamma_0 = (Int, Bool, (Int => Bool)) 
-        which may make the two derivations easier to read (and they might be put side-by-side).
+        |-^a_r in Fig 3 (the a is for ambiguous) and leave out the dots in Fig 4?
+        Fig 4 is the more complex, so better if it uses simpler symbols.
 
 p11.8   (WF-AbsTy) should be (WF-UnivTy) or the like.  Type abstraction is a term form,
         yielding a term of universal type.
 
+p11.31  Perhaps we should replace \epsilon |-_unamb \rho by |-_unamb \rho
+        (a judgment with only a conclusion) and then add the definition
+
+          \epsilon |-_unamb \rho
+          ----------------------
+             |-_unamb \rho
+
+        to the definition of |-_unamb.  (By the way, that definition should be
+        in a separate figure.)
+
 p11.24  If we follow the Barendregt convention (see p10.2--3), 
         then we don't need the second hypothesis of (Ty-TAbs).
 
+p12.1   I find it immensely confusing that the (R-) prefix is used to name rules
+        both in Fig 3 and Fig 4. Can the prefix for one or the other be changed please?
+        Currently, (R-IAbs) appears in both Fig 3 and Fig 4 with different definitions!
 
+p12.23  Why is this section written in outline form? It makes it hard to read.
+        It should be fine written as an ordinary narrative without bullet points.
 
+p12.24  Either explain focussing in more detail here, or explain all the proof
+        rules first and then mention at the end that they happen to correspond
+        to focussing.
 
-p10.43  (UA-IAbs) should be (UA-IApp).
+p12.26--32  I cannot follow what you are saying here.  I don't know what you mean
+        by "pivot on an environment lookup" or "shifts the focus" or "backward
+        chaining" or "forward chaining".  The rule references were too compact
+        to help, and it took me a while to realise that you meant rules in Fig 3
+        rather than Fig 4.  Giving explicit correspondences between rules in Fig 3
+        and rules in Fig 4 would help. Currently you mention rules in Fig 3 and
+        ask the reader to guess what they correspond to in Fig 4.
 
-p11--12, Fig 2--3. 
-        
-p11.38  "To solve the two problems" Delete, the two problems were mentioned too far back.
-        Rest of the sentence will be clear, regardless.  Or, move this sentence to the
-        beginning of 3.4, and then introduce the types and judgments.
+p12.32  "introduction rules in inverted form" Can you explain this at greater
+        length please? I wasn't sure what it meant.
 
-p11.38--p13.13  The discussion is out of date and does not match the figure
+p12.42--47  I think this might be easier to read if you give the example first
+         (be clearer on how "the outer context is instantiated").  Possibly
+         just give the two derivations with the ambiguous resolution rules,
+         as you did on p11.43--48.
 
-p11.38--p13.13  There is no explanation of \sigma types. Yes, lets call them monotypes.
+p13.1   "To implement measures (1) and (3b)" Drop the bullet points, and drop
+        this phrase, to begin "We provid a variant ..."  The reader will be
+        adequately motivated by the previous discussion, tracing the choice of
+        syntax to specific parts of it is probably counterproductive.
 
-p12.46  In hypothesis of (M-TAbs), \Sigma should not be in gray.
+p13.5   Can we get rid of blue \sigma now please?  Just typeset \sigma in black.
 
-p12     We need to explain how the judgments in Fig 2 and Fig 3 relate, e.g.
+p13.10  "convenient for measure (1)" -->
+        "convenient to make our definition syntax directed"
+
+p13.11  "help us to implement measure (3b)" -->
+        "help us to avoid ambiguous instantiations"
+
+p13.13  We need to explain how the judgments in Fig 3 and Fig 4 relate, e.g.
         \Gamma |-^a_r \rho  iff  \Gamma |-^a_r \rho.
         (The relation changes when we add E.)
+        As I recall, we had ways to relate the auxiliary judgements in Fig 4
+        to Fig 3 as well, and it would be good to make those relations
+        explicit.
+
+p13.14  You've explained that \bar{\alpha} is just the sequence of type variables
+        in \Gamma. But you haven't explained what it is there for! Why do we need it?
+        I think you added it after my day with Bruno, so I have no idea why it is there,
+        and I cannot work it out by looking at the rules
+
+p13.24,25.  References to "(measure (1))" and "(measure (2))" can be dropped,
+        similarly for later references. If its an important concept, best to give it
+        a name (such as "syntax-directed judgment") rather than a number in a
+        bulleted list.
+
+p13.26  "Third auxiliary judgement" Somewhere around here you need to refer
+        to the definition of \Sigma, so the reader knows what it means when it
+        is encountered in the text.
+
+p13.38  "after the rule has been committed to" I have no idea what this means.
+        Also, the grammar of this sentence is convoluted or wrong. Did you want
+        a comma after "to"? In any event, best to rewrite.
+
+p13.43  Around here should say something like:
+        "Judgment \bar{\alpha} |-_unamb \rho holds when a solution
+        to \tau[\bar{\sigma}/\bar{\alpha}] = \tau', where \tau is the
+        head of \rho, uniquely specifies each type in \bar{sigma}."
+        (Did I get that right?)
+
+p14.43  In hypothesis of (M-TApp), \Sigma should not be in gray.
+
+p15.7   Move the footnote into the text. In general, move *all* footnotes into
+        the text.  Forcing the reader to look to the bottom of the page and then
+        re-find their place in the main text does not enhance readability!
+
+p15.14--20  Move the definition into its own figure.  Also see note for p11.31.
+
+p15.24  "recursively requires that these contexts are unambiguous"
+        Why is it appropriate to use \epsilon rather than \bar{\alpha} to the
+        left of the turnstyle?  Note the question sort of answers itself if
+        we adopt the suggestion from the note for p11.31.
+
+                          |-_unamb \rho is the judgment that \rho is unambiguous
+             \bar{\alpha} |-_unamb \rho is the judgment that all type variables in
+                             \bar{\alpha} are resolved by matching against \rho
+
+p15.25--26  Delete. Dealt with earlier.
+
+p15.29  "stable under all possible substitutions \Theta"  
+        You need to first define what "stable" means and explain why stability is
+        important.
+
+p15.40--43  At last, an explanation of \bar{\alpha}. Please include a forward
+        reference to this explanation when \bar{\alpha} is first introduced.
+
+p16.14--10  Put definition of |-_coh in its own figure (or in Fig 6).
+
+p16.23--30  Probably clearer to avoid a bulleted list.
+
+p16.26  "that substitutes \bar{\alpha}" -->
+        "where the domain of \Theta is restricted to \bar{\alpha}"
+
+p16.27  Add "If no unifier exists, then rule (COH-simp) does not apply."
+
+p16.32  Need to draw attention when the judgment is first mentioned that
+        it mentions both \Sigma and \Sigma', I missed this and got confused
+        reading the rest of the paragraph.
+
+p16.42  Shouldn't this definition come when mgu is first mentioned?
+
+p16.43  "Moreover, \Theta subsumes any other such unifier" Perhaps write out
+        in full what this means.
+
+p16.43  "The algorithm itself is fairly straightforward" Presumably the
+        figure simply repeats a standard algorithm from the literature?
+        Why not say so, and give a citation to the original?
+
+p17.32  Reading the rules for this judgment, I found it hard to spot the
+        delimiting semicolons. Possibly better to use something more visible,
+        such as a horizontal rule |, in which case replace ; by | uniformly
+        in all judgments.
+
+p18.32  "The source of this non-termination are" Non-agreement of subject with verb!
+
+p18.33  "first two auxiliary judgments" In which figure? But couldn't you also get
+        a loop using the definition in Fig 3, which has no auxiliary judgments?
+        I'm wondering if there is a simpler explanation of the source of non-termination.
+
+p18.42--47  Is this new work, or is this just copied from Haskell [16]?
+        If the former, I found the phrase "One potential problem ..." misleading.
+        There are no potential problems, since the Haskell guys have solved them
+        for us!
+
+p19.27--29  Maybe we should add the termination conditions to the well-formedness
+        of types, with a pointer to this section.
         
-        Can't we get rid of \bar{\alpha} in the second and third judgement?
-        It is just tyvars(\Gamma), and \Gamma stays unchanged in the second
-        and third judgment.
-
-        The two hypotheses of (L-RuleMatch) can be typeset side-by-side, which
-        will save space (figure is currently too long).
-
-        The first hypothesis of (L-RuleNoMatch) can be changed to something
-        like 
-
-
-p13.23  "in rule (Ty-IAbs) of Figure 1" -->
-        "in rules (Ty-IAbs) and (Ty-Query) of Figure 1"
-        and then delete p13.29--30.
-
-p13.24  "The defininition of \bar{\alpha} |-_unamb"  --> 
-        "The defininition of \bar{\alpha} |-_unamb \rho"
-
-p13.25--28  The reader needs a more general guide. Something like: "Judgment
-        \bar{\alpha} |-_unamb \rho holds when a solution to the matching
-        problem, \rho[\bar{\rho'}/\bar{\alpha}] = \rho'', uniquely specifies
-        each type in \bar{\rho'}."
-
-        The explanation needs to explain why in (UA-IAbs) the first hypothesis
-        take an empty sequence of type variables.
-
-        I really don't follow either of these sentences, I think they need to
-        be completely rewritten.  First is to decide whether we want 
-        (UA-TAbs) and (UA-IAbs) or (UA-TAbsAlt) and (UA-IAbsAlt)!
-
-p13.45--47  Move the two footnotes into the text as parenthetic notes. In general,
-        move *all* footnotes into the text.  Forcing the reader to look to the bottom
-        of the page and then re-find their place in the main text does not help
-        readability.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
