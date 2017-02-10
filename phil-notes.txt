@@ -2,20 +2,20 @@ Notes on The Implicit Calculus
 
 p<page>.<line>
 
-p8.42   Instead, perhaps say we use Barendregt convention, which is stronger?
+p10.2--3   Instead, perhaps say we use Barendregt convention?
+        It implies the condition given here.
 
-p9.15--17  I would swap the order, defining type environments before the two judgments.
+p10.34  Give a citation for Curry-Howard, possibly my CACM Dec 2015 paper.
+        By the way, I've taken to calling Curry-Howard "Propositions as Types"
+        (because the name Curry-Howard annoys those who think credit should
+        go to Brouwer, Heyting, Kolmogorov, or De Bruijn), might want to
+        make that change here.
 
-p9.17   Need to explain the \Gamma, \rho entry in type environments.
+p10.38  Instead of writing |- with a dot over it in Fig 3, why don't we write
+        |-^a_r in Fig 2 (the a is for ambiguous) and leave out the dots in Fig 3.
+        Fig 3 is the more complex, so better if it uses simpler symbols.
 
-p9.22   Need to delete implicit environments.
-
-p9.27   "It is defined in terms of the auxiliary judgement \Delta |-_r \rho which" -->
-        "It is defined in terms of the judgement for resolution, \Gamma |-_r \rho, which"
-
-p9.39   Figure 2 refers to \sigma, which is not introduced until Section 3.4.
-
-p9.44   I mistakenly read (Int, Bool, Bool => Int) as ((Int, Bool, Bool) => Int) rather
+p10.44  I mistakenly read (Int, Bool, Bool => Int) as ((Int, Bool, Bool) => Int) rather
         than (Int, Bool, (Bool => Int)).  Possible fixes:
           (a) put additional space after each comma, and less around =>.
           (b) put parens around (Bool => Int) wherever it appears.
@@ -23,25 +23,19 @@ p9.44   I mistakenly read (Int, Bool, Bool => Int) as ((Int, Bool, Bool) => Int)
            \Gamma_0 = (Int, Bool, (Int => Bool)) 
         which may make the two derivations easier to read (and they might be put side-by-side).
 
-p10.8   (WF-AbsTy) should be (WF-UnivTy) or the like.  Abstraction is a term form.
+p11.8   (WF-AbsTy) should be (WF-UnivTy) or the like.  Type abstraction is a term form,
+        yielding a term of universal type.
 
-p10.24  If we add the Barendregt convention, we don't need the second hypothesis of (Ty-TAbs).
+p11.24  If we follow the Barendregt convention (see p10.2--3), 
+        then we don't need the second hypothesis of (Ty-TAbs).
 
-p10.24  Typesetting for \alpha \not\in \Gamma is wonky, leaves too much space.
 
-p10.24  I can't work out how this is typeset! In \TyTApp there is a hypothesis in the file
-        that doesn't appear in the pdf $\alpha \in \ftv{\rulet}$, and one not in the file
-        that does appear in the pdf $\alpha \not\in \tenv$.
 
-p10.40  Move unamb to a separate figure, so it doesn't overflow the page.
 
 p10.43  (UA-IAbs) should be (UA-IApp).
 
 p11--12, Fig 2--3. 
-        Instead of writing |- with a dot over it in Fig 3, why don't we write
-        |-^a_r in Fig 2 (the a is for ambiguous) and leave out the dots in Fig 3.
-        Fig 3 is the more complex, so better if it uses simpler symbols.
-
+        
 p11.38  "To solve the two problems" Delete, the two problems were mentioned too far back.
         Rest of the sentence will be clear, regardless.  Or, move this sentence to the
         beginning of 3.4, and then introduce the types and judgments.

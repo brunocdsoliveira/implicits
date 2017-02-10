@@ -11,40 +11,38 @@
 \section{The $\ourlang$ Calculus}
 \label{sec:ourlang}
 
-This section formalizes the syntax and type system of $\ourlang$.  In
-Section~\ref{sec:trans} (building on top of this type system) we present the
-formalization of the type-directed translation to System F. However, to avoid
-duplication and to facilitate readability, we present the rules of the type
-system and type-directed translation together. We use grey boxes to indicate
-the parts of the rules that belong to the type-directed translation. These
-greyed parts are explained in Section~\ref{sec:trans} and can be ignored in the
-remainder of this section.
+This section formalizes the syntax and type system of $\ourlang$, while
+Section~\ref{sec:trans} formalises the type-directed translation to System F.
+To avoid duplication and ease reading, we present the type
+system and type-directed translation together, using grey boxes to indicate
+which parts of the rules belong to the type-directed translation. These
+greyed parts can be ignored in this section and will be explained in the next.
 
 %-------------------------------------------------------------------------------
 \subsection{Syntax}    
 \label{subsec:syntax}
 
-This is the syntax of the calculus:
-{\bda{llrl}
+Here is the syntax of the calculus:
+\bda{llrl}
     \text{Types} & \rulet  & ::=  & \alpha \mid \rulet_1 \arrow \rulet_2 \mid \forall \alpha. \rulet \mid \rulet_1 \iarrow \rulet_2 \\
     \text{Expressions} & |e| & ::=  &
      x \mid \lambda (x:\rulet).e \mid e_1\,e_2 \mid \Lambda \alpha. e \mid e\,\rulet \mid \query \rulet \mid \ilambda \rulet. e \mid e_1 \with e_2  \\
-  \eda }
-
+\eda
+%
 %%endif
-
-\textit{Types} $\rulet$ comprise four constructs: type variables
-$\alpha$; function types $\rulet_1 \arrow \rulet_2$; type abstraction
-$\forall \alpha. \rulet$; and the novel \emph{rule type} $\rulet_1 \iarrow
+%
+Types $\rulet$ comprise four constructs: type variables
+$\alpha$; function types $\rulet_1 \arrow \rulet_2$; universal types
+$\forall \alpha. \rulet$; and the novel \textit{rule} types $\rulet_1 \iarrow
 \rulet_2$.  In a rule type $\rulet_1 \iarrow \rulet_2$, type $\rulet_1$ is
 called the \textit{context} and type $\rulet_2$ the \textit{head}.
 
 Expressions $e$ include three abstraction-eliminination pairs.
-The binder $\lambda (x:\rulet). e$ abstracts expression $e$ over values of type $\rulet$,
+Binder $\lambda (x:\rulet). e$ abstracts expression $e$ over values of type $\rulet$,
 is eliminated by application $e_1\,e_2$, and refers to the bound value with variable $x$.
-The binder $\Lambda \alpha.e$ abstracts expression $e$ over types, is eliminated
+Binder $\Lambda \alpha.e$ abstracts expression $e$ over types, is eliminated
 by type application $e\,\rulet$, and refers to the bound type with type variable $\alpha$ 
-(but $\alpha$ itself is not a valid expression). The binder $\ilambda \rulet. e$ 
+(but $\alpha$ itself is not a valid expression). Binder $\ilambda \rulet. e$ 
 abstracts expression $e$ over implicit values of type $\rulet$, is eliminated by
 implicit application $e_1 \with e_2$, and refers to the implicitly bound value with 
 implicit query $\query \rulet$.
@@ -53,20 +51,19 @@ and type variables $\alpha$ in binders are distinct. If not, they
 can be easily renamed apart to be so.
 
 Using rule abstractions and applications we can build the |implicit| 
-sugar that we have used in Sections~\ref{sec:intro} and \ref{sec:overview}.
+sugar used in Sections~\ref{sec:intro} and \ref{sec:overview}.
 %{
 %format == = "\defeq"
 %format e1
 \[ | implicit {-"\overline{"-} e : {-"\rulet}"-} in e1 == ({-" \overline{\lambda_? \rulet .} "-} e1) {-"\overline{"-} with e {-"}"-} | \]
 %}\bruno{Also introduce let, which is used later, in the translation.}
-
-Here the notation $\overline{\lambda_? \rho .}$ is a shortform for 
+Here $\overline{\lambda_? \rho .}$ is a shortform for 
 $\lambda_? \rho_1.~\ldots~\lambda_? \rho_n.$, and
-the notation $\overline{|with|~e}$ is a shortform for
+$\overline{|with|~e}$ is a shortform for
 |with| $e_1 \ldots $ |with| $e_n$.
 
 For brevity we have kept the $\ourlang$ calculus small. Examples
-may use additional syntax such as built-in integers, integer operators and boolean
+may use additional syntax such as built-in integers, integer operators, and boolean
 literals and types. 
 
 %-------------------------------------------------------------------------------
@@ -129,10 +126,10 @@ literals and types.
 \TyTAbs&
   \myirule {  \tenv,\alpha \turns \relation{e}{\rulet}~\gbox{\leadsto E_1} 
               \quad\quad\quad
-              \alpha \not\in \tenv \quad\quad\quad 
+              \alpha \not\in \tenv
            }
            { \tenv \turns \relation{\Lambda \alpha.e}{\forall
-               \alpha.\rulet}~\gbox{\leadsto \Lambda \alpha.E_1} } \quad\quad\quad
+               \alpha.\rulet}~\gbox{\leadsto \Lambda \alpha.E_1} }
 \\ \\
 \TyTApp&
   \myirule { \tenv \turns \relation{e}{\forall \alpha.\rulet_2}~\gbox{\leadsto E}
@@ -172,38 +169,36 @@ literals and types.
 \bruno{Another point I remember discussing with Philip is whether the unambiguity check can be combined with termination
 checking. Should we consider this option?}
 
-Figure \ref{fig:type} presents the static type system of $\ourlang$. The type system 
-is based on the type system of System F, and every System F term is typeable in our 
-system.
+Figure \ref{fig:type} presents the static type system of $\ourlang$.
+Our language is based on System~F, which is included in our system.
 
 %- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 \paragraph{Well-Formed Types}
-
-The judgement $\tenv \turns \rulet$ denotes
-the well-formedness of types with respect to type environment $\tenv$. As
-in System F, the type environment $\tenv$ records the type variables $\alpha$
-and the variables $x$ with associated type $\rulet$ in scope. New here is that
-it also records the types of the implicit rules $\rulet$:
+As in System F, a type environments $\tenv$ records type variables $\alpha$
+and variables $x$ with associated types $\rulet$ that are in scope.
+New here is that it also records instances of implicits $\rulet$.
 \bda{llrl} 
 \text{Type Environments}     & \tenv & ::= & \epsilon \mid \tenv, \relation{x}{\rulet} \mid \tenv , \alpha \mid \tenv, \rulet~\gbox{\leadsto x} \\
 \eda
-Types $\rulet$ are well-formed iff their free type variables occur in the type
-environment $\WFVarTy$.
+Judgement $\tenv \turns \rulet$ holds if type $\rulet$ is well-formed 
+with respect to type environment $\tenv$, that is, if all free type variables
+of $\rulet$ occur in $\tenv$.
 
 %- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 \paragraph{Well-Typed Expressions}
 
-The typing judgment ${\tenv \turns \relation{e}{\rulet}}$ means that
+Typing judgment ${\tenv \turns \relation{e}{\rulet}}$ holds if
 expression $e$ has type $\rulet$ with respect to type environment $\tenv$.
-Most of the rules are literal copies of the corresponding System F typing rules; only three deserve special attention.
-Firstly, rule \TyIAbs{} extends the implicit environment with the type of an implicit value. 
+The first five rules copy the corresponding System F rules; only the last three deserve special attention.
+Firstly, rule \TyIAbs{} extends the implicit environment with the type of an implicit instance.
 The side condition $\epsilon \vdash_{\mathit{unamb}} \rulet$ states that
 the type $\rulet_1$ must be unambiguous; we explain this concept in Section~\ref{subsec:det}.
-Secondly, rule \TyIApp{} eliminates an implicit abstraction by supplying a 
-value of the required type. Finally, rule \TyQuery{} resolves 
-a particular unambiguous type $\rulet$ against the implicit environment.
-It is defined in terms of the auxiliary judgement $\tenv \vturns \rulet$, which
-is explained next.
+Secondly, rule \TyIApp{} eliminates an implicit abstraction by supplying an
+instance of the required type. Finally, rule \TyQuery{} resolves 
+a given type $\rulet$ against the implicit environment.
+Again, a side-condition states that $\rulet$ must be unambiguous.
+Resolution is defined in terms of the auxiliary judgement $\tenv \vturns \rulet$, which
+is explained next. 
 
 %-------------------------------------------------------------------------------
 \subsection{Resolution}\label{s:resolution}
@@ -248,8 +243,9 @@ Intuitively, $\tenv\vdash_r \rulet$ holds if $\tenv$ entails $\rulet$, where the
 $\rulet$ are read as propositions.
 Following the Curry-Howard correspondence, we read
 $\alpha$ as a propositional variable and $\forall \alpha.\rulet$ as universal quantification.
-Unlike traditional Curry-Howard, we have two forms of arrow, functions $\rulet_1 \arrow \rulet_2$ and rules $\rulet_1 \iarrow \rulet_2$,
-and the important twist on the traditional correspondence is that we choose to treat
+Unlike traditional Curry-Howard, we have two forms of arrow,
+functions $\rulet_1 \arrow \rulet_2$ and rules $\rulet_1 \iarrow \rulet_2$,
+and the important twist is that we choose to treat
 only rules as implications, leaving functions as uninterpreted predicates.
 
 Figure~\ref{fig:resolution1} provides a first (ambiguous) definition of the
@@ -262,27 +258,27 @@ overlapping conclusions. Hence, a deterministic resolution algorithm is
 non-obvious.
 \item
 More importantly, the definition is \emph{ambiguous}: a derivation can be shown by
-multiple different derivations. For instance, there are two different derivations
-for
-$\tyint,\tybool,\tybool\iarrow\tyint \vturns \tyint$:
+multiple different derivations. For instance, if we define
+\[
+\Gamma_0 = (\tyint,\tybool,(\tybool\iarrow\tyint))
+\]
+then there are two different derivations for
+$\Gamma_0 \vturns \tyint$:
 \begin{equation*}
 \begin{array}{c}
 \inferrule*[Left=\mylabel{R-IVar}]
-   {\tyint \in (\tyint,\tybool,\tybool\iarrow\tyint)
-   }
-   {\tyint,\tybool,\tybool\iarrow\tyint \vturns \tyint}
+   {\tyint \in \Gamma_0}
+   {\Gamma_0 \vturns \tyint}
 \end{array}
-\end{equation*}
-\noindent and
-\begin{equation*}
+\quad \text{and} \quad\quad\quad\quad
 \begin{array}{c}
 \inferrule*[Left=\mylabel{R-IApp}]
-   {\inferrule*[Left=\mylabel{R-IVar}] {(\tybool \iarrow \tyint) \in (\tyint,\tybool,\tybool\iarrow\tyint)}
-                {\tyint,\tybool,\tybool\iarrow\tyint \vturns (\tybool \iarrow \tyint)} \\
-    \inferrule*[left=\mylabel{R-IVar}] {\tybool \in (\tyint,\tybool,\tybool\iarrow\tyint)}
-                {\tyint,\tybool,\tybool\iarrow\tyint \vturns \tybool}
+   {\inferrule*[Left=\mylabel{R-IVar}] {(\tybool \iarrow \tyint) \in \Gamma_0}
+                {\Gamma_0 \vturns (\tybool \iarrow \tyint)} \\
+    \inferrule*[left=\mylabel{R-IVar}] {\tybool \in \Gamma_0}
+                {\Gamma_0 \vturns \tybool}
    }
-   {\tyint,\tybool,\tybool\iarrow\tyint \vturns \tyint}
+   {\Gamma_0 \vturns \tyint}
 \end{array}
 \end{equation*}
 While this may seem harmless at the type-level, at the value-level each
