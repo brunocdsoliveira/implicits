@@ -1,0 +1,107 @@
+Notes on The Implicit Calculus
+
+p<page>.<line>
+
+p8.42   Instead, perhaps say we use Barendregt convention, which is stronger?
+
+p9.15--17  I would swap the order, defining type environments before the two judgments.
+
+p9.17   Need to explain the \Gamma, \rho entry in type environments.
+
+p9.22   Need to delete implicit environments.
+
+p9.27   "It is defined in terms of the auxiliary judgement \Delta |-_r \rho which" -->
+        "It is defined in terms of the judgement for resolution, \Gamma |-_r \rho, which"
+
+p9.39   Figure 2 refers to \sigma, which is not introduced until Section 3.4.
+
+p9.44   I mistakenly read (Int, Bool, Bool => Int) as ((Int, Bool, Bool) => Int) rather
+        than (Int, Bool, (Bool => Int)).  Possible fixes:
+          (a) put additional space after each comma, and less around =>.
+          (b) put parens around (Bool => Int) wherever it appears.
+        I prefer (b). Might also introduce
+           \Gamma_0 = (Int, Bool, (Int => Bool)) 
+        which may make the two derivations easier to read (and they might be put side-by-side).
+
+p10.8   (WF-AbsTy) should be (WF-UnivTy) or the like.  Abstraction is a term form.
+
+p10.24  If we add the Barendregt convention, we don't need the second hypothesis of (Ty-TAbs).
+
+p10.24  Typesetting for \alpha \not\in \Gamma is wonky, leaves too much space.
+
+p10.24  I can't work out how this is typeset! In \TyTApp there is a hypothesis in the file
+        that doesn't appear in the pdf $\alpha \in \ftv{\rulet}$, and one not in the file
+        that does appear in the pdf $\alpha \not\in \tenv$.
+
+p10.40  Move unamb to a separate figure, so it doesn't overflow the page.
+
+p10.43  (UA-IAbs) should be (UA-IApp).
+
+p11--12, Fig 2--3. 
+        Instead of writing |- with a dot over it in Fig 3, why don't we write
+        |-^a_r in Fig 2 (the a is for ambiguous) and leave out the dots in Fig 3.
+        Fig 3 is the more complex, so better if it uses simpler symbols.
+
+p11.38  "To solve the two problems" Delete, the two problems were mentioned too far back.
+        Rest of the sentence will be clear, regardless.  Or, move this sentence to the
+        beginning of 3.4, and then introduce the types and judgments.
+
+p11.38--p13.13  The discussion is out of date and does not match the figure
+
+p11.38--p13.13  There is no explanation of \sigma types. Yes, lets call them monotypes.
+
+p12.46  In hypothesis of (M-TAbs), \Sigma should not be in gray.
+
+p12     We need to explain how the judgments in Fig 2 and Fig 3 relate, e.g.
+        \Gamma |-^a_r \rho  iff  \Gamma |-^a_r \rho.
+        (The relation changes when we add E.)
+        
+        Can't we get rid of \bar{\alpha} in the second and third judgement?
+        It is just tyvars(\Gamma), and \Gamma stays unchanged in the second
+        and third judgment.
+
+        The two hypotheses of (L-RuleMatch) can be typeset side-by-side, which
+        will save space (figure is currently too long).
+
+        The first hypothesis of (L-RuleNoMatch) can be changed to something
+        like 
+
+
+p13.23  "in rule (Ty-IAbs) of Figure 1" -->
+        "in rules (Ty-IAbs) and (Ty-Query) of Figure 1"
+        and then delete p13.29--30.
+
+p13.24  "The defininition of \bar{\alpha} |-_unamb"  --> 
+        "The defininition of \bar{\alpha} |-_unamb \rho"
+
+p13.25--28  The reader needs a more general guide. Something like: "Judgment
+        \bar{\alpha} |-_unamb \rho holds when a solution to the matching
+        problem, \rho[\bar{\rho'}/\bar{\alpha}] = \rho'', uniquely specifies
+        each type in \bar{\rho'}."
+
+        The explanation needs to explain why in (UA-IAbs) the first hypothesis
+        take an empty sequence of type variables.
+
+        I really don't follow either of these sentences, I think they need to
+        be completely rewritten.  First is to decide whether we want 
+        (UA-TAbs) and (UA-IAbs) or (UA-TAbsAlt) and (UA-IAbsAlt)!
+
+p13.45--47  Move the two footnotes into the text as parenthetic notes. In general,
+        move *all* footnotes into the text.  Forcing the reader to look to the bottom
+        of the page and then re-find their place in the main text does not help
+        readability.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
