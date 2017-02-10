@@ -5,8 +5,152 @@
 
 %format === = "\cong"
 
-\section{Overview of the Implicit Calculus $\ourlang$}
+\section{Overview}
 \label{sec:overview}
+
+This section presents relevant background on type classes, IP 
+and coherence, and it introduces the key features of our calculus for ensuring coherence.
+
+\subsection{Type Classes and Implicit Programming}
+
+\subsection{Coherence in Type Classes}
+
+A programming language is said to be coherent if
+any valid program has exactly one meaning (that is,
+the semantics is not ambiguous). Haskell type classes preserve
+coherence, but not for free. Since the first implementations of type
+classes, Haskell imposes several restrictions to guarantee
+coherence. For example, the expression:
+
+> show (read ''3'') == ''3'' 
+
+\noindent where functions |show| and |read| have the types: 
+
+> show :: Show a => a -> String
+> read :: Read a => String -> a
+
+\noindent is rejected in Haskell due to \emph{ambiguity} of 
+\emph{type class resolution}~\cite{jones}. The functions |show| and
+|read| respectively print and parse values of a certain type |a|. 
+The type |a| can be any type that implements the classes |Show| 
+and |Read|. For example, it could be |Int|, |Float| or |Char|. The
+reason for rejecting the program is precisely that multiple choices 
+exists for instantiating the type |a|. Depending on such choice, the 
+semantics of the expression could be different. For example, chosing 
+|a=Float| leads to |False|, since showing the float 3 would result 
+in the ``3.0''. In contrast chosing |a=Int| leads to |True|, since the
+string is the same.
+
+\paragraph{Overlapping and Incoherent Instances} 
+Advanced features of type classes, such as overlapping
+instances~\cite{}, pose even more severe problems. In purely
+functional programming, ``\emph{substituting equals by equals}'' is
+expected to hold. That is, when given two equivalent expressions then
+replacing one by the other in \emph{any context} will always lead to
+two programs that yield the same result. Special care (via
+restrictions) is needed to preserve coherence and the ability of
+substituting equals by equals in the presence of overlapping
+instances. The following program illustrates the issues:
+
+> class Trans a where trans :: a -> a
+>
+> instance Trans a where trans x = x
+>
+> instance Trans Int where trans x = x+1
+>
+> bad :: a -> a
+> bad x = trans x  -- incoherent definition!
+
+\noindent This program declares a type class 
+|Trans a| for defining transformations on some 
+type |a|. A default implementation for any types, which 
+simply implements the identity transformation is defined 
+by the first instance. A second instance defines a 
+transformation on integers. Finally the function 
+|bad| simply calls the transformation function. 
+
+Now, consider the following reasoning steps, where |bad| 
+is applied to the integer |1|:
+
+> bad 1
+> = {- definition of |bad| -}
+> trans 1
+> = {- definition of |trans| -}
+> 1+1
+> = {- arithmetic -}
+> 2
+
+\noindent The reasoning steps substitute equals-by-equals. 
+Importantly, in the second step, since we use an integer, 
+we chose the implementation of trans on the second instance. 
+Thus the outcome of this simple equational reasoning is |2|. 
+
+Unfortunatelly the result of |bad 1| is actually |1|. 
+The problem is that |bad 1| has already committed to the 
+first implementation of |trans|, since type class resolution 
+is done statically: the only possible instance that can satisfy 
+the type |a -> a| is the first one. However, such bbehaviour is counter-intuitive since 
+|bad 1| and |trans 1| give different results, even though
+the definition of |bad| blatently says that |bad x = trans x|. 
+In other words substituting equals-by-equals would be lost 
+if the program is accepted. 
+To prevent this, Haskell implementations reject such program by default. 
+If programmers really want such incoherent behaviour, they can activate 
+a flag (\emph{incoherent instances}), which allows the program to type-check.
+But the use of incoherent instances is discouraged.  
+
+\paragraph{Global coherence} \bruno{Set example should come here.}
+
+\subsection{Incoherence in Implicits}
+
+Scala implicits~\cite{implicits}
+are an interesting alternative in IP
+design. Unlike type classes, implicits have locally scoped rules. Moreover,
+values of any type can be used as implicit parameters; there is no special 
+separate type-class-like interface. Instead, such interfaces are
+modeled with regular types, they can be abstracted over and do 
+not suffer from the second class nature of type classes. In $\ourlang$
+we also make similar design choices.
+
+%format v1 = "\Varid{v_1}"
+%format v2 = "\Varid{v_2}"
+
+\begin{figure}
+\small
+\begin{code}
+   trait A {
+     implicit def id[a] : a => a = x => x
+
+     def ?[a](implicit x: a) = x
+  }
+
+  object B extends A {
+     implicit def succ : Int => Int = x => x + 1
+
+     def bad[a](x : a) = (?[a => a]).apply(x)
+
+     val v1 = bad[Int](3)  // evaluates to 3
+     val v2 = (?[Int => Int]).apply(3) // evaluates to 4
+  }
+\end{code}
+\caption{Nested Scoping with Overlapping Rules in Scala}
+
+\label{fig:scala}
+
+\end{figure} 
+
+In particular, although Scala allows \emph{nested} local scoping and overlapping rules,
+\textit{coherence} is not guaranteed. Figure~\ref{fig:scala} illustrates
+the issue briefly, using the example that was presented in
+Section~\ref{subsec:over}. Scala's subclassing creates nested
+implicit scopes. The program is accepted, but Scala incoherently
+selects the more general implicit value (|id|) for |v1|. In contrast, |v2|,
+which (naively) inlines |func[Int]|, picks |succ|. As a result, despite
+looking equivalent, the two expressions yield different results.
+This makes such programs quite hard to understand. 
+
+
+\subsection{Our Calculus}
 
 Our calculus $\ourlang$ combines standard scoping mechanisms 
 (abstractions and applications) and types \`a la System F, with a
@@ -563,3 +707,89 @@ n.n+1$ and the second $f$ must be $\lambda x.x$.
 %\emph{rules} determine which values resolution infers. 
 
 %endif
+
+\subsection{Runtime Errors and Coherence Failures}
+\label{subsec:error}
+In $\ourlang$, ill-behaved programs either raise runtime errors or are
+incoherent. The principal source of runtime errors is query failure,
+which is caused by either lookup failure or ambiguous instantiation
+during resolution. Coherence failure happens when a query in a
+program does not have a single nearest match or its single nearest
+match is not the one used at runtime.
+
+\paragraph{Lookup Failures}
+A lookup fails if there is no matching rule in the rule environment,
+or there are multiple matching rules.
+
+The first cause, no matching rule, is the simplest, illustrated by the
+following two examples:
+\[\begin{array}{rl}
+\myset{} &\turns  |query Int| \\
+\myset{|{Bool} => Int : -|}& \turns |query Int|
+\end{array}
+\noindent \]
+In the first example, resolution does not find a matching rule for the
+given |Int| type in the environment. In the second example,
+resolution finds a matching rule for |Int| in the first step, but
+does not find one in the recursive step for |Bool|.
+
+The second cause are multiple matching rules, which is the case in the
+following two examples:
+
+> {Int : 1, Int : 2} turns (query Int)
+> {forall a.a -> Int : -, forall a.Int -> a : - } turns (query (Int -> Int))
+\noindent
+
+In the first example, two different rules produce a value for the same
+type |Int|; arbitrarily choosing one of 1 and 2
+makes the program's behavior unpredictable. To avoid this ambiguity,
+the lookup fails instead. The second example shows that two rules can
+be used to produce a value of the same type, even though the rule
+types are different. The two polymorphic rule types can be instantiated to the
+same type, in this case to |Int -> Int|.
+
+\paragraph{Ambiguous Instantiations}
+In some cases, resolution does not determine how to instantiate a
+fetched rule. Consider the following example:\footnote{$\rclos{n}$
+  denotes a closure value; distinct numbers mean distinct values.}\[
+\begin{array}{rl}
+  \myset{\quad 
+    |forall a.{a -> a} => Int : rclos 1| &, \\
+    |Bool -> Bool : rclos 2|&, \\
+    |forall b. b -> b : rclos 3|&} \turns |query Int|
+\end{array}\]
+% > { forall a. {a -> a} => Int : (rclos 1), Int -> Int : (rclos 2),
+% >  Bool -> Bool : (rclos 3) } turns (query Int)
+The |query Int| matches the first rule without determining an
+instantiation for |a|. However, the runtime behavior could actually
+depend on the choice between |rclos 2| and |rclos 3|. Thus the query
+is ambiguous.
+
+\paragraph{Coherence Failures}
+A program is coherent iff every query in the program has a single,
+lexically nearest match, which is the same statically and at runtime. This
+means that all the runtime queries instantiated from the original
+query should have the same resolution result. Consider the following
+example:
+
+> let f : forall b.b -> b =
+>   implicit {fun (x) (x) : forall a. a -> a} in
+>       query (b -> b)
+\noindent
+This program is coherent because no matter which type the type
+variable |b| will have at runtime, the resolution results for all
+those queries are the same (|forall a. a -> a|). However, the following program is
+incoherent:
+
+> let f : forall b.b -> b =
+>   implicit {fun (x) (x) : forall a. a -> a} in
+>      implicit {fun (n) (n + 1) : Int -> Int} in 
+>       query (b -> b)
+\noindent
+There are two possible results for the query |query (b -> b)|
+depending on the type of |b| at runtime. If the query is instantiated
+by the substitution $\subst{|b|}{|Int|}$, then the nearest result is
+|Int -> Int| and otherwise, |forall a. a -> a| is the one.
+
+Our static type system will safely reject such programs that can have
+the aforementioned runtime errors or coherence failures.

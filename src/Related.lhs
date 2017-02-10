@@ -670,3 +670,35 @@ and consider different evaluation strategies to deal with overlapping rules.
 With \emph{Constraint Handling Rules}, Stuckey and Sulzmann~\shortcite{theory_over} use \textit{Constraint Logic Programming}
 to implement type classes.
 
+%-------------------------------------------------------------------------------
+\subsection{Power of Resolution}
+\tom{Moved here from Section 3.}
+\tom{TODO: Do we still need this to appear here for the conference paper? Is
+it even still true with all the determinism and coherence enforcement?}
+
+The rules for deterministic resolution presented in this paper support all the
+examples described in Section~\ref{sec:overview}. They are strictly more powerful than
+the rules presented in the conference version of the paper~\cite{oliveira12implicit}.
+In other words, strictly more queries resolve with this article's rules than
+with the rules of the previous paper.
+For example, 
+the query:
+
+\begin{equation*}
+  \tychar \To \tybool,
+  \tybool \To \tyint \vturns \tychar \To \tyint
+\end{equation*}
+
+\noindent does not resolve under the deterministic resolution rules of
+the conference paper. In order to resolve such rule types, it is 
+necessary to add the rule type's context to the implicit
+environment in the course of the resolution process: 
+
+\begin{equation*}
+  \tychar \To \tybool,
+  \tybool \To \tyint, \tychar \vturns \tyint
+\end{equation*}
+
+\noindent but this was not supported by our previous set of rules. The new set
+of resolution rules do support this by means of rule \RIAbs, and queries like
+the above can now be resolved.

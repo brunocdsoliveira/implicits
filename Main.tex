@@ -3,6 +3,7 @@
 
 
 \usepackage{color}
+\usepackage{xspace}
 \usepackage{graphicx}
 \usepackage{latexsym}
 \usepackage{stmaryrd}
@@ -57,12 +58,29 @@
 \markboth{B. Oliveira et al.}{The Implicit Calculus: A New Foundation for Generic Programming}
 
 % Title portion
-\title{The Implicit Calculus: A New Foundation for Generic Programming}
+\title{\name: Deterministic and Coherent Implicits}
 \author{Ommitted for anonymous submission}
 
 \begin{abstract}
 \input{src/Abstract}
 \end{abstract}
+\begin{CCSXML}
+<ccs2012>
+<concept>
+<concept_id>10003752.10010124.10010125.10010130</concept_id>
+<concept_desc>Theory of computation~Type structures</concept_desc>
+<concept_significance>500</concept_significance>
+</concept>
+<concept>
+<concept_id>10011007.10011006.10011008.10011009.10011012</concept_id>
+<concept_desc>Software and its engineering~Functional languages</concept_desc>
+<concept_significance>500</concept_significance>
+</concept>
+</ccs2012>
+\end{CCSXML}
+
+\ccsdesc[500]{Theory of computation~Type structures}
+\ccsdesc[500]{Software and its engineering~Functional languages}
 
 \begin{comment}
 \category{D.3.2}{Programming Languages}   
@@ -108,11 +126,6 @@ P. Wadler, \ldots, University of Edinburgh.
 
 \input{src/Conclusion}
 
-% Appendix
-\appendix
-\section*{APPENDIX}
-\setcounter{section}{1}
-
 %\appendixhead{OLIVEIRA}
 
 % Acknowledgments
@@ -129,6 +142,13 @@ by Singapore Ministry of Education research grant MOE2010-T2-2-073.
 % Bibliography
 \bibliographystyle{ACM-Reference-Format}
 \bibliography{papers}
+
+% Appendix
+\appendix
+\section*{APPENDIX}
+\setcounter{section}{1}
+
+
 
 \input{src/Proofs}
 

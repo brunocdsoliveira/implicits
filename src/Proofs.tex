@@ -748,7 +748,7 @@ The proof proceeds by induction on the derivation of the first assumption.
 \end{equation*}
 
 %===============================================================================
-\item[\fbox{\texttt{(M-IAbs)}}]\quad$\tenv; \rulet_1 \iarrow \rulet_2 \leadsto E \ivturns \type \leadsto E'; \bar{\rulet} \leadsto \bar{x}, \rulet_1 \leadsto x$ \ \\
+\item[\fbox{\texttt{(M-IApp)}}]\quad$\tenv; \rulet_1 \iarrow \rulet_2 \leadsto E \ivturns \type \leadsto E'; \bar{\rulet} \leadsto \bar{x}, \rulet_1 \leadsto x$ \ \\
 %===============================================================================
   The third hypothesis of the lemma then is
 \begin{equation*}
@@ -790,7 +790,7 @@ The proof proceeds by induction on the derivation of the first assumption.
 \end{equation*}
 
 %===============================================================================
-\item[\fbox{\texttt{(M-TAbs)}}]\quad$\tenv; \forall\alpha.\rulet \leadsto E \ivturns \type \leadsto E'; \bar{\rulet} \leadsto \bar{x}$ \ \\
+\item[\fbox{\texttt{(M-TApp)}}]\quad$\tenv; \forall\alpha.\rulet \leadsto E \ivturns \type \leadsto E'; \bar{\rulet} \leadsto \bar{x}$ \ \\
 %===============================================================================
   Then the second hypothesis of the lemma is
 \begin{equation*}
@@ -939,7 +939,7 @@ The proof proceeds by induction on the derivation of the first assumption.
 %   \rho_2\theta \lhd \tau
 % \end{equation*}
 % 
-%   and, by rule \mylabel{M-IAbs}, we hence have
+%   and, by rule \mylabel{M-IApp}, we hence have
 % \begin{equation*}
 %   \rho_1\theta \iarrow \rho_2\theta \lhd \tau
 % \end{equation*}
@@ -1217,7 +1217,7 @@ The proof proceeds by induction on the derivation of the first assumption.
 % % \end{equation*}
 % % 
 % % %===============================================================================
-% % \item[(\texttt{M-IAbs})]\quad$\rho_1 \iarrow \rho_2 \lhd \tau$ \ \\
+% % \item[(\texttt{M-IApp})]\quad$\rho_1 \iarrow \rho_2 \lhd \tau$ \ \\
 % % %===============================================================================
 % %   From rule \mylabel{MTC-IAbs} and the induction hypothesis, we have that
 % % \begin{equation*}
@@ -1234,7 +1234,7 @@ The proof proceeds by induction on the derivation of the first assumption.
 %-------------------------------------------------------------------------------
 \subsection{Deterministic Resolution is Deterministic}\label{proof:determinism}
 
-\newcommand{\unamb}{\vdash_{\mathit{unamb}}}
+%\newcommand{\unamb}{\vdash_{\mathit{unamb}}}
 
 %###############################################################################
 {\centering
@@ -1469,12 +1469,12 @@ $\ba{c}
 \myruleform{\bar{\suty};\tenv; \rulet~\gbox{\leadsto E} \ivturns \type~\gbox{\leadsto E'}; \Sigma}\\ \\
 \mylabel{M-Simp} \quad
           {\epsilon;\tenv; \type~\gbox{\leadsto E} \ivturns \type~\gbox{\leadsto E}; \epsilon} \\ \\
-\mylabel{M-IAbs} \quad
+\mylabel{M-IApp} \quad
   \myirule{\bar{\suty};\tenv, \rulet_1 \gbox{\leadsto x}; \rulet_2 ~\gbox{\leadsto E\,x} \ivturns \type~\gbox{\leadsto E'}; \Sigma 
            \quad\quad\quad \gbox{x~\mathit{fresh}}
           }
           {\bar{\suty};\tenv; \rulet_1 \iarrow \rulet_2 ~\gbox{\leadsto E} \ivturns \type~\gbox{\leadsto E'}; \Sigma, \rulet_1~\gbox{\leadsto x}} \\ \\ 
-\mylabel{M-TAbs} \quad
+\mylabel{M-TApp} \quad
   \myirule{\bar{\suty};\tenv; \rulet[\suty/\alpha] ~\gbox{\leadsto E\,|\suty|} \ivturns \type~\gbox{\leadsto E'; \Sigma}
            \quad\quad\quad
            \tenv \turns \suty
@@ -1563,7 +1563,7 @@ The proof proceeds by induction on the derivation of the first hypothesis.
 %===============================================================================
 \item[\fbox{\texttt{(UA-IAbs)}}]\quad$\bar{\alpha} \unamb \rulet_1 \iarrow \rulet_2$ \ \\
 %===============================================================================
-  Then the second and third hypothesis of the lemma must have been formed by rule \mylabel{M-IAbs}.
+  Then the second and third hypothesis of the lemma must have been formed by rule \mylabel{M-IApp}.
   From their two hypotheses and from the hypothesis of the rule and the induction hypothesis, we obtain
   the desired results
 \begin{equation*}
@@ -1587,7 +1587,7 @@ The proof proceeds by induction on the derivation of the first hypothesis.
 
 \item[\fbox{\texttt{(UA-TAbs)}}]\quad$\bar{\alpha} \unamb \forall \alpha.\rulet$ \ \\
 %===============================================================================
-  Then the second and third hypothesis of the lemma must have been formed by rule \mylabel{M-TAbs},
+  Then the second and third hypothesis of the lemma must have been formed by rule \mylabel{M-TApp},
   with $\bar{\suty}_1 = \bar{\suty}_{1,1},\suty_{1,2}$ and $\bar{\suty}_1' = \bar{\suty}_{1,1}',\suty_{2,2}'$.
   From their two hypotheses and from the hypothesis of the rule and the induction hypothesis, we obtain
 \begin{equation*}
@@ -2036,20 +2036,20 @@ R(\tenv;\alpha;\tenv';\tenv'',\beta;\tenv,(\tenv_1',\beta)[\suty/\alpha];\suty)
 \end{equation*}
 
 %===============================================================================
-\item[\fbox{\texttt{(M-IAbs)}}]\quad$\tenv,\alpha,\tenv'; \rulet_1 \iarrow \rulet_2 \leadsto E \ivturns \type \leadsto E'; \Sigma, \rulet_1 \leadsto x$ \ \\
+\item[\fbox{\texttt{(M-IApp)}}]\quad$\tenv,\alpha,\tenv'; \rulet_1 \iarrow \rulet_2 \leadsto E \ivturns \type \leadsto E'; \Sigma, \rulet_1 \leadsto x$ \ \\
 %===============================================================================
   From the rule's hypothesis and the induction hypothesis we have 
 \begin{equation*}
   \tenv,(\tenv',\rulet_1 \leadsto x)[\suty/\alpha]; \rulet_2[\suty/\alpha] \leadsto (E x)[|\suty|/\alpha] \ivturns \type[\suty/\alpha] \leadsto E'[|\suty|/\alpha]; \Sigma[\suty/\alpha]
 \end{equation*}
 
-  Then from the definition of substutition and rule \mylabel{M-IAbs} we conclude
+  Then from the definition of substutition and rule \mylabel{M-IApp} we conclude
 \begin{equation*}
   \tenv,\tenv'[\suty/\alpha]; (\rulet_1 \iarrow \rulet_2)[\suty/\alpha] \leadsto E[|\suty|/\alpha] \ivturns \type[\suty/\alpha] \leadsto E'[|\suty|/\alpha]; (\Sigma,\rulet_1 \leadsto x)[\suty/\alpha]
 \end{equation*}
 
 %===============================================================================
-\item[\fbox{\texttt{(M-TAbs)}}]\quad$\tenv,\alpha,\tenv'; \forall\beta.\rulet \leadsto E \ivturns \type \leadsto E'; \Sigma$ \ \\
+\item[\fbox{\texttt{(M-TApp)}}]\quad$\tenv,\alpha,\tenv'; \forall\beta.\rulet \leadsto E \ivturns \type \leadsto E'; \Sigma$ \ \\
 %===============================================================================
   From the rule's first hypothesis and the induction hypothesis we have 
 \begin{equation*}
@@ -2061,7 +2061,7 @@ R(\tenv;\alpha;\tenv';\tenv'',\beta;\tenv,(\tenv_1',\beta)[\suty/\alpha];\suty)
   \tenv,\tenv'[\suty/\alpha] \vdash \suty'[\suty'/\alpha]
 \end{equation*}
 
-  From these two facts we conclude by rule \mylabel{M-TAbs}, reasoning modulo
+  From these two facts we conclude by rule \mylabel{M-TApp}, reasoning modulo
   the definition of substitution
 \begin{equation*}
   \tenv,\tenv'[\suty/\alpha]; (\forall\beta.\rulet)[\suty/\alpha] \leadsto E[|\suty|/\alpha] \ivturns \type[\suty/\alpha] \leadsto E'[|\suty|/\alpha]; \Sigma[\suty/\alpha]
@@ -2242,25 +2242,25 @@ $\theta(\type') = \theta(\type)$. Hence, the target judgement can be rewritten a
 This follows from rule \mylabel{M-Simp}.
 
 %===============================================================================
-\item[\fbox{\texttt{(AM-IAbs)}}]\quad$\bar{\alpha}; \tenv; \rulet_1 \iarrow \rulet_2~{\leadsto E}; \Sigma \alg \type~{\leadsto E'}; \Sigma',\theta(\rulet_1) \leadsto x, \theta(\Sigma);\theta$ \ \\
+\item[\fbox{\texttt{(AM-IApp)}}]\quad$\bar{\alpha}; \tenv; \rulet_1 \iarrow \rulet_2~{\leadsto E}; \Sigma \alg \type~{\leadsto E'}; \Sigma',\theta(\rulet_1) \leadsto x, \theta(\Sigma);\theta$ \ \\
 %===============================================================================
   From the hypothesis of the rule and the induction hypothesis, we have that
 \begin{equation*}
  \theta(\tenv,\rulet_1 \leadsto x); \theta(\rulet_2) \leadsto |\theta|(E\,x) \ivturns \theta(\type) \leadsto E'; \Sigma' 
 \end{equation*}
-  By rule \mylabel{M-IAbs} we may then conclude
+  By rule \mylabel{M-IApp} we may then conclude
 \begin{equation*}
  \theta(\tenv); \theta(\rulet_1 \iarrow \rulet_2) \leadsto |\theta|(E) \ivturns \theta(\type) \leadsto E'; \Sigma',\theta(\rulet_1) \leadsto x
 \end{equation*} 
 
 %===============================================================================
-\item[\fbox{\texttt{(AM-TAbs)}}]\quad$\bar{\alpha}; \tenv; \forall \alpha. \rulet~{\leadsto E}; \Sigma \alg \type~{\leadsto E'}; \Sigma',\theta(\Sigma);\theta$ \ \\
+\item[\fbox{\texttt{(AM-TApp)}}]\quad$\bar{\alpha}; \tenv; \forall \alpha. \rulet~{\leadsto E}; \Sigma \alg \type~{\leadsto E'}; \Sigma',\theta(\Sigma);\theta$ \ \\
 %===============================================================================
   Then it follows from the rule's hypothesis and from the induction hypothesis that
 \begin{equation*}
   \theta(\tenv); \theta(\rulet) \leadsto |\theta|(E\,\alpha) \ivturns \theta(\type) \leadsto E'; \Sigma'
 \end{equation*}
-  Hence, it follows from rule \mylabel{M-TAbs} that
+  Hence, it follows from rule \mylabel{M-TApp} that
 \begin{equation*}
   \theta(\tenv); \theta(\forall \alpha.\rulet) \leadsto |\theta|(E) \ivturns \theta(\type) \leadsto E'; \Sigma'
 \end{equation*}
@@ -2491,25 +2491,25 @@ From Lemma~\ref{lemma:acompleteness:5} and rule \mylabel{AM-Simp} we then have
 \end{equation*}
 
 %===============================================================================
-\item[\fbox{\texttt{(M-IAbs)}}]\quad$\theta_1(\tenv); \theta_1(\rulet_1 \iarrow \rulet_2)~{\leadsto |\theta_1|(E)}\ivturns \theta_1(\type)~{\leadsto |\theta_1|(E')}; \theta_1(\Sigma',\rulet_1 \leadsto x)$ \ \\
+\item[\fbox{\texttt{(M-IApp)}}]\quad$\theta_1(\tenv); \theta_1(\rulet_1 \iarrow \rulet_2)~{\leadsto |\theta_1|(E)}\ivturns \theta_1(\type)~{\leadsto |\theta_1|(E')}; \theta_1(\Sigma',\rulet_1 \leadsto x)$ \ \\
 %===============================================================================
   From the hypothesis of the rule and the induction hypothesis, we have that
 \begin{equation*}
  \bar{\alpha};\tenv,\rulet_1 \leadsto x;\rulet_2 \leadsto E\,x; \rulet_1 \leadsto x, \Sigma \alg \type \leadsto |\theta_2|(E'); \theta_2(\Sigma',\rulet_1 \leadsto x, \Sigma) 
 \end{equation*}
-  By rule \mylabel{AM-IAbs} we may then conclude
+  By rule \mylabel{AM-IApp} we may then conclude
 \begin{equation*}
  \bar{\alpha};\tenv;\rulet_1 \iarrow \rulet_2 \leadsto E; \Sigma \alg \type \leadsto |\theta_2|(E'); \theta_2(\Sigma',\rulet_1 \leadsto x, \Sigma) 
 \end{equation*} 
 
 %===============================================================================
-\item[\fbox{\texttt{(M-TAbs)}}]\quad$\theta_1(\tenv); \theta_1(\forall\alpha.\rulet) \leadsto |\theta_1|(E) \ivturns \theta_1(\type) \leadsto |\theta_1|(E'); \theta_1(\Sigma')$ \ \\
+\item[\fbox{\texttt{(M-TApp)}}]\quad$\theta_1(\tenv); \theta_1(\forall\alpha.\rulet) \leadsto |\theta_1|(E) \ivturns \theta_1(\type) \leadsto |\theta_1|(E'); \theta_1(\Sigma')$ \ \\
 %===============================================================================
   From the hypothesis of the rule and the induction hypothesis, we have that
 \begin{equation*}
  \bar{\alpha},\alpha;\tenv;\rulet \leadsto E\,\alpha; \Sigma \alg \type \leadsto |\theta_2|(E'); \theta_2(\Sigma',\Sigma) 
 \end{equation*}
-  Hence, it follows from rule \mylabel{AM-TAbs} that
+  Hence, it follows from rule \mylabel{AM-TApp} that
 \begin{equation*}
  \bar{\alpha};\tenv;\forall \alpha.\rulet \leadsto E; \Sigma \alg \type \leadsto |\theta_2|(E'); \theta_2(\Sigma',\Sigma) 
 \end{equation*}
@@ -2648,14 +2648,14 @@ From Lemma~\ref{lemma:acompleteness:5} and rule \mylabel{AM-Simp} we then have
 % \begin{description}
 % \renewcommand{\itemsep}{10mm}
 % %= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = 
-% \item[\texttt{(M-IAbs)}] \quad
+% \item[\texttt{(M-IApp)}] \quad
 %     $\rho_1 \iarrow \rho_2 \lhd \tau$ \ \\
 % %= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = 
-% From rule \mylabel{M-IAbs} and the induction hypothesis it follows that:
+% From rule \mylabel{M-IApp} and the induction hypothesis it follows that:
 % \begin{equation*}
 % \theta(\rho_2) \lhd \head{\theta(\tau)}
 % \end{equation*}
-% Then it follows from rule \mylabel{M-IAbs} that:
+% Then it follows from rule \mylabel{M-IApp} that:
 % \begin{equation*}
 % \theta(\rho_1) \iarrow \theta(\rho_2) \lhd \head{\theta(\tau)}
 % \end{equation*}
@@ -2666,10 +2666,10 @@ From Lemma~\ref{lemma:acompleteness:5} and rule \mylabel{AM-Simp} we then have
 % \end{equation*}
 % 
 % %= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = 
-% \item[\texttt{(M-TAbs)}] \quad
+% \item[\texttt{(M-TApp)}] \quad
 %     $\forall \alpha. \rho \lhd \tau$ \ \\
 % %= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = 
-% From rule \mylabel{M-TAbs} and the induction hypothesis it follows that:
+% From rule \mylabel{M-TApp} and the induction hypothesis it follows that:
 % \begin{equation*}
 % \theta(\rho[\suty'/\alpha']) \lhd \head{\theta(\tau)}
 % \end{equation*}
@@ -2678,7 +2678,7 @@ From Lemma~\ref{lemma:acompleteness:5} and rule \mylabel{AM-Simp} we then have
 % \begin{equation*}
 % \theta(\rho)[\theta(\suty')/\alpha'] \lhd \head{\theta(\tau)}
 % \end{equation*}
-% Then, by rule \mylabel{M-TAbs}, we get:
+% Then, by rule \mylabel{M-TApp}, we get:
 % \begin{equation*}
 % \forall \alpha. \theta(\rho) \lhd \head{\theta(\tau)}
 % \end{equation*}
@@ -2714,7 +2714,7 @@ From Lemma~\ref{lemma:acompleteness:5} and rule \mylabel{AM-Simp} we then have
 % \begin{equation*}
 % \forall \bar{\beta}.\tau' \lhd \tau'
 % \end{equation*}
-% by repeated application of rule \mylabel{M-TAbs}
+% by repeated application of rule \mylabel{M-TApp}
 % choosing substitutions of the form $[\beta/\beta]$
 % and the trivial base case $\tau' \lhd \tau'$ shown by rule
 % \mylabel{M-Simp}.
