@@ -39,23 +39,20 @@ This is the syntax of the calculus:
 
 %%endif
 
-
-
 \textit{Types} $\rho$ comprise four constructs: type variables
 $\alpha$; function types $\rulet_1 \arrow \rulet_2$; type abstraction
 $\forall \alpha. \rulet$; and the novel rule type $\rulet_1 \iarrow
 \rulet_2$.  In a rule type $\rulet_1 \iarrow \rulet_2$, type $\rulet_1$ is
 called the \textit{context} and type $\rulet_2$ the \textit{head}.
 
-Expressions $e$ include three
-abstraction-eliminination pairs. The
-binder $\lambda (x:\rulet). e$ abstracts expression $e$ over values of type $\rulet$, is eliminated by
-application $e_1\,e_2$ and refers to the bound value with variable $x$.
+Expressions $e$ include three abstraction-eliminination pairs.
+The binder $\lambda (x:\rulet). e$ abstracts expression $e$ over values of type $\rulet$,
+is eliminated by application $e_1\,e_2$, and refers to the bound value with variable $x$.
 The binder $\Lambda \alpha.e$ abstracts expression $e$ over types, is eliminated
-by type application $e\,\rho$ and refers to the bound type with type variable $\alpha$ 
+by type application $e\,\rho$, and refers to the bound type with type variable $\alpha$ 
 (but $\alpha$ itself is not a valid expression). The binder $\ilambda \rulet. e$ 
 abstracts expression $e$ over implicit values of type $\rulet$, is eliminated by
-implicit application $e_1 \with e_2$ and refers to the implicitly bound value with 
+implicit application $e_1 \with e_2$, and refers to the implicitly bound value with 
 implicit query $\query \rulet$.
 Without loss of generality we assume that all variables $x$
 and type variables $\alpha$ in binders are distinct. If not, they
@@ -66,12 +63,10 @@ sugar that we have used in Sections~\ref{sec:intro} and \ref{sec:overview}.
 %{
 %format == = "\defeq"
 %format e1
-
 \[ | implicit {-"\overline{"-} e : {-"\rho}"-} in e1 == ({-" \overline{\lambda_? \rho .} "-} e1) {-"\overline{"-} with e {-"}"-} | \]
 %}\bruno{Also introduce let, which is used later, in the translation.}
-
-The notation $\overline{\lambda_? \rho .}$ is a shortform for 
-$\lambda_? \rho_1.~\ldots~\lambda_? \rho_n.$. Correspondingly,
+Here the notation $\overline{\lambda_? \rho .}$ is a shortform for 
+$\lambda_? \rho_1.~\ldots~\lambda_? \rho_n.$, and
 the notation $\overline{|with|~e}$ is a shortform for
 |with| $e_1 \ldots $ |with| $e_n$.
 
@@ -80,7 +75,7 @@ the notation $\overline{|with|~e}$ is a shortform for
 % automatically inferred.
 
 For brevity, we have kept $\ourlang$ small. Examples
-may use additional syntax such as built-in integers, integer operators and boolean
+may use additional syntax such as built-in integers, integer operators, and boolean
 literals and types. 
 % Extending this calculus with support for \emph{higher-kinded 
 % polymorphism} in the style of System $F_{\omega}$ is not hard.  
