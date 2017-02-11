@@ -5,25 +5,36 @@
 > Throughout: Please use author-name citations rather than numeric;
 >             see ICFP call for papers.
 
-FIXED
+DONE
  
 > p10.2--3   Instead, perhaps say we use Barendregt convention?
 >         It implies the condition given here.
-> 
+
+DONE
+ 
 > p10.34  Give a citation for Curry-Howard, possibly my CACM Dec 2015 paper.
 >         By the way, I've taken to calling Curry-Howard "Propositions as Types"
 >         (because the name Curry-Howard annoys those who think credit should
 >         go to Brouwer, Heyting, Kolmogorov, or De Bruijn), might want to
 >         make that change here.
-> 
+
+DONE
+ 
 > p10.38  Instead of writing |- with a dot over it in Fig 3, why don't we write
 >         |-^a_r in Fig 3 (the a is for ambiguous) and leave out the dots in Fig 4?
 >         Fig 4 is the more complex, so better if it uses simpler symbols.
-> 
+ 
+DONE
+
 > p11.8   (WF-AbsTy) should be (WF-UnivTy) or the like.  Type abstraction is a term form,
 >         yielding a term of universal type.
-> 
+
+DONE
+ 
 > p11.31  Perhaps we should replace \epsilon |-_unamb \rho by |-_unamb \rho
+
+DONE
+
 >         (a judgment with only a conclusion) and then add the definition
 > 
 >           \epsilon |-_unamb \rho
@@ -32,21 +43,32 @@ FIXED
 > 
 >         to the definition of |-_unamb.  (By the way, that definition should be
 >         in a separate figure.)
-> 
+
+TODO
+
 > p11.24  If we follow the Barendregt convention (see p10.2--3), 
 >         then we don't need the second hypothesis of (Ty-TAbs).
-> 
+
+DONE
+ 
 > p12.1   I find it immensely confusing that the (R-) prefix is used to name rules
 >         both in Fig 3 and Fig 4. Can the prefix for one or the other be changed please?
 >         Currently, (R-IAbs) appears in both Fig 3 and Fig 4 with different definitions!
-> 
+
+I changed the ambiguous rule name prefixes to (AR-) in Section 3.3.
+TODO: propagate this change throughout the rest of the paper.
+ 
 > p12.23  Why is this section written in outline form? It makes it hard to read.
 >         It should be fine written as an ordinary narrative without bullet points.
-> 
+
+TODO
+ 
 > p12.24  Either explain focussing in more detail here, or explain all the proof
 >         rules first and then mention at the end that they happen to correspond
 >         to focussing.
-> 
+
+TODO
+ 
 > p12.26--32  I cannot follow what you are saying here.  I don't know what you mean
 >         by "pivot on an environment lookup" or "shifts the focus" or "backward
 >         chaining" or "forward chaining".  The rule references were too compact
@@ -54,67 +76,100 @@ FIXED
 >         rather than Fig 4.  Giving explicit correspondences between rules in Fig 3
 >         and rules in Fig 4 would help. Currently you mention rules in Fig 3 and
 >         ask the reader to guess what they correspond to in Fig 4.
-> 
+
+TODO
+ 
 > p12.32  "introduction rules in inverted form" Can you explain this at greater
 >         length please? I wasn't sure what it meant.
-> 
+
+TODO
+ 
 > p12.42--47  I think this might be easier to read if you give the example first
 >          (be clearer on how "the outer context is instantiated").  Possibly
 >          just give the two derivations with the ambiguous resolution rules,
 >          as you did on p11.43--48.
-> 
+
+TODO
+ 
 > p13.1   "To implement measures (1) and (3b)" Drop the bullet points, and drop
 >         this phrase, to begin "We provid a variant ..."  The reader will be
 >         adequately motivated by the previous discussion, tracing the choice of
 >         syntax to specific parts of it is probably counterproductive.
-> 
+
+TODO
+ 
 > p13.5   Can we get rid of blue \sigma now please?  Just typeset \sigma in black.
-> 
+
+DONE 
+
 > p13.10  "convenient for measure (1)" -->
 >         "convenient to make our definition syntax directed"
-> 
+
+TODO
+ 
 > p13.11  "help us to implement measure (3b)" -->
 >         "help us to avoid ambiguous instantiations"
-> 
+
+TODO
+ 
 > p13.13  We need to explain how the judgments in Fig 3 and Fig 4 relate, e.g.
 >         \Gamma |-^a_r \rho  iff  \Gamma |-^a_r \rho.
 >         (The relation changes when we add E.)
 >         As I recall, we had ways to relate the auxiliary judgements in Fig 4
 >         to Fig 3 as well, and it would be good to make those relations
 >         explicit.
-> 
+
+TODO
+ 
 > p13.14  You've explained that \bar{\alpha} is just the sequence of type variables
 >         in \Gamma. But you haven't explained what it is there for! Why do we need it?
 >         I think you added it after my day with Bruno, so I have no idea why it is there,
 >         and I cannot work it out by looking at the rules
-> 
+ 
+TODO
+
 > p13.24,25.  References to "(measure (1))" and "(measure (2))" can be dropped,
 >         similarly for later references. If its an important concept, best to give it
 >         a name (such as "syntax-directed judgment") rather than a number in a
 >         bulleted list.
-> 
+
+TODO
+ 
 > p13.26  "Third auxiliary judgement" Somewhere around here you need to refer
 >         to the definition of \Sigma, so the reader knows what it means when it
 >         is encountered in the text.
-> 
+
+
+TODO 
+
 > p13.38  "after the rule has been committed to" I have no idea what this means.
 >         Also, the grammar of this sentence is convoluted or wrong. Did you want
 >         a comma after "to"? In any event, best to rewrite.
-> 
+
+TODO
+ 
 > p13.43  Around here should say something like:
 >         "Judgment \bar{\alpha} |-_unamb \rho holds when a solution
 >         to \tau[\bar{\sigma}/\bar{\alpha}] = \tau', where \tau is the
 >         head of \rho, uniquely specifies each type in \bar{sigma}."
 >         (Did I get that right?)
-> 
+
+TODO
+ 
 > p14.43  In hypothesis of (M-TApp), \Sigma should not be in gray.
-> 
+
+DONE
+ 
 > p15.7   Move the footnote into the text. In general, move *all* footnotes into
 >         the text.  Forcing the reader to look to the bottom of the page and then
 >         re-find their place in the main text does not enhance readability!
-> 
+ 
+DONE
+
 > p15.14--20  Move the definition into its own figure.  Also see note for p11.31.
-> 
+
+TODO
+ 
 > p15.24  "recursively requires that these contexts are unambiguous"
 >         Why is it appropriate to use \epsilon rather than \bar{\alpha} to the
 >         left of the turnstyle?  Note the question sort of answers itself if
@@ -123,54 +178,87 @@ FIXED
 >                           |-_unamb \rho is the judgment that \rho is unambiguous
 >              \bar{\alpha} |-_unamb \rho is the judgment that all type variables in
 >                              \bar{\alpha} are resolved by matching against \rho
-> 
+
+TODO
+ 
 > p15.25--26  Delete. Dealt with earlier.
-> 
+
+TODO?
+ 
 > p15.29  "stable under all possible substitutions \Theta"  
 >         You need to first define what "stable" means and explain why stability is
 >         important.
-> 
+
+TODO
+ 
 > p15.40--43  At last, an explanation of \bar{\alpha}. Please include a forward
 >         reference to this explanation when \bar{\alpha} is first introduced.
-> 
+
+TODO
+ 
 > p16.14--10  Put definition of |-_coh in its own figure (or in Fig 6).
-> 
+
+TODO
+ 
 > p16.23--30  Probably clearer to avoid a bulleted list.
-> 
+
+TODO
+ 
 > p16.26  "that substitutes \bar{\alpha}" -->
 >         "where the domain of \Theta is restricted to \bar{\alpha}"
-> 
+
+DONE
+ 
 > p16.27  Add "If no unifier exists, then rule (COH-simp) does not apply."
-> 
+
+DONE
+ 
 > p16.32  Need to draw attention when the judgment is first mentioned that
 >         it mentions both \Sigma and \Sigma', I missed this and got confused
 >         reading the rest of the paragraph.
-> 
+
+DONE
+ 
 > p16.42  Shouldn't this definition come when mgu is first mentioned?
-> 
+
+TODO
+ 
 > p16.43  "Moreover, \Theta subsumes any other such unifier" Perhaps write out
 >         in full what this means.
-> 
+ 
+TODO
+
 > p16.43  "The algorithm itself is fairly straightforward" Presumably the
 >         figure simply repeats a standard algorithm from the literature?
 >         Why not say so, and give a citation to the original?
-> 
+
+TODO
+ 
 > p17.32  Reading the rules for this judgment, I found it hard to spot the
 >         delimiting semicolons. Possibly better to use something more visible,
 >         such as a horizontal rule |, in which case replace ; by | uniformly
 >         in all judgments.
-> 
+
+TODO
+ 
 > p18.32  "The source of this non-termination are" Non-agreement of subject with verb!
-> 
+
+DONE
+ 
 > p18.33  "first two auxiliary judgments" In which figure? But couldn't you also get
 >         a loop using the definition in Fig 3, which has no auxiliary judgments?
 >         I'm wondering if there is a simpler explanation of the source of non-termination.
-> 
+
+TODO
+ 
 > p18.42--47  Is this new work, or is this just copied from Haskell [16]?
 >         If the former, I found the phrase "One potential problem ..." misleading.
 >         There are no potential problems, since the Haskell guys have solved them
 >         for us!
-> 
+
+TODO
+ 
 > p19.27--29  Maybe we should add the termination conditions to the well-formedness
 >         of types, with a pointer to this section.
->         
+
+TODO         

@@ -16,7 +16,7 @@
  }{
             \Gamma \turns T_1 \arrow T_2
 } \\ \\
-  (\texttt{F-WF-AbsTy}) & 
+  (\texttt{F-WF-UnivTy}) & 
 \myirule{
             \Gamma, \alpha \turns T
  }{
@@ -134,7 +134,7 @@ By structural induction on the expression and corresponding inference rule.
 \end{equation*}
 
 %===============================================================================
-\item[\fbox{\texttt{(WF-AbsTy)}}\quad$\tenv \turns \forall\alpha.\rulet$] \ \\
+\item[\fbox{\texttt{(WF-UnivTy)}}\quad$\tenv \turns \forall\alpha.\rulet$] \ \\
 %===============================================================================
   It follows from the induction hypothesis and the hypothesis of the rule that
 \begin{equation*}
@@ -145,7 +145,7 @@ By structural induction on the expression and corresponding inference rule.
   |\tenv|,\alpha \turns |\rulet|
 \end{equation*}
 
-  Hence, by rule \mylabel{F-WF-AbsTy}, and taking into account that
+  Hence, by rule \mylabel{F-WF-UnivTy}, and taking into account that
   $\forall\alpha.|\rulet| = |\forall\alpha.\rulet|$, we conclude that
 \begin{equation*}
   |\tenv| \turns |\forall\alpha.\rulet|

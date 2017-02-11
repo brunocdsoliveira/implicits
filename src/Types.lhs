@@ -46,9 +46,11 @@ by type application $e\,\rulet$, and refers to the bound type with type variable
 abstracts expression $e$ over implicit values of type $\rulet$, is eliminated by
 implicit application $e_1 \with e_2$, and refers to the implicitly bound value with 
 implicit query $\query \rulet$.
-Without loss of generality we assume that all variables $x$
-and type variables $\alpha$ in binders are distinct. If not, they
-can be easily renamed apart to be so.
+For convenience we adopt the Barendregt convention~\cite{barendregt}, that
+variables in binders are distinct, throughout this article.
+% Without loss of generality we assume that all variables $x$
+% and type variables $\alpha$ in binders are distinct. If not, they
+% can be easily renamed apart to be so.
 
 Using rule abstractions and applications we can build the |implicit| 
 sugar used in Sections~\ref{sec:intro} and \ref{sec:overview}.
@@ -125,8 +127,6 @@ literals and types.
 
 \TyTAbs&
   \myirule {  \tenv,\alpha \turns \relation{e}{\rulet}~\gbox{\leadsto E_1} 
-              \quad\quad\quad
-              \alpha \not\in \tenv
            }
            { \tenv \turns \relation{\Lambda \alpha.e}{\forall
                \alpha.\rulet}~\gbox{\leadsto \Lambda \alpha.E_1} }
@@ -143,7 +143,7 @@ literals and types.
   \myirule { \tenv, \rulet_1 \gbox{\leadsto x} \turns \relation{e}{\rulet_2}~\gbox{\leadsto
     E} 
              \quad \tenv \turns \rulet_1 
-             \quad \epsilon \vdash_{\mathit{unamb}} \rulet_1
+             \quad \vdash_{\mathit{unamb}} \rulet_1
              \quad \gbox{x~\mathit{fresh}}}
            { \tenv \turns \relation{\ilambda \rulet_1.e}{\rulet_1 \iarrow \rulet_2}~\gbox{\leadsto
     \lambda \relation{x}{||\rulet_1||}. E}}
@@ -158,7 +158,7 @@ literals and types.
 \\ \\
 \TyQuery &
 \myirule
-{ \tenv \vturns \rulet~\gbox{\leadsto E} \quad\quad\quad \tenv \turns \rulet \quad\quad\quad \epsilon \vdash_{\mathit{unamb}} \rulet}
+{ \tenv \vturns \rulet~\gbox{\leadsto E} \quad\quad\quad \tenv \turns \rulet \quad\quad\quad \vdash_{\mathit{unamb}} \rulet}
 { \tenv \turns \relation{?\rulet}{\rulet}~\gbox{\leadsto E}
 } 
 \eda
@@ -209,24 +209,24 @@ is explained next.
 \ba{c}
 \multicolumn{1}{c}{\myruleform{\tenv \vturns \rulet~\gbox{\leadsto E}}} \\ \\
 
-\mylabel{R-TAbs} \quad
+\mylabel{AR-TAbs} \quad
   \myirule{\tenv, \alpha \vturns \rulet~\gbox{\leadsto E}}
           {\tenv \vturns \forall \alpha. \rulet~\gbox{\leadsto \Lambda\alpha.E}} 
 \quad\quad\quad
-\mylabel{R-TApp} \quad
+\mylabel{AR-TApp} \quad
   \myirule{\tenv \vturns \forall \alpha. \rulet~\gbox{\leadsto E} \quad\quad \Gamma \turns \rulet'}
           {\tenv \vturns \rulet[\rulet'/\alpha]~\gbox{\leadsto E~||\rulet'||}}
 \\ \\
-\mylabel{R-IVar} \quad
+\mylabel{AR-IVar} \quad
   \myirule{\rulet~\gbox{\leadsto x} \in \tenv}
           {\tenv \vturns \rulet~\gbox{\leadsto x}}
 \quad\quad\quad
-\mylabel{R-IAbs} \quad
+\mylabel{AR-IAbs} \quad
   \myirule{\tenv, \rulet_1~\gbox{\leadsto x} \vturns \rulet_2~\gbox{\leadsto E} \quad\quad \gbox{x~\mathit{fresh}}}
           {\tenv \vturns \rulet_1 \iarrow \rulet_2~\gbox{\leadsto
             \lambda\relation{x}{||\rulet_1||}.E}} 
 \\ \\
-\mylabel{R-IApp} \quad
+\mylabel{AR-IApp} \quad
   \myirule{\tenv \vturns \rulet_1 \iarrow \rulet_2~\gbox{\leadsto E_2} \quad\quad \tenv \vturns \rulet_1~\gbox{\leadsto E_1}}
           {\tenv \vturns \rulet_2~~\gbox{\leadsto E_2~E_1}}
 \\ \\
@@ -241,9 +241,9 @@ The underlying principle of resolution in $\ourlang$ originates
 from resolution in logic. 
 Intuitively, $\tenv\vdash_r \rulet$ holds if $\tenv$ entails $\rulet$, where the types in $\tenv$ and
 $\rulet$ are read as propositions.
-Following the Curry-Howard correspondence, we read
+Following the ``Propositions as Types'' correspondence~\cite{propsastypes}, we read
 $\alpha$ as a propositional variable and $\forall \alpha.\rulet$ as universal quantification.
-Unlike traditional Curry-Howard, we have two forms of arrow,
+Yet, unlike in the traditional interpretation of types as propositions, we have two forms of arrow,
 functions $\rulet_1 \arrow \rulet_2$ and rules $\rulet_1 \iarrow \rulet_2$,
 and the important twist is that we choose to treat
 only rules as implications, leaving functions as uninterpreted predicates.
@@ -266,16 +266,16 @@ then there are two different derivations for
 $\Gamma_0 \vturns \tyint$:
 \begin{equation*}
 \begin{array}{c}
-\inferrule*[Left=\mylabel{R-IVar}]
+\inferrule*[Left=\mylabel{AR-IVar}]
    {\tyint \in \Gamma_0}
    {\Gamma_0 \vturns \tyint}
 \end{array}
 \quad \text{and} \quad\quad\quad\quad
 \begin{array}{c}
-\inferrule*[Left=\mylabel{R-IApp}]
-   {\inferrule*[Left=\mylabel{R-IVar}] {(\tybool \iarrow \tyint) \in \Gamma_0}
+\inferrule*[Left=\mylabel{AR-IApp}]
+   {\inferrule*[Left=\mylabel{AR-IVar}] {(\tybool \iarrow \tyint) \in \Gamma_0}
                 {\Gamma_0 \vturns (\tybool \iarrow \tyint)} \\
-    \inferrule*[left=\mylabel{R-IVar}] {\tybool \in \Gamma_0}
+    \inferrule*[left=\mylabel{AR-IVar}] {\tybool \in \Gamma_0}
                 {\Gamma_0 \vturns \tybool}
    }
    {\Gamma_0 \vturns \tyint}
@@ -369,7 +369,6 @@ measure (3b).
 \paragraph{Revised Resolution Rules}
 
 \newcommand{\elookup}[3][\bar{\alpha}]{{#2}_{#1}\langle{#3}\rangle}
-\newcommand{\ivturns}{\mathop{\dot{\turns}_{r}}}
 
 \figtwocol{fig:resolution2}{Deterministic Resolution and Translation to System F}{
 \begin{center}
@@ -427,7 +426,7 @@ measure (3b).
           }
           {\tenv; \rulet_1 \iarrow \rulet_2 ~\gbox{\leadsto E} \ivturns \type~\gbox{\leadsto E'}; \Sigma, \rulet_1~\gbox{\leadsto x}} \\ \\ 
 \mylabel{M-TApp} \quad
-  \myirule{\tenv; \rulet[\suty/\alpha] ~\gbox{\leadsto E\,||\suty||} \ivturns \type~\gbox{\leadsto E'; \Sigma}
+  \myirule{\tenv; \rulet[\suty/\alpha] ~\gbox{\leadsto E\,||\suty||} \ivturns \type~\gbox{\leadsto E'}; \Sigma
            \quad\quad\quad
            \tenv \turns \suty
           }
@@ -519,9 +518,8 @@ should be instantiated. In fact, the matching succeeds under any possible
 substitution of $\alpha$. In this particular case the ambiguity is harmless, because
 it does not affect the semantics. Yet, it is not so harmless in other cases.
 Take for instance the context type $\forall \alpha. (\alpha \arrow \tystr)
-\iarrow (\tystr \arrow \alpha) \iarrow (\tystr \arrow \tystr)$.\footnote{This 
-type encodes the well-known ambiguous Haskell type |forall a. (Show a, Read a) => String -> String|
-of the expression |read . show|.} Again the
+\iarrow (\tystr \arrow \alpha) \iarrow (\tystr \arrow \tystr)$. This 
+type encodes the well-known ambiguous Haskell type |forall a. (Show a, Read a) => String -> String| of the expression |read . show|. Again the
 choice of $\alpha$ is ambiguous when matching against the simple type $\tystr
 \arrow \tystr$. Yet, now the choice is critical for two reasons. Firstly, if we
 guess the wrong instantiation $\suty$ for $\alpha$, then it may not be possible
@@ -551,7 +549,7 @@ for this purpose.} This judgement is defined as follows:
         {\bar{\alpha} \vdash_{\mathit{unamb}} \forall \alpha.\rulet} 
 \quad\quad\quad
 \mylabel{UA-IAbs} \quad
-\myirule{\epsilon \vdash_{\mathit{unamb}} \rulet_1 \quad\quad \bar{\alpha} \vdash_{\mathit{unamb}} \rulet_2}
+\myirule{\vdash_{\mathit{unamb}} \rulet_1 \quad\quad \bar{\alpha} \vdash_{\mathit{unamb}} \rulet_2}
         {\bar{\alpha} \vdash_{\mathit{unamb}} \rulet_1 \iarrow \rulet_2} \\ \\
 % \mylabel{UA-TAbsAlt} \quad
 % \myirule{\bar{\alpha} \vdash_{\mathit{unamb}} \rulet}
@@ -655,8 +653,10 @@ Instead of guessing the type instantiation ahead of time in rule
 $\mylabel{M-TApp}$, rule $\mylabel{Coh-TApp}$ defers the instantiation to the
 base case, rule \mylabel{Coh-Simp}. This last rule performs the deferred
 instantiation of type variables $\bar{\alpha}$ by computing the \emph{most general
-unifier} $\theta = \mgu{\type'}{\type}$ of $\type'$ and $\type$ that substitutes $\bar{\alpha}$.
+unifier} $\theta = \mgu{\type'}{\type}$ of $\type'$ and $\type$ whose
+domain is restricted to $\bar{\alpha}$.
 If this unifier exists, a match has been established.
+If no unifier exists, then rule \textsc{COH-Simp} does not apply.
 \item
 Since the coherence check considers the substitution of the type variables
 $\bar{\alpha}$ that occur in the environment at the point of the query, rule
@@ -835,8 +835,8 @@ As an example of non-termination consider
   \tyint \To \tychar \vturns \tyint
 \end{equation*}
 which loops, using alternatively the first and second rule in the
-environment. The source of this non-termination are the mutually recursive 
-definitions of the first two auxiliary judgements: a simple type can be resolved
+environment. The source of this non-termination is the mutually recursive 
+definition of the first two auxiliary judgements: a simple type can be resolved
 in terms of a rule type whose head it matches, but this requires further 
 resolution of the rule type's context. 
 

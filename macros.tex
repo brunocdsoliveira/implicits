@@ -7,8 +7,8 @@
 % \newtheorem{proposition}[theorem]{Proposition}
 % \newtheorem{corollary}[theorem]{Corollary}
 
-\newcommand{\head}[1]{\mathrm{\textcolor{blue}{hd}(#1)}}
-\newcommand{\suty}{\textcolor{blue}{\sigma}}
+\newcommand{\head}[1]{\mathrm{hd}(#1)}
+\newcommand{\suty}{\sigma}
 \newcommand{\name}{{\bf Cochis}\xspace}
 
 \newcommand{\mca}{\mathcal{A}}
@@ -116,7 +116,8 @@
 \newcommand{\tenv}{\Gamma}
 \newcommand{\eval}{\Downarrow}
 \newcommand{\turns}{\vdash}
-\newcommand{\vturns}{\vdash_{r}}
+\newcommand{\vturns}{\vdash^a_{r}}
+\newcommand{\ivturns}{\mathop{\turns_{r}}}
 \newcommand{\kturns}{\vdash_{k}}
 \newcommand{\vtyping}{\models}
 
@@ -245,7 +246,7 @@
 
 \newcommand{\WFIntTy}{\tlabel{\facerule{WF-IntTy}}}
 \newcommand{\WFVarTy}{\tlabel{\facerule{WF-VarTy}}}
-\newcommand{\WFAbsTy}{\tlabel{\facerule{WF-AbsTy}}}
+\newcommand{\WFAbsTy}{\tlabel{\facerule{WF-UnivTy}}}
 \newcommand{\WFFunTy}{\tlabel{\facerule{WF-FunTy}}}
 \newcommand{\WFRulTy}{\tlabel{\facerule{WF-RulTy}}}
 
