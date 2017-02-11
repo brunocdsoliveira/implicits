@@ -143,7 +143,7 @@ literals and types.
   \myirule { \tenv, \rulet_1 \gbox{\leadsto x} \turns \relation{e}{\rulet_2}~\gbox{\leadsto
     E} 
              \quad \tenv \turns \rulet_1 
-             \quad \vdash_{\mathit{unamb}} \rulet_1
+             \quad \unamb \rulet_1
              \quad \gbox{x~\mathit{fresh}}}
            { \tenv \turns \relation{\ilambda \rulet_1.e}{\rulet_1 \iarrow \rulet_2}~\gbox{\leadsto
     \lambda \relation{x}{||\rulet_1||}. E}}
@@ -158,7 +158,7 @@ literals and types.
 \\ \\
 \TyQuery &
 \myirule
-{ \tenv \vturns \rulet~\gbox{\leadsto E} \quad\quad\quad \tenv \turns \rulet \quad\quad\quad \vdash_{\mathit{unamb}} \rulet}
+{ \tenv \vturns \rulet~\gbox{\leadsto E} \quad\quad\quad \tenv \turns \rulet \quad\quad\quad \unamb \rulet}
 { \tenv \turns \relation{?\rulet}{\rulet}~\gbox{\leadsto E}
 } 
 \eda
@@ -191,7 +191,7 @@ Typing judgment ${\tenv \turns \relation{e}{\rulet}}$ holds if
 expression $e$ has type $\rulet$ with respect to type environment $\tenv$.
 The first five rules copy the corresponding System F rules; only the last three deserve special attention.
 Firstly, rule \TyIAbs{} extends the implicit environment with the type of an implicit instance.
-The side condition $\epsilon \vdash_{\mathit{unamb}} \rulet$ states that
+The side condition $\unamb \rulet$ states that
 the type $\rulet_1$ must be unambiguous; we explain this concept in Section~\ref{subsec:det}.
 Secondly, rule \TyIApp{} eliminates an implicit abstraction by supplying an
 instance of the required type. Finally, rule \TyQuery{} resolves 
@@ -529,28 +529,39 @@ Secondly, for different choices of $\suty$ the types $(\tystr \arrow
 \alpha)[\suty/\alpha]$ and $(\alpha \arrow \tystr)[\suty/\alpha]$ can be resolved
 in completely different ways.
 
-\newcommand{\unamb}{\vdash_{\mathit{unamb}}}
-
 In order to avoid any problems, we conservatively forbid all ambiguous context
-types in the implicit environment with the $\epsilon \unamb \rulet_1$
+types in the implicit environment with the $\unamb \rulet_1$
 side-condition in rule \mylabel{Ty-IAbs} of Figure~\ref{fig:type}.\footnote{An
 alternative design to avoid such ambiguity would instantiate unused type
 variables to a dummy type, like GHC's \texttt{GHC.Prim.Any}, which is only used
-for this purpose.} This judgement is defined as follows: 
+for this purpose.} This judgement is defined in Figure~\ref{fig:unamb}
+in terms of the auxiliary judgement $\bar{\alpha} \unamb \rulet$ which
+takes an additional sequence of type variables $\alpha$ that is initially
+empty.
+\figtwocol{fig:unamb}{Unambiguous context types}{
+\begin{center}
+\framebox{
+\begin{minipage}{\textwidth}
 \bda{c}
-\myruleform{\bar{\alpha} \vdash_{\mathit{unamb}} \rulet} 
+\myruleform{\unamb \rulet} 
+\quad\quad\quad
+\mylabel{UA-Main} \quad
+\myirule{\epsilon \unamb \rulet}
+        {\unamb \rulet}
+\\ \\
+\myruleform{\bar{\alpha} \unamb \rulet} 
 \quad\quad\quad
 \mylabel{UA-Simp} \quad
 \myirule{\bar{\alpha} \subseteq \mathit{ftv}(\type)}
-        {\bar{\alpha} \vdash_{\mathit{unamb}} \type}
+        {\bar{\alpha} \unamb \type}
 \\ \\
 \mylabel{UA-TAbs} \quad
-\myirule{\bar{\alpha},\alpha \vdash_{\mathit{unamb}} \rulet}
-        {\bar{\alpha} \vdash_{\mathit{unamb}} \forall \alpha.\rulet} 
+\myirule{\bar{\alpha},\alpha \unamb \rulet}
+        {\bar{\alpha} \unamb \forall \alpha.\rulet} 
 \quad\quad\quad
 \mylabel{UA-IAbs} \quad
-\myirule{\vdash_{\mathit{unamb}} \rulet_1 \quad\quad \bar{\alpha} \vdash_{\mathit{unamb}} \rulet_2}
-        {\bar{\alpha} \vdash_{\mathit{unamb}} \rulet_1 \iarrow \rulet_2} \\ \\
+\myirule{\unamb \rulet_1 \quad\quad \bar{\alpha} \unamb \rulet_2}
+        {\bar{\alpha} \unamb \rulet_1 \iarrow \rulet_2} \\ \\
 % \mylabel{UA-TAbsAlt} \quad
 % \myirule{\bar{\alpha} \vdash_{\mathit{unamb}} \rulet}
 %         {\bar{\alpha} \vdash_{\mathit{unamb}} \forall \alpha.\rulet}
@@ -559,9 +570,16 @@ for this purpose.} This judgement is defined as follows:
 % \myirule{\epsilon \vdash_{\mathit{unamb}} \rulet_1 \quad\quad \bar{\alpha},\mathit{ftv}(\rulet_1) \vdash_{\mathit{unamb}} \rulet_2}
 %         {\bar{\alpha} \vdash_{\mathit{unamb}} \rulet_1 \iarrow \rulet_2} \\ \\
 \eda
+\end{minipage}
+}
+\end{center}
+}
 
-The base case, rule \mylabel{UA-Simp}, expresses that fixing the simple type
-$\type$ also fixes the type variables $\bar{\alpha}$. Inductive rule \mylabel{UA-TAbs}
+The auxililiary judgement expresses that all type variables $\bar{\alpha}$ 
+are resolved when matching against $\rulet$.
+Its base case, rule \mylabel{UA-Simp}, expresses
+that fixing the simple type $\type$ also fixes the type variables
+$\bar{\alpha}$. Inductive rule \mylabel{UA-TAbs}
 accumulates the bound type variables $\bar{\alpha}$ before the
 head. Rule \mylabel{UA-IAbs} skips over any contexts
 on the way to the head, but also recursively requires that these contexts are
@@ -625,31 +643,31 @@ substitutions, this rule uses the more algorithmic judgement
 $\bar{\alpha};\rulet\coh\type$. This auxiliary judgement checks algorithmically
 whether there context type $\rulet$ matches $\type$ under any possible instantiation
 of the type variables $\bar{\alpha}$.
-\bda{c}
-\myruleform{\bar{\alpha};\rulet\coh \tau}
-\quad\quad\quad
-\mylabel{COH-Simp}\quad
-\myirule{\theta = \textit{mgu}_{\bar{\alpha}}(\tau,\tau')
-        }
-        {\bar{\alpha};\tau'\coh \tau}  \\ \\
-\mylabel{Coh-TApp}\quad
-\myirule{\bar{\alpha},\alpha;\rulet \coh \tau}
-        {\bar{\alpha};\forall \alpha. \rulet\coh \tau}  
-\quad\quad\quad
-\mylabel{Coh-IApp}\quad
-\myirule{\bar{\alpha};\rulet_2 \coh \tau}
-        {\bar{\alpha};\rulet_1 \iarrow \rulet_2\coh \tau}
-\eda
+% \bda{c}
+% \myruleform{\bar{\alpha};\rulet\coh \tau}
+% \quad\quad\quad
+% \mylabel{COH-Simp}\quad
+% \myirule{\theta = \textit{mgu}_{\bar{\alpha}}(\tau,\tau')
+%         }
+%         {\bar{\alpha};\tau'\coh \tau}  \\ \\
+% \mylabel{Coh-TApp}\quad
+% \myirule{\bar{\alpha},\alpha;\rulet \coh \tau}
+%         {\bar{\alpha};\forall \alpha. \rulet\coh \tau}  
+% \quad\quad\quad
+% \mylabel{Coh-IApp}\quad
+% \myirule{\bar{\alpha};\rulet_2 \coh \tau}
+%         {\bar{\alpha};\rulet_1 \iarrow \rulet_2\coh \tau}
+% \eda
 
 The definition of $\bar{\alpha};\rulet \coh \type$ is a variation on that of
 the declarative judgement $\tenv; \rulet \ivturns \type; \Sigma$. There are
-three differences: 
-\begin{enumerate}
-\item
-Since the judgement is only concerned with matchability, no recursive
+three differences. 
+% \begin{enumerate}
+% \item
+Firstly, since the judgement is only concerned with matchability, no recursive
 resolvents $\Sigma$ are collected. 
-\item
-Instead of guessing the type instantiation ahead of time in rule
+% \item
+Secondly, instead of guessing the type instantiation ahead of time in rule
 $\mylabel{M-TApp}$, rule $\mylabel{Coh-TApp}$ defers the instantiation to the
 base case, rule \mylabel{Coh-Simp}. This last rule performs the deferred
 instantiation of type variables $\bar{\alpha}$ by computing the \emph{most general
@@ -657,12 +675,12 @@ unifier} $\theta = \mgu{\type'}{\type}$ of $\type'$ and $\type$ whose
 domain is restricted to $\bar{\alpha}$.
 If this unifier exists, a match has been established.
 If no unifier exists, then rule \textsc{COH-Simp} does not apply.
-\item
-Since the coherence check considers the substitution of the type variables
+% \item
+Thirdly, since the coherence check considers the substitution of the type variables
 $\bar{\alpha}$ that occur in the environment at the point of the query, rule
 \mylabel{AL-RuleNoMatch} pre-populates the substitutable variables of the
 $\coh$ judgement with them.
-\end{enumerate}
+% \end{enumerate}
 
 The second main difference is situated in the third auxiliary judgement
 $\bar{\alpha};\tenv;\rulet;\Sigma \alg \type ; \Sigma'$. This judgement is 
@@ -709,13 +727,19 @@ could happen when computing for example $\mathit{mgu}_{\alpha}(\forall \beta.\be
 \begin{center}
 \framebox{$
 \ba{c}
-\multicolumn{1}{c}{\myruleform{\tenv \alg \rulet~\gbox{\leadsto E}}} \\ \\
+\myruleform{\tenv \alg \rulet~\gbox{\leadsto E}} \quad\quad\quad
 
 \mylabel{AR-Main}\quad
 \myirule{\mathit{tyvars}(\tenv);\tenv \alg \rulet~\gbox{\leadsto E}}
         {\tenv \alg \rulet~\gbox{\leadsto E}}  \\ \\
 
-\multicolumn{1}{c}{\myruleform{\bar{\alpha};\tenv \alg \rulet~\gbox{\leadsto E}}} \\ \\
+\myruleform{\bar{\alpha};\tenv \alg \rulet~\gbox{\leadsto E}} 
+
+\quad\quad\quad
+
+\mylabel{AR-Simp}\quad
+\myirule{\bar{\alpha};\tenv;\tenv \alg \tau~\gbox{\leadsto E}}
+        {\bar{\alpha};\tenv \alg \tau ~\gbox{\leadsto E} }  \\ \\
 
 \mylabel{AR-IAbs}\quad
 \myirule{\bar{\alpha};\tenv, \rulet_1~\gbox{\leadsto x} \alg \rulet_2~\gbox{\leadsto E} \quad\quad \gbox{x~\mathit{fresh}}}
@@ -728,10 +752,6 @@ could happen when computing for example $\mathit{mgu}_{\alpha}(\forall \beta.\be
 % \mylabel{Alg-Simp}\quad
 % \myirule{\bar{\alpha};\tenv \turns_{\mathit{match1st}} \tau \hookrightarrow \bar{\rulet}\gbox{; \bar{\omega}; E} \quad\quad \bar{\alpha};\tenv \alg \rulet_i~\gbox{\leadsto E_i} \quad (\forall \rulet_i \in \bar{\rulet})}
 %         {\bar{\alpha};\tenv \alg \tau ~\gbox{\leadsto E[\bar{\omega}/\bar{E}]} }  \\ \\
-
-\mylabel{AR-Simp}\quad
-\myirule{\bar{\alpha};\tenv;\tenv \alg \tau~\gbox{\leadsto E}}
-        {\bar{\alpha};\tenv \alg \tau ~\gbox{\leadsto E} }  \\ \\
 
 \multicolumn{1}{c}{\myruleform{\bar{\alpha};\tenv;\tenv' \alg \type~\gbox{\leadsto E} }} \\ \\
 
@@ -753,7 +773,7 @@ could happen when computing for example $\mathit{mgu}_{\alpha}(\forall \beta.\be
   \myirule{\bar{\alpha};\tenv;\tenv' \alg \type~\gbox{\leadsto E}
           }
           {\bar{\alpha};\tenv;\tenv',\alpha \alg \type~\gbox{\leadsto E}} 
-\\ \\ \\
+\\ \\
 
 \multicolumn{1}{c}{\myruleform{\bar{\alpha}; \tenv; \rulet~\gbox{\leadsto E}; \Sigma \alg \type~\gbox{\leadsto E'}; \Sigma'}} \\ \\
 
@@ -769,6 +789,20 @@ could happen when computing for example $\mathit{mgu}_{\alpha}(\forall \beta.\be
 \mylabel{AM-TApp}\quad
 \myirule{\bar{\alpha},\alpha; \tenv; \rulet~\gbox{\leadsto E\,\alpha}; \Sigma \alg \type~\gbox{\leadsto E'}; \Sigma'}
         {\bar{\alpha}; \tenv; \forall \alpha. \rulet~\gbox{\leadsto E}; \Sigma \alg \type~\gbox{\leadsto E'}; \Sigma'} 
+\\ \\
+\myruleform{\bar{\alpha};\rulet\coh \tau}
+\quad\quad\quad
+\mylabel{COH-Simp}\quad
+\myirule{\theta = \textit{mgu}_{\bar{\alpha}}(\tau,\tau')
+        }
+        {\bar{\alpha};\tau'\coh \tau}  \\ \\
+\mylabel{Coh-TApp}\quad
+\myirule{\bar{\alpha},\alpha;\rulet \coh \tau}
+        {\bar{\alpha};\forall \alpha. \rulet\coh \tau}  
+\quad\quad\quad
+\mylabel{Coh-IApp}\quad
+\myirule{\bar{\alpha};\rulet_2 \coh \tau}
+        {\bar{\alpha};\rulet_1 \iarrow \rulet_2\coh \tau}
 \ea
 $
 }

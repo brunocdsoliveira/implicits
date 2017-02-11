@@ -44,7 +44,7 @@ DONE
 >         to the definition of |-_unamb.  (By the way, that definition should be
 >         in a separate figure.)
 
-TODO
+DONE
 
 > p11.24  If we follow the Barendregt convention (see p10.2--3), 
 >         then we don't need the second hypothesis of (Ty-TAbs).
@@ -168,7 +168,7 @@ DONE
 
 > p15.14--20  Move the definition into its own figure.  Also see note for p11.31.
 
-TODO
+DONE
  
 > p15.24  "recursively requires that these contexts are unambiguous"
 >         Why is it appropriate to use \epsilon rather than \bar{\alpha} to the
@@ -179,7 +179,7 @@ TODO
 >              \bar{\alpha} |-_unamb \rho is the judgment that all type variables in
 >                              \bar{\alpha} are resolved by matching against \rho
 
-TODO
+DONE?
  
 > p15.25--26  Delete. Dealt with earlier.
 
@@ -198,11 +198,11 @@ TODO
  
 > p16.14--10  Put definition of |-_coh in its own figure (or in Fig 6).
 
-TODO
+DONE
  
 > p16.23--30  Probably clearer to avoid a bulleted list.
 
-TODO
+DONE
  
 > p16.26  "that substitutes \bar{\alpha}" -->
 >         "where the domain of \Theta is restricted to \bar{\alpha}"
@@ -217,7 +217,7 @@ DONE
 >         it mentions both \Sigma and \Sigma', I missed this and got confused
 >         reading the rest of the paragraph.
 
-DONE
+TODO
  
 > p16.42  Shouldn't this definition come when mgu is first mentioned?
 
