@@ -8,10 +8,10 @@
 \newcommand{\qtv}[1]{\mathit{qtv}(#1)}
 \newcommand{\ftv}[1]{\mathit{ftv}(#1)}
 
-\section{The $\ourlang$ Calculus}
+\section{The $\name$ Calculus}
 \label{sec:ourlang}
 
-This section formalizes the syntax and type system of $\ourlang$, while
+This section formalizes the syntax and type system of $\name$, while
 Section~\ref{sec:trans} formalises the type-directed translation to System F.
 To avoid duplication and ease reading, we present the type
 system and type-directed translation together, using grey boxes to indicate
@@ -64,7 +64,7 @@ $\lambda_? \rho_1.~\ldots~\lambda_? \rho_n.$, and
 $\overline{|with|~e}$ is a shortform for
 |with| $e_1 \ldots $ |with| $e_n$.
 
-For brevity we have kept the $\ourlang$ calculus small. Examples
+For brevity we have kept the $\name$ calculus small. Examples
 may use additional syntax such as built-in integers, integer operators, and boolean
 literals and types. 
 
@@ -169,7 +169,7 @@ literals and types.
 \bruno{Another point I remember discussing with Philip is whether the unambiguity check can be combined with termination
 checking. Should we consider this option?}
 
-Figure \ref{fig:type} presents the static type system of $\ourlang$.
+Figure \ref{fig:type} presents the static type system of $\name$.
 Our language is based on System~F, which is included in our system.
 
 %- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
@@ -237,7 +237,7 @@ $
 \end{center}
 }
 
-The underlying principle of resolution in $\ourlang$ originates
+The underlying principle of resolution in $\name$ originates
 from resolution in logic. 
 Intuitively, $\tenv\vdash_r \rulet$ holds if $\tenv$ entails $\rulet$, where the types in $\tenv$ and
 $\rulet$ are read as propositions.
@@ -637,7 +637,7 @@ auxiliary ones that have similar roles. In fact, since the differences
 are not situated in the main and first auxiliary judgement, these are
 actually identical.
 
-The first difference is situated in rule \mylabel{AL-RuleNoMatch} of the second
+The first difference is situated in rule \mylabel{Alg-L-RuleNoMatch} of the second
 judgement. Instead of an explicit quantification over all possible
 substitutions, this rule uses the more algorithmic judgement
 $\bar{\alpha};\rulet\coh\type$. This auxiliary judgement checks algorithmically
@@ -678,7 +678,7 @@ If no unifier exists, then rule \textsc{COH-Simp} does not apply.
 % \item
 Thirdly, since the coherence check considers the substitution of the type variables
 $\bar{\alpha}$ that occur in the environment at the point of the query, rule
-\mylabel{AL-RuleNoMatch} pre-populates the substitutable variables of the
+\mylabel{Alg-L-RuleNoMatch} pre-populates the substitutable variables of the
 $\coh$ judgement with them.
 % \end{enumerate}
 
@@ -689,12 +689,12 @@ collect the recursive resolution obligations in $\Sigma'$ just like the
 corresponding judgement in the declarative specification. The main difference
 with the latter is that it uses the deferred approach to instantiating 
 type variables. In order to subject the resolution obligations to this
-substitution, which is computed in rule \mylabel{AM-Simp}, the judgement
+substitution, which is computed in rule \mylabel{Alg-M-Simp}, the judgement
 makes use of an accumulating parameter $\Sigma$.  This accumulator $\Sigma$
 represents all the obligations collected so far in which type variables
 have not been substituted yet. In contrast, $\Sigma'$ denotes all obligations
 with type variables already substituted.
-Finally, note that rule \mylabel{AL-RuleMatch} does not pre-populate the 
+Finally, note that rule \mylabel{Alg-L-RuleMatch} does not pre-populate the 
 type variables with those of the environment: we only want to instantiate
 the type variables that appear in the context type $\rulet$ itself for an 
 actual match.
@@ -706,8 +706,15 @@ Figure~\ref{fig:mgu} lists the algorithm for computing the most general
 unifier. For $\theta = \mathit{mgu}_{\bar{\alpha}}(\rulet_1,\rulet_2)$ we
 have that $\theta(\rulet_1) = \theta(\rulet_2)$ and $\mathit{dom}(\theta) \subseteq
 \bar{\alpha}$. Note that $\bar{\alpha}$ are the variables that are subject to substitution.
-Moreover, $\theta$ subsumes any other such unifier. The
-algorithm itself is fairly straightforward and needs little explanation.
+Moreover, $\theta$ subsumes any other such unifier: 
+\begin{equation*}
+\forall \eta: \quad \mathit{dom}(\eta) \subseteq \bar{\alpha} \wedge
+\eta(\rulet_1) = \eta(\rulet_2)  
+\quad\Rightarrow\quad
+\exists \iota: \mathit{dom}(\iota) \subseteq \bar{\alpha} \wedge
+\iota(\theta(\rulet_1)) = \iota(\theta(\rulet_2))
+\end{equation*}
+The algorithm itself is fairly straightforward and needs little explanation.
 Only rule \tlabel{UAbs} deserves two notes. Firstly, we assume that $\alpha$-renaming
 is used implicitly to use the same name $\beta$ for both bound type variables. Secondly,
 we have to be careful that $\beta$ does not escape its scope through $\theta$, which
@@ -729,7 +736,7 @@ could happen when computing for example $\mathit{mgu}_{\alpha}(\forall \beta.\be
 \ba{c}
 \myruleform{\tenv \alg \rulet~\gbox{\leadsto E}} \quad\quad\quad
 
-\mylabel{AR-Main}\quad
+\mylabel{Alg-R-Main}\quad
 \myirule{\mathit{tyvars}(\tenv);\tenv \alg \rulet~\gbox{\leadsto E}}
         {\tenv \alg \rulet~\gbox{\leadsto E}}  \\ \\
 
@@ -737,15 +744,15 @@ could happen when computing for example $\mathit{mgu}_{\alpha}(\forall \beta.\be
 
 \quad\quad\quad
 
-\mylabel{AR-Simp}\quad
+\mylabel{Alg-R-Simp}\quad
 \myirule{\bar{\alpha};\tenv;\tenv \alg \tau~\gbox{\leadsto E}}
         {\bar{\alpha};\tenv \alg \tau ~\gbox{\leadsto E} }  \\ \\
 
-\mylabel{AR-IAbs}\quad
+\mylabel{Alg-R-IAbs}\quad
 \myirule{\bar{\alpha};\tenv, \rulet_1~\gbox{\leadsto x} \alg \rulet_2~\gbox{\leadsto E} \quad\quad \gbox{x~\mathit{fresh}}}
         {\bar{\alpha};\tenv \alg \rulet_1 \iarrow \rulet_2 ~\gbox{\leadsto \lambda(x : ||\rulet_1||). E}} \quad\quad\quad
 
-\mylabel{AR-TAbs}\quad
+\mylabel{Alg-R-TAbs}\quad
 \myirule{\bar{\alpha};\tenv,\alpha \alg \rulet ~\gbox{\leadsto E}}
         {\bar{\alpha};\tenv \alg \forall \alpha. \rulet ~\gbox{\leadsto \Lambda \alpha. E}}  \\ \\
 
@@ -755,21 +762,21 @@ could happen when computing for example $\mathit{mgu}_{\alpha}(\forall \beta.\be
 
 \multicolumn{1}{c}{\myruleform{\bar{\alpha};\tenv;\tenv' \alg \type~\gbox{\leadsto E} }} \\ \\
 
-\mylabel{AL-RuleMatch}\quad
+\mylabel{Alg-L-RuleMatch}\quad
 \myirule{\epsilon; \tenv; \rulet~\gbox{\leadsto x}; \epsilon \alg \type~\gbox{\leadsto E}; \bar{\rulet}~\gbox{\leadsto \bar{x}} \quad\quad
          \bar{\alpha};\tenv \alg \bar{\rulet}~\gbox{\leadsto \bar{E}}}
         {\bar{\alpha};\tenv; \tenv', \rulet~\gbox{\leadsto x} \alg \type~\gbox{\leadsto E[\bar{E}/\bar{x}] }}  \\ \\
 
-\mylabel{AL-RuleNoMatch}\quad
+\mylabel{Alg-L-RuleNoMatch}\quad
 \myirule{\bar{\alpha};\rulet \not\coh \type \quad\quad
          \bar{\alpha};\tenv;\tenv' \alg \type~\gbox{\leadsto E'}}
         {\bar{\alpha};\tenv;\tenv', \rulet~\gbox{\leadsto x}\alg \type~\gbox{\leadsto E'}}  \\ \\
-\mylabel{AL-Var} \quad
+\mylabel{Alg-L-Var} \quad
   \myirule{\bar{\alpha};\tenv;\tenv' \alg \type~\gbox{\leadsto E}
           }
           {\bar{\alpha};\tenv;\tenv',x:\rulet \alg \type~\gbox{\leadsto E}} 
 \quad\quad\quad
-\mylabel{AL-TyVar} \quad
+\mylabel{Alg-L-TyVar} \quad
   \myirule{\bar{\alpha};\tenv;\tenv' \alg \type~\gbox{\leadsto E}
           }
           {\bar{\alpha};\tenv;\tenv',\alpha \alg \type~\gbox{\leadsto E}} 
@@ -777,16 +784,16 @@ could happen when computing for example $\mathit{mgu}_{\alpha}(\forall \beta.\be
 
 \multicolumn{1}{c}{\myruleform{\bar{\alpha}; \tenv; \rulet~\gbox{\leadsto E}; \Sigma \alg \type~\gbox{\leadsto E'}; \Sigma'}} \\ \\
 
-\mylabel{AM-Simp}\quad
+\mylabel{Alg-M-Simp}\quad
 \myirule{\theta = \textit{mgu}_{\bar{\alpha}}(\type,\type')
         }
         {\bar{\alpha}; \tenv; \type'~\gbox{\leadsto E}; \Sigma \alg \type~\gbox{\leadsto ||\theta||(E)}; \theta(\Sigma)}  \\ \\
 
-\mylabel{AM-IApp}\quad
+\mylabel{Alg-M-IApp}\quad
 \myirule{\bar{\alpha}; \tenv, \rulet_1~\gbox{\leadsto x}; \rulet_2~\gbox{\leadsto E\,x}; \rulet_1~\gbox{\leadsto x}, \Sigma \alg \type~\gbox{\leadsto E'}; \Sigma'\quad\quad \gbox{x~\mathit{fresh}}}
         {\bar{\alpha}; \tenv; \rulet_1 \iarrow \rulet_2~\gbox{\leadsto E}; \Sigma \alg \type~\gbox{\leadsto E'}; \Sigma'}  \\ \\
 
-\mylabel{AM-TApp}\quad
+\mylabel{Alg-M-TApp}\quad
 \myirule{\bar{\alpha},\alpha; \tenv; \rulet~\gbox{\leadsto E\,\alpha}; \Sigma \alg \type~\gbox{\leadsto E'}; \Sigma'}
         {\bar{\alpha}; \tenv; \forall \alpha. \rulet~\gbox{\leadsto E}; \Sigma \alg \type~\gbox{\leadsto E'}; \Sigma'} 
 \\ \\
@@ -869,8 +876,8 @@ As an example of non-termination consider
   \tyint \To \tychar \vturns \tyint
 \end{equation*}
 which loops, using alternatively the first and second rule in the
-environment. The source of this non-termination is the mutually recursive 
-definition of the first two auxiliary judgements: a simple type can be resolved
+environment. The source of this non-termination is the recursive 
+nature of resolution: a simple type can be resolved
 in terms of a rule type whose head it matches, but this requires further 
 resolution of the rule type's context. 
 
@@ -892,10 +899,10 @@ it defines a size measure $\||\rulet\||$ for type terms $\rulet$ and makes sure 
 of the resolved head type decreases steadily with each recursive resolution
 step. 
 
-One potential problem is that the size measure does not properly take into
-account universally quantified type variables. It assigns them size 1 but
+The size measure does not take 
+universally quantified type variables into account. It assigns them size 1 but
 ignores the fact that the size may increase dramatically when the type variable
-is instantiated with a large type. The rule $\TermRule$ makes up for this problem
+is instantiated with a large type. The rule $\TermRule$ makes up for this 
 by requiring a size decrease for all possible instantiations of free type variables.
 However, rather than to specify this property non-constructively as 
 \[ \forall \bar{\rulet}: \quad \||[\bar{\alpha}\mapsto\bar{\rulet}]\tau_1\|| < \||[\bar{\alpha}\mapsto\bar{\rulet}]\tau_2\|| \]
@@ -971,6 +978,6 @@ This can be done by making the condition part of the well-formedness relation fo
 % 
 % In contrast, our local scopes are \textit{closed}. Later extensions of the
 % program (e.g., new modules) do not affect the existing scopes. Hence, in
-% $\ourlang$, termination of resolution coincides with the traditional program
-% termination problem. So, alternatively, $\ourlang$  may enforce termination in
+% $\name$, termination of resolution coincides with the traditional program
+% termination problem. So, alternatively, $\name$  may enforce termination in
 % a less stringent manner using available termination checkers like~\cite{approve}.

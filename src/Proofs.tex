@@ -354,7 +354,7 @@ Thus we have by (\texttt{F-Var}) that
 \begin{lemma}\label{lemma:resolution}\label{lemma:tp:2}
   If 
 \begin{equation*}
-    \tenv \vdash_r \rulet \leadsto E
+    \tenv \vturns \rulet \leadsto E
 \end{equation*}
   and
 \begin{equation*}
@@ -373,7 +373,7 @@ Thus we have by (\texttt{F-Var}) that
   By induction on the derivation.
 \begin{description}
 %===============================================================================
-\item[\fbox{\texttt{(R-TAbs)}}\quad$\tenv \vdash_r \forall \alpha.\rulet \leadsto \Lambda \alpha.E$] \ \\
+\item[\fbox{\texttt{(AR-TAbs)}}\quad$\tenv \vturns \forall \alpha.\rulet \leadsto \Lambda \alpha.E$] \ \\
 %===============================================================================
 
   From the hypothesis of the rule and the induction hypothesis, we have
@@ -395,7 +395,7 @@ Thus we have by (\texttt{F-Var}) that
 \end{equation*}
 
 %===============================================================================
-\item[\fbox{\texttt{(R-TApp)}}]\quad$\tenv \vdash_r \rulet [\suty/\alpha] \leadsto E\,|\suty|$ \ \\
+\item[\fbox{\texttt{(AR-TApp)}}]\quad$\tenv \vturns \rulet [\suty/\alpha] \leadsto E\,|\suty|$ \ \\
 %===============================================================================
 
   From the first hypothesis of the rule and the induction hypothesis, we have
@@ -422,7 +422,7 @@ Thus we have by (\texttt{F-Var}) that
 \end{equation*}
 
 %===============================================================================
-\item[\fbox{\texttt{(R-IVar)}}]\quad$\tenv \vdash_r \rulet \leadsto x$ \ \\
+\item[\fbox{\texttt{(AR-IVar)}}]\quad$\tenv \vturns \rulet \leadsto x$ \ \\
 %===============================================================================
 
   From the hypothesis of the rule and the definition of $|\cdot|$, we have
@@ -436,7 +436,7 @@ Thus we have by (\texttt{F-Var}) that
 \end{equation*}
 
 %===============================================================================
-\item[\fbox{\texttt{(R-IAbs)}}]\quad$\tenv \vdash_r \rulet_1 \iarrow \rulet_2 \leadsto \lambda x:|\rulet_1|.E$ \ \\
+\item[\fbox{\texttt{(AR-IAbs)}}]\quad$\tenv \vturns \rulet_1 \iarrow \rulet_2 \leadsto \lambda x:|\rulet_1|.E$ \ \\
 %===============================================================================
 
   From the first hypothesis of the rule and the induction hypothesis, we have
@@ -459,7 +459,7 @@ Thus we have by (\texttt{F-Var}) that
 \end{equation*}
 
 %===============================================================================
-\item[\fbox{\texttt{(R-IApp)}}]\quad$\tenv \vdash_r \rulet_2 \leadsto E_2\,E_1$ \ \\
+\item[\fbox{\texttt{(AR-IApp)}}]\quad$\tenv \vturns \rulet_2 \leadsto E_2\,E_1$ \ \\
 %===============================================================================
 
   From the hypotheses of the rule and the induction hypothesis, we have
@@ -490,6 +490,7 @@ typical binder-related properties.
 
 The first lemma is the weakening lemma: that states that an extended context
 preserves all the derivations of the original context.
+
 %###############################################################################
 {\centering
 \fbox{
@@ -540,7 +541,7 @@ by the remainder of the context.
 The proof proceeds by straightfoward induction on the derivation of the first
 hypothesis.
 
-The key case is the one for rule \mylabel{R-IVar} where $\rulet' = \rulet$ and
+The key case is the one for rule \mylabel{AR-IVar} where $\rulet' = \rulet$ and
 $E' = x$. In this case the second hypothesis gives us 
 \begin{equation*}
 \tenv \vturns \rulet \leadsto E
@@ -607,34 +608,34 @@ The proof proceeds by induction on the derivation.
 \begin{description}
 \setlength{\itemsep}{1em}
 %===============================================================================
-\item[\fbox{\texttt{(R-IAbs)}$^3$}]\quad$\bar{\alpha};\tenv \ivturns \rulet_1 \iarrow \rulet_2 \leadsto \lambda x:|\rulet_1|.E$ \ \\
+\item[\fbox{\texttt{(R-IAbs)}}]\quad$\bar{\alpha};\tenv \ivturns \rulet_1 \iarrow \rulet_2 \leadsto \lambda x:|\rulet_1|.E$ \ \\
 %===============================================================================
-  From the first assumption of rule \mylabel{R-IAbs}$^3$ and the induction hypothesis, we have
+  From the first assumption of rule \mylabel{R-IAbs} and the induction hypothesis, we have
 \begin{equation*}
   \tenv, x : \rulet_1 \vturns \rulet_2 \leadsto E
 \end{equation*}
 
-  Hence, from rule \mylabel{R-IAbs}$^2$ and the freshness condition on $x$ in
-rule \mylabel{R-IAbs}$^3$ it follows that
+  Hence, from rule \mylabel{AR-IAbs} and the freshness condition on $x$ in
+rule \mylabel{R-IAbs} it follows that
 \begin{equation*}
   \tenv \vturns \rulet_1 \iarrow \rulet_2 \leadsto \lambda x:|\rulet_1|.E
 \end{equation*}
 
 %===============================================================================
-\item[\fbox{\texttt{(R-TAbs)}$^3$}]\quad$\bar{\alpha};\tenv \ivturns \forall \alpha.\rulet \leadsto \Lambda \alpha.E$ \ \\
+\item[\fbox{\texttt{(R-TAbs)}}]\quad$\bar{\alpha};\tenv \ivturns \forall \alpha.\rulet \leadsto \Lambda \alpha.E$ \ \\
 %===============================================================================
-  From the precondition of rule \mylabel{R-TAbs}$^3$ and the induction hypothesis, we have
+  From the precondition of rule \mylabel{R-TAbs} and the induction hypothesis, we have
 \begin{equation*}
   \tenv,\alpha \vturns \rulet \leadsto E
 \end{equation*}
 
-  Hence, from rule \mylabel{R-TAbs}$^2$ it follows that
+  Hence, from rule \mylabel{AR-TAbs} it follows that
 \begin{equation*}
   \tenv \vturns \forall \alpha.\rulet \leadsto \Lambda \alpha.E
 \end{equation*}
 
 %===============================================================================
-\item[\fbox{\texttt{(R-Simp)}$^3$}]\quad$\bar{\alpha};\tenv \ivturns \tau \leadsto E$ \ \\
+\item[\fbox{\texttt{(R-Simp)}}]\quad$\bar{\alpha};\tenv \ivturns \tau \leadsto E$ \ \\
 %===============================================================================
 
   From the precondition of the rule, Lemma~\ref{lemma:s23:2} and the simple fact that
@@ -685,7 +686,7 @@ with the previous proof.
 \end{equation*}
 
   From the lemma's assumption $(\tenv', \rulet \leadsto x) \subseteq \tenv$ we conclude
-  $(\rulet \leadsto x) \in \tenv$. Hence, by rule \mylabel{R-Simp}$^2$ we have
+  $(\rulet \leadsto x) \in \tenv$. Hence, by rule \mylabel{AR-Simp} we have
 \begin{equation*}
   \tenv \vturns \rulet \leadsto x
 \end{equation*}
@@ -767,11 +768,11 @@ The proof proceeds by induction on the derivation of the first assumption.
 \begin{equation*}
   \tenv, \rulet_1 \leadsto x \vturns \rulet_1 \iarrow \rulet_2 \leadsto E
 \end{equation*}
-  From rule \mylabel{R-IVar}$^2$ we can also conclude
+  From rule \mylabel{AR-IVar} we can also conclude
 \begin{equation*}
   \tenv, \rulet_1 \leadsto x \vturns \rulet_1 \leadsto x
 \end{equation*}
-  These two facts allow us to derive from rule \mylabel{R-IApp}
+  These two facts allow us to derive from rule \mylabel{AR-IApp}
 \begin{equation*}
   \tenv, \rulet_1 \leadsto x \vturns \rulet_2 \leadsto E\,x 
 \end{equation*}
@@ -796,7 +797,7 @@ The proof proceeds by induction on the derivation of the first assumption.
 \begin{equation*}
   \tenv \vturns \forall\alpha.\rulet \leadsto E
 \end{equation*}
-  This allows us to conclude by rule \mylabel{R-TApp} that
+  This allows us to conclude by rule \mylabel{AR-TApp} that
 \begin{equation*}
   \tenv \vturns \rulet[\suty/\alpha] \leadsto E\,|\suty|
 \end{equation*}
@@ -820,7 +821,7 @@ The proof proceeds by induction on the derivation of the first assumption.
 % 
 % Lemma~\ref{lemma:sa:3} states that the resolution algorithm
 % $\vdash_{\mathit{alg}}$ is sound with respect to the deterministic resolution
-% specification $\vdash_r$.
+% specification $\vturns$.
 % 
 % Its proof relies on Lemma~\ref{lemma:sa:2}, which states that
 % the auxiliary relation $\vdash_{\mathit{match1st}}$ is sound, whose
@@ -853,7 +854,7 @@ The proof proceeds by induction on the derivation of the first assumption.
 % 
 %   if
 % \begin{equation*}
-%   \bar{\alpha}; \env \vdash_r \rho_i' \leadsto E_i''\quad\quad (\forall \rho_i' \in \bar{\rho}')
+%   \bar{\alpha}; \env \vturns \rho_i' \leadsto E_i''\quad\quad (\forall \rho_i' \in \bar{\rho}')
 % \end{equation*}
 % 
 %   then 
@@ -1038,7 +1039,7 @@ The proof proceeds by induction on the derivation of the first assumption.
 % and for all $\env' \supseteq \env$
 % and for all $\bar{E}'$ such that
 % \begin{equation*}
-%   \bar{\alpha}; \env' \vdash_r \rho_i' \leadsto E_i'\quad\quad (\forall \rho_i' \in \bar{\rho}')
+%   \bar{\alpha}; \env' \vturns \rho_i' \leadsto E_i'\quad\quad (\forall \rho_i' \in \bar{\rho}')
 % \end{equation*}
 % 
 % we have that
@@ -1116,7 +1117,7 @@ The proof proceeds by induction on the derivation of the first assumption.
 % 
 %   then
 % \begin{equation*}
-%   \bar{\alpha}; \env \vdash_r \rho \leadsto E
+%   \bar{\alpha}; \env \vturns \rho \leadsto E
 % \end{equation*}
 % \end{lemma}
 % \end{minipage}
@@ -1166,7 +1167,7 @@ The proof proceeds by induction on the derivation of the first assumption.
 % 
 %   Hence, using rule \mylabel{R-Simp}, we conclude
 % \begin{equation*}
-%   \bar{\alpha}; \env \vdash_r \tau \leadsto E[\bar{\omega}/\bar{E}]
+%   \bar{\alpha}; \env \vturns \tau \leadsto E[\bar{\omega}/\bar{E}]
 % \end{equation*}
 % 
 % \end{description}
@@ -2145,7 +2146,7 @@ The proof proceeds by induction on the derivation of the hypothesis.
 \begin{description}
 \setlength{\itemsep}{1em}
 %===============================================================================
-\item[\fbox{\texttt{(AL-RuleMatch)}}]\quad$\bar{\alpha};\tenv; \tenv', \rulet~{\leadsto x} \alg \type~{\leadsto E[\bar{E}/\bar{x}]}$ \ \\
+\item[\fbox{\texttt{(Alg-L-RuleMatch)}}]\quad$\bar{\alpha};\tenv; \tenv', \rulet~{\leadsto x} \alg \type~{\leadsto E[\bar{E}/\bar{x}]}$ \ \\
 %===============================================================================
 From the rule's first hypothesis and Lemma~\ref{lemma:asoundness:3} we have
 \begin{equation*}
@@ -2157,7 +2158,7 @@ Then, using Lemma~\ref{lemma:asoundness:1} and rule \mylabel{L-RuleMatch} we con
 \end{equation*}
 
 %===============================================================================
-\item[\fbox{\texttt{(AL-RuleNoMatch)}}]\quad$\bar{\alpha};\tenv;\tenv', \rulet~{\leadsto x}\alg \type~{\leadsto E'}$ \ \\
+\item[\fbox{\texttt{(Alg-L-RuleNoMatch)}}]\quad$\bar{\alpha};\tenv;\tenv', \rulet~{\leadsto x}\alg \type~{\leadsto E'}$ \ \\
 %===============================================================================
   From the rule's second hypothesis and the induction hypothesis we have
 \begin{equation*}
@@ -2178,7 +2179,7 @@ Then, using Lemma~\ref{lemma:asoundness:1} and rule \mylabel{L-RuleMatch} we con
 \end{equation*}
 
 %===============================================================================
-\item[\fbox{\texttt{(AL-Var)}}]\quad$\bar{\alpha};\tenv;\tenv',x:\rulet \alg \type~{\leadsto E}$ \ \\
+\item[\fbox{\texttt{(Alg-L-Var)}}]\quad$\bar{\alpha};\tenv;\tenv',x:\rulet \alg \type~{\leadsto E}$ \ \\
 %===============================================================================
 From the rule's hypothesis and the induction hypothesis we obtain
 \begin{equation*}
@@ -2190,7 +2191,7 @@ By rule \mylabel{L-Var} we conclude
 \end{equation*}
 
 %===============================================================================
-\item[\fbox{\texttt{(AL-TyVar)}}]\quad$\bar{\alpha};\tenv;\tenv',\alpha \alg \type~{\leadsto E}$ \ \\
+\item[\fbox{\texttt{(Alg-L-TyVar)}}]\quad$\bar{\alpha};\tenv;\tenv',\alpha \alg \type~{\leadsto E}$ \ \\
 %===============================================================================
 From the rule's hypothesis and the induction hypothesis we obtain
 \begin{equation*}
@@ -2232,7 +2233,7 @@ The proof proceeds by induction on the derivation of the first hypothesis.
 \begin{description}
 \setlength{\itemsep}{1em}
 %===============================================================================
-\item[\fbox{\texttt{(AM-Simp)}}]\quad$\bar{\alpha}; \tenv; \type' \leadsto E; \Sigma \alg \type \leadsto |\theta|(E); \epsilon,\theta(\Sigma);\theta$ \ \\
+\item[\fbox{\texttt{(Alg-M-Simp)}}]\quad$\bar{\alpha}; \tenv; \type' \leadsto E; \Sigma \alg \type \leadsto |\theta|(E); \epsilon,\theta(\Sigma);\theta$ \ \\
 %===============================================================================
 From the hypothesis of the rule and Lemma~\ref{lemma:asoundness:6} it follows that
 $\theta(\type') = \theta(\type)$. Hence, the target judgement can be rewritten as
@@ -2242,7 +2243,7 @@ $\theta(\type') = \theta(\type)$. Hence, the target judgement can be rewritten a
 This follows from rule \mylabel{M-Simp}.
 
 %===============================================================================
-\item[\fbox{\texttt{(AM-IApp)}}]\quad$\bar{\alpha}; \tenv; \rulet_1 \iarrow \rulet_2~{\leadsto E}; \Sigma \alg \type~{\leadsto E'}; \Sigma',\theta(\rulet_1) \leadsto x, \theta(\Sigma);\theta$ \ \\
+\item[\fbox{\texttt{(Alg-M-IApp)}}]\quad$\bar{\alpha}; \tenv; \rulet_1 \iarrow \rulet_2~{\leadsto E}; \Sigma \alg \type~{\leadsto E'}; \Sigma',\theta(\rulet_1) \leadsto x, \theta(\Sigma);\theta$ \ \\
 %===============================================================================
   From the hypothesis of the rule and the induction hypothesis, we have that
 \begin{equation*}
@@ -2254,7 +2255,7 @@ This follows from rule \mylabel{M-Simp}.
 \end{equation*} 
 
 %===============================================================================
-\item[\fbox{\texttt{(AM-TApp)}}]\quad$\bar{\alpha}; \tenv; \forall \alpha. \rulet~{\leadsto E}; \Sigma \alg \type~{\leadsto E'}; \Sigma',\theta(\Sigma);\theta$ \ \\
+\item[\fbox{\texttt{(Alg-M-TApp)}}]\quad$\bar{\alpha}; \tenv; \forall \alpha. \rulet~{\leadsto E}; \Sigma \alg \type~{\leadsto E'}; \Sigma',\theta(\Sigma);\theta$ \ \\
 %===============================================================================
   Then it follows from the rule's hypothesis and from the induction hypothesis that
 \begin{equation*}
@@ -2343,7 +2344,7 @@ Straightforward induction on the derivation.
 \begin{equation*}
   \mathit{tyvars}(\tenv);\tenv \ivturns \rulet \leadsto E
 \end{equation*}
-  Hence, by Lemma~\ref{lemma:acompleteness:1} and rule \mylabel{AR-Main} the desired conclusion follows
+  Hence, by Lemma~\ref{lemma:acompleteness:1} and rule \mylabel{Alg-R-Main} the desired conclusion follows
 \begin{equation*}
   \tenv \alg \rulet \leadsto E
 \end{equation*}
@@ -2399,7 +2400,7 @@ From the rule's first hypothesis and Lemma~\ref{lemma:acompleteness:3} we have
 \begin{equation*}
 \epsilon; \tenv; \rulet \leadsto x; \epsilon \alg \type \leadsto E'; \bar{\rulet} \leadsto \bar{x}
 \end{equation*}
-Then, using Lemma~\ref{lemma:acompleteness:1} and rule \mylabel{AL-RuleMatch} we conclude
+Then, using Lemma~\ref{lemma:acompleteness:1} and rule \mylabel{Alg-L-RuleMatch} we conclude
 \begin{equation*}
 \bar{\alpha};\tenv; \tenv', \rulet~{\leadsto x} \alg \type~{\leadsto E[\bar{E}/\bar{x}]}
 \end{equation*}
@@ -2416,7 +2417,7 @@ Then, using Lemma~\ref{lemma:acompleteness:1} and rule \mylabel{AL-RuleMatch} we
 \begin{equation*}
 \bar{\alpha}; \rulet \not\coh \type
 \end{equation*}
-  Hence with rule \mylabel{AL-RuleNoMatch} we conclude
+  Hence with rule \mylabel{Alg-L-RuleNoMatch} we conclude
 \begin{equation*}
   \bar{\alpha};\tenv;\tenv',\rulet \leadsto x \alg \type~{\leadsto E'}
 \end{equation*}
@@ -2428,7 +2429,7 @@ From the rule's hypothesis and the induction hypothesis we obtain
 \begin{equation*}
   \bar{\alpha};\tenv;\tenv' \alg \type~{\leadsto E}
 \end{equation*}
-By rule \mylabel{AL-Var} we conclude
+By rule \mylabel{Alg-L-Var} we conclude
 \begin{equation*}
   \bar{\alpha};\tenv;\tenv',x:\rulet \alg \type~{\leadsto E}
 \end{equation*}
@@ -2440,7 +2441,7 @@ From the rule's hypothesis and the induction hypothesis we obtain
 \begin{equation*}
   \bar{\alpha};\tenv;\tenv' \alg \type~{\leadsto E}
 \end{equation*}
-By rule \mylabel{AL-TyVar} we conclude
+By rule \mylabel{Alg-L-TyVar} we conclude
 \begin{equation*}
   \bar{\alpha};\tenv;\tenv',\alpha \alg \type~{\leadsto E}
 \end{equation*}
@@ -2485,7 +2486,7 @@ The proof proceeds by induction on the derivation of the first hypothesis.
 \item[\fbox{\texttt{(M-Simp)}}]\quad$\theta_1(\tenv); \theta_1(\type') \leadsto |\theta_1|(E) \ivturns \theta_1(\type) \leadsto |\theta_1|(E); \theta_1(\epsilon)$ \hfill where $\theta_1(\tenv) = \theta_1(\type')$. \\
 %===============================================================================
 
-From Lemma~\ref{lemma:acompleteness:5} and rule \mylabel{AM-Simp} we then have
+From Lemma~\ref{lemma:acompleteness:5} and rule \mylabel{Alg-M-Simp} we then have
 \begin{equation*}
   \bar{\alpha}; \tenv; \type' \leadsto E; \Sigma \alg \type \leadsto \theta_2(E); \theta_2(\Sigma)
 \end{equation*}
@@ -2497,7 +2498,7 @@ From Lemma~\ref{lemma:acompleteness:5} and rule \mylabel{AM-Simp} we then have
 \begin{equation*}
  \bar{\alpha};\tenv,\rulet_1 \leadsto x;\rulet_2 \leadsto E\,x; \rulet_1 \leadsto x, \Sigma \alg \type \leadsto |\theta_2|(E'); \theta_2(\Sigma',\rulet_1 \leadsto x, \Sigma) 
 \end{equation*}
-  By rule \mylabel{AM-IApp} we may then conclude
+  By rule \mylabel{Alg-M-IApp} we may then conclude
 \begin{equation*}
  \bar{\alpha};\tenv;\rulet_1 \iarrow \rulet_2 \leadsto E; \Sigma \alg \type \leadsto |\theta_2|(E'); \theta_2(\Sigma',\rulet_1 \leadsto x, \Sigma) 
 \end{equation*} 
@@ -2509,7 +2510,7 @@ From Lemma~\ref{lemma:acompleteness:5} and rule \mylabel{AM-Simp} we then have
 \begin{equation*}
  \bar{\alpha},\alpha;\tenv;\rulet \leadsto E\,\alpha; \Sigma \alg \type \leadsto |\theta_2|(E'); \theta_2(\Sigma',\Sigma) 
 \end{equation*}
-  Hence, it follows from rule \mylabel{AM-TApp} that
+  Hence, it follows from rule \mylabel{Alg-M-TApp} that
 \begin{equation*}
  \bar{\alpha};\tenv;\forall \alpha.\rulet \leadsto E; \Sigma \alg \type \leadsto |\theta_2|(E'); \theta_2(\Sigma',\Sigma) 
 \end{equation*}
@@ -2568,7 +2569,7 @@ From Lemma~\ref{lemma:acompleteness:5} and rule \mylabel{AM-Simp} we then have
 \end{minipage}
 }}
 
-% \newcommand{\vdashr}[4]{#1; #2 \vdash_r #3 \leadsto #4}
+% \newcommand{\vdashr}[4]{#1; #2 \vturns #3 \leadsto #4}
 % 
 % \begin{proof}
 % The proof proceeds by induction on the $\bar{\alpha};\env \vdash_r \rho \leadsto E$ derivation.

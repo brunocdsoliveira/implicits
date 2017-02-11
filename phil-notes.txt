@@ -226,7 +226,7 @@ TODO
 > p16.43  "Moreover, \Theta subsumes any other such unifier" Perhaps write out
 >         in full what this means.
  
-TODO
+DONE
 
 > p16.43  "The algorithm itself is fairly straightforward" Presumably the
 >         figure simply repeats a standard algorithm from the literature?
@@ -249,15 +249,15 @@ DONE
 >         a loop using the definition in Fig 3, which has no auxiliary judgments?
 >         I'm wondering if there is a simpler explanation of the source of non-termination.
 
-TODO
+DONE
  
 > p18.42--47  Is this new work, or is this just copied from Haskell [16]?
 >         If the former, I found the phrase "One potential problem ..." misleading.
 >         There are no potential problems, since the Haskell guys have solved them
 >         for us!
 
-TODO
- 
+DONE
+
 > p19.27--29  Maybe we should add the termination conditions to the well-formedness
 >         of types, with a pointer to this section.
 

@@ -1,13 +1,13 @@
 \section{Type-Directed Translation to System F}
 \label{sec:trans}
 
-In this section we explain the dynamic semantics of $\ourlang$ in terms
+In this section we explain the dynamic semantics of $\name$ in terms
 of System F's dynamic semantics, by means of a type-directed translation. 
 This translation turns implicit contexts into explicit parameters and
 statically resolves all queries, much like Wadler and Blott's dictionary
 passing translation for type classes~\cite{adhoc}. 
 The advantage of this approach is that we simultaneously provide a meaning to
-well-typed $\ourlang$ programs and an effective implementation that resolves
+well-typed $\name$ programs and an effective implementation that resolves
 all queries statically.
 
 The translation follows the type system presented in Section~\ref{sec:ourlang}.
@@ -16,7 +16,7 @@ corresponds to the grayed parts of Figures~\ref{fig:type}, \ref{fig:resolution1}
 
 %-------------------------------------------------------------------------------
 \subsection{Type-Directed Translation}
-Figure~\ref{fig:type} presents the translation rules that convert $\ourlang$
+Figure~\ref{fig:type} presents the translation rules that convert $\name$
 expressions into ones of System F. 
 The gray parts of the figure extend the type system with the necessary
 information for the translation.
@@ -38,7 +38,7 @@ term variable $x$.
 \paragraph{Translation of Types}
 
 The function $|\cdot|$ takes 
-$\ourlang$ types $\rulet$ to System F types T: 
+$\name$ types $\rulet$ to System F types T: 
 \begin{equation*}
 \begin{array}{rcl@{\hspace{1cm}}rcl}
 |\alpha| & = & \alpha &
@@ -47,7 +47,7 @@ $\ourlang$ types $\rulet$ to System F types T:
 |\rulet_1 \iarrow \rulet_2| & = & |\rulet_1| \arrow |\rulet_2| %\\
 \end{array}
 \end{equation*}
-Its reveals that implicit $\ourlang$ arrows are translated to explicit System F function arrows.
+Its reveals that implicit $\name$ arrows are translated to explicit System F function arrows.
 
 %- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 \paragraph{Translation of Terms}
@@ -56,7 +56,7 @@ The type-directed translation judgment, which extends the typing judgment, is
 \begin{center}
   $\tenv \turns \relation{e}{\rulet}~\gbox{\leadsto E}$
 \end{center}
-This judgment states that the translation of $\ourlang$ expression $e$ with
+This judgment states that the translation of $\name$ expression $e$ with
 type $\rulet$ is System~F expression $E$, with respect to type environment
 $\tenv$.
 
@@ -95,14 +95,14 @@ postponed resolutions, obtain their evidence $\bar{E}$ and fill in the
 placeholders.
 
 %- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-\paragraph{Meta-Theory} The type-directed translation of $\ourlang$ to System F exhibits a number
+\paragraph{Meta-Theory} The type-directed translation of $\name$ to System F exhibits a number
 of desirable properties.
 
-\begin{theorem}[Type-preserving translation]\label{thm:type:preservation} Let $e$ be an $\ourlang$
+\begin{theorem}[Type-preserving translation]\label{thm:type:preservation} Let $e$ be an $\name$
   expression, $\rulet$ be a type, $\tenv$ a type environment and $E$ be a System F expression. If
   $\tenv \turns \relation{e}{\rulet} \leadsto E$, then $|\tenv| \turns \relation{E}{|\rulet|}$.
 \end{theorem}
-Here we define the translation of the type environment form $\ourlang$ to System F as:
+Here we define the translation of the type environment form $\name$ to System F as:
 \begin{equation*}
 \begin{array}{rcl@{\hspace{2cm}}rcl}
 |\epsilon| & = & \epsilon & |\tenv,\alpha| & = & |\tenv|, \alpha \\
@@ -176,13 +176,13 @@ provided that the algorithm terminates.
 
 %-------------------------------------------------------------------------------
 \subsection{Dynamic Semantics}
-Finally, we define the dynamic semantics of $\ourlang$ as the composition of
+Finally, we define the dynamic semantics of $\name$ as the composition of
 the type-directed translation and System F's dynamic semantics.  Following
 Siek's notation~\cite{systemfg}, this dynamic semantics is:
 \[ \mathit{eval}(e) = V \quad\quad \textit{where } \epsilon \turns \relation{e}{\rulet} \leadsto E \textit{ and } E \rightarrow^* V  \]
 with $\rightarrow^*$ the reflexive, transitive closure of System F's standard single-step call-by-value reduction relation (see \cite[Chapter 23]{tapl}).
 
-Now we can state the conventional type safety theorem for $\ourlang$:
+Now we can state the conventional type safety theorem for $\name$:
 \begin{theorem}[Type Safety]
 If $\epsilon \turns \relation{e}{\rulet}$, then $\mathit{eval}(e) = V$ for
 some System F value $V$.
