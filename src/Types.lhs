@@ -622,6 +622,7 @@ grabs them and passes them on to all uses of rule \mylabel{L-RuleNoMatch}.
 \newcommand{\alg}{\turns_{\mathit{alg}}}
 \newcommand{\coh}{\turns_{\mathit{coh}}}
 \newcommand{\mgu}[3][\bar{\alpha}]{\textit{mgu}_{#1}(#2,#3)}
+\newcommand{\mgun}[4][\tenv]{\textit{mgu}_{#1;#2}(#3,#4)}
 
 Figure~\ref{fig:algorithm} contains an algorithm that implements the
 non-algorithmic deterministic resolution rules of Figure~\ref{fig:resolution2}.
@@ -640,7 +641,7 @@ actually identical.
 The first difference is situated in rule \mylabel{Alg-L-RuleNoMatch} of the second
 judgement. Instead of an explicit quantification over all possible
 substitutions, this rule uses the more algorithmic judgement
-$\bar{\alpha};\rulet\coh\type$. This auxiliary judgement checks algorithmically
+$\bar{\alpha};\tenv;\rulet\coh\type$. This auxiliary judgement checks algorithmically
 whether there context type $\rulet$ matches $\type$ under any possible instantiation
 of the type variables $\bar{\alpha}$.
 % \bda{c}
@@ -659,7 +660,7 @@ of the type variables $\bar{\alpha}$.
 %         {\bar{\alpha};\rulet_1 \iarrow \rulet_2\coh \tau}
 % \eda
 
-The definition of $\bar{\alpha};\rulet \coh \type$ is a variation on that of
+The definition of $\bar{\alpha};\tenv;\rulet \coh \type$ is a variation on that of
 the declarative judgement $\tenv; \rulet \ivturns \type; \Sigma$. There are
 three differences. 
 % \begin{enumerate}
@@ -671,9 +672,20 @@ Secondly, instead of guessing the type instantiation ahead of time in rule
 $\mylabel{M-TApp}$, rule $\mylabel{Coh-TApp}$ defers the instantiation to the
 base case, rule \mylabel{Coh-Simp}. This last rule performs the deferred
 instantiation of type variables $\bar{\alpha}$ by computing the \emph{most general
-unifier} $\theta = \mgu{\type'}{\type}$ of $\type'$ and $\type$ whose
-domain is restricted to $\bar{\alpha}$.
-If this unifier exists, a match has been established.
+domain-restricted unifier} $\theta = \mgu{\type'}{\type}$.
+A substitution $\theta$ is a unifier of two types $\rulet_1$ and $\rulet_2$ iff
+$\theta(\rulet_1) = \theta(\rulet_2)$. A unifier $\theta$ is restricted to domain
+$\bar{\alpha}$ if $\dom(\theta) \subseteq \bar{\alpha}$.
+A most general domain-restricted unifier $\theta$ subsumes
+any other unifier restricted to the same domain $\bar{\alpha}$:
+\begin{equation*}
+\forall \eta: \quad \mathit{dom}(\eta) \subseteq \bar{\alpha} \wedge
+\eta(\rulet_1) = \eta(\rulet_2)  
+\quad\Rightarrow\quad
+\exists \iota: \mathit{dom}(\iota) \subseteq \bar{\alpha} \wedge
+\iota(\theta(\rulet_1)) = \iota(\theta(\rulet_2))
+\end{equation*}
+If this most-general unifier exists, a match has been established.
 If no unifier exists, then rule \textsc{COH-Simp} does not apply.
 % \item
 Thirdly, since the coherence check considers the substitution of the type variables
@@ -684,7 +696,7 @@ $\coh$ judgement with them.
 
 The second main difference is situated in the third auxiliary judgement
 $\bar{\alpha};\tenv;\rulet;\Sigma \alg \type ; \Sigma'$. This judgement is 
-in fact an extended version of $\bar{\alpha};\rulet\coh\type$ that does 
+in fact an extended version of $\bar{\alpha};\tenv;\rulet\coh\type$ that does 
 collect the recursive resolution obligations in $\Sigma'$ just like the 
 corresponding judgement in the declarative specification. The main difference
 with the latter is that it uses the deferred approach to instantiating 
@@ -703,22 +715,14 @@ actual match.
 \paragraph{Restricted Unification}
 
 Figure~\ref{fig:mgu} lists the algorithm for computing the most general
-unifier. For $\theta = \mathit{mgu}_{\bar{\alpha}}(\rulet_1,\rulet_2)$ we
-have that $\theta(\rulet_1) = \theta(\rulet_2)$ and $\mathit{dom}(\theta) \subseteq
-\bar{\alpha}$. Note that $\bar{\alpha}$ are the variables that are subject to substitution.
-Moreover, $\theta$ subsumes any other such unifier: 
-\begin{equation*}
-\forall \eta: \quad \mathit{dom}(\eta) \subseteq \bar{\alpha} \wedge
-\eta(\rulet_1) = \eta(\rulet_2)  
-\quad\Rightarrow\quad
-\exists \iota: \mathit{dom}(\iota) \subseteq \bar{\alpha} \wedge
-\iota(\theta(\rulet_1)) = \iota(\theta(\rulet_2))
-\end{equation*}
-The algorithm itself is fairly straightforward and needs little explanation.
-Only rule \tlabel{UAbs} deserves two notes. Firstly, we assume that $\alpha$-renaming
-is used implicitly to use the same name $\beta$ for both bound type variables. Secondly,
-we have to be careful that $\beta$ does not escape its scope through $\theta$, which
-could happen when computing for example $\mathit{mgu}_{\alpha}(\forall \beta.\beta, \forall \beta.\alpha)$.
+domain-restricted unifier. The algorithm itself is standard: the domain
+restriction $\bar{\alpha}$ merely denotes which type variables are to be
+treated as unification variables; all other type variables are to be treated as
+constants.  Only rule \tlabel{U-Univ} deserves two notes. Firstly, we assume that
+$\alpha$-renaming is used implicitly to use the same name $\beta$ for both
+bound type variables. Secondly, we have to be careful that $\beta$ does not
+escape its scope through $\theta$, which could happen when computing for
+example $\mathit{mgu}_{\alpha}(\forall \beta.\beta, \forall \beta.\alpha)$.
 
 % \paragraph{Ambiguity}
 % Some of the type variables $\bar{\alpha}$ may not be instantiated by the
@@ -768,7 +772,7 @@ could happen when computing for example $\mathit{mgu}_{\alpha}(\forall \beta.\be
         {\bar{\alpha};\tenv; \tenv', \rulet~\gbox{\leadsto x} \alg \type~\gbox{\leadsto E[\bar{E}/\bar{x}] }}  \\ \\
 
 \mylabel{Alg-L-RuleNoMatch}\quad
-\myirule{\bar{\alpha};\rulet \not\coh \type \quad\quad
+\myirule{\bar{\alpha};\tenv;\rulet \not\coh \type \quad\quad
          \bar{\alpha};\tenv;\tenv' \alg \type~\gbox{\leadsto E'}}
         {\bar{\alpha};\tenv;\tenv', \rulet~\gbox{\leadsto x}\alg \type~\gbox{\leadsto E'}}  \\ \\
 \mylabel{Alg-L-Var} \quad
@@ -785,7 +789,7 @@ could happen when computing for example $\mathit{mgu}_{\alpha}(\forall \beta.\be
 \multicolumn{1}{c}{\myruleform{\bar{\alpha}; \tenv; \rulet~\gbox{\leadsto E}; \Sigma \alg \type~\gbox{\leadsto E'}; \Sigma'}} \\ \\
 
 \mylabel{Alg-M-Simp}\quad
-\myirule{\theta = \textit{mgu}_{\bar{\alpha}}(\type,\type')
+\myirule{\theta = \mgun{\bar{\alpha}}{\type}{\type'}
         }
         {\bar{\alpha}; \tenv; \type'~\gbox{\leadsto E}; \Sigma \alg \type~\gbox{\leadsto ||\theta||(E)}; \theta(\Sigma)}  \\ \\
 
@@ -794,22 +798,22 @@ could happen when computing for example $\mathit{mgu}_{\alpha}(\forall \beta.\be
         {\bar{\alpha}; \tenv; \rulet_1 \iarrow \rulet_2~\gbox{\leadsto E}; \Sigma \alg \type~\gbox{\leadsto E'}; \Sigma'}  \\ \\
 
 \mylabel{Alg-M-TApp}\quad
-\myirule{\bar{\alpha},\alpha; \tenv; \rulet~\gbox{\leadsto E\,\alpha}; \Sigma \alg \type~\gbox{\leadsto E'}; \Sigma'}
+\myirule{\bar{\alpha},\alpha; \tenv,\alpha; \rulet~\gbox{\leadsto E\,\alpha}; \Sigma \alg \type~\gbox{\leadsto E'}; \Sigma'}
         {\bar{\alpha}; \tenv; \forall \alpha. \rulet~\gbox{\leadsto E}; \Sigma \alg \type~\gbox{\leadsto E'}; \Sigma'} 
 \\ \\
-\myruleform{\bar{\alpha};\rulet\coh \tau}
+\myruleform{\bar{\alpha};\tenv;\rulet\coh \tau}
 \quad\quad\quad
 \mylabel{COH-Simp}\quad
-\myirule{\theta = \textit{mgu}_{\bar{\alpha}}(\tau,\tau')
+\myirule{\theta = \mgun{\bar{\alpha}}{\tau}{\tau'}
         }
-        {\bar{\alpha};\tau'\coh \tau}  \\ \\
+        {\bar{\alpha};\tenv;\tau'\coh \tau}  \\ \\
 \mylabel{Coh-TApp}\quad
-\myirule{\bar{\alpha},\alpha;\rulet \coh \tau}
-        {\bar{\alpha};\forall \alpha. \rulet\coh \tau}  
+\myirule{\bar{\alpha},\alpha;\tenv,\alpha;\rulet \coh \tau}
+        {\bar{\alpha};\tenv;\forall \alpha. \rulet\coh \tau}  
 \quad\quad\quad
 \mylabel{Coh-IApp}\quad
-\myirule{\bar{\alpha};\rulet_2 \coh \tau}
-        {\bar{\alpha};\rulet_1 \iarrow \rulet_2\coh \tau}
+\myirule{\bar{\alpha};\tenv;\rulet_2 \coh \tau}
+        {\bar{\alpha};\tenv;\rulet_1 \iarrow \rulet_2\coh \tau}
 \ea
 $
 }
@@ -820,42 +824,90 @@ $
 \begin{center}
 \framebox{$
 \ba{c}
-\multicolumn{1}{c}{\myruleform{\theta = \mathit{mgu}_{\bar{\alpha}}(\rulet_1,\rulet_2)}} \\ \\
+% \multicolumn{1}{c}{\myruleform{\theta = \mathit{mgu}_{\bar{\alpha}}(\rulet_1,\rulet_2)}} \\ \\
+% \mylabel{U-InstL}\quad\myirule{ \alpha \in \bar{\alpha}
+%         } 
+%         { [\suty/\alpha] = \mathit{mgu}_{\bar{\alpha}}(\alpha,\suty)} \hspace{1cm} 
+% 
+% \mylabel{U-InstR}\quad\myirule{ \alpha \in \bar{\alpha}
+%         } 
+%         { [\suty/\alpha] = \mathit{mgu}_{\bar{\alpha}}(\suty,\alpha)} \\ \\
+% 
+% \mylabel{U-Var}\quad
+% \myirule{
+%         } 
+%         { \epsilon = \mathit{mgu}_{\bar{\alpha}}(\beta,\beta)}  \\ \\
+% 
+% \mylabel{U-Fun}\quad
+% \myirule{\theta_1 = \mathit{mgu}_{\bar{\alpha}}(\rulet_{1,1},\rulet_{2,1})
+%          \quad\quad
+%          \theta_2 = \mathit{mgu}_{\bar{\alpha}}(\theta_1(\rulet_{1,2}),\theta_1(\rulet_{2,2}))
+%         } 
+%         {\theta_2 \cdot \theta_1 = \mathit{mgu}_{\bar{\alpha}}(\rulet_{1,1} \arrow \rulet_{1,2},\rulet_{2,1} \arrow \rulet_{2,2})}  \\ \\
+% 
+% 
+% \mylabel{U-Rul}\quad
+% \myirule{\theta_1 = \mathit{mgu}_{\bar{\alpha}}(\rulet_{1,1},\rulet_{2,1})
+%          \quad\quad
+%          \theta_2 = \mathit{mgu}_{\bar{\alpha}}(\theta_1(\rulet_{1,2}),\theta_1(\rulet_{2,2}))
+%         } 
+%         {\theta_2 \cdot \theta_1 = \mathit{mgu}_{\bar{\alpha}}(\rulet_{1,1} \iarrow \rulet_{1,2},\rulet_{2,1} \iarrow \rulet_{2,2})}  \\ \\
+% 
+% \mylabel{U-Univ}\quad
+% \myirule{\theta = \mathit{mgu}_{\bar{\alpha}}(\rulet_{1},\rulet_{2})
+%           \quad\quad
+%           \beta \not\in \mathit{ftv}(\theta)
+%         } 
+%         {\theta = \mathit{mgu}_{\bar{\alpha}}(\forall \beta.\rulet_{1},\forall \beta.\rulet_{2})}  \\ \\
 
-\mylabel{UInstL}\quad\myirule{ \alpha \in \bar{\alpha}
+\myruleform{\theta = \mgun{\bar{\alpha}}{\rulet_1}{\rulet_2}}
+\hspace{1cm}
+
+\mylabel{U-InstL}\quad\myirule{ 
+	  \alpha \in \bar{\alpha}
+          \quad\quad
+          \forall \beta\in\mathit{ftv}(\suty):~~ \beta \in \bar{\alpha} \vee \beta >_\tenv \alpha
         } 
-        { [\suty/\alpha] = \mathit{mgu}_{\bar{\alpha}}(\alpha,\suty)} \hspace{1cm} 
+        { [\suty/\alpha] = \mgun{\bar{\alpha}}{\alpha}{\suty}}  \\ \\
 
-\mylabel{UInstR}\quad\myirule{ \alpha \in \bar{\alpha}
-        } 
-        { [\suty/\alpha] = \mathit{mgu}_{\bar{\alpha}}(\suty,\alpha)} \\ \\
-
-\mylabel{UVar}\quad
+\mylabel{U-Var}\quad
 \myirule{
         } 
-        { \emptyset = \mathit{mgu}_{\bar{\alpha}}(\beta,\beta)}  \\ \\
+        { \epsilon = \mgun{\bar{\alpha}}{\beta}{\beta}}  \hspace{1cm}
 
-\mylabel{UFun}\quad
-\myirule{\theta_1 = \mathit{mgu}_{\bar{\alpha}}(\rulet_{1,1},\rulet_{2,1})
-         \quad\quad
-         \theta_2 = \mathit{mgu}_{\bar{\alpha}}(\theta_1(\rulet_{1,2}),\theta_1(\rulet_{2,2}))
-        } 
-        {\theta_2 \cdot \theta_1 = \mathit{mgu}_{\bar{\alpha}}(\rulet_{1,1} \arrow \rulet_{1,2},\rulet_{2,1} \arrow \rulet_{2,2})}  \\ \\
-
-
-\mylabel{URul}\quad
-\myirule{\theta_1 = \mathit{mgu}_{\bar{\alpha}}(\rulet_{1,1},\rulet_{2,1})
-         \quad\quad
-         \theta_2 = \mathit{mgu}_{\bar{\alpha}}(\theta_1(\rulet_{1,2}),\theta_1(\rulet_{2,2}))
-        } 
-        {\theta_2 \cdot \theta_1 = \mathit{mgu}_{\bar{\alpha}}(\rulet_{1,1} \iarrow \rulet_{1,2},\rulet_{2,1} \iarrow \rulet_{2,2})}  \\ \\
-
-\mylabel{UAbs}\quad
-\myirule{\theta = \mathit{mgu}_{\bar{\alpha}}(\rulet_{1},\rulet_{2})
+\mylabel{U-InstR}\quad\myirule{ 
+	  \alpha \in \bar{\alpha}
           \quad\quad
-          \beta \not\in \mathit{ftv}(\theta)
+          \forall \beta\in\mathit{ftv}(\suty):~~ \beta \in \bar{\alpha} \vee \beta >_\tenv \alpha
         } 
-        {\theta = \mathit{mgu}_{\bar{\alpha}}(\forall \beta.\rulet_{1},\forall \beta.\rulet_{2})}  \\ \\
+        { [\suty/\alpha] = \mgun{\bar{\alpha}}{\suty}{\alpha}} \\ \\
+
+\mylabel{U-Fun}\quad
+\myirule{\theta_1 = \mgun{\bar{\alpha}}{\rulet_{1,1}}{\rulet_{2,1}}
+         \quad\quad
+         \theta_2 = \mgun{\bar{\alpha}}{\theta_1(\rulet_{1,2})}{\theta_1(\rulet_{2,2})}
+        } 
+        {\theta_2 \cdot \theta_1 = \mgun{\bar{\alpha}}{\rulet_{1,1} \arrow \rulet_{1,2}}{\rulet_{2,1} \arrow \rulet_{2,2}}}  \\ \\
+
+
+\mylabel{U-Rul}\quad
+\myirule{\theta_1 = \mgun{\bar{\alpha}}{\rulet_{1,1}}{\rulet_{2,1}}
+         \quad\quad
+         \theta_2 = \mgun{\bar{\alpha}}{\theta_1(\rulet_{1,2})}{\theta_1(\rulet_{2,2})}
+        } 
+        {\theta_2 \cdot \theta_1 = \mgun{\bar{\alpha}}{\rulet_{1,1} \iarrow \rulet_{1,2}}{\rulet_{2,1} \iarrow \rulet_{2,2}}}  \\ \\
+
+\mylabel{U-Univ}\quad
+\myirule{\theta = \mgun[\tenv,\beta]{\bar{\alpha}}{\rulet_{1}}{\rulet_{2}}
+        } 
+        {\theta = \mgun{\bar{\alpha}}{\forall \beta.\rulet_{1}}{\forall \beta.\rulet_{2}}}  \\ \\
+
+\myruleform{\beta >_\tenv \alpha}
+\hspace{1cm}
+\myirule{
+}
+{ \beta >_{\tenv_1,\beta,\tenv_2,\alpha,\tenv_3} \alpha }
+
 \ea
 $
 }

@@ -55,8 +55,8 @@ DONE
 >         both in Fig 3 and Fig 4. Can the prefix for one or the other be changed please?
 >         Currently, (R-IAbs) appears in both Fig 3 and Fig 4 with different definitions!
 
-I changed the ambiguous rule name prefixes to (AR-) in Section 3.3.
-TODO: propagate this change throughout the rest of the paper.
+DONE
+TODO: propagate this change throughout section 3
  
 > p12.23  Why is this section written in outline form? It makes it hard to read.
 >         It should be fine written as an ordinary narrative without bullet points.
@@ -221,7 +221,7 @@ TODO
  
 > p16.42  Shouldn't this definition come when mgu is first mentioned?
 
-TODO
+DONE
  
 > p16.43  "Moreover, \Theta subsumes any other such unifier" Perhaps write out
 >         in full what this means.
