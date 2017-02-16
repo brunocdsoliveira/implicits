@@ -100,7 +100,7 @@ instances, which can be used to allow distinct
 program. Scala also allows a powerful form of overlapping 
 implicits~\cite{implicits}. The essence of this style of implicit
 programming is modelled by the \emph{implicit calculus}~\cite{oliveira12implicit}. The
-implicit calculus has been show to be type-safe.
+implicit calculus has been shown to be type-safe.
 Unfortunately, both the implicit calculus and the various existing
 language mechanisms that embody flexibility do not preserve
 coherence and the ability to substitute equals for equals. 
@@ -108,7 +108,7 @@ coherence and the ability to substitute equals for equals.
 The design of IP mechanisms has led to heated debate~\cite{} about the
 pros and cons of each school of thought: ease of reasoning versus
 flexibility. Proponents of the Haskell school of thought argue that
-having coherence is extremelly desirable, and flexibility should not
+having coherence is extremely desirable, and flexibility should not
 come at the cost of that property. Proponents of flexible IP
 mechanisms would argue that flexibility is more important and, in
 practice, problems due to incoherence are rare. The current
@@ -129,7 +129,7 @@ where a single, global, implicit environment is assumed, and no local
 scoping constructs are allowed.
 
 Ensuring coherence in \name is challenging.  The overlapping and
-higher-order nature of rules pose significant challenges for the
+higher-order nature of rules poses significant challenges for the
 coherence and determinism of \name's resolution. To overcome
 non-determinism due to higher-order rules, we borrow ideas from
 \emph{focused proof
@@ -143,8 +143,8 @@ and removes any recursive resolutions from matching decisions.
 In summary, our contributions are as follows:
 
 \begin{itemize}
-\item \name
-  provides a \emph{coherent} (and type-safe) minimal formal model for
+\item We present \name,
+  a \emph{coherent} (and type-safe) minimal formal model for
   implicit programming that supports local scoping, overlapping rules,
   first-class instances and higher-order rules.
 
@@ -162,12 +162,12 @@ In summary, our contributions are as follows:
 
 %-------------------------------------------------------------------------------
 \paragraph{Organization} 
-Section 2 presents an informal overview of our calculus. 
-Section 3 describes a polymorphic type system that
-statically excludes ill-behaved programs. Section 4 provides the elaboration 
+Section~\ref{sec:overview} presents an informal overview of our calculus. 
+Section~\ref{sec:ourlang} describes a polymorphic type system that
+statically excludes ill-behaved programs. Section~\ref{sec:trans} provides the elaboration 
 semantics of our calculus into System F and correctness results. 
 %Section 5 presents the source language and its encoding into $\ourlang$. 
-Section 6 discusses related work and Section 7 concludes.
+Section~\ref{src:related} discusses related work and Section~\ref{sec:conclusion} concludes.
 
 %if False
 This paper is a rewrite and expansion of the conference paper by Oliveira et
