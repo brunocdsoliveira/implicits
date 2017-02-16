@@ -1,6 +1,9 @@
-\documentclass[prodmode,acmtoplas]{acmsmall}
+\documentclass[acmlarge, anonymous, review, authorname]{acmart}
+%\documentclass[prodmode,acmtoplas]{acmsmall}
+
 
 \usepackage{color}
+\usepackage{xspace}
 \usepackage{graphicx}
 \usepackage{latexsym}
 \usepackage{stmaryrd}
@@ -49,31 +52,39 @@
 %\acmMonth{1}
 
 % Document starts
+\bibliographystyle{ACM-Reference-Format}
+\citestyle{acmauthoryear}
 \begin{document}
 
 % Page heads
 \markboth{B. Oliveira et al.}{The Implicit Calculus: A New Foundation for Generic Programming}
 
 % Title portion
-\title{The Implicit Calculus: A New Foundation for Generic Programming}
-\author{BRUNO C. D. S. OLIVEIRA
-\affil{The University of Hong Kong}
-TOM SCHRIJVERS
-\affil{Ghent University}
-WONTAE CHOI
-\affil{Seoul National University}
-WONCHAN LEE
-\affil{Seoul National University}
-KWANGKEUN YI
-\affil{Seoul National University}
-PHILIP WADLER
-\affil{University of Edinburgh}
-}
+\title{\name: Deterministic and Coherent Implicits}
+\author{Ommitted for anonymous submission}
 
 \begin{abstract}
 \input{src/Abstract}
 \end{abstract}
+\begin{CCSXML}
+<ccs2012>
+<concept>
+<concept_id>10003752.10010124.10010125.10010130</concept_id>
+<concept_desc>Theory of computation~Type structures</concept_desc>
+<concept_significance>500</concept_significance>
+</concept>
+<concept>
+<concept_id>10011007.10011006.10011008.10011009.10011012</concept_id>
+<concept_desc>Software and its engineering~Functional languages</concept_desc>
+<concept_significance>500</concept_significance>
+</concept>
+</ccs2012>
+\end{CCSXML}
 
+\ccsdesc[500]{Theory of computation~Type structures}
+\ccsdesc[500]{Software and its engineering~Functional languages}
+
+\begin{comment}
 \category{D.3.2}{Programming Languages}   
                 {Language Classifications}
                 [Functional Languages, Object-Oriented Languages]
@@ -97,6 +108,7 @@ T. Schrijvers, Department of Applied Mathematics and Computer Science, Ghent Uni
 W. Choi {and} W. Lee {and} K. Yi, \ldots, Seoul National University;
 P. Wadler, \ldots, University of Edinburgh.
 \end{bottomstuff}
+\end{comment}
 
 \maketitle
 
@@ -110,18 +122,13 @@ P. Wadler, \ldots, University of Edinburgh.
 
 \input{src/Translation}
 
-\input{src/SourceLang}
+%\input{src/SourceLang}
 
 \input{src/Related}
 
 \input{src/Conclusion}
 
-% Appendix
-\appendix
-\section*{APPENDIX}
-\setcounter{section}{1}
-
-\appendixhead{OLIVEIRA}
+%\appendixhead{OLIVEIRA}
 
 % Acknowledgments
 \begin{acks}
@@ -135,8 +142,14 @@ by Singapore Ministry of Education research grant MOE2010-T2-2-073.
 \end{acks}
 
 % Bibliography
-\bibliographystyle{acmsmall}
 \bibliography{papers}
+
+% Appendix
+\appendix
+\section*{APPENDIX}
+\setcounter{section}{1}
+
+
 
 \input{src/Proofs}
 

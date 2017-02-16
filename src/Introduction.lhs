@@ -55,55 +55,66 @@ These implicit values are either fetched by type from the current (implicit)
 environment or constructed by type-directed rules.
 
 Currently there are two main schools of thought regarding
-the design of IP mechanisms.  Haskell's type classes~\cite{adhoc} embody
+the design of IP mechanisms. Haskell's type classes~\cite{adhoc} embody
 the first school of thought, which is guided by the \emph{ease of
   reasoning} qualities of pure functional languages, and the
 \emph{predictability} of programs. To ensure these goals the semantics
-of the language should be \emph{coherent}~\cite{reynolds}. Coherence
+of the language should be \emph{coherent}~\cite{Reynolds91coherence,qual}. Coherence
 means that any valid program must have exactly one meaning (that is,
-the semantics is not ambiguous/non-deterministic).  Haskell type classes preserve
-coherence, but at a cost. Since the first implementations of type
-classes, Haskell imposes several restrictions to guarantee
-coherence. Advanced features of type classes, such as overlapping
-instances,\footnote{\url{https://downloads.haskell.org/~ghc/latest/docs/html/users\_guide/glasgow\_exts.html\#overlapping-instances}} 
-pose severe problems for coherence. In purely
-functional programming, ``\emph{substituting equals by equals}'' is
-expected to hold. That is, when given two equivalent expressions, then
-replacing one by the other in \emph{any context} always leads to
-two programs that yield the same result. Special care (via
-restrictions) is needed to preserve coherence and the ability of
-substituting equals by equals in the presence of overlapping
-instances. 
+the semantics is not ambiguous/non-deterministic). In fact Haskell
+type classes support an even stronger, so-called, \emph{global
+  coherence} property. Global coherence ensures that \emph{at any point in a
+  program, and independently of the context} the type-directed
+resolution process always returns the same result for the same
+resolved type. This is a consequence of Haskell having the usual
+coherence property and a restriction of at most one
+instance of a type class per type in a program.
 
-Various past work has pointed out limitations of type classes~\cite{}. 
-In particular type classes allow at most one instance per type (or severely 
+While both coherence and global coherence are preserved in Haskell,
+this comes at a cost. Since the first implementations of type classes,
+Haskell imposes several restrictions to guarantee coherence. Advanced
+features of type classes, such as overlapping
+instances,\footnote{\url{https://downloads.haskell.org/~ghc/latest/docs/html/users\_guide/glasgow\_exts.html\#overlapping-instances}}
+pose severe problems for coherence. In purely functional programming,
+``\emph{substituting equals by equals}'' is expected to hold. That is,
+when given two equivalent expressions replacing one by the other in
+\emph{any context} always leads to two programs that yield the same
+result. Special care (via restrictions) is needed to preserve
+coherence and the ability of substituting equals by equals in the
+presence of overlapping instances.
+
+Various past work has pointed out limitations of type classes~\cite{named_instance,systemct,implicit_explicit,modular,Garcia:2007extended,implicits,oliveira12implicit}. 
+In particular since type classes allow at most one instance per type (or severely 
 restrict overlapping instances) to exist in a program. This means  
 that all instances must be visible globally, and local scoping of
-instances is not allowed. Other restrictions of type classes are 
+instances is not allowed. Such form of global scoping goes against 
+modularity. Other restrictions of type classes are 
 that they are second class interfaces and that the type-directed rules 
-cannot be higher-order~\cite{}. 
+cannot be higher-order~\cite{oliveira12implicit}. 
 
-\bruno{Need to talk, at some point, about global coherence.}
-
-An alternative school of thought favours \emph{flexibility}. For instance, 
+An alternative school of thought in the design of IP mechanisms favours \emph{flexibility}. For instance, 
 Scala implicits and Agda's instance arguments \bruno{others} do not impose all of
 the type class restrictions. For example, Scala supports local scoping of
 instances, which can be used to allow distinct 
 ``instances'' to exists for the same type in different scopes in the same
 program. Scala also allows a powerful form of overlapping 
-implicits~\cite{}. The essence of this style of implicit
-programming is modelled by the \emph{implicit calculus}. The
-implicit calculus has show to be type-safe.
+implicits~\cite{implicits}. The essence of this style of implicit
+programming is modelled by the \emph{implicit calculus}~\cite{oliveira12implicit}. The
+implicit calculus has been show to be type-safe.
 Unfortunately, both the implicit calculus and the various existing
 language mechanisms that embody flexibility do not preserve
 coherence and the ability to substitute equals for equals. 
 
-The design of IP mechanisms has led to heated debate~\cite{} about 
-the pros and cons of each school of thought: ease of reasoning versus
-flexibility. The current state-of-affairs seems to indicate that both
-goals are at odds with each other, and cannot be easily reconciled.  
+The design of IP mechanisms has led to heated debate~\cite{} about the
+pros and cons of each school of thought: ease of reasoning versus
+flexibility. Proponents of the Haskell school of thought argue that
+having coherence is extremelly desirable, and flexibility should not
+come at the cost of that property. Proponents of flexible IP
+mechanisms would argue that flexibility is more important and, in
+practice, problems due to incoherence are rare. The current
+state-of-affairs seems to indicate that both goals are at odds with
+each other, and cannot be easily reconciled.
 
-\bruno{Should we give the new calculus a name?}
 This paper presents \name, an improved variant of the implicit calculus that
 preserves \emph{coherence}. \name supports local scoping,
 overlapping instances, first-class instances and higher-order
@@ -119,7 +130,7 @@ to be entirely deterministic and coherent.  In particular, unlike focused proof
 search, our resolution uses a stack discipline to prioritize rules, and removes
 any recursive resolutions from matching decisions.
 
-In summary, our contributions are as follows.
+In summary, our contributions are as follows:
 
 \begin{itemize}
 \item \name
