@@ -30,7 +30,7 @@ The syntax of System F is as follows:
     \mid \Lambda \alpha . E \mid E\;T 
   \end{array} \]}
 
-The gray extension to the syntax of type environments annotates very
+The gray extension to the syntax of type environments annotates every
 implicit rule type with explicit System F evidence in the form of a 
 term variable $x$.
 
@@ -85,7 +85,7 @@ generated from the resolution for the head of the rule ($\rulet_2$). Similarly,
 rule \mylabel{R-TAbs}~wraps a type lambda binder around the System F expression
 resulting from the resolution of $\rulet$.
 
-For simple types rule $\type$ rule \mylabel{R-Simp} delegates the work of
+For simple types $\type$ rule \mylabel{R-Simp} delegates the work of
 building evidence, when a matching rule $\rulet$ type is found in the
 environment, to rule \mylabel{L-RuleMatch}. The evidence consists of two parts:
 $E$ is the evidence of matching $\type$ against $\rulet$. This match contains
@@ -168,7 +168,7 @@ Figure~\ref{fig:resolution2}.
 
 With the evidence we can state the correctness of the algorithm.
 \begin{theorem}[Partial Correctness]
-Let $\tenv$ be a type environment, $\rulet$ be a type and E be a System F expressions.
+Let $\tenv$ be a type environment, $\rulet$ be a type and E be a System F expression.
 Assume that $\epsilon \vdash_{\mathit{unamb}} \rulet$ and also $\forall \rulet_i \in \tenv: \epsilon \vdash_{\mathit{unamb}} \rulet_i$.
 Then $\tenv \ivturns \rulet \leadsto E$ if and only if $\tenv \vdash_{\mathit{alg}} \rulet \leadsto E$,
 provided that the algorithm terminates.
