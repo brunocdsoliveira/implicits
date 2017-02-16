@@ -115,19 +115,22 @@ practice, problems due to incoherence are rare. The current
 state-of-affairs seems to indicate that both goals are at odds with
 each other, and cannot be easily reconciled.
 
-This paper presents \name: the Calculus Of CoHerent
-  ImplicitS. \name is an improved variant of the implicit
-calculus that preserves \emph{coherence}. \name supports local
-scoping, overlapping instances, first-class instances and higher-order
-rules. Yet, in contrast to most previous work that supports such
-features, the calculus is not only type-safe, but also
-coherent. Naturally, the unrestricted calculus does not support global
-coherence, since this property depends on the global scoping
-restriction. Nevertheless, if desired, it is possible to model
-source languages on top of \name that support global scoping only.
-Global scoping can be viewed as a particular case of local scoping
-where a single, global, implicit environment is assumed, and no local
-scoping constructs are allowed.
+This paper presents \name: the Calculus Of CoHerent ImplicitS. \name
+is an improved variant of the implicit calculus that preserves
+\emph{coherence}. \name supports local scoping, overlapping instances,
+first-class instances and higher-order rules. Yet, in contrast to most
+previous work that supports such features, the calculus is not only
+type-safe, but also coherent. Naturally, the unrestricted calculus
+does not support global coherence, since this property depends on the
+global scoping restriction. Nevertheless, if retaining global
+coherence is desired, it is possible to model source languages on top
+of \name that support global scoping only.  Global scoping can be
+viewed as a particular case of local scoping where a single, global,
+implicit environment is assumed, and no local scoping constructs are
+allowed.
+ 
+%If a single global scope exists in a
+%program then the determinism and coherence of \name imply that 
 
 Ensuring coherence in \name is challenging.  The overlapping and
 higher-order nature of rules poses significant challenges for the

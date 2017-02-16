@@ -38,28 +38,31 @@ can be defined as follows:
 > instance Ord Int where
 >   (<=) = primIntLe
 >
-> instance (Ord a, Ord b) => Ord (a, b) where -- a type-directed rule
+> instance (Ord a, Ord b) => Ord (a, b) where
 >   (xa,xb) <= (ya,yb) = xa < ya || (xa == ya && xb <= yb)
 
 The first instance provides the implementation of |<=| for integers.
-The second instance is more interesting. It provided the
+The second instance is more interesting. It provides the
 implementation of ordering for paris. In this case, the ordering
 instance itself \emph{requires} by an ordering instance for each of
-the elements of the pair. Such instances, which require implementations 
-of other instances, are what we call a \emph{type-directed rule}. 
+the elements of the pair. These requiriments will be implicitly resolved 
+by the compiler using the existing set of rules in a process called 
+\emph{resolution}.  
+%Such instances, which require implementations 
+%of other instances, . 
 
 \paragraph{Implicit programming} The reason why type classes are an implicit 
 programming mechanism is because the implementations of type class operations 
-are automatically \emph{computed} from the set of rules/instances. 
+are automatically \emph{computed} from the set of rules/instances during the 
+resolution process. 
 For example, with |Ord| we can define a generic sorting
 function:
 
 > sort :: Ord a => [a] -> [a]
 
 \noindent that takes a list of elements of an arbitrary type |a| and
-returns a list of the same type, as long as the type of the elements
-is in the |Ord| type class, hence the |Ord a =>| context. A call to |sort|
-will only type check if a suitable type class instance can be
+returns a list of the same type, as long as ordering is supported by the type of the elements. 
+A call to |sort| will only type check if a suitable type class instance can be
 found. Other than that, the caller does not need to worry about the
 type class context, as shown in the following interaction with a
 Haskell interpreter: 
@@ -67,6 +70,8 @@ Haskell interpreter:
 < Prelude > sort [ (3, 5), (2, 4), (3, 4) ]
 < [(2,4),(3,4),(3,5)]
 
+\noindent In this example, the resolution process combined the two |Ord| instances 
+to find suitable implementations for |Ord (Int,Int)|. 
 
 \paragraph{One instance per type} A characteristic of
 (Haskell) type classes is that only one instance is allowed for a
