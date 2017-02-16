@@ -33,7 +33,7 @@ goals: \emph{flexibility} and \emph{ease of reasoning}.
 Many programming languages aim at providing powerful, 
 flexible language constructs that allow programmers to achieve reuse, 
 and develop programs rapidly and concisely. Other programming languages aim 
-at easy reasoning about programs, as well as avoid programming
+at easy reasoning about programs, as well as to avoid programming
 pitfalls. Very often the two goals are at odds with each other, since 
 highly flexible programming mechanisms make reasoning harder. 
 Arguably the art of programming language design is to reconcile
@@ -65,7 +65,7 @@ the semantics is not ambiguous/non-deterministic). In fact Haskell
 type classes support an even stronger, so-called, \emph{global
   coherence} property. Global coherence ensures that \emph{at any point in a
   program, and independently of the context} the type-directed
-resolution process always returns the same result for the same
+resolution process always returns the same value for the same
 resolved type. This is a consequence of Haskell having the usual
 coherence property and a restriction of at most one
 instance of a type class per type in a program.
@@ -115,20 +115,30 @@ practice, problems due to incoherence are rare. The current
 state-of-affairs seems to indicate that both goals are at odds with
 each other, and cannot be easily reconciled.
 
-This paper presents \name, an improved variant of the implicit calculus that
-preserves \emph{coherence}. \name supports local scoping,
-overlapping instances, first-class instances and higher-order
+This paper presents \name, an improved variant of the implicit
+calculus that preserves \emph{coherence}. \name supports local
+scoping, overlapping instances, first-class instances and higher-order
 rules. Yet, in contrast to most previous work that supports such
-features, the calculus is not only type-safe, but also coherent. 
+features, the calculus is not only type-safe, but also
+coherent. Naturally, the unrestricted calculus does not support global
+coherence, since this property depends on the global scoping
+restriction. Nevertheless, if desired, it is possible to model
+source languages on top of \name that support global scoping only.
+Global scoping can be viewed as a particular case of local scoping
+where a single, global, implicit environment is assumed, and no local
+scoping constructs are allowed.
 
-The overlapping and higher-order nature of rules pose significant challenges
-for the coherence and determinism of \name's resolution. To overcome
-non-determinism due to higher-order rules, we borrow ideas from \emph{focused
-proof search}~\cite{focusing,Miller91b,Liang:2009}. However, unlike focused proof search, which is still
-essentially non-deterministic, \name's resolution employs additional techniques
-to be entirely deterministic and coherent.  In particular, unlike focused proof
-search, our resolution uses a stack discipline to prioritize rules, and removes
-any recursive resolutions from matching decisions.
+Ensuring coherence in \name is challenging.  The overlapping and
+higher-order nature of rules pose significant challenges for the
+coherence and determinism of \name's resolution. To overcome
+non-determinism due to higher-order rules, we borrow ideas from
+\emph{focused proof
+  search}~\cite{focusing,Miller91b,Liang:2009}. However, unlike
+focused proof search, which is still essentially non-deterministic,
+\name's resolution employs additional techniques to be entirely
+deterministic and coherent.  In particular, unlike focused proof
+search, our resolution uses a stack discipline to prioritize rules,
+and removes any recursive resolutions from matching decisions.
 
 In summary, our contributions are as follows:
 
