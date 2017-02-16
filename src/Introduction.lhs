@@ -115,7 +115,8 @@ practice, problems due to incoherence are rare. The current
 state-of-affairs seems to indicate that both goals are at odds with
 each other, and cannot be easily reconciled.
 
-This paper presents \name, an improved variant of the implicit
+This paper presents \name: the Calculus Of CoHerent
+  ImplicitS. \name is an improved variant of the implicit
 calculus that preserves \emph{coherence}. \name supports local
 scoping, overlapping instances, first-class instances and higher-order
 rules. Yet, in contrast to most previous work that supports such
