@@ -10,8 +10,76 @@
 
 This section presents relevant background on type classes, IP 
 and coherence, and it introduces the key features of our calculus for ensuring coherence.
+We chose to present most of the issues and code examples using Haskell type classes 
+syntax, since this is the oldest and most well-established IP mechanism.
 
 \subsection{Type Classes and Implicit Programming}
+
+Type classes are special types of interfaces, which enable the definition of
+type-overloaded functions like comparison, pretty printing or parsing.
+
+> class Ord a   where  (<=) :: a -> a -> Bool
+> class Show a  where  show :: a -> String
+> class Read a  where  read :: String -> a
+
+A type class declaration consists of: a class name such as |Ord|, |Show|
+or |Read|; a type parameter; and a set of method declarations. Each of
+the methods in the type class declaration should have at least one
+occurrence of the type parameter in their signature (either as an
+argument or as a return type).
+
+\paragraph{Instances and type-directed rules} Implementations 
+of type classes are provided by type class instances. 
+In our terminology, borrowed from the implicit calculus, 
+instances are synonymous with rules.
+For example, |Ord| instances/rules for integers and pairs 
+can be defined as follows:
+
+> instance Ord Int where
+>   (<=) = primIntLe
+>
+> instance (Ord a, Ord b) => Ord (a, b) where -- a type-directed rule
+>   (xa,xb) <= (ya,yb) = xa < ya || (xa == ya && xb <= yb)
+
+The first instance provides the implementation of |<=| for integers.
+The second instance is more interesting. It provided the
+implementation of ordering for paris. In this case, the ordering
+instance itself \emph{requires} by an ordering instance for each of
+the elements of the pair. Such instances, which require implementations 
+of other instances, are what we call a \emph{type-directed rule}. 
+
+\paragraph{Implicit programming} The reason why type classes are an implicit 
+programming mechanism is because the implementations of type class operations 
+are automatically \emph{computed} from the set of rules/instances. 
+For example, with |Ord| we can define a generic sorting
+function:
+
+> sort :: Ord a => [a] -> [a]
+
+\noindent that takes a list of elements of an arbitrary type |a| and
+returns a list of the same type, as long as the type of the elements
+is in the |Ord| type class, hence the |Ord a =>| context. A call to |sort|
+will only type check if a suitable type class instance can be
+found. Other than that, the caller does not need to worry about the
+type class context, as shown in the following interaction with a
+Haskell interpreter: 
+
+< Prelude > sort [ (3, 5), (2, 4), (3, 4) ]
+< [(2,4),(3,4),(3,5)]
+
+
+\paragraph{One instance per type} A characteristic of
+(Haskell) type classes is that only one instance is allowed for a
+given type. For example, the alternative ordering model for pairs
+
+> instance (Ord a, Ord b) => Ord (a, b) where 
+>   (xa,xb) <= (ya,yb) = xa <=ya && xb <= yb
+
+in the same program as the previous instance is forbidden because the
+compiler automatically picks the right type class instance based on
+the type parameter of the type class. Since in this case there are two
+type class instances for the same type, there is no sensible way for
+the compiler to choose one of these two instances.
 
 \subsection{Coherence in Type Classes}
 
@@ -24,10 +92,12 @@ coherence. For example, the expression:
 
 > show (read ''3'') == ''3'' 
 
+\begin{comment}
 \noindent where functions |show| and |read| have the types: 
 
 > show :: Show a => a -> String
 > read :: Read a => String -> a
+\end{comment}
 
 \noindent is rejected in Haskell due to \emph{ambiguity} of 
 \emph{type class resolution}~\cite{jones}. The functions |show| and
