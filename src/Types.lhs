@@ -191,7 +191,7 @@ Typing judgment ${\tenv \turns \relation{e}{\rulet}}$ holds if
 expression $e$ has type $\rulet$ with respect to type environment $\tenv$.
 The first five rules copy the corresponding System F rules; only the last three deserve special attention.
 Firstly, rule \TyIAbs{} extends the implicit environment with the type of an implicit instance.
-The side condition $\unamb \rulet$ states that
+The side condition $\unamb \rulet_1$ states that
 the type $\rulet_1$ must be unambiguous; we explain this concept in Section~\ref{subsec:det}.
 Secondly, rule \TyIApp{} eliminates an implicit abstraction by supplying an
 instance of the required type. Finally, rule \TyQuery{} resolves 
