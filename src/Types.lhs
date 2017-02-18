@@ -344,7 +344,7 @@ resolution renders the meaning of a program ambiguous.
 
 Figure~\ref{fig:resolution2} defines judgement $\tenv \ivturns \rulet$, which
 is a syntax-directed deterministic variant of $\tenv \vturns \rulet$. This
-determinstic variant is sound with respect to the ambiguous definition; in
+determinstic variant is sound with respect to the ambiguous definition. In
 other words, $\tenv \vturns \rulet$ holds if $\tenv \ivturns \rulet$ holds.
 Yet, the opposite is not true. The deterministic judgement sacrifices some
 expressive power in exchange for better behavedness.
@@ -517,12 +517,13 @@ $
 \end{center}
 }
 
-Figure~\ref{fig:resolution2} shows our syntax-directed and unambiguous variant
-of resolution. 
-
-The main judgement $\tenv \ivturns \rulet$ is simply a wrapper around the
-auxiliary judgement $\bar{\alpha};\tenv \ivturns \rulet$ that populates $\bar{\alpha}$
-with the type variables in the environment at the point of the query:
+Figure~\ref{fig:resolution2} defines the main judgement $\tenv \ivturns \rulet$ 
+in terms of three interdependent auxiliary judgements. The first of these
+auxiliary judgements is $\bar{\alpha};\tenv \ivturns \rulet$, where
+the type variables $\bar{\alpha}$ are the free type variables in the
+original environment at the point of the query. The main judgement
+sets this parameter up in rule \mylabel{R-Main} with 
+the function $\mathit{tyvars}$:
 \newcommand{\tyvars}[1]{\mathit{tyvars}(#1)}
 \begin{equation*}
 \begin{array}{rcl@@{\hspace{2cm}}rcl}
@@ -532,49 +533,63 @@ with the type variables in the environment at the point of the query:
 \tyvars{\tenv,\rulet~\gbox{\leadsto x}} & = & \tyvars{\tenv} 
 \end{array}
 \end{equation*}
+While the auxiliary judgement $\bar{\alpha};\tenv \ivturns \rulet$ extends the
+type environment $\tenv$, it does not update the type variables $\bar{\alpha}$.
+This judgement is syntax-directed on the query type $\rulet$.  Its job is to
+strip $\rulet$ down to a simple type $\type$ using literal copies of the
+ambiguous rules \mylabel{AR-TAbs} and \mylabel{AR-IAbs}, and then to hand it
+off to the second auxiliary judgement in rule \mylabel{R-Simp}.
 
-The judgement $\bar{\alpha};\tenv \ivturns \rulet$ implements
-the backward chaining phase of measure (1); it is syntax-directed on
-$\rulet$. Its job is to strip $\rulet$ down to a simple type $\type$ using
-literal copies of the original rules \mylabel{R-TAbs} and \mylabel{R-IAbs}, and
-then hand it off to the next judgement in rule \mylabel{R-Simp}.
+The second auxiliary judgement, $\bar{\alpha}; \tenv; \tenv' \ivturns \type$,
+is syntax-directed on $\tenv'$: it traverses $\tenv'$ from right to left until
+it finds a rule type $\rulet$ that matches the simple type $\type$.  Rules
+\mylabel{L-Var} and \mylabel{L-TyVar} skip the irrelevant entries in the
+environment. Rule \mylabel{L-RuleMatch} identifies a matching rule type
+$\rulet$ -- where matching is determined by with the third auxiliary judgement
+-- and takes care of recursively resolving its context types; details follow
+below.  Finally, rule \mylabel{L-RuleNoMatch} skips a rule type in the
+environment if it does not match. Its condition
+$\mathit{stable}(\bar{\alpha},\tenv,\rulet,\type)$ entails the opposite of rule
+\mylabel{L-RuleMatch}'s first condition: \begin{equation*} \not\exists
+\Sigma:\quad\tenv;\rulet \ivturns \type; \Sigma \end{equation*} 
+(We come back to the reason why the condition is stronger than this in
+Section~\ref{sec:coherence}.)
+As a consequence, rules \mylabel{L-RuleMatch} and \mylabel{L-RuleNoMatch}
+are mutually excluse and the judgement effectively commits to the
+right-most matching rule in $\tenv'$.
+We maintain the invariant that $\tenv'$ is a prefix of $\tenv$; rule
+\mylabel{R-Simp} provides $\tenv$ as the initial value for $\tenv'$.
+Hence, if a matching rule type $\rulet$ is found, we have that
+$\rulet \in \tenv$. Hence, the second auxiliary judgement
+plays much the same role as rule
+\mylabel{AR-IVar} in Figure~\ref{fig:resolution1}, which also selects a rule type $\rulet \in \tenv$. The difference is that rule \mylabel{AR-IVar} makes a non-deterministic
+choice, while the second auxiliary judgement makes determinstic committed choice
+that prioritizes rule types more to the right in the environment. For instance, $\tyint,\tyint \vturns \tyint$ has two ways to resolve, while $\tyint,\tyint \ivturns \tyint$ has only one because the second $\tyint$ in the environment shadows the first.
 
-The next judgement, $\bar{\alpha}; \tenv; \tenv' \ivturns \type$, scans for a
-rule type $\rulet$ in the environment $\tenv'$ that matches the simple type
-$\type$. Note that we maintain the invariant that $\tenv'$ is a prefix of
-$\tenv$ and thus $\rulet \in \tenv$.  The judgement's definition is
-syntax-directed on $\tenv'$ (measure (1)) and presents a deterministic
-alternative to the original rule \mylabel{R-IVar} by committing to the first
-matching rule type (measure (2)). Rules \mylabel{L-Var} and \mylabel{L-TyVar}
-skip the irrelevant entries in the environment.  Rule \mylabel{L-RuleMatch}
-identifies a matching rule type $\rulet$ with the third auxiliary judgement and
-takes care of recursively resolving its context types; details follow below.
-Finally, rule \mylabel{L-RuleNoMatch} skips a rule type in the environment if
-it does not match. If we take the empty substitution for $\theta$, then the
-rule's first condition implies the opposite of rule \mylabel{L-RuleMatch}'s
-first condition:
-\begin{equation*}
-\not\exists \Sigma:\quad\tenv;\rulet \ivturns \type; \Sigma
-\end{equation*}
-We come back to the reason why the condition is stronger than this in Section~\ref{sec:coherence}.
 
 Finally, the third auxiliary judgement, $\tenv;\rulet \ivturns \type; \Sigma$,
 determines whether the rule type $\rulet$ matches the simple type~$\type$. The
 judgement is defined by structural induction on $\rulet$, which is step by step
-instantiated to a simple type to realise the forward chaining phase of measure
-(1). 
-Any recursive resolutions are deferred in this process (measure (2b)) -- the
-postponed resolvents are captured in the $\Sigma$ argument; this
+instantiated to $\type$. 
+Any recursive resolutions are deferred in this process -- the
+postponed resolvents are captured in the $\Sigma$ argument. This
 way they do not influence the matching decision and backtracking is avoided.
 Instead, the recursive resolutions are executed, as part of rule
-\mylabel{L-RuleMatch}, after the rule has been committed to
+\mylabel{L-RuleMatch}, after the rule has been committed to.
 Rule \mylabel{M-Simp} constitutes the base case where the rule type equals the
 target type. Rule \mylabel{M-IApp} is the counterpart of the original
 rule \mylabel{R-IApp} where the implication arrow $\rulet_1 \iarrow \rulet_2$
 is instantiated to $\rulet_2$; the resolution of $\rulet_1$ is deferred.
 Lastly, rule \mylabel{M-TApp} is the counterpart of the original rule \mylabel{R-TApp}.
-The main difference is that, in keeping with measure (3b), it only uses
-monotypes $\suty$ to substitute the type variable.
+The main difference is that it only uses
+monotypes $\suty$ to substitute the type variable; this implements the predicativity
+restriction explained above.
+
+The relation to the ambiguous definition of resolution can be summarized as follows:
+if $\tenv;\rulet \ivturns \type; \bar{\rulet}$
+with
+$\tenv \vturns \rulet$ and $\tenv \vturns \bar{\rulet}$, then
+$\tenv \vturns \type$.
 
 %- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 \paragraph{Non-Ambiguity Constraints}
