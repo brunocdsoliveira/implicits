@@ -599,24 +599,11 @@ $[\suty/\alpha]$ for the rule type $\forall \alpha.\rulet$ should be obtained.
 At first sight it seems that the choice of $\suty$ is free and thus a source of
 non-determinism. However, in many cases the choice is not free at all, but is
 instead determined fully by the simple type $\type$ that we want to match.
-
-Consider the case of matching $\forall \alpha. \alpha \arrow \tyint$ with the
-simple type $\tyint \arrow \tyint$. Here we can only choose to instantiate
-$\alpha$ with $\suty=\tyint$ if we want $(\alpha \arrow \tyint)[\suty/\alpha]$ to
-be equal to $\tyint \arrow \tyint$.
-However, the choice is not always forced by the matching. This
-is for instance the case with the 
-context type $\forall \alpha. \tyint$. When
-we match the head of this type $\tyint$ with the simple type $\tyint$, the
-matching succeeds without actually determining how the type variable $\alpha$
-should be instantiated. In fact, the matching succeeds under any possible
-substitution of $\alpha$. In this particular case the ambiguity is harmless, because
-it does not affect the semantics. Yet, it is not so harmless in other cases.
-Take for instance the context type $\forall \alpha. (\alpha \arrow \tystr)
+However, the choice is not always forced by the matching. Take for instance the context type $\forall \alpha. (\alpha \arrow \tystr)
 \iarrow (\tystr \arrow \alpha) \iarrow (\tystr \arrow \tystr)$. This 
-type encodes the well-known ambiguous Haskell type |forall a. (Show a, Read a) => String -> String| of the expression |read . show|. Again the
+type encodes the well-known ambiguous Haskell type |forall a. (Show a, Read a) => String -> String| of the expression |read . show|. The
 choice of $\alpha$ is ambiguous when matching against the simple type $\tystr
-\arrow \tystr$. Yet, now the choice is critical for two reasons. Firstly, if we
+\arrow \tystr$. Yet, the choice is critical for two reasons. Firstly, if we
 guess the wrong instantiation $\suty$ for $\alpha$, then it may not be possible
 to recursively resolve $(\tystr \arrow \alpha)[\suty/\alpha]$ or $(\alpha \arrow
 \tystr)[\suty/\alpha]$, while with a lucky guess both can be resolved.
@@ -683,6 +670,14 @@ unambiguous.
 Finally, the unambiguity condition is also imposed on the queried type $\rulet$
 in rule \mylabel{Ty-Query} because this type too may extend the implicit
 environment in rule \mylabel{R-IAbs}.
+
+Note that the definition rules out harmless ambiguity, such as that in the type
+$\forall \alpha. \tyint$. When we match the head of this type $\tyint$ with the
+simple type $\tyint$, the matching succeeds without actually determining how
+the type variable $\alpha$ should be instantiated. Here the ambiguity is
+harmless, because it does not affect the semantics. Yet, for the sake of
+simplicity, we have opted to not differentiate between harmless and harmful
+ambiguity.
 
 %-------------------------------------------------------------------------------
 \paragraph{Coherence Enforcement}\label{sec:coherence}
