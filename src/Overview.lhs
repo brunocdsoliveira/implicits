@@ -19,9 +19,12 @@ implicits in Scala.
 Type classes permit one to declare
 overloaded functions like comparison, pretty printing, or parsing.
 
-> class Ord a   where  (<=) :: a -> a -> Bool
-> class Show a  where  show :: a -> String
-> class Read a  where  read :: String -> a
+> class Ord a where
+>   (<=) :: a -> a -> Bool
+> class Show a where
+>   show :: a -> String
+> class Read a where
+>   read :: String -> a
 
 A type class declaration consists of: a class name, such as |Ord|, |Show|
 or |Read|; a type parameter, such as |a|; and a set of method declarations,
@@ -38,18 +41,19 @@ Instances implement type classes.
 % of type classes are provided by type class instances. 
 % In our terminology, borrowed from the implicit calculus, 
 % instances are synonymous with rules.
-For example, |Ord| instances for integers and pairs 
+For example, |Ord| instances for integers, characters, and pairs 
 can be defined as follows:
 
 > instance Ord Int where
->   (<=) = primIntLe
->
+>   x <= y  =  primIntLe x y
+> instance Ord Char where
+>   x <= y  =  primCharLe x y
 > instance (Ord a, Ord b) => Ord (a, b) where
->   (xa,xb) <= (ya,yb) = xa < ya || (xa == ya && xb <= yb)
+>   (x,x') <= (y,y') = x < y || (x == y && x' <= y')
 
-\noindent The first instance provides the implementation of ordering for integers,
-which is given by a primitive function.
-The second instance is more interesting, and provides the
+\noindent The first two instance provide the implementation of ordering for integers
+and characters, which are given by primitive functions.
+The third instance is more interesting, and provides the
 implementation of ordering for pairs. In this case, the ordering
 instance itself \emph{requires} an ordering instance for each of
 the elements of the pair. These requirements will be resolved 
@@ -73,11 +77,13 @@ found. Other than that, the caller does not need to worry about the
 type class context, as shown in the following interaction with a
 Haskell interpreter: 
 
-< Prelude > sort [ (3,5), (2,4), (3,4) ]
-< [(2,4),(3,4),(3,5)]
+< Prelude > sort [ (3,'a'), (2,'c'), (3,'b') ]
+< [(2,'c'),(3,'a'),(3,'b')]
 
 \noindent In this example, the resolution process combines the two |Ord| instances 
-to find a suitable implementation for |Ord (Int,Int)|. 
+to find a suitable implementation for |Ord (Int,Char)|.  The declarations given
+are sufficient to resolve an infinite number of other instances, such as
+|Ord (Char,(Int,Int))| and the like.
 
 \paragraph{One instance per type} A characteristic of
 (Haskell) type classes is that only one instance is allowed for a
