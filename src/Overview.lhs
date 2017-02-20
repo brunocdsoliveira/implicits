@@ -23,8 +23,9 @@ overloaded functions like comparison, pretty printing, or parsing.
 > class Show a  where  show :: a -> String
 > class Read a  where  read :: String -> a
 
-A type class declaration consists of: a class name such as |Ord|, |Show|
-or |Read|; a type parameter; and a set of method declarations. Each of
+A type class declaration consists of: a class name, such as |Ord|, |Show|
+or |Read|; a type parameter, such as |a|; and a set of method declarations,
+such as those for |(<=)|, |show|, and |read|. Each of
 the methods in the type class declaration should have at least one
 occurrence of the type parameter in their signature.
 % (either as an argument or as a return type).
