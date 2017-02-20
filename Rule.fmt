@@ -3,6 +3,11 @@
 %format with = "{\bf with}"
 %format implicit = "{\bf implicit}"
 %format record = "{\bf record}"
+%format def = "{\bf def}"
+%format val = "{\bf val}"
+%format trait = "{\bf trait}"
+%format object = "{\bf object}"
+%format extends = "{\bf extends}"
 %format a = "\alpha"
 %format b = "\beta"
 %format Pair a b = a "\!\times\!" b
