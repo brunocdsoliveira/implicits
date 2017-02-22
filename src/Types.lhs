@@ -207,8 +207,12 @@ is explained next.
 \begin{center}
 \framebox{$
 \ba{c}
-\multicolumn{1}{c}{\myruleform{\tenv \vturns \rulet~\gbox{\leadsto E}}} \\ \\
-
+\myruleform{\tenv \vturns \rulet~\gbox{\leadsto E}}
+\quad\quad\quad
+\mylabel{AR-IVar} \quad
+  \myirule{\rulet~\gbox{\leadsto x} \in \tenv}
+          {\tenv \vturns \rulet~\gbox{\leadsto x}}
+\\ \\
 \mylabel{AR-TAbs} \quad
   \myirule{\tenv, \alpha \vturns \rulet~\gbox{\leadsto E}}
           {\tenv \vturns \forall \alpha. \rulet~\gbox{\leadsto \Lambda\alpha.E}} 
@@ -217,20 +221,14 @@ is explained next.
   \myirule{\tenv \vturns \forall \alpha. \rulet~\gbox{\leadsto E} \quad\quad \Gamma \turns \rulet'}
           {\tenv \vturns \rulet[\rulet'/\alpha]~\gbox{\leadsto E~||\rulet'||}}
 \\ \\
-\mylabel{AR-IVar} \quad
-  \myirule{\rulet~\gbox{\leadsto x} \in \tenv}
-          {\tenv \vturns \rulet~\gbox{\leadsto x}}
-\quad\quad\quad
 \mylabel{AR-IAbs} \quad
   \myirule{\tenv, \rulet_1~\gbox{\leadsto x} \vturns \rulet_2~\gbox{\leadsto E} \quad\quad \gbox{x~\mathit{fresh}}}
           {\tenv \vturns \rulet_1 \iarrow \rulet_2~\gbox{\leadsto
             \lambda\relation{x}{||\rulet_1||}.E}} 
-\\ \\
+\quad\quad\quad
 \mylabel{AR-IApp} \quad
   \myirule{\tenv \vturns \rulet_1 \iarrow \rulet_2~\gbox{\leadsto E_2} \quad\quad \tenv \vturns \rulet_1~\gbox{\leadsto E_1}}
           {\tenv \vturns \rulet_2~~\gbox{\leadsto E_2~E_1}}
-\\ \\
-
 \ea
 $
 }
@@ -418,8 +416,7 @@ The proof on the left only involves the predicative generalisation from
 $\tyint$ to $\alpha$. Yet, the second proof contains an impredicative
 generalisation from $\forall \beta. \beta \iarrow \beta$ to $\alpha$.
 Impredicativity is a well-known source of such problems in other settings, such
-as in type inference for ???~\cite{}. The established solution of those
-settings also works here: restrict to predicativity. This is where the monotype
+as in type inference for the polymorphic $\lambda$-calculus~\cite{boehm85,pfenning93}. The established solution also works here: restrict to predicativity. This is where the monotype
 sort $\suty$ comes in: we only allow generalisation over (or dually,
 instantiation with) monotypes $\suty$.
 
@@ -550,8 +547,8 @@ $\rulet$ -- where matching is determined by with the third auxiliary judgement
 below.  Finally, rule \mylabel{L-RuleNoMatch} skips a rule type in the
 environment if it does not match. Its condition
 $\mathit{stable}(\bar{\alpha},\tenv,\rulet,\type)$ entails the opposite of rule
-\mylabel{L-RuleMatch}'s first condition: \begin{equation*} \not\exists
-\Sigma:\quad\tenv;\rulet \ivturns \type; \Sigma \end{equation*} 
+\mylabel{L-RuleMatch}'s first condition: $\not\exists
+\Sigma:\quad\tenv;\rulet \ivturns \type; \Sigma$.
 (We come back to the reason why the condition is stronger than this in
 Section~\ref{sec:coherence}.)
 As a consequence, rules \mylabel{L-RuleMatch} and \mylabel{L-RuleNoMatch}
@@ -705,6 +702,18 @@ for substitution by rule \mylabel{L-RuleNoMatch} by parametrising the
 judgements by this set. These are the type variables that occur in the environment
 $\tenv$ at the point of the query. The main resolution judgement $\ivturns \rulet$
 grabs them and passes them on to all uses of rule \mylabel{L-RuleNoMatch}.
+
+%- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+\paragraph{Similarity with Focused Proof Search}
+Those familiar with \emph{focused proof
+search}~\cite{focusing,Miller91b,Liang:2009} may have noticed that part of the
+syntax-directedness of our deterministic resolution is very similar to that
+obtained by focusing in proof search. Both approaches alternate a phase that
+is syntax directed on a ``query'' formula (our first auxiliary judgement),
+with a phase that is syntax directed on a given formula (our third auxiliary
+judgement). This is as far as the correspondence goes though, as the choice
+of given formula to focus on is typically not deterministic in focused proof
+search.
 
 %-------------------------------------------------------------------------------
 \subsection{Algorithm}
