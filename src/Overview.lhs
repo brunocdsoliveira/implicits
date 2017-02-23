@@ -8,16 +8,16 @@
 \section{Overview}
 \label{sec:overview}
 
-This section presents relevant background on type classes, IP 
-and coherence, and it introduces the key features of our calculus for ensuring coherence.
-We begin by discussing type classes in Haskell, since this is the oldest
-and most well-established IP mechanism, then go on to compare with
+This section summarizes the relevant background on type classes, IP 
+and coherence, and introduces $\ourlang$'s key features for ensuring coherence.
+We begin by discussing Haskell type classes, since this is the oldest
+and most well-established IP mechanism, then go on to compare them with
 implicits in Scala.
 
 \subsection{Type Classes and Implicit Programming}
 
-Type classes permit one to declare
-overloaded functions like comparison, pretty printing, or parsing.
+Type classes enable the declaration of overloaded functions like comparison,
+pretty printing, or parsing.
 
 > class Ord a where
 >   (<=) :: a -> a -> Bool
@@ -30,7 +30,7 @@ A type class declaration consists of: a class name, such as |Ord|, |Show|
 or |Read|; a type parameter, such as |a|; and a set of method declarations,
 such as those for |(<=)|, |show|, and |read|. Each of
 the methods in the type class declaration should have at least one
-occurrence of the type parameter in their signature.
+occurrence of the type parameter |a| in their signature.
 % (either as an argument or as a return type).
 % The type parameter may be neither an argument nor a return type,
 % as in showList :: [a] -> String.
@@ -52,27 +52,27 @@ can be defined as follows:
 >   (x,x') <= (y,y') = x < y || (x == y && x' <= y')
 
 \noindent The first two instances provide the implementation of ordering for integers
-and characters, which are given by primitive functions.
+and characters, in terms of primitive functions.
 The third instance is more interesting, and provides the
 implementation of ordering for pairs. In this case, the ordering
-instance itself \emph{requires} an ordering instance for each of
-the elements of the pair. These requirements will be resolved 
+instance itself \emph{requires} an ordering instance for both
+components of the pair. These requirements are resolved 
 by the compiler using the existing set of instances in a process called 
 \emph{resolution}.  
-Using |Ord|, we can define a generic sorting function
+Using |Ord| we can define a generic sorting function
 
 > sort :: Ord a => [a] -> [a]
 
 \noindent that takes a list of elements of an arbitrary type |a| and
 returns a list of the same type, so long as ordering is supported
-on type |a|.  The body of the function may refer to |<=| on type |a|.
+on type |a|. The body of the function may refer to |<=| on type |a|.
 
 \paragraph{Implicit programming}
 Type classes are an implicit 
 programming mechanism because implementations of type class operations 
 are automatically \emph{computed} from the set of instances during the 
 resolution process. 
-For instance, a call to |sort| will only type check if a suitable type class instance can be
+For instance, a call to |sort| only type checks if a suitable type class instance can be
 found. Other than that, the caller does not need to worry about the
 type class context, as shown in the following interaction with a
 Haskell interpreter: 
@@ -87,16 +87,17 @@ are sufficient to resolve an infinite number of other instances, such as
 
 \paragraph{One instance per type} A characteristic of
 (Haskell) type classes is that only one instance is allowed for a
-given type. For example, the alternative ordering model for pairs
+given type. For example, it is forbidden to include the alternative ordering
+model for pairs
 
 > instance (Ord a, Ord b) => Ord (a, b) where 
 >   (xa,xb) <= (ya,yb) = xa <=ya && xb <= yb
 
-in the same program as the previous instance is forbidden because the
+in the same program as the previous instance because the
 compiler automatically picks the right type class instance based on
-the type parameter of the type class. Since in this case there are two
-type class instances for the same type, there is no sensible way for
-the compiler to choose one of these two instances.
+the type parameter of the type class. If there are two
+type class instances for the same type, the compiler does not
+know which of the two to choose.
 
 \subsection{Coherence in Type Classes}
 \label{sec:overview-coherence}
@@ -104,7 +105,7 @@ the compiler to choose one of these two instances.
 An IP design is \emph{coherent} if
 any valid program has exactly one meaning (that is,
 the semantics is not ambiguous). 
-Haskell imposes restrictions that guarantee
+Haskell imposes restrictions to guarantee
 coherence. For example, the expression:
 
 > show (read "3") == "3" 
@@ -128,18 +129,16 @@ ensure coherence.  The following program illustrates the issues:
 > instance Trans a where trans x = x
 > instance Trans Int where trans x = x+1
 
-\noindent This program declares a type class 
-|Trans a| for defining transformations on some 
-type |a|. A default implementation for any type, which 
-simply implements the identity transformation is defined 
-by the first instance. A second instance defines  
-transformation on integers. 
+\noindent This program declares a type class |Trans a| for defining
+transformations on some type |a|. The first instance provides a default
+implementation for any type, the identity transformation.  The second instance
+defines a transformation for integers only. 
 
 The overlapping declarations are clearly incoherent,
 since it is unclear whether |trans 3| should return
 |3| using the first instance, or |4| using the second instance.
-One might guess that the second instance, being more specific,
-is the one that would apply; and that is indeed how
+Because the second instance is more specific, one 
+might guess that it supercedes the first one; and that is indeed how
 Haskell assigns a meaning to overlapping instances.
 
 But now consider the following declaration.
@@ -148,44 +147,43 @@ But now consider the following declaration.
 > bad x = trans x  -- incoherent definition!
 
 If Haskell were to accept this definition, it
-must implement |tran| using the first instance,
+must implement |trans| using the first instance,
 since it is applied at the arbitrary type |a|.
 Now |bad 3| returns |3| but |trans 3| returns |4|,
-even though |bad| and |trasn| are defined to be
+even though |bad| and |trans| are defined to be
 equal, a nasty impediment to equational reasoning!
 
-For this reason, Haskell rejects such program by default.  A
-programmer who wants such behaviour can activate the flag
-(\emph{IncoherentInstances}), which allows the program to typecheck.
-But the use of incoherent instances is discouraged.
+For this reason Haskell rejects the program by default. A programmer who really
+wants such behaviour can enable the \emph{IncoherentInstances} compiler flag,
+which allows the program to typecheck. But the use of incoherent instances is
+discouraged.
 
 \paragraph{Global Uniqueness of Instances} A consequence 
-of having both coherence and at most an instance of a type class 
-per type in a program is global uniqueness of instances~\cite{uniqueness}. That is, 
+of having both coherence and at most one instance of a type class 
+per type in a program is \emph{global uniqueness} of instances~\cite{uniqueness}. That is, 
 at any point in the program type class resolution for a particular 
-type will always resolve into the same value. 
-A common example used 
-to illustrate the usefulnes of the global uniqueness property is 
-a library for sets of some type |a| supporting a |union| operation:
+type always resolves to the same value. 
+The usefulness of this property is nicely illustrated by a library that
+provides a datatype for sets that is polymorphic in the elements along with a
+|union| operation:
 
 < union :: Ord a => Set a -> Set a -> Set a
 
-\noindent For efficiency reasons sets may be implemented with a
-datastructure that keeps elements ordered in some way. To deal with
+\noindent For efficiency reasons the sets are represented by a
+datastructure that orders the elements in a particular way. To deal with
 ordering it is natural to rely on the |Ord| type class, and the
-ordering defined by it for the particular type |a|.  To preserve the
+ordering it defines for the particular type |a|.  To preserve the
 correct invariant, it is crucial that the ordering of elements in the
-set is always the same. The fact that there is only one instance per
-type in a program guarantees this with Haskell type classes. If two
-different instances of |Ord| could be used in different parts of the
-program for the same type, then it would be possible to construct sets
-using two different orderings (say ascending and descending order) in
-the same program, and then applying union to build a set that breaks
-the ordering invariant.
+set is always the same. The global uniqueness property guarantees this. If two
+distinct instances of |Ord| could be used in different parts of the
+program for the same type, then it would be possible to construct within the
+same program two sets using two different orderings (say ascending and
+descending order) in the same program, and then break the ordering invariant by
+unioning those two sets.
 
-We should remark that although global uniqueness is, in principle, 
-a property that should hold in Haskell programs, implementations 
-of Haskell can actually break this property in various ways~
+Although global uniqueness is, in principle, a property that should hold in
+Haskell programs, Haskell implementations actually violate this property in
+various circumstances~
 \footnote{\url{http://stackoverflow.com/questions/12735274/breaking-data-set-integrity-without-generalizednewtypederiving}}.
 In fact it is ackowledged that providing a global uniqueness check is quite 
 challenging for Haskell implementations~\footnote{\url{https://mail.haskell.org/pipermail/haskell-cafe/2012-October/103887.html}}.
