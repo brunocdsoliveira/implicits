@@ -63,8 +63,8 @@ of the language should be \emph{coherent}~\cite{Reynolds91coherence,qual}. Coher
 means that any valid program must have exactly one meaning (that is,
 the semantics is not ambiguous/non-deterministic). In fact Haskell
 type classes support an even stronger, so-called, \emph{global
-  uniqueness of
-  instances}\footnote{\url{http://blog.ezyang.com/2014/07/type-classes-confluence-coherence-global-uniqueness/}}
+  uniqueness} of
+  instances~\citep{uniqueness}
 property. Global uniqueness ensures that \emph{at any point in a
   program, and independently of the context} the type-directed
 resolution process always returns the same value for the same
@@ -116,7 +116,8 @@ Unfortunately, both the implicit calculus and the various existing
 language mechanisms that embody flexibility do not preserve
 coherence and the ability to substitute equals for equals. 
 
-The design of IP mechanisms has led to heated debate\footnote{\url{http://lists.seas.upenn.edu/pipermail/types-list/2009/001405.html}}\footnote{https://www.youtube.com/watch?v=hIZxTQP1ifo} about the
+The design of IP mechanisms has led to heated
+debate~\citep{show-stopping,uniqueness,kmett} about the
 pros and cons of each school of thought: ease of reasoning versus
 flexibility. Proponents of the Haskell school of thought argue that
 having coherence is extremely desirable, and flexibility should not
