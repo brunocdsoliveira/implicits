@@ -51,7 +51,7 @@ can be defined as follows:
 > instance (Ord a, Ord b) => Ord (a, b) where
 >   (x,x') <= (y,y') = x < y || (x == y && x' <= y')
 
-\noindent The first two instance provide the implementation of ordering for integers
+\noindent The first two instances provide the implementation of ordering for integers
 and characters, which are given by primitive functions.
 The third instance is more interesting, and provides the
 implementation of ordering for pairs. In this case, the ordering
@@ -110,7 +110,7 @@ coherence. For example, the expression:
 > show (read "3") == "3" 
 
 \noindent is rejected in Haskell due to \emph{ambiguity} of 
-\emph{type class resolution}~\cite{jones}.  Functions |show| and
+\emph{type class resolution}~\cite{qual}.  Functions |show| and
 |read| print and parse values of any type |a| that implements 
 the classes |Show| and |Read|.  The program is rejected because
 there is more that one possible choice for |a|, for example
@@ -121,7 +121,7 @@ while choosing |a=Int| leads to |True|.
 
 \paragraph{Overlapping and Incoherent Instances} 
 Advanced features of type classes, such as overlapping
-instances~\cite{}, require additional restriction to
+instances, require additional restriction to
 ensure coherence.  The following program illustrates the issues:
 
 > class Trans a where trans :: a -> a
@@ -133,8 +133,7 @@ ensure coherence.  The following program illustrates the issues:
 type |a|. A default implementation for any type, which 
 simply implements the identity transformation is defined 
 by the first instance. A second instance defines  
-transformation on integers. Finally, function 
-|bad| simply calls the transformation function.
+transformation on integers. 
 
 The overlapping declarations are clearly incoherent,
 since it is unclear whether |tran 3| should return
@@ -153,7 +152,7 @@ must implement |tran| using the first instance,
 since it is applied at the arbitrary type |a|.
 Now |bad 3| returns |3| but |tran 3| returns |4|,
 even though |bad| and |tran| are defined to be
-equal, a nasty impediment to equational reasoning.
+equal, a nasty impediment to equational reasoning!
 
 For this reason, Haskell rejects such program by default.  A
 programmer who wants such behaviour can activate the flag
@@ -164,14 +163,13 @@ But the use of incoherent instances is discouraged.
 
 \subsection{Incoherence in Implicits}
 
-Scala implicits~\cite{implicits}
-are an interesting alternative in IP
-design. Unlike type classes, implicits have locally scoped rules. Moreover,
-values of any type can be used as implicit parameters; there are no special
-constructs analogous to type class or instance declarations.
-Insteada, implicits are modeled with ordinary types.
-They can be abstracted over and
-do not suffer from the second-class nature of type classes.
+Scala implicits~\cite{implicits} are an interesting alternative in IP
+design. Unlike type classes, implicits have locally scoped
+rules. Moreover, values of any type can be used as implicit
+parameters; there are no special constructs analogous to type class or
+instance declarations.  Instead, implicits are modeled with ordinary
+types.  They can be abstracted over and do not suffer from the
+second-class nature of type classes.
 
 %format v1 = "\Varid{v_1}"
 %format v2 = "\Varid{v_2}"
@@ -179,19 +177,17 @@ do not suffer from the second-class nature of type classes.
 \begin{figure}
 \small
 \begin{code}
-   trait A {
-     implicit def id[a] : a => a = x => x		// (1)
-     def trans[a](implicit f: a =>a) = f		// (2)
-  }
-  object B extends A {
-     implicit def succ : Int => Int = x => x + 1	// (3)
-     def bad[a](x : a) = trans[a](x)			// (4) incoherent definition!
-     val v1 = bad[Int](3)				// (5) evaluates to 3
-     val v2 = trans[Int](3)				// (6) evaluates to 4
-  }
+trait A {
+   implicit def id[a] : a => a = x => x		// (1)
+   def trans[a](implicit f: a =>a) = f		// (2)
+}
+object B extends A {
+   implicit def succ : Int => Int = x => x + 1	// (3)
+   def bad[a](x : a) = trans[a](x)		// (4) incoherent definition!
+   val v1 = bad[Int](3)				// (5) evaluates to 3
+   val v2 = trans[Int](3)			// (6) evaluates to 4
+}
 \end{code}
-
-\plw{Change typesetting so . and \} appear properly}
 
 \caption{Nested Scoping with Overlapping Rules in Scala}
 
