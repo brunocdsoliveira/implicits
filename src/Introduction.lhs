@@ -62,7 +62,7 @@ the first school of thought, which is guided by the \emph{ease of
 of the language should be \emph{coherent}~\cite{Reynolds91coherence,qual}. Coherence
 means that any valid program must have exactly one meaning (that is,
 the semantics is not ambiguous/non-deterministic). In fact Haskell
-type classes support an even stronger, so-called, \emph{global
+type classes are supposed to support an even stronger, so-called, \emph{global
   uniqueness} of
   instances~\citep{uniqueness}
 property. Global uniqueness ensures that \emph{at any point in a

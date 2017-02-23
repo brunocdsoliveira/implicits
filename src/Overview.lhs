@@ -159,17 +159,49 @@ programmer who wants such behaviour can activate the flag
 (\emph{IncoherentInstances}), which allows the program to typecheck.
 But the use of incoherent instances is discouraged.
 
-\paragraph{Global coherence} \bruno{Set example should come here.}
+\paragraph{Global Uniqueness of Instances} A consequence 
+of having both coherence and at most an instance of a type class 
+per type in a program is global uniqueness of instances~\cite{uniqueness}. That is, 
+at any point in the program type class resolution for a particular 
+type will always resolve into the same value. 
+A common example used 
+to illustrate the usefulnes of the global uniqueness property is 
+a library for sets of some type |a| supporting a |union| operation:
+
+< union :: Ord a => Set a -> Set a -> Set a
+
+\noindent For efficiency reasons sets may be implemented with a
+datastructure that keeps elements ordered in some way. To deal with
+ordering it is natural to rely on the |Ord| type class, and the
+ordering defined by it for the particular type |a|.  To preserve the
+correct invariant, it is crucial that the ordering of elements in the
+set is always the same. The fact that there is only one instance per
+type in a program guarantees this with Haskell type classes. If two
+different instances of |Ord| could be used in different parts of the
+program for the same type, then it would be possible to construct sets
+using two different orderings (say ascending and descending order) in
+the same program, and then applying union to build a set that breaks
+the ordering invariant.
+
+We should remark that although global uniqueness is, in principle, 
+a property that should hold in Haskell programs, implementations 
+of Haskell can actually break this property in various ways~
+\footnote{\url{http://stackoverflow.com/questions/12735274/breaking-data-set-integrity-without-generalizednewtypederiving}}.
+In fact it is ackowledged that providing a global uniqueness check is quite 
+challenging for Haskell implementations~\footnote{\url{https://mail.haskell.org/pipermail/haskell-cafe/2012-October/103887.html}}.
 
 \subsection{Incoherence in Implicits}
 
 Scala implicits~\cite{implicits} are an interesting alternative in IP
 design. Unlike type classes, implicits have locally scoped
-rules. Moreover, values of any type can be used as implicit
-parameters; there are no special constructs analogous to type class or
-instance declarations.  Instead, implicits are modeled with ordinary
-types.  They can be abstracted over and do not suffer from the
-second-class nature of type classes.
+rules. Consequentelly Scala does not have the global uniqueness
+property, since multiple implementations of "instances" may exist for
+the same type under different scopes.  Another interesting difference
+between implicits and type classes is that values of any type can be
+used as implicit parameters; there are no special constructs analogous
+to type class or instance declarations. Instead, implicits are modeled
+with ordinary types. They can be abstracted over and do not suffer
+from the second-class nature of type classes.
 
 %format v1 = "\Varid{v_1}"
 %format v2 = "\Varid{v_2}"
@@ -196,7 +228,8 @@ object B extends A {
 \end{figure} 
 
 Although Scala allows \emph{nested} local scoping and overlapping rules,
-\textit{coherence} is not guaranteed. Figure~\ref{fig:scala} illustrates
+\textit{coherence} is not guaranteed. 
+Figure~\ref{fig:scala} illustrates
 the issue briefly, based on the example from Section~\ref{sec:overview-coherence}.
 Line~(1) defines a function |id| with type parameter |a|, which is simply
 the identity function of type |a => a|.
