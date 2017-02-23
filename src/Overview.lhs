@@ -138,7 +138,7 @@ The overlapping declarations are clearly incoherent,
 since it is unclear whether |trans 3| should return
 |3| using the first instance, or |4| using the second instance.
 Because the second instance is more specific, one 
-might guess that it supercedes the first one; and that is indeed how
+might guess that it supersedes the first one; and that is indeed how
 Haskell assigns a meaning to overlapping instances.
 
 But now consider the following declaration.
@@ -190,11 +190,11 @@ challenging for Haskell implementations~\footnote{\url{https://mail.haskell.org/
 
 \subsection{Incoherence in Implicits}
 
-Scala implicits~\cite{implicits} are an interesting alternative in IP
+Scala implicits~\cite{implicits} are an interesting alternative IP
 design. Unlike type classes, implicits have locally scoped
-rules. Consequentelly Scala does not have the global uniqueness
-property, since multiple implementations of "instances" may exist for
-the same type under different scopes.  Another interesting difference
+rules. Consequently Scala does not have the global uniqueness
+property, since different ``instances'' may exist for
+the same type in different scopes.  Another interesting difference
 between implicits and type classes is that values of any type can be
 used as implicit parameters; there are no special constructs analogous
 to type class or instance declarations. Instead, implicits are modeled
@@ -231,27 +231,25 @@ Figure~\ref{fig:scala} illustrates
 the issue briefly, based on the example from Section~\ref{sec:overview-coherence}.
 Line~(1) defines a function |id| with type parameter |a|, which is simply
 the identity function of type |a => a|.
-Keyword |implicit| in the declaration specifies that this value may
+The |implicit| keyword in the declaration specifies that this value may
 be used to synthesise an implicit argument.
 Line~(2) defines a function |trans| with type parameter |a|,
 which takes an implicit argument |f| of type |a => a| and returns |f|.
-Here keyword |implicit| specifies that the actual argument should not
-be given explicitly, but it will instead synthesise an argument of the
-correct type from the available |implicit| declarations.
+Here the |implicit| keyword specifies that the actual argument should not be
+given explicitly; instead argument of the appropriate type will be synthesized from
+the available |implicit| declarations.
 
 In the nested scope, line~(3) defines a function |succ| of type
-|Int => Int| that takes argument |x| and returns |x+1|.  Again, keyword
-|implicit| in the declaration specifies that this value may be used to
+|Int => Int| that takes argument |x| and returns |x+1|.  Again, 
+the |implicit| keyword in the declaration specifies that this value may be used to
 synthesise an implicit argument.  Line~(4) defines a function |bad|
 with type parameter |a| which takes an argument |x| of type |a| and
 returns the value of function |trans| applied at type |a| to argument
 |x|.  Lines~(5) and~(6) shows that, as in the earlier example and for
 the same reason, |bad(3)| returns |3| while |trans(3)| returns |4|.
 This is an equally nasty impediment to equational reasoning, but
-unlike in Haskell, this is the expected behaviour: not only does it
-not require a flag to enable it, there is no way to disable it!
-
-
+unlike in Haskell, this is the expected behaviour: it is enabled
+by default and there is no way to disable it.
 
 \subsection{Our Calculus}
 
