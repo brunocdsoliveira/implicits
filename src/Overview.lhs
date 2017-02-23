@@ -121,7 +121,7 @@ while choosing |a=Int| leads to |True|.
 
 \paragraph{Overlapping and Incoherent Instances} 
 Advanced features of type classes, such as overlapping
-instances, require additional restriction to
+instances, require additional restrictions to
 ensure coherence.  The following program illustrates the issues:
 
 > class Trans a where trans :: a -> a
@@ -136,7 +136,7 @@ by the first instance. A second instance defines
 transformation on integers. 
 
 The overlapping declarations are clearly incoherent,
-since it is unclear whether |tran 3| should return
+since it is unclear whether |trans 3| should return
 |3| using the first instance, or |4| using the second instance.
 One might guess that the second instance, being more specific,
 is the one that would apply; and that is indeed how
@@ -150,8 +150,8 @@ But now consider the following declaration.
 If Haskell were to accept this definition, it
 must implement |tran| using the first instance,
 since it is applied at the arbitrary type |a|.
-Now |bad 3| returns |3| but |tran 3| returns |4|,
-even though |bad| and |tran| are defined to be
+Now |bad 3| returns |3| but |trans 3| returns |4|,
+even though |bad| and |trasn| are defined to be
 equal, a nasty impediment to equational reasoning!
 
 For this reason, Haskell rejects such program by default.  A

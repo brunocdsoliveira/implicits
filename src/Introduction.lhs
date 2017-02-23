@@ -63,14 +63,16 @@ of the language should be \emph{coherent}~\cite{Reynolds91coherence,qual}. Coher
 means that any valid program must have exactly one meaning (that is,
 the semantics is not ambiguous/non-deterministic). In fact Haskell
 type classes support an even stronger, so-called, \emph{global
-  coherence} property. Global coherence ensures that \emph{at any point in a
+  uniqueness of
+  instances}\footnote{\url{http://blog.ezyang.com/2014/07/type-classes-confluence-coherence-global-uniqueness/}}
+property. Global uniqueness ensures that \emph{at any point in a
   program, and independently of the context} the type-directed
 resolution process always returns the same value for the same
 resolved type. This is a consequence of Haskell having the usual
 coherence property and a restriction of at most one
 instance of a type class per type in a program.
 
-While both coherence and global coherence are preserved in Haskell,
+While both coherence and global uniqueness of instances are preserved in Haskell,
 this comes at a cost. Since the first implementations of type classes,
 Haskell imposes several restrictions to guarantee coherence. Advanced
 features of type classes, such as overlapping
@@ -131,9 +133,9 @@ is an improved variant of the implicit calculus that preserves
 first-class instances and higher-order rules. Yet, in contrast to most
 previous work that supports such features, the calculus is not only
 type-safe, but also coherent. Naturally, the unrestricted calculus
-does not support global coherence, since this property depends on the
+does not support global uniqueness of instances, since this property depends on the
 global scoping restriction. Nevertheless, if retaining global
-coherence is desired, it is possible to model source languages on top
+uniqueness is desired, it is possible to model source languages on top
 of \name that support global scoping only.  Global scoping can be
 viewed as a particular case of local scoping where a single, global,
 implicit environment is assumed, and no local scoping constructs are
