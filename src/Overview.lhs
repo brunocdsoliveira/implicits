@@ -151,7 +151,7 @@ If Haskell were to accept this definition, it
 must implement |tran| using the first instance,
 since it is applied at the arbitrary type |a|.
 Now |bad 3| returns |3| but |trans 3| returns |4|,
-even though |bad| and |trasn| are defined to be
+even though |bad| and |trans| are defined to be
 equal, a nasty impediment to equational reasoning!
 
 For this reason, Haskell rejects such program by default.  A
@@ -228,7 +228,7 @@ object B extends A {
 \end{figure} 
 
 Although Scala allows \emph{nested} local scoping and overlapping rules,
-\textit{coherence} is not guaranteed. 
+\textit{coherence} is also not guaranteed. 
 Figure~\ref{fig:scala} illustrates
 the issue briefly, based on the example from Section~\ref{sec:overview-coherence}.
 Line~(1) defines a function |id| with type parameter |a|, which is simply
