@@ -251,33 +251,19 @@ This is an equally nasty impediment to equational reasoning, but
 unlike in Haskell, this is the expected behaviour: it is enabled
 by default and there is no way to disable it.
 
-\subsection{Our Calculus}
+\subsection{An Overview of $\ourlang$}
 
-Our calculus $\ourlang$ resembles Haskell in requiring coherence
-and resembles Scala in permitting nested declarations.  What are
-referred to as type class instances in Haskell are called \emph{rules},
-while as in Scala no special declaration for type classes is required.
-
-$\ourlang$ combines standard scoping mechanisms 
-(abstractions and applications) and types \`a la System~F, with a
-logic-programming-style query language. 
-At its heart is a threefold interpretation of types:
-\begin{center}
-  |types === propositions === rules|
-\end{center}
-\noindent Firstly, types have their traditional meaning of classifying
-terms.  Secondly, via the Curry-Howard isomorphism, types can
-also be interpreted as propositions -- in the context of IP, the type
-proposition denotes the availability in the implicit environment of a
-value of the corresponding type. Thirdly, a type is interpreted as a
-logic-programming style rule, i.e., a Prolog rule or Horn
-clause~\cite{kowalski}.
-%%\footnote{The connection between type class
-%%  instances and Prolog rules is folklore.}
-Resolution~\cite{resolution} connects rules and propositions: it is
-the means to show (the evidence) that a proposition is entailed by a set of rules.
-%%Again, a value serves as evidence for the rule interpretation,
-%%constructing a proof of one proposition in terms of proofs of others.
+Our calculus $\ourlang$ resembles Haskell in requiring coherence and
+resembles Scala in permitting nested declarations. 
+Unrestricted $\ourlang$ programs do not guarantee global uniqueness.
+What are referred to as type class instances in Haskell are called
+\emph{rules}, while as in Scala no special declaration for type
+classes is required.  $\ourlang$ can be viewed as an improved variant
+of the implicit calculus~\cite{oliveira12implicit}, which is a calculus 
+designed to model the essence of Scala implicits. Like the implicit
+calculus it combines standard scoping mechanisms (abstractions and
+applications) and types \`a la System~F, with a
+logic-programming-style query language.
 
 We now present the key features of $\ourlang$ and how
 these features are used for IP. For readability purposes we sometimes omit
@@ -343,6 +329,7 @@ combination is more compactly denoted as:
 
 \noindent Both expressions return |2|. 
 
+\begin{comment}
 \paragraph{Rule Currying} 
 Like traditional lambdas, rule abstractions can be curried.
 Here is a rule that computes an |Pair Int Bool| 
@@ -364,61 +351,12 @@ The type of this rule is :
 \noindent Using two rule applications it is possible to provide the implicit 
 values to the two rule abstractions. For example:
 
-\begin{comment}
-The rule abstraction syntax resembles a type-annotated expression: the
-expression |((query Int) + 1, not (query Bool))|
-to the left of the colon is
-the \emph{rule body}, and to the right is the \emph{rule type} |{Int, Bool} =>
-Pair Int Bool|. A rule abstraction abstracts over a set of implicit
-values (here |{Int,Bool}|), or, more generally, over rules to build 
-values. 
-
-< rule ({Int, Bool} => Pair Int Bool) (((query Int) + 1, not (query Bool)))
-
-%% are \emph{bound} to the rule body.  In
-%%$\ourlang$ static types also play the roles of variables in rule
-%%abstractions.
-
-%%We write the above rule's type as
-%%$\rulety{\tyInt,\tyBool}{\tyInt\times\tyBool}$. 
-
-Hence, when a value of type |Pair Int Bool| is needed (expressed by the query |query
-(Pair Int Bool)|), the above rule can be used, provided that an integer and
-a boolean value are available in the implicit environment. In such an
-environment, the rule returns a pair of the incremented |Int| value and negated
-|Bool| value.
-
-The implicit environment is extended through rule application (analogous to
-extending the environment with function applications).
-Rule application is expressed as, for example:
-%\[
-%\qapp{\qlam{\tyInt, \tyBool}
-%      {\texttt{(\qask{\tyInt}+1, not\;\qask{\tyBool})}}
-%     }{\{\texttt{1},\texttt{true}\}}.
-%\]
-
-< rule ({Int, Bool} => Pair Int Bool) (((query Int) + 1, not (query Bool))) 
-<    with {1,True}
-
-With syntactic sugar similar to a |let|-expression, a rule abstraction-application 
-combination is denoted more compactly as:
-%%\[
-%%\qlet{\{\texttt{1},\texttt{true}\}}
-%%     {\texttt{(\qask{\tyInt}+1, not\;\qask{\tyBool})}}
-%%\]
-
-
-%% \noindent which can be used 
-
-< implicit {1,True} in ((query Int) + 1, not (query Bool))
-
-\end{comment}
-
 < implicit 1 in
 <  implicit True in 
 <    ((query Int) + 1, not (query Bool))
 
-\noindent which returns |(2,False)|. 
+\noindent which returns |(2,False)|.
+\end{comment} 
 
 \paragraph{Higher-order rules} $\ourlang$ supports higher-order
 rules. For example, the rule 
@@ -500,11 +438,6 @@ rule. The following expression returns
 >   implicit True in 
 >     implicit (biglam a (rule a (((query a),(query a))))) in
 >       (query (Pair Int Int), query (Pair Bool Bool))
-
-Polymorphic rules can also be used to resolve polymorphic queries:
-
-> implicit (biglam a (rule a (((query a),(query a))))) in
->   (query (forall a . a => Pair a a))
 
 \paragraph{Combining higher-order and polymorphic rules} 
 The rule 
@@ -604,7 +537,10 @@ returns $2$ and not $1$:
 \]
 %endif
 
-
+\subsection{Overlapping Rules and Coherence in $\ourlang$}
+\bruno{Tom, this is where you take over. I've pasted in some 
+old text for you, but you need to rewrite since it doesn't match what we want 
+to say in this paper. In any case a fair amount of it should be useful to you.}
 
 \paragraph{Overlapping rules} 
 Two rules overlap if their return types intersect, i.e., when they can both 
