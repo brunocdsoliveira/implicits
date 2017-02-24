@@ -379,6 +379,9 @@ The following expression returns $(3, 4)$:
 <  implicit (rule Int (((query Int), (query Int) + 1))) in 
 <    query (Pair Int Int)
 
+Note that higher-order rules are a feature introduced by the implicit calculus and 
+are neither supported in Haskell nor Scala.
+
 \paragraph{Recursive resolution} 
 Note that resolving the  query |(query (Pair Int Int))| above
 involves applying multiple rules. 
@@ -540,7 +543,9 @@ returns $2$ and not $1$:
 \subsection{Overlapping Rules and Coherence in $\ourlang$}
 \bruno{Tom, this is where you take over. I've pasted in some 
 old text for you, but you need to rewrite since it doesn't match what we want 
-to say in this paper. In any case a fair amount of it should be useful to you.}
+to say in this paper. In any case a fair amount of it should be useful to you.
+Here you want to explicitly connect to the example in Section 2.2 and 2.3.
+}
 
 \paragraph{Overlapping rules} 
 Two rules overlap if their return types intersect, i.e., when they can both 
