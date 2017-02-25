@@ -262,3 +262,50 @@ DONE
 >         of types, with a pointer to this section.
 
 TODO         
+
+------------------------------------------------------------------------
+
+Fri 17 Feb 2017
+
+1. INTRODUCTION
+
+p1.1  "Flexibility vs ease of reasoning" I agree that coherence increases ease
+      of reasoning. But I'm not sure that anyone looking at our Figure 4 will
+      say our system makes reasoning easy. Can we address this in any way?
+
+p2.22 Add to the long list of work on limitations of type classes: chain
+      (Morris and Jones, ICFP 2010).
+
+p2.31 Ought to say a bit more about the strengths of the implicit calcululus,
+      and that it is the basis for our work.
+
+p2.41 Add a footnote: "Cochise, 1804--1874, was chief of the Chokonen band of
+      the Chiricahua Apache." (Alas, this suggest a non-existent application of
+      our work to the Apache web server; the name doesn't really seem to fit.)
+
+p3.7  This mention of focus will leave the reader at a disadvantage if they don't
+      know what focussing is.  Needs to be rephrased.  Something like this.
+      "We introduce a logical formulation of how to resolve implicits,
+      which is simple but ambiguous and incoherent, and a second formulation,
+      which is less simple but unambiguous and coherent.  Every resolution
+      of the second formulation is also a resolution of the first, but not
+      conversely.  Parts of the second formulation bear a close resemblance
+      to a standard technique for proof search in logic called \emph{focussing}
+      [citations come here]."
+
+p3.14--16  Yes, it would be good to do this. But the present paper does
+      not draw out the connection that strongly. Further, there are a lot
+      of differences between what we do and focussed proof search.
+
+p3.18 We should submit the full proofs as a supplement with the paper,
+      I believe ICFP supports this. Double-blinded conferences frown on
+      including links to the author's web page in the submission, for
+      obvious reasons.
+
+p3.19 Should we say something about this paper giving a neater formulation
+      of the implicit calcululus? The reason I got into all this was to
+      provide a neat, binary formulation of your somewhat awkward n-ary
+      rules.
+
+
+

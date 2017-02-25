@@ -62,15 +62,17 @@ the first school of thought, which is guided by the \emph{ease of
 of the language should be \emph{coherent}~\cite{Reynolds91coherence,qual}. Coherence
 means that any valid program must have exactly one meaning (that is,
 the semantics is not ambiguous/non-deterministic). In fact Haskell
-type classes support an even stronger, so-called, \emph{global
-  coherence} property. Global coherence ensures that \emph{at any point in a
+type classes are supposed to support an even stronger, so-called, \emph{global
+  uniqueness} of
+  instances~\citep{uniqueness}
+property. Global uniqueness ensures that \emph{at any point in a
   program, and independently of the context} the type-directed
 resolution process always returns the same value for the same
 resolved type. This is a consequence of Haskell having the usual
 coherence property and a restriction of at most one
 instance of a type class per type in a program.
 
-While both coherence and global coherence are preserved in Haskell,
+While both coherence and global uniqueness of instances are preserved in Haskell,
 this comes at a cost. Since the first implementations of type classes,
 Haskell imposes several restrictions to guarantee coherence. Advanced
 features of type classes, such as overlapping
@@ -83,8 +85,8 @@ result. Special care (via restrictions) is needed to preserve
 coherence and the ability of substituting equals by equals in the
 presence of overlapping instances.
 
-Various past work has pointed out limitations of type classes~\cite{named_instance,systemct,implicit_explicit,modular,Garcia:2007extended,implicits,oliveira12implicit}. 
-In particular since type classes allow at most one instance per type (or severely 
+Various past work has pointed out limitations of type classes~\cite{named_instance,systemct,implicit_explicit,modular,Garcia:2007extended,implicits,chain,oliveira12implicit}. 
+In particular type classes allow at most one instance per type (or severely 
 restrict overlapping instances) to exist in a program. This means  
 that all instances must be visible globally, and local scoping of
 instances is not allowed. Such form of global scoping goes against 
@@ -99,13 +101,23 @@ instances, which can be used to allow distinct
 ``instances'' to exists for the same type in different scopes in the same
 program. Scala also allows a powerful form of overlapping 
 implicits~\cite{implicits}. The essence of this style of implicit
-programming is modelled by the \emph{implicit calculus}~\cite{oliveira12implicit}. The
+programming is modelled by the \emph{implicit
+  calculus}~\cite{oliveira12implicit}. The implicit 
+calculus supports a number of features that are unsupported 
+by type classes. Besides local scoping, in the implicit calculus 
+\emph{any type} can be an implicit value. In contrast Haskell's type
+class model only allows instances of classes (which can be viewed 
+as a special kind of record) to be passed implicitly. Finally the
+implicit calculus supports higher-order instances/rules: 
+that is rules, where the rule requirements can themselfves be other rules. 
+The
 implicit calculus has been shown to be type-safe.
 Unfortunately, both the implicit calculus and the various existing
 language mechanisms that embody flexibility do not preserve
 coherence and the ability to substitute equals for equals. 
 
-The design of IP mechanisms has led to heated debate~\cite{} about the
+The design of IP mechanisms has led to heated
+debate~\citep{show-stopping,uniqueness,kmett} about the
 pros and cons of each school of thought: ease of reasoning versus
 flexibility. Proponents of the Haskell school of thought argue that
 having coherence is extremely desirable, and flexibility should not
@@ -115,14 +127,16 @@ practice, problems due to incoherence are rare. The current
 state-of-affairs seems to indicate that both goals are at odds with
 each other, and cannot be easily reconciled.
 
-This paper presents \name: the Calculus Of CoHerent ImplicitS. \name
-is an improved variant of the implicit calculus that supports local scoping, overlapping instances,
+This paper presents \name\footnote{Cochise, 1804--1874, was chief of the Chokonen band of
+      the Chiricahua Apache.}: the Calculus Of CoHerent ImplicitS. \name
+is an improved variant of the implicit calculus that preserves
+\emph{coherence}. \name supports local scoping, overlapping instances,
 first-class instances and higher-order rules. Yet, in contrast to most
 previous work that supports such features, the calculus is not only
 type-safe, but also coherent. Naturally, the unrestricted calculus
-does not support global coherence, since this property depends on the
+does not support global uniqueness of instances, since this property depends on the
 global scoping restriction. Nevertheless, if retaining global
-coherence is desired, it is possible to model source languages on top
+uniqueness is desired, it is possible to model source languages on top
 of \name that support global scoping only.  Global scoping can be
 viewed as a particular case of local scoping where a single, global,
 implicit environment is assumed, and no local scoping constructs are
@@ -132,10 +146,14 @@ allowed.
 
 Ensuring coherence in \name is challenging.  The overlapping and
 higher-order nature of rules poses significant challenges for the
-coherence and determinism of \name's resolution. To overcome
-non-determinism due to higher-order rules, we borrow ideas from
-\emph{focused proof
-  search}~\cite{focusing,Miller91b,Liang:2009}. However, unlike
+coherence and determinism of \name's resolution. 
+We introduce a logical formulation of how to resolve implicits, which
+is simple but ambiguous and incoherent, and a second formulation,
+which is less simple but unambiguous and coherent.  Every resolution
+of the second formulation is also a resolution of the first, but not
+conversely.  Parts of the second formulation bear a close resemblance
+to a standard technique for proof search in logic called
+\emph{focussing}~\cite{focusing,Miller91b,Liang:2009}. However, unlike
 focused proof search, which is still essentially non-deterministic,
 \name's resolution employs additional techniques to be entirely
 deterministic and coherent.  In particular, unlike focused proof
@@ -150,14 +168,20 @@ In summary, our contributions are as follows:
   implicit programming that supports local scoping, overlapping rules,
   first-class instances and higher-order rules.
 
-\item We identify the connection between the type-directed resolution
-  process of IP and focused proof search. The design of resolution in
-  our calculus is directly inspired by focused proof search, but
-  employs various additional techniques to ensure determinism.
+%\item We identify the connection between the type-directed resolution
+%  process of IP and focussing. The design of resolution in
+%  our calculus is directly inspired by focused proof search, but
+%  employs various additional techniques to ensure determinism.
+
+\item We significantly improve the design of resolution over the
+  previous work on the implicit calculus. The new design for
+  resolution is more powerful/expressive; it is closely based in
+  principles of logic\bruno{should we say this?}; and is related 
+  to the idea of focussing on proof search.  
 
 \item We provide a semantics in the form of a translation from \name
    to System F. We prove our translation to be type-safe, and
-   coherent. The full proofs are available at: \url{http://fill.me}. 
+   coherent. The full proofs are available in the appendix of this paper. 
 
 \end{itemize}
 
@@ -169,7 +193,7 @@ Section~\ref{sec:ourlang} describes a polymorphic type system that
 statically excludes ill-behaved programs. Section~\ref{sec:trans} provides the elaboration 
 semantics of our calculus into System F and correctness results. 
 %Section 5 presents the source language and its encoding into $\ourlang$. 
-Section~\ref{src:related} discusses related work and Section~\ref{sec:conclusion} concludes.
+Section~\ref{sec:related} discusses related work and Section~\ref{sec:conclusion} concludes.
 
 %if False
 This paper is a rewrite and expansion of the conference paper by Oliveira et

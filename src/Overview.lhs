@@ -8,185 +8,198 @@
 \section{Overview}
 \label{sec:overview}
 
-This section presents relevant background on type classes, IP 
-and coherence, and it introduces the key features of our calculus for ensuring coherence.
-We chose to present most of the issues and code examples using Haskell type classes 
-syntax, since this is the oldest and most well-established IP mechanism.
+This section summarizes the relevant background on type classes, IP 
+and coherence, and introduces $\ourlang$'s key features for ensuring coherence.
+We begin by discussing Haskell type classes, since this is the oldest
+and most well-established IP mechanism, then go on to compare them with
+implicits in Scala.
 
 \subsection{Type Classes and Implicit Programming}
 
-Type classes are special types of interfaces, which enable the definition of
-type-overloaded functions like comparison, pretty printing or parsing.
+Type classes enable the declaration of overloaded functions like comparison,
+pretty printing, or parsing.
 
-> class Ord a   where  (<=) :: a -> a -> Bool
-> class Show a  where  show :: a -> String
-> class Read a  where  read :: String -> a
+> class Ord a where
+>   (<=) :: a -> a -> Bool
+> class Show a where
+>   show :: a -> String
+> class Read a where
+>   read :: String -> a
 
-A type class declaration consists of: a class name such as |Ord|, |Show|
-or |Read|; a type parameter; and a set of method declarations. Each of
+A type class declaration consists of: a class name, such as |Ord|, |Show|
+or |Read|; a type parameter, such as |a|; and a set of method declarations,
+such as those for |(<=)|, |show|, and |read|. Each of
 the methods in the type class declaration should have at least one
-occurrence of the type parameter in their signature (either as an
-argument or as a return type).
+occurrence of the type parameter |a| in their signature.
+% (either as an argument or as a return type).
+% The type parameter may be neither an argument nor a return type,
+% as in showList :: [a] -> String.
 
-\paragraph{Instances and type-directed rules} Implementations 
-of type classes are provided by type class instances. 
-In our terminology, borrowed from the implicit calculus, 
-instances are synonymous with rules.
-For example, |Ord| instances/rules for integers and pairs 
+\paragraph{Instances and type-directed rules}
+Instances implement type classes.
+% Implementations 
+% of type classes are provided by type class instances. 
+% In our terminology, borrowed from the implicit calculus, 
+% instances are synonymous with rules.
+For example, |Ord| instances for integers, characters, and pairs 
 can be defined as follows:
 
 > instance Ord Int where
->   (<=) = primIntLe
->
+>   x <= y  =  primIntLe x y
+> instance Ord Char where
+>   x <= y  =  primCharLe x y
 > instance (Ord a, Ord b) => Ord (a, b) where
->   (xa,xb) <= (ya,yb) = xa < ya || (xa == ya && xb <= yb)
+>   (x,x') <= (y,y') = x < y || (x == y && x' <= y')
 
-The first instance provides the implementation of |<=| for integers.
-The second instance is more interesting. It provides the
-implementation of ordering for paris. In this case, the ordering
-instance itself \emph{requires} by an ordering instance for each of
-the elements of the pair. These requiriments will be implicitly resolved 
-by the compiler using the existing set of rules in a process called 
+\noindent The first two instances provide the implementation of ordering for integers
+and characters, in terms of primitive functions.
+The third instance is more interesting, and provides the
+implementation of ordering for pairs. In this case, the ordering
+instance itself \emph{requires} an ordering instance for both
+components of the pair. These requirements are resolved 
+by the compiler using the existing set of instances in a process called 
 \emph{resolution}.  
-%Such instances, which require implementations 
-%of other instances, . 
-
-\paragraph{Implicit programming} The reason why type classes are an implicit 
-programming mechanism is because the implementations of type class operations 
-are automatically \emph{computed} from the set of rules/instances during the 
-resolution process. 
-For example, with |Ord| we can define a generic sorting
-function:
+Using |Ord| we can define a generic sorting function
 
 > sort :: Ord a => [a] -> [a]
 
 \noindent that takes a list of elements of an arbitrary type |a| and
-returns a list of the same type, as long as ordering is supported by the type of the elements. 
-A call to |sort| will only type check if a suitable type class instance can be
+returns a list of the same type, so long as ordering is supported
+on type |a|. The body of the function may refer to |<=| on type |a|.
+
+\paragraph{Implicit programming}
+Type classes are an implicit 
+programming mechanism because implementations of type class operations 
+are automatically \emph{computed} from the set of instances during the 
+resolution process. 
+For instance, a call to |sort| only type checks if a suitable type class instance can be
 found. Other than that, the caller does not need to worry about the
 type class context, as shown in the following interaction with a
 Haskell interpreter: 
 
-< Prelude > sort [ (3, 5), (2, 4), (3, 4) ]
-< [(2,4),(3,4),(3,5)]
+< Prelude > sort [ (3,'a'), (2,'c'), (3,'b') ]
+< [(2,'c'),(3,'a'),(3,'b')]
 
 \noindent In this example, the resolution process combines the two |Ord| instances 
-to find suitable a implementations for |Ord (Int,Int)|, which is implicitly passed 
-to the |sort| function.
+to find a suitable implementation for |Ord (Int,Char)|.  The declarations given
+are sufficient to resolve an infinite number of other instances, such as
+|Ord (Char,(Int,Int))| and the like.
 
 \paragraph{One instance per type} A characteristic of
 (Haskell) type classes is that only one instance is allowed for a
-given type. For example, the alternative ordering model for pairs
+given type. For example, it is forbidden to include the alternative ordering
+model for pairs
 
 > instance (Ord a, Ord b) => Ord (a, b) where 
 >   (xa,xb) <= (ya,yb) = xa <=ya && xb <= yb
 
-in the same program as the previous instance is forbidden because the
+in the same program as the previous instance because the
 compiler automatically picks the right type class instance based on
-the type parameter of the type class. Since in this case there are two
-type class instances for the same type, there is no sensible way for
-the compiler to choose one of these two instances.
+the type parameter of the type class. If there are two
+type class instances for the same type, the compiler does not
+know which of the two to choose.
 
 \subsection{Coherence in Type Classes}
+\label{sec:overview-coherence}
 
-A programming language is said to be coherent if
+An IP design is \emph{coherent} if
 any valid program has exactly one meaning (that is,
-the semantics is not ambiguous). Haskell type classes preserve
-coherence, but not for free. Since the first implementations of type
-classes, Haskell imposes several restrictions to guarantee
+the semantics is not ambiguous). 
+Haskell imposes restrictions to guarantee
 coherence. For example, the expression:
 
-> show (read ''3'') == ''3'' 
-
-\begin{comment}
-\noindent where functions |show| and |read| have the types: 
-
-> show :: Show a => a -> String
-> read :: Read a => String -> a
-\end{comment}
+> show (read "3") == "3" 
 
 \noindent is rejected in Haskell due to \emph{ambiguity} of 
-\emph{type class resolution}~\cite{jones}. The functions |show| and
-|read| respectively print and parse values of a certain type |a|. 
-The type |a| can be any type that implements the classes |Show| 
-and |Read|. For example, it could be |Int|, |Float| or |Char|. The
-reason for rejecting the program is precisely that multiple choices 
-exists for instantiating the type |a|. Depending on such choice, the 
-semantics of the expression could be different. For example, chosing 
-|a=Float| leads to |False|, since showing the float 3 would result 
-in the ``3.0''. In contrast chosing |a=Int| leads to |True|, since the
-string is the same.
+\emph{type class resolution}~\cite{qual}.  Functions |show| and
+|read| print and parse values of any type |a| that implements 
+the classes |Show| and |Read|.  The program is rejected because
+there is more that one possible choice for |a|, for example
+it could be |Int|, |Float|, or |Char|. 
+Choosing |a=Float| leads to |False|,
+since showing the float |3| would result in |"3.0"|,
+while choosing |a=Int| leads to |True|.
 
 \paragraph{Overlapping and Incoherent Instances} 
-More advanced features of type classes, such as overlapping
-instances~\cite{}, pose even more severe problems. In purely
-functional programming, ``\emph{substituting equals by equals}'' is
-expected to hold. That is, when given two equivalent expressions then
-replacing one by the other in \emph{any context} will always lead to
-two programs that yield the same result. Special care (via
-restrictions) is needed to preserve coherence and the ability of
-substituting equals by equals in the presence of overlapping
-instances. The following program illustrates the issues:
+Advanced features of type classes, such as overlapping
+instances, require additional restrictions to
+ensure coherence.  The following program illustrates the issues:
 
 > class Trans a where trans :: a -> a
->
 > instance Trans a where trans x = x
->
 > instance Trans Int where trans x = x+1
->
+
+\noindent This program declares a type class |Trans a| for defining
+transformations on some type |a|. The first instance provides a default
+implementation for any type, the identity transformation.  The second instance
+defines a transformation for integers only. 
+
+The overlapping declarations are clearly incoherent,
+since it is unclear whether |trans 3| should return
+|3| using the first instance, or |4| using the second instance.
+Because the second instance is more specific, one 
+might guess that it supersedes the first one; and that is indeed how
+Haskell assigns a meaning to overlapping instances.
+
+But now consider the following declaration.
+
 > bad :: a -> a
 > bad x = trans x  -- incoherent definition!
 
-\noindent This program declares a type class 
-|Trans a| for defining transformations on some 
-type |a|. A default implementation for any types, which 
-simply implements the identity transformation is defined 
-by the first instance. A second instance defines a 
-transformation on integers. Finally the function 
-|bad| simply calls the transformation function. 
+If Haskell were to accept this definition, it
+must implement |trans| using the first instance,
+since it is applied at the arbitrary type |a|.
+Now |bad 3| returns |3| but |trans 3| returns |4|,
+even though |bad| and |trans| are defined to be
+equal, a nasty impediment to equational reasoning!
 
-Now, consider the following reasoning steps, where |bad| 
-is applied to the integer |1|:
+For this reason Haskell rejects the program by default. A programmer who really
+wants such behaviour can enable the \emph{IncoherentInstances} compiler flag,
+which allows the program to typecheck. But the use of incoherent instances is
+discouraged.
 
-> bad 1
-> = {- definition of |bad| -}
-> trans 1
-> = {- definition of |trans| -}
-> 1+1
-> = {- arithmetic -}
-> 2
+\paragraph{Global Uniqueness of Instances} A consequence 
+of having both coherence and at most one instance of a type class 
+per type in a program is \emph{global uniqueness} of instances~\cite{uniqueness}. That is, 
+at any point in the program type class resolution for a particular 
+type always resolves to the same value. 
+The usefulness of this property is nicely illustrated by a library that
+provides a datatype for sets that is polymorphic in the elements along with a
+|union| operation:
 
-\noindent The reasoning steps substitute equals-by-equals. 
-Importantly, in the second step, since we use an integer, 
-we chose the implementation of trans on the second instance. 
-Thus the outcome of this simple equational reasoning is |2|. 
+< union :: Ord a => Set a -> Set a -> Set a
 
-Unfortunatelly the result of |bad 1| is actually |1|. 
-The problem is that |bad 1| has already committed to the 
-first implementation of |trans|, since type class resolution 
-is done statically: the only possible instance that can satisfy 
-the type |a -> a| is the first one. However, such bbehaviour is counter-intuitive since 
-|bad 1| and |trans 1| give different results, even though
-the definition of |bad| blatently says that |bad x = trans x|. 
-In other words substituting equals-by-equals would be lost 
-if the program is accepted. 
-To prevent this, Haskell implementations reject such program by default. 
-If programmers really want such incoherent behaviour, they can activate 
-a flag (\emph{incoherent instances}), which allows the program to type-check.
-But the use of incoherent instances is discouraged.  
+\noindent For efficiency reasons the sets are represented by a
+datastructure that orders the elements in a particular way. To deal with
+ordering it is natural to rely on the |Ord| type class, and the
+ordering it defines for the particular type |a|.  To preserve the
+correct invariant, it is crucial that the ordering of elements in the
+set is always the same. The global uniqueness property guarantees this. If two
+distinct instances of |Ord| could be used in different parts of the
+program for the same type, then it would be possible to construct within the
+same program two sets using two different orderings (say ascending and
+descending order) in the same program, and then break the ordering invariant by
+unioning those two sets.
 
-\paragraph{Global coherence} \bruno{Set example should come here.}
+Although global uniqueness is, in principle, a property that should hold in
+Haskell programs, Haskell implementations actually violate this property in
+various circumstances~
+\footnote{\url{http://stackoverflow.com/questions/12735274/breaking-data-set-integrity-without-generalizednewtypederiving}}.
+In fact it is ackowledged that providing a global uniqueness check is quite 
+challenging for Haskell implementations~\footnote{\url{https://mail.haskell.org/pipermail/haskell-cafe/2012-October/103887.html}}.
 
 \subsection{Incoherence in Implicits}
 
-Scala implicits~\cite{implicits}
-are an interesting alternative in IP
-design. Unlike type classes, implicits have locally scoped rules. Moreover,
-values of any type can be used as implicit parameters; there is no special 
-separate type-class-like interface. Instead, such interfaces are
-modeled with regular types, they can be abstracted over and do 
-not suffer from the second class nature of type classes. In $\ourlang$
-we also make similar design choices.
+Scala implicits~\cite{implicits} are an interesting alternative IP
+design. Unlike type classes, implicits have locally scoped
+rules. Consequently Scala does not have the global uniqueness
+property, since different ``instances'' may exist for
+the same type in different scopes.  Another interesting difference
+between implicits and type classes is that values of any type can be
+used as implicit parameters; there are no special constructs analogous
+to type class or instance declarations. Instead, implicits are modeled
+with ordinary types. They can be abstracted over and do not suffer
+from the second-class nature of type classes.
 
 %format v1 = "\Varid{v_1}"
 %format v2 = "\Varid{v_2}"
@@ -194,63 +207,66 @@ we also make similar design choices.
 \begin{figure}
 \small
 \begin{code}
-   trait A {
-     implicit def id[a] : a => a = x => x
-
-     def ?[a](implicit x: a) = x
-  }
-
-  object B extends A {
-     implicit def succ : Int => Int = x => x + 1
-
-     def bad[a](x : a) = (?[a => a]).apply(x)
-
-     val v1 = bad[Int](3)  // evaluates to 3
-     val v2 = (?[Int => Int]).apply(3) // evaluates to 4
-  }
+trait A {
+   implicit def id[a] : a => a = x => x		// (1)
+   def trans[a](implicit f: a =>a) = f		// (2)
+}
+object B extends A {
+   implicit def succ : Int => Int = x => x + 1	// (3)
+   def bad[a](x : a) = trans[a](x)		// (4) incoherent definition!
+   val v1 = bad[Int](3)				// (5) evaluates to 3
+   val v2 = trans[Int](3)			// (6) evaluates to 4
+}
 \end{code}
+
 \caption{Nested Scoping with Overlapping Rules in Scala}
 
 \label{fig:scala}
 
 \end{figure} 
 
-In particular, although Scala allows \emph{nested} local scoping and overlapping rules,
-\textit{coherence} is not guaranteed. Figure~\ref{fig:scala} illustrates
-the issue briefly, using the example that was presented in
-Section~\ref{subsec:over}. Scala's subclassing creates nested
-implicit scopes. The program is accepted, but Scala incoherently
-selects the more general implicit value (|id|) for |v1|. In contrast, |v2|,
-which (naively) inlines |func[Int]|, picks |succ|. As a result, despite
-looking equivalent, the two expressions yield different results.
-This makes such programs quite hard to understand. 
+Although Scala allows \emph{nested} local scoping and overlapping rules,
+\textit{coherence} is also not guaranteed. 
+Figure~\ref{fig:scala} illustrates
+the issue briefly, based on the example from Section~\ref{sec:overview-coherence}.
+Line~(1) defines a function |id| with type parameter |a|, which is simply
+the identity function of type |a => a|.
+The |implicit| keyword in the declaration specifies that this value may
+be used to synthesise an implicit argument.
+Line~(2) defines a function |trans| with type parameter |a|,
+which takes an implicit argument |f| of type |a => a| and returns |f|.
+Here the |implicit| keyword specifies that the actual argument should not be
+given explicitly; instead argument of the appropriate type will be synthesized from
+the available |implicit| declarations.
 
+In the nested scope, line~(3) defines a function |succ| of type
+|Int => Int| that takes argument |x| and returns |x+1|.  Again, 
+the |implicit| keyword in the declaration specifies that this value may be used to
+synthesise an implicit argument.  Line~(4) defines a function |bad|
+with type parameter |a| which takes an argument |x| of type |a| and
+returns the value of function |trans| applied at type |a| to argument
+|x|.  Lines~(5) and~(6) shows that, as in the earlier example and for
+the same reason, |bad(3)| returns |3| while |trans(3)| returns |4|.
+This is an equally nasty impediment to equational reasoning, but
+unlike in Haskell, this is the expected behaviour: it is enabled
+by default and there is no way to disable it.
 
-\subsection{Our Calculus}
+\subsection{An Overview of $\ourlang$}
 
-Our calculus $\ourlang$ combines standard scoping mechanisms 
-(abstractions and applications) and types \`a la System F, with a
-logic-programming-style query language. 
-At the heart of the language is a threefold interpretation of types:
-\begin{center}
-  |types === propositions === rules|
-\end{center}
-\noindent Firstly, types have their traditional meaning of classifying
-terms.  Secondly, via the Curry-Howard isomorphism, types can
-also be interpreted as propositions -- in the context of GP, the type
-proposition denotes the availability in the implicit environment of a
-value of the corresponding type. Thirdly, a type is interpreted as a
-logic-programming style rule, i.e., a Prolog rule or Horn
-clause~\cite{kowalski}.
-%%\footnote{The connection between type class
-%%  instances and Prolog rules is folklore.}
-Resolution~\cite{resolution} connects rules and propositions: it is
-the means to show (the evidence) that a proposition is entailed by a set of rules.
-%%Again, a value serves as evidence for the rule interpretation,
-%%constructing a proof of one proposition in terms of proofs of others.
+Our calculus $\ourlang$ resembles Haskell in requiring coherence and
+resembles Scala in permitting nested declarations. 
+Unrestricted $\ourlang$ programs do not guarantee global uniqueness.
+What are referred to as type class instances in Haskell are called
+\emph{rules}, while as in Scala no special declaration for type
+classes is required.  $\ourlang$ can be viewed as an improved variant
+of the implicit calculus~\cite{oliveira12implicit}, which is a calculus 
+designed to model the essence of Scala implicits. Like the implicit
+calculus it combines standard scoping mechanisms (abstractions and
+applications) and types \`a la System~F, with a
+logic-programming-style query language.
 
-Next we present the key features of $\ourlang$ and how
-these features are used for GP. For readability purposes we sometimes omit
+We now present the key features of $\ourlang$ and how
+these features are used for IP. For readability purposes we sometimes omit
 redundant type annotations and slightly simplify the syntax. 
 
 \paragraph{Fetching values by types} A central construct in
@@ -313,6 +329,7 @@ combination is more compactly denoted as:
 
 \noindent Both expressions return |2|. 
 
+\begin{comment}
 \paragraph{Rule Currying} 
 Like traditional lambdas, rule abstractions can be curried.
 Here is a rule that computes an |Pair Int Bool| 
@@ -334,61 +351,12 @@ The type of this rule is :
 \noindent Using two rule applications it is possible to provide the implicit 
 values to the two rule abstractions. For example:
 
-\begin{comment}
-The rule abstraction syntax resembles a type-annotated expression: the
-expression |((query Int) + 1, not (query Bool))|
-to the left of the colon is
-the \emph{rule body}, and to the right is the \emph{rule type} |{Int, Bool} =>
-Pair Int Bool|. A rule abstraction abstracts over a set of implicit
-values (here |{Int,Bool}|), or, more generally, over rules to build 
-values. 
-
-< rule ({Int, Bool} => Pair Int Bool) (((query Int) + 1, not (query Bool)))
-
-%% are \emph{bound} to the rule body.  In
-%%$\ourlang$ static types also play the roles of variables in rule
-%%abstractions.
-
-%%We write the above rule's type as
-%%$\rulety{\tyInt,\tyBool}{\tyInt\times\tyBool}$. 
-
-Hence, when a value of type |Pair Int Bool| is needed (expressed by the query |query
-(Pair Int Bool)|), the above rule can be used, provided that an integer and
-a boolean value are available in the implicit environment. In such an
-environment, the rule returns a pair of the incremented |Int| value and negated
-|Bool| value.
-
-The implicit environment is extended through rule application (analogous to
-extending the environment with function applications).
-Rule application is expressed as, for example:
-%\[
-%\qapp{\qlam{\tyInt, \tyBool}
-%      {\texttt{(\qask{\tyInt}+1, not\;\qask{\tyBool})}}
-%     }{\{\texttt{1},\texttt{true}\}}.
-%\]
-
-< rule ({Int, Bool} => Pair Int Bool) (((query Int) + 1, not (query Bool))) 
-<    with {1,True}
-
-With syntactic sugar similar to a |let|-expression, a rule abstraction-application 
-combination is denoted more compactly as:
-%%\[
-%%\qlet{\{\texttt{1},\texttt{true}\}}
-%%     {\texttt{(\qask{\tyInt}+1, not\;\qask{\tyBool})}}
-%%\]
-
-
-%% \noindent which can be used 
-
-< implicit {1,True} in ((query Int) + 1, not (query Bool))
-
-\end{comment}
-
 < implicit 1 in
 <  implicit True in 
 <    ((query Int) + 1, not (query Bool))
 
-\noindent which returns |(2,False)|. 
+\noindent which returns |(2,False)|.
+\end{comment} 
 
 \paragraph{Higher-order rules} $\ourlang$ supports higher-order
 rules. For example, the rule 
@@ -410,6 +378,9 @@ The following expression returns $(3, 4)$:
 < implicit 3 in 
 <  implicit (rule Int (((query Int), (query Int) + 1))) in 
 <    query (Pair Int Int)
+
+Note that higher-order rules are a feature introduced by the implicit calculus and 
+are neither supported in Haskell nor Scala.
 
 \paragraph{Recursive resolution} 
 Note that resolving the  query |(query (Pair Int Int))| above
@@ -470,11 +441,6 @@ rule. The following expression returns
 >   implicit True in 
 >     implicit (biglam a (rule a (((query a),(query a))))) in
 >       (query (Pair Int Int), query (Pair Bool Bool))
-
-Polymorphic rules can also be used to resolve polymorphic queries:
-
-> implicit (biglam a (rule a (((query a),(query a))))) in
->   (query (forall a . a => Pair a a))
 
 \paragraph{Combining higher-order and polymorphic rules} 
 The rule 
@@ -574,7 +540,12 @@ returns $2$ and not $1$:
 \]
 %endif
 
-
+\subsection{Overlapping Rules and Coherence in $\ourlang$}
+\bruno{Tom, this is where you take over. I've pasted in some 
+old text for you, but you need to rewrite since it doesn't match what we want 
+to say in this paper. In any case a fair amount of it should be useful to you.
+Here you want to explicitly connect to the example in Section 2.2 and 2.3.
+}
 
 \paragraph{Overlapping rules} 
 Two rules overlap if their return types intersect, i.e., when they can both 
