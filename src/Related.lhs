@@ -20,7 +20,7 @@ Our work allows a very flexible model of implicits with first-class
 rules, higher-order rules and nested scoping with overlapping rules
 while guaranteeing coherence.  Closest to our work in the goal of
 combining additional flexibility with coherence are \emph{modular type
-classes}~\cite{modular}, System $F_{G}$~\cite{systemfg}. Both 
+classes}~\cite{modular} and System $F_{G}$~\cite{systemfg}. Both 
 works preserve coherence in the presence of local scoping, but (unlike
 $\ourlang$) the local scopes \emph{forbid overlapping rules}. The
 restriction of no overlapping rules is an essential part of
@@ -34,7 +34,7 @@ $F^{G}$~\cite{systemfg} also offers an implicit parameter passing
 mechanism with local scoping, which is used for concept-based generic
 programming~\cite{siek11concepts}. Both mechanisms are strongly influenced by type
 classes, and they preserve some of the characteristics of type
-classes: such only allowing modules or concepts to be implictly
+classes: such as only allowing modules or concepts to be implictly
 passed. Moreover neither of those mechanisms support higher-order
 rules. In contrast $\ourlang$ follows the Scala implicits phylosophy
 and allows values of any type to be implicit, and additionally
@@ -77,9 +77,8 @@ is very important, so local instances were discarded.
 However, there are many languages with IP
 mechanisms (including Scala, Coq, Agda, Idris or Isabelle) that have more
 modest goals in terms of type-inference. In these languages there are
-usually enough type annotations that ambiguity introduced by local instances 
-is avoided, and there is indeed added expressive power because type 
-annotations drive the resolution process.
+usually enough type annotations such that ambiguity introduced by local instances 
+is avoided.
 
 Jones's work on \emph{qualified types}~\cite{simpl_qual} provides a
 particularly elegant framework that captures type classes and other
@@ -118,12 +117,14 @@ our notion of scoping is closed at a particular resolution point, but
 the scopes can still be extended in other resolution
 points.
 
+\begin{comment}
 A lot of
 work on type classes is focused on increasingly more powerful ``type
 class'' interfaces.  \emph{Functional dependencies}~\cite{fundeps},
 \emph{associated types}~\cite{assoctypes,assoctypes2} and \emph{type
   families}~\cite{typefunc} are all examples of this trend.  This line
 of work is orthogonal to our own.
+\end{comment}
 
 
 \subsection{Implicit Programming without Coherence}
@@ -189,10 +190,12 @@ severally restricted the power of resolution by forbidding recursive resolution.
 Since then, recursive resolution as been enabled in Agda. Like Coq's and Idris's 
 type classes, instance arguments allow multiple incoherent rules.
 
+\begin{comment}
 An interesting aspect about IP mechanisms for theorem proving is that,
 in such a context, incoherence is less dangerous. Due to
 \emph{proof irrelevance}, which instances get picked in a proof is not
 so important, as long as a proof exists.
+\end{comment}
 
 \subsection{Global Uniqueness and Same Instance Guarantee}
 The global scoping of Haskell type classes not only ensures coherence
@@ -202,7 +205,7 @@ only, since multiple rules for the same type can coexist in the same
 program. We agree that for programs such as the Set example, it is
 highly desirable to ensure that the same ordering instance is used
 consistently. $\ourlang$ is a core calculus, meant to enable the
-design of source language that utilize its power. It should be easy
+design of source languages that utilize its power. It should be easy
 enough to design source languages on top of $\ourlang$ that forbid
 local scoping constructs and, instead, make all declared rules visible
 in a single global environemnt. This would retain several of the
@@ -225,12 +228,13 @@ but those two sets will have different types since they using
 different |Ord| instances.  So, taking the union of those two sets is
 not possible.  In contrast to $\ourlang$ Genus is focused on providing
 a robust source language implementation for generic
-programming. Althout the authors have prove some meta-theory results,
+programming. Althout the authors have proved some meta-theory results,
 neither type-safety nor coherence have been proved for Genus.  In
 dependently typed languages such as Agda or Idris, it is possible to
 parametrize types by the instances they use~\cite{brady}. This
 achieves a similar outcome to Genus approach to consistent usage of
-instances.
+instances. Investigating the applicability of similar approaches to 
+$\ourlang$ is an interesting line for future work.
 
 \subsection{Focused Proof Search}
 \bruno{Tom, this is for you to fill in.}
