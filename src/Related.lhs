@@ -40,6 +40,12 @@ rules. In contrast $\ourlang$ follows the Scala implicits phylosophy
 and allows values of any type to be implicit, and additionally
 higher-order rules are supported.
 
+There have been also some proposals for addressing the limitations that
+arise from global scoping~\cite{named_instance,implicit_explicit} in type classes.
+However in those designs, type classes are still second-class and
+resolution only works for type classes.\bruno{say more: not formally studied; 
+unclear if coherence holds?}
+
 \emph{Implicit parameters}~\cite{implicit_param} are a proposal for a
 name-based implicit parameter passing mechanism with local scoping. 
 Implicit parameters allow \emph{named}
@@ -54,48 +60,53 @@ where recursive resolution and the ability to compose rules automatically is
 a key feature and source of convinience.
 
 \subsection{Implicit Programming with Coherence and Global Scoping}
+
 Several core calculi and refinements have been proposed in the context
 of type-classes. As already discussed in detail in
 Section~\ref{sec:intro}, there are a number of design choices that
-(Haskell-style) type classes take that are different from the implicit
-calculus. Most prominently, type classes make a strong differentiation
+(Haskell-style) type classes take that are different from $\ourlang$. 
+Most prominently, type classes make a strong differentiation
 between types and type classes, and they use global scoping instead of
-local scoping for the rule environment. These design choices can be
+local scoping for instances/rules. The design choice for global scoping can be
 traced back to Wadler and Blott's~\shortcite{adhoc} original paper on
-type classes.  The reason for global scoping is also motivated by
-Wadler and Blott. They wanted to extend Hindley-Milner
+type classes. They wanted to extend Hindley-Milner
 type-inference~\cite{hindley69principal,milner78theory,damas82principal}
 and discovered that local instances resulted in the loss of principal
-types.  However, there are many languages with type-class like
-mechanisms (including Scala, Coq, Agda and Isabelle) that have more
-modest goals in terms of type-inference.  In these languages there are
-usually enough type annotations that such ambiguity is avoided, and
-there is indeed added expressive power because type annotations drive
-the resolution process.
+types. For Haskell-like languages the preservation of principal types 
+is very important, so local instances were discarded. 
+However, there are many languages with IP
+mechanisms (including Scala, Coq, Agda, Idris or Isabelle) that have more
+modest goals in terms of type-inference. In these languages there are
+usually enough type annotations that ambiguity introduced by local instances 
+is avoided, and there is indeed added expressive power because type 
+annotations drive the resolution process.
 
-There is a wide range of work that builds on the original type
-classes proposal~\cite{adhoc}. Jones's work on \emph{qualified
-  types}~\cite{simpl_qual} provides a particularly elegant framework
-that captures type classes and other forms of predicates on
-types. Like type classes, qualified types too make a strong
-distinction between types and predicates over types, and scoping is
-global. There have been some proposals for addressing the limitations
-that arise from global
-scoping~\cite{named_instance,implicit_explicit}.  However in those
-designs, type classes are still second-class and resolution only works
-for type classes. The GHC Haskell compiler supports overlapping
+Jones's work on \emph{qualified types}~\cite{simpl_qual} provides a
+particularly elegant framework that captures type classes and other
+forms of predicates on types. Like type classes, qualified types too
+make a strong distinction between types and predicates over types, and
+scoping is global. Jones~\shortcite{coherence_qual} discusses the
+coherence of qualified types. The formal statement of coherence in $\ourlang$
+is similar to the one used in qualified types.\bruno{double-check that this is true.} 
+
+\begin{comment}
+ In his definition, the translation
+semantics is coherent if the given system of predicates guarantees the
+uniqueness of evidence. This notion of coherence provides a general
+framework for Haskell-like systems, but it leaves out the details of
+how to coherently generate the evidence, which is non-trivial with
+overlapping instances.
+\end{comment}
+
+The GHC Haskell compiler supports overlapping
 instances~\cite{designspace}, that live in the same global scope. This
-allows some relief for the lack of local scoping.  A lot of recent
-work on type classes is focused on increasingly more powerful ``type
-class'' interfaces.  \emph{Functional dependencies}~\cite{fundeps},
-\emph{associated types}~\cite{assoctypes,assoctypes2} and \emph{type
-  families}~\cite{typefunc} are all examples of this trend.  This line
-of work is orthogonal to our own.
-
-Our calculus has a different approach to overlapping compared to
+allows some relief for the lack of local scoping, but it still does 
+not allow different instances for the same type to coexist in 
+different scopes of a program.
+$\ourlang$ has a different approach to overlapping compared to
 \emph{instance chains}~\cite{chain}. With instance chains the
 programmer imposes an order on a set of overlapping type class
-instances. All instance chains for a type class have global scope and
+instances. All instance chains for a type class have a global scope and
 are expected not to overlap. This makes the scope of overlapping
 closed within a chain.  In our calculus, we make our local scope
 closed, thus overlap only happens within one nested scope.
@@ -107,23 +118,13 @@ our notion of scoping is closed at a particular resolution point, but
 the scopes can still be extended in other resolution
 points.
 
-Our calculus is different from \emph{instance chains}~\cite{chain}
-too. With instance chains the programmer imposes an
-order on a set of overlapping type class instances. All instance
-chains for a type class have global scope and are expected not to
-overlap. This makes the scope of overlapping closed within a chain,
-which is one way to ensure the coherence under the presence of
-overlap. In our calculus, we make our local scope closed,
-thus overlap only happens within one nested scope.
+A lot of
+work on type classes is focused on increasingly more powerful ``type
+class'' interfaces.  \emph{Functional dependencies}~\cite{fundeps},
+\emph{associated types}~\cite{assoctypes,assoctypes2} and \emph{type
+  families}~\cite{typefunc} are all examples of this trend.  This line
+of work is orthogonal to our own.
 
-Lastly, Jones~\shortcite{coherence_qual} discusses the coherence of
-qualified type systems in his work on qualified types. In his
-definition, the translation semantics is coherent if the given
-system of predicates guarantees the uniqueness of evidence. This
-notion of coherence
-provides a general framework for Haskell-like systems, but it leaves
-out the details of how to coherently generate the evidence, which
-is non-trivial with overlapping instances.
 
 \subsection{Implicit Programming without Coherence}
 
