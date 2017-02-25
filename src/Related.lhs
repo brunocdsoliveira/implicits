@@ -128,144 +128,74 @@ of work is orthogonal to our own.
 
 \subsection{Implicit Programming without Coherence}
 
-\paragraph{Implicit calculus}
-
-The main inspiration for our work comes from Scala
-implicits~\cite{implicits,scala}. Like our work Scala implicits allow
-implicit parameters of any types of values and recursive resolution is
-supported.
-
-Therefore there are noteworthy differences between $\ourlang$ and
-Scala implicits. In contrast to $\ourlang$, Scala has subtyping. We do
-not think that subtyping is essential, and it complicates the
-formalization: as discussed in Section~\ref{subsec:extensions}
-subtyping would require considerable adaptations to our calculus.
-Therefore we have omitted subtyping here.  Although Scala also
-provides local and nested scoping, nested scoping can only happen
-through subclassing and the rules for resolution in the presence of
-overlapping instances are quite ad-hoc.
-In other words Scala's scoring system attempts to account 
-for both nested scoping through subclassing and the most specific type, whereas in the 
-implicit calculus only the lexical scope is considered.
-Finally, Scala has no (first-class) rule abstractions and
-consequently no support for higher-order rules. Rather,
-implicit arguments can only be used in definitions. 
-
-However, Scala does not provide coherence
-checking and, as such, it is possible to incoherently select rules
-in the presence of nested scoping. Figure~\ref{fig:scala} illustrates
-the issue briefly, using the example that was presented in
-Section~\ref{sec:intro}. Scala's subclassing creates nested
-implicit scopes. The program is accepted, but Scala incoherently
-selects the more general implicit value (|id|) for |v1|. In contrast, |v2|,
-which inlines |func[Int]|, picks |succ|. As a result, despite
-looking equivalent, the two expressions yield different results.
-Finally, Scala implicits do not allow higher-order rules and queries;
-and the mechanism is only informally described.
-
-\paragraph{IP Mechanisms in Dependently Typed Programming}
-
-A number of dependently typed languages also include several
-mechanisms inspired by type classes. Although such mechanisms 
-have been implemented and they are actively used, there is little 
-work on formalization. 
-
-\paragraph{Isabelle Type Classes} The first type-class mechanism 
-in a theorem prover was in Isabelle~\cite{haftmann06constructive}. The mechanism was 
-largely influenced by Haskell type classes and shares many of the 
-same design choices. The introduction of \emph{axiomatic type classes}~\cite{wenzel00usingaxiomatic} 
-showed how theorem proving can benefit from type classes to model 
-not only the operations in type classes, but also the corresponding
-algebraic laws. 
-
-\paragraph{Coq's Canonical Structures And Type Classes}
-The Coq theorem prover has two mechanisms that allow modelling
-type-class like structures: \emph{canonical structures}~\cite{gonthier11lessad-doc} and
-\emph{type classes}~\cite{coqclasses}. The two mechanisms have quite a bit of
-overlap in terms of functionality. In both mechanisms the idea is to
-use dependent records to model type-class-like structures, and pass
-instances of such records implicitly. Both mechanisms support
-recursive resolution to automatically build suitable records and they
-follow Haskell type classes model of global scoping.
-Furthermore, because Coq is dependently typed an additional feature of
-the two mechanisms is that they can also model \emph{value
-  classes}~\cite{gonthier11lessad-doc} (that is classes parametrized by values, rather
-than by types). This functionality is not available in the implicit
-calculus, due to the lack of dependent types.  Another difference is
-that recursive resolution is allowed to backtrack in canonical
-structures and type classes, whereas the implicit calculus forbids
-this. The reason for forbidding backtracking in the implicit calculus
-(and also Haskell type classes) is justified by the use of the
-mechanism for programming purposes, and the need for users to
-easily predict which instances are used. In a theorem proving context,
-backtracking makes more sense since, due to \emph{proof irrelevance},
-which instances get picked in a proof is not so important, as long as the
-proof is completed.
-
-A key difference to our work is that both canonical structures and
-Coq's type classes focus on the implementation of a concrete
-mechanism, whereas we focus on the formalization of a general
-mechanism.  Neither canonical structures nor Coq's type classes have
-been formally specified. It could be that a generalization of the
-implicit calculus with dependent types (and allowing backtracking)
-would be able to provide a suitable specification for these
-mechanisms. Generalizing the implicit calculus with Coq style
-dependent types poses considerable challenges, because computation
-can happen during type-checking.
-
-\emph{Instance arguments}~\cite{instanceargs} are an Agda extension
-that is closely related to implicits. Like the implicit calculus, 
-instance arguments use a special arrow for introducing implicit 
-arguments. However, unlike most other mechanisms,
-implicit rules are not declared explicitly. Instead rules are drawn
-directly from the type-environment, and any previously defined 
-declaration can be used as a rule. 
-Furthermore resolution is limited in its expressive power, to avoid
-introducing a different computational model in Agda. This design
-differs significantly from $\ourlang$, where resolution is very
-expressive and the scoping mechanisms allow explicit rule declarations.
-
-Rules in $\ourlang$ can  also  be
-first-class implicit functions, but unlike instance arguments we 
-can express higher-order rules. 
-
-\subsection{Global Uniqueness and Same Instance Guarantee}
-Liskov
-
-\subsection{Focused Proof Search}
-\bruno{Tom, this is for you to fill in.}
-
-
-
-%-------------------------------------------------------------------------------
-\subsection{Power of Resolution}
-\tom{Moved here from Section 3.}
-\tom{TODO: Do we still need this to appear here for the conference paper? Is
-it even still true with all the determinism and coherence enforcement?}
-
-The rules for deterministic resolution presented in this paper support all the
-examples described in Section~\ref{sec:overview}. They are strictly more powerful than
-the rules presented in the conference version of the paper~\cite{oliveira12implicit}.
-In other words, strictly more queries resolve with this article's rules than
-with the rules of the previous paper.
-For example, 
+\paragraph{Implicits} The implicit calculus~\cite{oliveira12implicit} is the main 
+inspiration for the design of $\ourlang$. There are two major 
+differences between $\ourlang$ and the implicit calculus. 
+The first difference is that the implicit calculus, like Scala, 
+does not enforce coherence. Programs similar to that in Figure~\ref{fig:scala}
+can be written in the implicit calculus and there is no way to detect 
+incoherence. The second difference is in the design of resolution. 
+Rules in the implicit calculus have $n$-ary arguments, whereas 
+in $\ourlang$ rules have single arguments and $n$-ary arguments
+are simulated via multiple single argument rules. The resolution process 
+with n-ary arguments in the implicit calculus is simple, but quite ad-hoc 
+and forbids certain types of resolution that are allowed in $\ourlang$. For example,
 the query:
-
 \begin{equation*}
   \tychar \To \tybool,
   \tybool \To \tyint \vturns \tychar \To \tyint
 \end{equation*}
 
 \noindent does not resolve under the deterministic resolution rules of
-the conference paper. In order to resolve such rule types, it is 
-necessary to add the rule type's context to the implicit
-environment in the course of the resolution process: 
+the implicit calculus, but it is solvable in $\ourlang$. Essentially
+resolving such query requires adding the rule type's context to the
+implicit environment in the course of the resolution process. But in
+the implicit calculus the implicit environment never changes during
+resolution, which significantly weakens the power of resolution. 
+\bruno{Should we say something like: Our design for resolution is much more disciplined and based in the principles 
+of logic.}
+\emph{Scala implicits}~\cite{implicits,scala} were themselfves the
+inspiration for the implicit calculus and, therefore, share various
+similarities with $\ourlang$.  In Scala implicit arguments can be of
+any type, and local scoping (including overlapping rules) is
+supported. However Scala implicits are incoherent and they do not
+allow higher-order rules either.
 
-\begin{equation*}
-  \tychar \To \tybool,
-  \tybool \To \tyint, \tychar \vturns \tyint
-\end{equation*}
+\paragraph{IP Mechanisms in Dependently Typed Programming}
+A number of dependently typed languages also have IP mechanisms
+inspired by type classes. Coq's type classes~\cite{coqclasses} and
+canonical structures~\cite{gonthier11lessad-doc}, Agda's instance
+arguments~\cite{instanceargs} and Idris type classes~\cite{brady} all allow multiple and/or highly overlapping
+rules/instances that can be incoherent. 
+The Coq theorem prover has two mechanisms that allow modelling
+type-class like structures: \emph{canonical structures}~\cite{gonthier11lessad-doc} and
+\emph{type classes}~\cite{coqclasses}. The two mechanisms have quite a bit of
+overlap in terms of functionality. In both mechanisms the idea is to
+use dependent records to model type-class-like structures, and pass
+instances of such records implicitly, but they still follow Haskell's 
+global scoping approach. Nevertheless highly overlapping instances, which 
+can be incoherent are allowed. Like implicits, the design of
+Idris type classes allows for any type of value to be implicit. Thus
+type classes in Idris are first-class, can be manipulated as any other 
+value, an also allows multiple (incoherent) instances of the same type.
+\emph{Instance arguments}~\cite{instanceargs} are an Agda extension
+that is closely related to implicits. Like $\ourlang$, 
+instance arguments use a special arrow for introducing implicit 
+arguments. However, unlike most other mechanisms,
+implicit rules are not declared explicitly. Instead rules are drawn
+directly from the type-environment, and any previously defined 
+declaration can be used as a rule. The original design of instance arguments
+severally restricted the power of resolution by forbidding recursive resolution.
+Since then, recursive resolution as been enabled in Agda. Like Coq's and Idris's 
+type classes, instance arguments allow multiple incoherent rules.
 
-\noindent but this was not supported by our previous set of rules. The new set
-of resolution rules do support this by means of rule \RIAbs, and queries like
-the above can now be resolved.
+An interesting aspect about IP mechanisms for theorem proving is that,
+in such a context, incoherence is less dangerous. Due to
+\emph{proof irrelevance}, which instances get picked in a proof is not
+so important, as long as a proof exists.
+
+\subsection{Global Uniqueness and Same Instance Guarantee}
+Liskov
+
+\subsection{Focused Proof Search}
+\bruno{Tom, this is for you to fill in.}
