@@ -20,7 +20,7 @@ Our work allows a very flexible model of implicits with first-class
 rules, higher-order rules and nested scoping with overlapping rules
 while guaranteeing coherence.  Closest to our work in the goal of
 combining additional flexibility with coherence are \emph{modular type
-classes}~\cite{modular} and System $F_{G}$~\cite{systemfg}.  Both
+classes}~\cite{modular}, System $F_{G}$~\cite{systemfg}. Both 
 works preserve coherence in the presence of local scoping, but (unlike
 $\ourlang$) the local scopes \emph{forbid overlapping rules}. The
 restriction of no overlapping rules is an essential part of
@@ -195,7 +195,42 @@ in such a context, incoherence is less dangerous. Due to
 so important, as long as a proof exists.
 
 \subsection{Global Uniqueness and Same Instance Guarantee}
-Liskov
+The global scoping of Haskell type classes not only ensures coherence
+but also \emph{global uniqueness}~\cite{uniqueness}, as discussed in
+Section~\ref{sec:overview-coherence}. Unrestricted $\ourlang$ programs ensure coherence
+only, since multiple rules for the same type can coexist in the same
+program. We agree that for programs such as the Set example, it is
+highly desirable to ensure that the same ordering instance is used
+consistently. $\ourlang$ is a core calculus, meant to enable the
+design of source language that utilize its power. It should be easy
+enough to design source languages on top of $\ourlang$ that forbid
+local scoping constructs and, instead, make all declared rules visible
+in a single global environemnt. This would retain several of the
+benefits of $\ourlang$ (such as first-class, higher-order rules, and
+coherent overlapping rules), while providing a form of global
+uniqueness. However this design would still be essentially
+non-modular, which is a key motivation for many alternatives to type
+classes to provide local scoping instead. 
+
+Global uniquess of instances is just a sufficient property to ensure
+consistent uses of the same instances for examples like Set.  However,
+the important point is not that we have global uniqueness, but that we
+can guarantee that the same instance is used consistently.  $\ourlang$
+does not have, admitedelly, a good solution for providing such
+consistency, but there is work on this direction which could provide
+alternatives for dealing with the problem. Genus~\cite{Zhang15LFO}
+tracks the types of instances to enforce consistent uses of instances.
+In Genus it is possible to have two sets using different orderings,
+but those two sets will have different types since they using
+different |Ord| instances.  So, taking the union of those two sets is
+not possible.  In contrast to $\ourlang$ Genus is focused on providing
+a robust source language implementation for generic
+programming. Althout the authors have prove some meta-theory results,
+neither type-safety nor coherence have been proved for Genus.  In
+dependently typed languages such as Agda or Idris, it is possible to
+parametrize types by the instances they use~\cite{brady}. This
+achieves a similar outcome to Genus approach to consistent usage of
+instances.
 
 \subsection{Focused Proof Search}
 \bruno{Tom, this is for you to fill in.}
