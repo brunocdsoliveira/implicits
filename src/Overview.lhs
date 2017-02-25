@@ -70,8 +70,9 @@ Haskell interpreter:
 < Prelude > sort [ (3, 5), (2, 4), (3, 4) ]
 < [(2,4),(3,4),(3,5)]
 
-\noindent In this example, the resolution process combined the two |Ord| instances 
-to find suitable implementations for |Ord (Int,Int)|. 
+\noindent In this example, the resolution process combines the two |Ord| instances 
+to find suitable a implementations for |Ord (Int,Int)|, which is implicitly passed 
+to the |sort| function.
 
 \paragraph{One instance per type} A characteristic of
 (Haskell) type classes is that only one instance is allowed for a
@@ -117,7 +118,7 @@ in the ``3.0''. In contrast chosing |a=Int| leads to |True|, since the
 string is the same.
 
 \paragraph{Overlapping and Incoherent Instances} 
-Advanced features of type classes, such as overlapping
+More advanced features of type classes, such as overlapping
 instances~\cite{}, pose even more severe problems. In purely
 functional programming, ``\emph{substituting equals by equals}'' is
 expected to hold. That is, when given two equivalent expressions then
