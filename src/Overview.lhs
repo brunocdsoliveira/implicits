@@ -14,7 +14,7 @@ We begin by discussing Haskell type classes, since this is the oldest
 and most well-established IP mechanism, then go on to compare them with
 implicits in Scala.
 
-\subsection{Type Classes and Implicit Programming}
+\subsection{Type Classes and Implicit Programming}\label{subsec:tclasses}
 
 Type classes enable the declaration of overloaded functions like comparison,
 pretty printing, or parsing.

@@ -5,23 +5,55 @@
 \section{Related Work}
 \label{sec:related}
 
-This section discusses related work. The most closely related work can be divided 
-into two parts: IP mechanisms that support coherence, but lose some flexibility; 
-and IP mechanisms that are incoherence but offer greater flexibility. $\ourlang$
-is unique in offering very flexible mechanisms, while ensuring coherence. 
+This section discusses related work. The most closely related work can
+be divided into three strands: IP mechanisms that support local
+scoping with coherence, but forbid overlapping rules and lack other
+types of flexibility; IP mechanisms that have global scoping and
+preserve coherence; and IP mechanisms that are incoherent but offer
+greater flexibility in terms of local scoping and/or overlapping
+rules.  $\ourlang$ is unique in offering very flexible mechanisms
+(including local scoping with overlapping rules, first-class rules 
+and higher-order rules), while preserving coherence.
 
-Our work allows nested scoping with overlapping rules while guaranteeing
-coherence. Regarding these issues, previous approaches can be divided into two
-kind. The first kind allows local scoping but forbids nested scoping and, as
-such, avoids the issue of guaranteeing coherence in the presence of
-overlapping. Modular type
-classes~\cite{modular} and System $F_{G}$~\cite{systemfg} are examples of
-this kind of approach. The second kind allows nested scoping,
-but does not guarantee coherence. Most prominently Scala falls in this
-category, but there are several other proposals that also follow this
-approach~\cite{systemct,implicit_explicit,instanceargs}.
+\subsection{Implicit Programming with Local Scoping, Coherence but no Overlapping Rules}
+Our work allows a very flexible model of implicits with first-class
+rules, higher-order rules and nested scoping with overlapping rules
+while guaranteeing coherence.  Closest to our work in the goal of
+combining additional flexibility with coherence are \emph{modular type
+classes}~\cite{modular} and System $F_{G}$~\cite{systemfg}.  Both
+works preserve coherence in the presence of local scoping, but (unlike
+$\ourlang$) the local scopes \emph{forbid overlapping rules}. The
+restriction of no overlapping rules is an essential part of
+guaranteeing coherence. $\ourlang$ also has several other fundamental
+differences to both modular type classes and System $F_{G}$.
+\textit{Modular type classes}~\cite{modular} are a language design
+that uses ML-modules to model type classes. The main novelty of this
+design is that, in addition to explicit instantiation of modules,
+implicit instantiation is also supported.  System
+$F^{G}$~\cite{systemfg} also offers an implicit parameter passing
+mechanism with local scoping, which is used for concept-based generic
+programming~\cite{siek11concepts}. Both mechanisms are strongly influenced by type
+classes, and they preserve some of the characteristics of type
+classes: such only allowing modules or concepts to be implictly
+passed. Moreover neither of those mechanisms support higher-order
+rules. In contrast $\ourlang$ follows the Scala implicits phylosophy
+and allows values of any type to be implicit, and additionally
+higher-order rules are supported.
 
-\subsection{Implicit Programming with Coherence}
+\emph{Implicit parameters}~\cite{implicit_param} are a proposal for a
+name-based implicit parameter passing mechanism with local scoping. 
+Implicit parameters allow \emph{named}
+arguments to be passed implicitly, and these arguments can be of any
+type. However, implicit parameters do not support recursive resolution,
+so for most use-cases of type-classes, including the |Ord| instance 
+for pairs in Section~\ref{subsec:tclasses}, implicit parameters would be very cumbersome. They 
+would require manual composition of rules, instead 
+of relying on the recursive resolution mechanism to do this automatically.
+This in in stark contrast with most other IP mechanims, including $\ourlang$, 
+where recursive resolution and the ability to compose rules automatically is 
+a key feature and source of convinience.
+
+\subsection{Implicit Programming with Coherence and Global Scoping}
 Several core calculi and refinements have been proposed in the context
 of type-classes. As already discussed in detail in
 Section~\ref{sec:intro}, there are a number of design choices that
@@ -92,42 +124,6 @@ notion of coherence
 provides a general framework for Haskell-like systems, but it leaves
 out the details of how to coherently generate the evidence, which
 is non-trivial with overlapping instances.
-
-
-\emph{Implicit parameters}~\cite{implicit_param} are a proposal for a
-name-based implicit parameter passing mechanism with local scoping. Lewis et al.
-formalized a small core language with the mechanism and there is also
-a GHC Haskell implementation. Implicit parameters allow \emph{named}
-arguments to be passed implicitly, and these arguments can be of any
-type. However, implicit parameters do not support recursive resolution,
-so for most use-cases of type-classes they require composing 
-rules manually, instead of relying on the recursive resolution 
-mechanism to do this automatically.
-
-\paragraph{System $F^{G}$} System $F^{G}$~\cite{systemfg} also offers an implicit 
-parameter passing mechanism with local scoping, which is used
-for concept-based generic programming. 
-Instead of a name-based approach, a type-directed approach is used
-for passing implicit parameters. This is closer to $\ourlang$ than implicit parameters.
-A more important difference to the implicit calculus is that, like type classes, there is a
-strong differentiation between types and concepts
-in System $F^{G}$:
-concepts cannot be used as types; and types cannot be used as
-concepts. As a consequence, models implementing concepts can only 
-be passed as implicit parameters, and regular values can only be
-passed as explicit parameters. 
-
-
-\textit{Modular type classes}~\cite{modular} are a language design
-that uses ML-modules to model type classes.  The main novelty of this
-design is that, in addition to explicit instantiation of modules,
-implicit instantiation is also supported. In this design local scoping is
-allowed. However, unlike $\ourlang$ (and also System
-$F^{G}$ and implicit parameters) the local scopes cannot be nested.
-Furthermore, implicit instantiation is limited to modules (that is 
-other regular values cannot be implicitly passed and automatically resolved).
-Finally System $F^{G}$ only formalizes a very simple
-type of resolution, which does not support recursive resolution. 
 
 \subsection{Implicit Programming without Coherence}
 
