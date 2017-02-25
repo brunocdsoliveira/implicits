@@ -40,12 +40,6 @@ rules. In contrast $\ourlang$ follows the Scala implicits phylosophy
 and allows values of any type to be implicit, and additionally
 higher-order rules are supported.
 
-There have been also some proposals for addressing the limitations that
-arise from global scoping~\cite{named_instance,implicit_explicit} in type classes.
-However in those designs, type classes are still second-class and
-resolution only works for type classes.\bruno{say more: not formally studied; 
-unclear if coherence holds?}
-
 \emph{Implicit parameters}~\cite{implicit_param} are a proposal for a
 name-based implicit parameter passing mechanism with local scoping. 
 Implicit parameters allow \emph{named}
@@ -79,6 +73,15 @@ mechanisms (including Scala, Coq, Agda, Idris or Isabelle) that have more
 modest goals in terms of type-inference. In these languages there are
 usually enough type annotations such that ambiguity introduced by local instances 
 is avoided.
+
+There have been some proposals for addressing the limitations that
+arise from global scoping~\cite{named_instance,implicit_explicit} in the context 
+of Haskell type classes. Both \emph{named instances}~\cite{named_instance} and 
+\emph{Explicit Haskell}~\cite{implicit_explicit} preserve 
+most design choices taken in type clases (including global scoping), 
+but allow instances that not participate in the 
+automatic resolution process to be named. This enables the possibility of overriding 
+the compiler's default resolution result with a user-defined choice.
 
 Jones's work on \emph{qualified types}~\cite{simpl_qual} provides a
 particularly elegant framework that captures type classes and other
@@ -125,7 +128,6 @@ class'' interfaces.  \emph{Functional dependencies}~\cite{fundeps},
   families}~\cite{typefunc} are all examples of this trend.  This line
 of work is orthogonal to our own.
 \end{comment}
-
 
 \subsection{Implicit Programming without Coherence}
 
