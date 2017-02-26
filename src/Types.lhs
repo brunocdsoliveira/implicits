@@ -53,7 +53,7 @@ variables in binders are distinct, throughout this article.
 % can be easily renamed apart to be so.
 
 Using rule abstractions and applications we can build the |implicit| 
-sugar used in Sections~\ref{sec:intro} and \ref{sec:overview}.
+sugar used in Section \ref{sec:overview}.
 %{
 %format == = "\defeq"
 %format e1
@@ -166,15 +166,13 @@ literals and types.
 }
 \end{center}
 }
-\bruno{Another point I remember discussing with Philip is whether the unambiguity check can be combined with termination
-checking. Should we consider this option?}
 
 Figure \ref{fig:type} presents the static type system of $\name$.
 Our language is based on System~F, which is included in our system.
 
 %- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 \paragraph{Well-Formed Types}
-As in System F, a type environments $\tenv$ records type variables $\alpha$
+As in System F, a type environment $\tenv$ records type variables $\alpha$
 and variables $x$ with associated types $\rulet$ that are in scope.
 New here is that it also records instances of implicits $\rulet$.
 \bda{llrl} 
@@ -271,7 +269,7 @@ $\Gamma_0 \vturns \tyint$:
    {\tyint \in \Gamma_0}
    {\Gamma_0 \vturns \tyint}
 \end{array}
-\quad \text{and} \quad\quad\quad\quad
+\quad \text{and} \quad\quad\quad\quad\quad\quad
 \begin{array}{c}
 \inferrule*[Left=\mylabel{AR-IApp}]
    {\inferrule*[Left=\mylabel{AR-IVar}] {(\tybool \iarrow \tyint) \in \Gamma_0}
@@ -351,7 +349,7 @@ expressive power in exchange for better behavedness.
 \paragraph{Revised Syntax}
 
 To facilitate the definition of the deterministic resolution
-judgement we have split the syntax of types into three different
+judgement we split the syntax of types into three different
 sorts: \emph{context} types, \emph{simple} types and \emph{monotypes}.
 {\bda{llrl}
     \text{Context Types} & \rulet \hide{\in 2^\meta{RType}} & ::= & 
@@ -518,7 +516,12 @@ Figure~\ref{fig:resolution2} defines the main judgement $\tenv \ivturns \rulet$
 in terms of three interdependent auxiliary judgements. The first of these
 auxiliary judgements is $\bar{\alpha};\tenv \ivturns \rulet$, where
 the type variables $\bar{\alpha}$ are the free type variables in the
-original environment at the point of the query. The main judgement
+original environment at the point of the query. Tracking the free type variables 
+of the original environment plays a crutial role in guaranteeing coherence 
+and ensuring that resolution is stable under type substitutions.
+\bruno{Added the previous sentence. Referring to an example in Section 2 
+would be nice at this point.} 
+ The main judgement
 sets this parameter up in rule \mylabel{R-Main} with 
 the function $\mathit{tyvars}$:
 \newcommand{\tyvars}[1]{\mathit{tyvars}(#1)}
@@ -552,8 +555,8 @@ $\mathit{stable}(\bar{\alpha},\tenv,\rulet,\type)$ entails the opposite of rule
 (We come back to the reason why the condition is stronger than this in
 Section~\ref{sec:coherence}.)
 As a consequence, rules \mylabel{L-RuleMatch} and \mylabel{L-RuleNoMatch}
-are mutually excluse and the judgement effectively commits to the
-right-most matching rule in $\tenv'$.
+are mutually excluse and \emph{the judgement effectively commits to the
+right-most matching rule in $\tenv'$}.
 We maintain the invariant that $\tenv'$ is a prefix of $\tenv$; rule
 \mylabel{R-Simp} provides $\tenv$ as the initial value for $\tenv'$.
 Hence, if a matching rule type $\rulet$ is found, we have that
@@ -822,10 +825,8 @@ The algorithm for computing the most general domain-restricted unifier $\theta=
 \mgun{\bar{\alpha}}{\rulet_1}{\rulet_2}$ is a key component of the two
 algorithmic changes explained above.  Figure~\ref{fig:mgu} provides its
 definition, which is a non-trivial extension of traditional first-order
-unification~\cite{}. The differences 
-
-because it has to account for
-type variable binders and the scope of type variables.
+unification~\cite{}\bruno{reference missing}. The differences 
+arize because it has to account for type variable binders and the scope of type variables.
 
 The algorithm itself is standard: the domain
 restriction $\bar{\alpha}$ merely denotes which type variables are to be
