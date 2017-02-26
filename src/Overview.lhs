@@ -35,7 +35,7 @@ occurrence of the type parameter |a| in their signature.
 % The type parameter may be neither an argument nor a return type,
 % as in showList :: [a] -> String.
 
-\paragraph{Instances and type-directed rules}
+\paragraph{Instances and Type-Directed Rules}
 Instances implement type classes.
 % Implementations 
 % of type classes are provided by type class instances. 
@@ -67,7 +67,7 @@ Using |Ord| we can define a generic sorting function
 returns a list of the same type, as long as ordering is supported
 for type |a|. The body of the function may refer to |<=| on type |a|.
 
-\paragraph{Implicit programming}
+\paragraph{Implicit Programming}
 Type classes are an implicit 
 programming mechanism because implementations of type class operations 
 are automatically \emph{computed} from the set of instances during the 
@@ -85,7 +85,7 @@ to find a suitable implementation for |Ord (Int,Char)|.  The declarations given
 are sufficient to resolve an infinite number of other instances, such as
 |Ord (Char,(Int,Int))| and the like.
 
-\paragraph{One instance per type} A characteristic of
+\paragraph{One Instance Per Type} A characteristic of
 (Haskell) type classes is that only one instance is allowed for a
 given type. For example, it is forbidden to include the alternative ordering
 model for pairs
@@ -268,7 +268,7 @@ We now present the key features of $\ourlang$ and how
 these features are used for IP. For readability purposes we sometimes omit
 redundant type annotations and slightly simplify the syntax. 
 
-\paragraph{Fetching values by types} A central construct in
+\paragraph{Fetching Values by Type} A central construct in
 $\ourlang$ is a query. Queries allow values to be fetched by type, not by name.  
   For example, in the following function call
 
@@ -287,7 +287,7 @@ environment, to serve as an actual argument.
 %%omitted thanks to type inference. Our calculus makes implicit queries
 %%always manifest in text. 
 
-\paragraph{Constructing values with type-directed rules} $\ourlang$ constructs values, using
+\paragraph{Constructing Values with Type-Directed Rules} $\ourlang$ constructs values, using
 programmer-defined, type-directed rules (similar to functions). A rule (or rule
 abstraction) defines how to compute, from implicit arguments, a value of a
 particular type. For example, here is a rule that given an implicit |Int| value, 
@@ -357,7 +357,7 @@ values to the two rule abstractions. For example:
 \noindent which returns |(2,False)|.
 \end{comment} 
 
-\paragraph{Higher-order rules} $\ourlang$ supports higher-order
+\paragraph{Higher-Order Rules} $\ourlang$ supports higher-order
 rules. For example, the rule 
 %%\[
 %%\qlam{\tyInt,\rulety{\tyInt}{\tyInt\times\tyInt}}{\qask{(\tyInt\times\tyInt)}}
@@ -381,7 +381,7 @@ The following expression returns $(3, 4)$:
 Note that higher-order rules are a feature introduced by the implicit calculus and 
 are neither supported in Haskell nor Scala.
 
-\paragraph{Recursive resolution} 
+\paragraph{Recursive Resolution} 
 Note that resolving the  query |(query (Pair Int Int))| above
 involves applying multiple rules. 
 %combining multiple rules. 
@@ -392,7 +392,7 @@ the required integer pair. It does however contain the integer $3$ and a rule
 pair from an integer. Hence, the query is resolved with $(3,4)$, the
 result of applying the pair-producing rule to $3$.
 
-\paragraph{Polymorphic rules and queries} $\ourlang$ allows polymorphic rules. For example, the rule 
+\paragraph{Polymorphic Rules and Queries} $\ourlang$ allows polymorphic rules. For example, the rule 
 %%\[
 %%\qLam{\alpha}{\qlam{\alpha}{(\qask{\alpha},\qask{\alpha})}},
 %%\]
@@ -441,7 +441,7 @@ rule. The following expression returns
 >     implicit (biglam a (rule a (((query a),(query a))))) in
 >       (query (Pair Int Int), query (Pair Bool Bool))
 
-\paragraph{Combining higher-order and polymorphic rules} 
+\paragraph{Combining Higher-Order and Polymorphic Rules} 
 The rule 
 %if False
 \[
@@ -491,7 +491,7 @@ integer pair). For example, the following expression returns $((3,3),(3,3))$:
 % to $3$, and the final answer $((3,3),(3,3))$ from applying the same
 % rule to $(3,3)$.
 
-\paragraph{Locally and lexically scoped rules} 
+\paragraph{Locally and Lexically Scoped Rules} 
 Rules can be nested and resolution respects the lexical scope of rules. 
 Consider the following program: 
 
@@ -540,69 +540,48 @@ returns $2$ and not $1$:
 %endif
 
 \subsection{Overlapping Rules and Coherence in $\ourlang$}
-\bruno{Tom, this is where you take over. I've pasted in some 
-old text for you, but you need to rewrite since it doesn't match what we want 
-to say in this paper. In any case a fair amount of it should be useful to you.
-Here you want to explicitly connect to the example in Section 2.2 and 2.3.
-}
 
-\paragraph{Overlapping rules} 
-Two rules overlap if their return types intersect, i.e., when they can both 
-be used to resolve the same query. Overlapping rules are
-allowed in $\ourlang$ through nested scoping. The nearest matching
-rule takes priority over other matching rules. For example consider 
-the following program:
+As the previous example shows, the lexical scope imposes a natural precedence
+on rules. This precedence means that the lexically nearest rule is used to
+resolve a query, and not necessarily the most specific rule.
+For instance, the following $\ourlang$ variation on the running |trans|
+example from Section~\ref{sec:overview-coherence}
 
-%if False
+> implicit (fun (n) (n + 1) : Int -> Int)  in 
+>    implicit (fun (x) (x) : forall a. a -> a)  in 
+>       query (Int -> Int) 3
 
-A program is coherent iff every query in it has a single, lexically
-nearest match and this nearest match is the one actually used for the
-query at runtime. The following program is coherent:
-
-%endif
-
-> implicit (biglam a (fun (x) (x))) in 
->    implicit (fun (n) (n + 1)) in 
->       query (Int -> Int) 1
-
-In this case |fun (n) (n + 1)| (of type |Int -> Int|) is the lexically nearest
-match in the implicit environment and evaluating this program results 
-in |2|. However, if we have the following program instead:
-
-> implicit (fun (n) (n + 1)) in 
->   implicit (biglam a (fun (x) (x))) in  
->      query (Int -> Int) 1
-
-Then the lexically nearest match is |biglam a (fun (x) (x))| (of type |forall a. a  -> a|)
-and evaluating this program results in |1|.
-
-\paragraph{Overlapping rules and coherence:} 
-A program is coherent iff every query in it has a single, lexically nearest
-match. It is
-well-known~\cite{designspace} that coherence cannot always be guaranteed in the
-presence of overlapping rules. Consider for instance the program:
+yields the result |3| as the inner identity rule has precedence over the
+more specific incrementation rule in the outer scope. Yet, this lexical
+precedense alone is insufficient to guarantee coherence.
+Consider the program
 
 > let f : forall b.b -> b =
 >   implicit (fun (x) (x) : forall a. a -> a) in
 >      implicit (fun (n) (n + 1) : Int -> Int) in 
 >       query (b -> b)
-> in f Int 1
+> in f Int 3
 
 While the query |query (b -> b)| always matches |forall a. a -> a|, that is not
-always the lexically nearest match. Indeed, in case |b| is instantiated to
-|Int| the rule |Int -> Int| is a nearer match. However, in case |b| is
+always the lexically nearest match. Indeed, if |b| is instantiated to
+|Int| the rule |Int -> Int| is a nearer match. However, if |b| is
 instantiated to any other type, |Int -> Int| is not a valid match. In summary,
-we cannot in all cases statically determine the lexically nearest match. 
+we cannot always statically determine the lexically nearest match. 
 
 One might consider to resolve the incoherence by picking the lexically nearest
 rule that matches all possible instantiations of the query, e.g., |forall
-a. a -> a| in the example. In the case of overlapping type family instances for Haskell~\cite{eisenberg},
-that approach leads to type unsoundness. There is not such threat here, nor is
-there for overlapping type class instances in Haskell~\cite{???}. Nevertheless, allowing
-this form of incoherence is undesirable for two reasons. Firstly, because it
-makes the behavior of programs harder to predict, and, secondly, because
-the behavior of programs is not stable under inlining.
-For these reasons we reject incoherent programs.
+a. a -> a| in the example. While this poses no threat to type soundness, this
+form of incoherence is nevertheless undesirable for two reasons.
+Firstly, it makes the behavior of programs harder to predict, and, secondly,
+the behavior of programs is not stable under inlining. Indeed, if we inline the
+function definition of |f| at the call site and substitute the arguments, we obtain the specialised program
+
+> implicit (fun (x) (x) : forall a. a -> a) in
+>    implicit (fun (n) (n + 1) : Int -> Int) in 
+>     query (Int -> Int) 3
+
+This program yields the result |4| while the original incoherent version would yield |3|.
+To avoid this unpredictable behavior, $\ourlang$ rejects incoherent programs.
 
 %if False
 
@@ -754,88 +733,88 @@ n.n+1$ and the second $f$ must be $\lambda x.x$.
 
 %endif
 
-\subsection{Runtime Errors and Coherence Failures}
-\label{subsec:error}
-In $\ourlang$, ill-behaved programs either raise runtime errors or are
-incoherent. The principal source of runtime errors is query failure,
-which is caused by either lookup failure or ambiguous instantiation
-during resolution. Coherence failure happens when a query in a
-program does not have a single nearest match or its single nearest
-match is not the one used at runtime.
-
-\paragraph{Lookup Failures}
-A lookup fails if there is no matching rule in the rule environment,
-or there are multiple matching rules.
-
-The first cause, no matching rule, is the simplest, illustrated by the
-following two examples:
-\[\begin{array}{rl}
-\myset{} &\turns  |query Int| \\
-\myset{|{Bool} => Int : -|}& \turns |query Int|
-\end{array}
-\noindent \]
-In the first example, resolution does not find a matching rule for the
-given |Int| type in the environment. In the second example,
-resolution finds a matching rule for |Int| in the first step, but
-does not find one in the recursive step for |Bool|.
-
-The second cause are multiple matching rules, which is the case in the
-following two examples:
-
-> {Int : 1, Int : 2} turns (query Int)
-> {forall a.a -> Int : -, forall a.Int -> a : - } turns (query (Int -> Int))
-\noindent
-
-In the first example, two different rules produce a value for the same
-type |Int|; arbitrarily choosing one of 1 and 2
-makes the program's behavior unpredictable. To avoid this ambiguity,
-the lookup fails instead. The second example shows that two rules can
-be used to produce a value of the same type, even though the rule
-types are different. The two polymorphic rule types can be instantiated to the
-same type, in this case to |Int -> Int|.
-
-\paragraph{Ambiguous Instantiations}
-In some cases, resolution does not determine how to instantiate a
-fetched rule. Consider the following example:\footnote{$\rclos{n}$
-  denotes a closure value; distinct numbers mean distinct values.}\[
-\begin{array}{rl}
-  \myset{\quad 
-    |forall a.{a -> a} => Int : rclos 1| &, \\
-    |Bool -> Bool : rclos 2|&, \\
-    |forall b. b -> b : rclos 3|&} \turns |query Int|
-\end{array}\]
-% > { forall a. {a -> a} => Int : (rclos 1), Int -> Int : (rclos 2),
-% >  Bool -> Bool : (rclos 3) } turns (query Int)
-The |query Int| matches the first rule without determining an
-instantiation for |a|. However, the runtime behavior could actually
-depend on the choice between |rclos 2| and |rclos 3|. Thus the query
-is ambiguous.
-
-\paragraph{Coherence Failures}
-A program is coherent iff every query in the program has a single,
-lexically nearest match, which is the same statically and at runtime. This
-means that all the runtime queries instantiated from the original
-query should have the same resolution result. Consider the following
-example:
-
-> let f : forall b.b -> b =
->   implicit {fun (x) (x) : forall a. a -> a} in
->       query (b -> b)
-\noindent
-This program is coherent because no matter which type the type
-variable |b| will have at runtime, the resolution results for all
-those queries are the same (|forall a. a -> a|). However, the following program is
-incoherent:
-
-> let f : forall b.b -> b =
->   implicit {fun (x) (x) : forall a. a -> a} in
->      implicit {fun (n) (n + 1) : Int -> Int} in 
->       query (b -> b)
-\noindent
-There are two possible results for the query |query (b -> b)|
-depending on the type of |b| at runtime. If the query is instantiated
-by the substitution $\subst{|b|}{|Int|}$, then the nearest result is
-|Int -> Int| and otherwise, |forall a. a -> a| is the one.
-
-Our static type system will safely reject such programs that can have
-the aforementioned runtime errors or coherence failures.
+% \subsection{Runtime Errors and Coherence Failures}
+% \label{subsec:error}
+% In $\ourlang$, ill-behaved programs either raise runtime errors or are
+% incoherent. The principal source of runtime errors is query failure,
+% which is caused by either lookup failure or ambiguous instantiation
+% during resolution. Coherence failure happens when a query in a
+% program does not have a single nearest match or its single nearest
+% match is not the one used at runtime.
+% 
+% \paragraph{Lookup Failures}
+% A lookup fails if there is no matching rule in the rule environment,
+% or there are multiple matching rules.
+% 
+% The first cause, no matching rule, is the simplest, illustrated by the
+% following two examples:
+% \[\begin{array}{rl}
+% \myset{} &\turns  |query Int| \\
+% \myset{|{Bool} => Int : -|}& \turns |query Int|
+% \end{array}
+% \noindent \]
+% In the first example, resolution does not find a matching rule for the
+% given |Int| type in the environment. In the second example,
+% resolution finds a matching rule for |Int| in the first step, but
+% does not find one in the recursive step for |Bool|.
+% 
+% The second cause are multiple matching rules, which is the case in the
+% following two examples:
+% 
+% > {Int : 1, Int : 2} turns (query Int)
+% > {forall a.a -> Int : -, forall a.Int -> a : - } turns (query (Int -> Int))
+% \noindent
+% 
+% In the first example, two different rules produce a value for the same
+% type |Int|; arbitrarily choosing one of 1 and 2
+% makes the program's behavior unpredictable. To avoid this ambiguity,
+% the lookup fails instead. The second example shows that two rules can
+% be used to produce a value of the same type, even though the rule
+% types are different. The two polymorphic rule types can be instantiated to the
+% same type, in this case to |Int -> Int|.
+% 
+% \paragraph{Ambiguous Instantiations}
+% In some cases, resolution does not determine how to instantiate a
+% fetched rule. Consider the following example:\footnote{$\rclos{n}$
+%   denotes a closure value; distinct numbers mean distinct values.}\[
+% \begin{array}{rl}
+%   \myset{\quad 
+%     |forall a.{a -> a} => Int : rclos 1| &, \\
+%     |Bool -> Bool : rclos 2|&, \\
+%     |forall b. b -> b : rclos 3|&} \turns |query Int|
+% \end{array}\]
+% % > { forall a. {a -> a} => Int : (rclos 1), Int -> Int : (rclos 2),
+% % >  Bool -> Bool : (rclos 3) } turns (query Int)
+% The |query Int| matches the first rule without determining an
+% instantiation for |a|. However, the runtime behavior could actually
+% depend on the choice between |rclos 2| and |rclos 3|. Thus the query
+% is ambiguous.
+% 
+% \paragraph{Coherence Failures}
+% A program is coherent iff every query in the program has a single,
+% lexically nearest match, which is the same statically and at runtime. This
+% means that all the runtime queries instantiated from the original
+% query should have the same resolution result. Consider the following
+% example:
+% 
+% > let f : forall b.b -> b =
+% >   implicit {fun (x) (x) : forall a. a -> a} in
+% >       query (b -> b)
+% \noindent
+% This program is coherent because no matter which type the type
+% variable |b| will have at runtime, the resolution results for all
+% those queries are the same (|forall a. a -> a|). However, the following program is
+% incoherent:
+% 
+% > let f : forall b.b -> b =
+% >   implicit {fun (x) (x) : forall a. a -> a} in
+% >      implicit {fun (n) (n + 1) : Int -> Int} in 
+% >       query (b -> b)
+% \noindent
+% There are two possible results for the query |query (b -> b)|
+% depending on the type of |b| at runtime. If the query is instantiated
+% by the substitution $\subst{|b|}{|Int|}$, then the nearest result is
+% |Int -> Int| and otherwise, |forall a. a -> a| is the one.
+% 
+% Our static type system will safely reject such programs that can have
+% the aforementioned runtime errors or coherence failures.
