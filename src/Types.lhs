@@ -518,11 +518,9 @@ auxiliary judgements is $\bar{\alpha};\tenv \ivturns \rulet$, where
 the type variables $\bar{\alpha}$ are the free type variables in the
 original environment at the point of the query. Tracking these free variables 
 plays a crucial role in guaranteeing coherence 
-and ensuring that resolution is stable under type substitutions.
-\bruno{Added the previous sentence. Referring to an example in Section 2 
-would be nice at this point.} 
- The main judgement
-sets this parameter up in rule \mylabel{R-Main} with 
+and ensuring that resolution is stable under type substitutions; this is explained below.
+The main judgement
+retries these free variables in rule \mylabel{R-Main} with 
 the function $\mathit{tyvars}$:
 \newcommand{\tyvars}[1]{\mathit{tyvars}(#1)}
 \begin{equation*}
@@ -684,9 +682,9 @@ ambiguity.
 
 In order to enforce coherence, rule \mylabel{L-RuleNoMatch} makes sure that the
 decision to not select a context type is stable under all possible
-substitutions $\theta$.  For instance, when looking up $\alpha \arrow \alpha$, the context
-type $\tyInt \arrow \tyInt$ does not match and is otherwise skipped. Yet, under the substitution
-$\theta = [\alpha \mapsto |Int|]$ the context type would match after all. In
+substitutions $\theta$.  Consider for instance the |bad| example from Section~\ref{sec:overview:incoherence}: when looking up |b -> b|, the rule 
+|Int -> Int| does not match and is otherwise skipped. Yet, under the substitution
+$\theta = [|b| \mapsto |Int|]$ the rule would match after all. In
 order to avoid this unstable situation, rule \mylabel{L-RuleNoMatch} only skips a context
 type in the implicit environment, if there is no substitution $\theta$ for
 which the type would match the context type.
@@ -696,27 +694,15 @@ or overlapping type family instances in Haskell. However, there is one
 important complicating factor here: the query type may contain universal
 quantifiers.  Consider a query for |forall a. a -> a|. In this case we wish to
 rule out entirely the context type |Int -> Int| as a potential match. Even
-though it matches under the substitution $\theta = [\alpha \mapsto |Int|]$,
+though it matches under the substitution $\theta = [|a| \mapsto |Int|]$,
 that covers only one instantiation while the query clearly requires a resolvent that
-covers all possible instantiations at the same time.
+covers all possible instantiations.
 
 We clearly identify which type variables $\bar{\alpha}$ are to be considered
 for substitution by rule \mylabel{L-RuleNoMatch} by parametrising the
 judgements by this set. These are the type variables that occur in the environment
 $\tenv$ at the point of the query. The main resolution judgement $\ivturns \rulet$
 grabs them and passes them on to all uses of rule \mylabel{L-RuleNoMatch}.
-
-%- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-\paragraph{Similarity with Focused Proof Search}
-Those familiar with \emph{focused proof
-search}~\cite{focusing,Miller91b,Liang:2009} may have noticed that part of the
-syntax-directedness of our deterministic resolution is very similar to that
-obtained by focusing in proof search. Both approaches alternate a phase that
-is syntax directed on a ``query'' formula (our first auxiliary judgement),
-with a phase that is syntax directed on a given formula (our third auxiliary
-judgement). This is as far as the correspondence goes though, as the choice
-of given formula to focus on is typically not deterministic in focused proof
-search.
 
 %-------------------------------------------------------------------------------
 \subsection{Algorithm}
@@ -825,7 +811,7 @@ The algorithm for computing the most general domain-restricted unifier $\theta=
 \mgun{\bar{\alpha}}{\rulet_1}{\rulet_2}$ is a key component of the two
 algorithmic changes explained above.  Figure~\ref{fig:mgu} provides its
 definition, which is a non-trivial extension of traditional first-order
-unification~\cite{}\bruno{reference missing}. The differences 
+unification~\cite{martellimonatanari}. The differences 
 arize because it has to account for type variable binders and the scope of type variables.
 
 The algorithm itself is standard: the domain
