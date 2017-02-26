@@ -137,6 +137,8 @@ Resolution is stable under substitution.
 \quad\Rightarrow\quad 
 \tenv,\tenv'[\sigma/\alpha] \ivturns \rulet[\sigma/\alpha] \leadsto E[|\sigma|/\alpha] \]
 \end{lemma}
+\bruno{Not entirely sure that the naming for the lemmas matches with
+  what's on the literature, as I argued in my email}
 
 %-------------------------------------------------------------------------------
 \subsection{Evidence Generation in the Algorithm}
@@ -144,6 +146,7 @@ Resolution is stable under substitution.
 The evidence generation in Figure~\ref{fig:algorithm} is largely similar to
 that in the deterministic specification of resolution in
 Figure~\ref{fig:resolution2}.
+With the evidence we can state the correctness of the algorithm.
 
 % The main difference, and complication, is due to the fact that the evidence for
 % type instantiation and recursive resolution is needed before these operations
@@ -166,7 +169,6 @@ Figure~\ref{fig:resolution2}.
 % are computed. The latter kind, $\bar{\omega}$, are substituted later in rule \mylabel{Alg-Simp} where
 % the recursive resolutions take place.
 
-With the evidence we can state the correctness of the algorithm.
 \begin{theorem}[Partial Correctness]
 Let $\tenv$ be a type environment, $\rulet$ be a type and E be a System F expression.
 Assume that $\epsilon \vdash_{\mathit{unamb}} \rulet$ and also $\forall \rulet_i \in \tenv: \epsilon \vdash_{\mathit{unamb}} \rulet_i$.
