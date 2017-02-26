@@ -62,10 +62,10 @@ the first school of thought, which is guided by the \emph{ease of
 of the language should be \emph{coherent}~\cite{Reynolds91coherence,qual}. Coherence
 means that any valid program must have exactly one meaning (that is,
 the semantics is not ambiguous/non-deterministic). In fact Haskell
-type classes are supposed to support an even stronger, so-called, \emph{global
+type classes are supposed to support an even stronger property, the so-called \emph{global
   uniqueness} of
-  instances~\citep{uniqueness}
-property. Global uniqueness ensures that \emph{at any point in a
+  instances~\citep{uniqueness}.
+Global uniqueness ensures that \emph{at any point in a
   program, and independently of the context} the type-directed
 resolution process always returns the same value for the same
 resolved type. This is a consequence of Haskell having the usual
@@ -82,14 +82,14 @@ pose severe problems for coherence. In purely functional programming,
 when given two equivalent expressions replacing one by the other in
 \emph{any context} always leads to two programs that yield the same
 result. Special care (via restrictions) is needed to preserve
-coherence and the ability of substituting equals by equals in the
+coherence and the ability of substituting equals for equals in the
 presence of overlapping instances.
 
 Various past work has pointed out limitations of type classes~\cite{named_instance,systemct,implicit_explicit,modular,Garcia:2007extended,implicits,chain,oliveira12implicit}. 
 In particular type classes allow at most one instance per type (or severely 
 restrict overlapping instances) to exist in a program. This means  
 that all instances must be visible globally, and local scoping of
-instances is not allowed. Such form of global scoping goes against 
+instances is not allowed. This form of global scoping goes against 
 modularity. Other restrictions of type classes are 
 that they are second class interfaces and that the type-directed rules 
 cannot be higher-order~\cite{oliveira12implicit}. 
@@ -103,13 +103,13 @@ program. Scala also allows a powerful form of overlapping
 implicits~\cite{implicits}. The essence of this style of implicit
 programming is modelled by the \emph{implicit
   calculus}~\cite{oliveira12implicit}. The implicit 
-calculus supports a number of features that are unsupported 
+calculus supports a number of features that are not supported 
 by type classes. Besides local scoping, in the implicit calculus 
 \emph{any type} can be an implicit value. In contrast Haskell's type
 class model only allows instances of classes (which can be viewed 
 as a special kind of record) to be passed implicitly. Finally the
 implicit calculus supports higher-order instances/rules: 
-that is rules, where the rule requirements can themselfves be other rules. 
+that is rules, where the rule requirements can themselves be other rules. 
 The
 implicit calculus has been shown to be type-safe.
 Unfortunately, both the implicit calculus and the various existing
@@ -122,7 +122,7 @@ pros and cons of each school of thought: ease of reasoning versus
 flexibility. Proponents of the Haskell school of thought argue that
 having coherence is extremely desirable, and flexibility should not
 come at the cost of that property. Proponents of flexible IP
-mechanisms would argue that flexibility is more important and, in
+mechanisms argue that flexibility is more important and, in
 practice, problems due to incoherence are rare. The current
 state-of-affairs seems to indicate that both goals are at odds with
 each other, and cannot be easily reconciled.
@@ -174,10 +174,10 @@ In summary, our contributions are as follows:
 %  employs various additional techniques to ensure determinism.
 
 \item We significantly improve the design of resolution over the
-  previous work on the implicit calculus. The new design for
-  resolution is more powerful/expressive; it is closely based in
+  existing work on the implicit calculus by Oliveira et al.~\shortcite{oliveira12implicit}. The new design for
+  resolution is more powerful and expressive; it is closely based on
   principles of logic\bruno{should we say this?}; and is related 
-  to the idea of focussing on proof search.  
+  to the idea of focussing in proof search.  
 
 \item We provide a semantics in the form of a translation from \name
    to System F. We prove our translation to be type-safe, and
