@@ -237,4 +237,13 @@ instances. Investigating the applicability of a similar approach to
 $\ourlang$ is an interesting line of future work.
 
 \subsection{Focused Proof Search}
-\bruno{Tom, this is for you to fill in.}
+% \paragraph{Similarity with Focused Proof Search}
+Part of the syntax-directedness of our deterministic resolution is very similar
+to that obtained by \emph{focusing} in proof
+search~\cite{focusing,Miller91b,Liang:2009}. Both approaches alternate a phase
+that
+is syntax directed on a ``query'' formula (our first auxiliary judgement),
+with a phase that is syntax directed on a given formula (our third auxiliary
+judgement). This is as far as the correspondence goes though, as the choice
+of given formula to focus on is typically not deterministic in focused proof
+search.

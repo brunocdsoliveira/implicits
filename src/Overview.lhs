@@ -540,6 +540,7 @@ returns $2$ and not $1$:
 %endif
 
 \subsection{Overlapping Rules and Coherence in $\ourlang$}
+\label{sec:overview:incoherence}
 
 As the previous example shows, the lexical scope imposes a natural precedence
 on rules. This precedence means that the lexically nearest rule is used to
@@ -556,11 +557,11 @@ more specific incrementation rule in the outer scope. Yet, this lexical
 precedense alone is insufficient to guarantee coherence.
 Consider the program
 
-> let f : forall b.b -> b =
+> let bad : forall b.b -> b =
 >   implicit (fun (x) (x) : forall a. a -> a) in
 >      implicit (fun (n) (n + 1) : Int -> Int) in 
 >       query (b -> b)
-> in f Int 3
+> in bad Int 3
 
 While the query |query (b -> b)| always matches |forall a. a -> a|, that is not
 always the lexically nearest match. Indeed, if |b| is instantiated to
@@ -574,7 +575,7 @@ a. a -> a| in the example. While this poses no threat to type soundness, this
 form of incoherence is nevertheless undesirable for two reasons.
 Firstly, it makes the behavior of programs harder to predict, and, secondly,
 the behavior of programs is not stable under inlining. Indeed, if we inline the
-function definition of |f| at the call site and substitute the arguments, we obtain the specialised program
+function definition of |bad| at the call site and substitute the arguments, we obtain the specialised program
 
 > implicit (fun (x) (x) : forall a. a -> a) in
 >    implicit (fun (n) (n + 1) : Int -> Int) in 
