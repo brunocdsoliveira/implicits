@@ -11,14 +11,14 @@ scoping with coherence, but forbid overlapping rules and lack other
 types of flexibility; IP mechanisms that have global scoping and
 preserve coherence; and IP mechanisms that are incoherent but offer
 greater flexibility in terms of local scoping and/or overlapping
-rules.  $\ourlang$ is unique in offering very flexible mechanisms
-(including local scoping with overlapping rules, first-class rules 
+rules.  $\ourlang$ is unique in offering flexibility 
+(local scoping with overlapping rules, first-class rules 
 and higher-order rules), while preserving coherence.
 
 \subsection{Implicit Programming with Local Scoping, Coherence but no Overlapping Rules}
 Our work allows a very flexible model of implicits with first-class
 rules, higher-order rules and nested scoping with overlapping rules
-while guaranteeing coherence.  Closest to our work in the goal of
+while guaranteeing coherence.  Closest to our work in terms of
 combining additional flexibility with coherence are \emph{modular type
 classes}~\cite{modular} and System $F_{G}$~\cite{systemfg}. Both 
 works preserve coherence in the presence of local scoping, but (unlike
@@ -34,9 +34,9 @@ $F^{G}$~\cite{systemfg} also offers an implicit parameter passing
 mechanism with local scoping, which is used for concept-based generic
 programming~\cite{siek11concepts}. Both mechanisms are strongly influenced by type
 classes, and they preserve some of the characteristics of type
-classes: such as only allowing modules or concepts to be implictly
+classes such as only allowing modules or concepts to be implicitly
 passed. Moreover neither of those mechanisms support higher-order
-rules. In contrast $\ourlang$ follows the Scala implicits phylosophy
+rules. In contrast $\ourlang$ follows the Scala implicits philosophy
 and allows values of any type to be implicit, and additionally
 higher-order rules are supported.
 
@@ -47,16 +47,16 @@ arguments to be passed implicitly, and these arguments can be of any
 type. However, implicit parameters do not support recursive resolution,
 so for most use-cases of type-classes, including the |Ord| instance 
 for pairs in Section~\ref{subsec:tclasses}, implicit parameters would be very cumbersome. They 
-would require manual composition of rules, instead 
-of relying on the recursive resolution mechanism to do this automatically.
-This in in stark contrast with most other IP mechanims, including $\ourlang$, 
+would require manual composition of rules instead 
+of providing automatic recursive resolution.
+This is in stark contrast with most other IP mechanisms, including $\ourlang$, 
 where recursive resolution and the ability to compose rules automatically is 
-a key feature and source of convinience.
+a key feature and source of convenience.
 
 \subsection{Implicit Programming with Coherence and Global Scoping}
 
 Several core calculi and refinements have been proposed in the context
-of type-classes. As already discussed in detail in
+of type classes. As already discussed in detail in
 Section~\ref{sec:intro}, there are a number of design choices that
 (Haskell-style) type classes take that are different from $\ourlang$. 
 Most prominently, type classes make a strong differentiation
@@ -85,7 +85,7 @@ the compiler's default resolution result with a user-defined choice.
 
 Jones's work on \emph{qualified types}~\cite{simpl_qual} provides a
 particularly elegant framework that captures type classes and other
-forms of predicates on types. Like type classes, qualified types too
+forms of predicates on types. Like type classes, qualified types
 make a strong distinction between types and predicates over types, and
 scoping is global. Jones~\shortcite{coherence_qual} discusses the
 coherence of qualified types. The formal statement of coherence in $\ourlang$
@@ -101,7 +101,7 @@ overlapping instances.
 \end{comment}
 
 The GHC Haskell compiler supports overlapping
-instances~\cite{designspace}, that live in the same global scope. This
+instances~\cite{designspace} that live in the same global scope. This
 allows some relief for the lack of local scoping, but it still does 
 not allow different instances for the same type to coexist in 
 different scopes of a program.
@@ -117,7 +117,7 @@ with overlapping equations}~\cite{eisenberg}. This proposal allows the
 declaration of a type family and a (closed) set of instances. 
 After this declaration no more instances can be added. In contrast 
 our notion of scoping is closed at a particular resolution point, but 
-the scopes can still be extended in other resolution
+the scopes can still be extended at other resolution
 points.
 
 \begin{comment}
@@ -141,7 +141,7 @@ incoherence. The second difference is in the design of resolution.
 Rules in the implicit calculus have $n$-ary arguments, whereas 
 in $\ourlang$ rules have single arguments and $n$-ary arguments
 are simulated via multiple single argument rules. The resolution process 
-with n-ary arguments in the implicit calculus is simple, but quite ad-hoc 
+with $n$-ary arguments in the implicit calculus is simple, but quite ad-hoc 
 and forbids certain types of resolution that are allowed in $\ourlang$. For example,
 the query:
 \begin{equation*}
@@ -150,14 +150,14 @@ the query:
 \end{equation*}
 
 \noindent does not resolve under the deterministic resolution rules of
-the implicit calculus, but it is solvable in $\ourlang$. Essentially
+the implicit calculus, but it resolves in $\ourlang$. Essentially
 resolving such query requires adding the rule type's context to the
 implicit environment in the course of the resolution process. But in
 the implicit calculus the implicit environment never changes during
 resolution, which significantly weakens the power of resolution. 
 \bruno{Should we say something like: Our design for resolution is much more disciplined and based in the principles 
 of logic.}
-\emph{Scala implicits}~\cite{implicits,scala} were themselfves the
+\emph{Scala implicits}~\cite{implicits,scala} were themselves the
 inspiration for the implicit calculus and, therefore, share various
 similarities with $\ourlang$.  In Scala implicit arguments can be of
 any type, and local scoping (including overlapping rules) is
@@ -177,19 +177,19 @@ overlap in terms of functionality. In both mechanisms the idea is to
 use dependent records to model type-class-like structures, and pass
 instances of such records implicitly, but they still follow Haskell's 
 global scoping approach. Nevertheless highly overlapping instances, which 
-can be incoherent are allowed. Like implicits, the design of
+can be incoherent, are allowed. Like implicits, the design of
 Idris type classes allows for any type of value to be implicit. Thus
 type classes in Idris are first-class, can be manipulated as any other 
-value, an also allows multiple (incoherent) instances of the same type.
+value, an also allow multiple (incoherent) instances of the same type.
 \emph{Instance arguments}~\cite{instanceargs} are an Agda extension
 that is closely related to implicits. Like $\ourlang$, 
 instance arguments use a special arrow for introducing implicit 
 arguments. However, unlike most other mechanisms,
 implicit rules are not declared explicitly. Instead rules are drawn
-directly from the type-environment, and any previously defined 
+directly from the regular type environment, and any previously defined 
 declaration can be used as a rule. The original design of instance arguments
-severally restricted the power of resolution by forbidding recursive resolution.
-Since then, recursive resolution as been enabled in Agda. Like Coq's and Idris's 
+severely restricted the power of resolution by forbidding recursive resolution.
+Since then, recursive resolution has been enabled in Agda. Like Coq's and Idris's 
 type classes, instance arguments allow multiple incoherent rules.
 
 \begin{comment}
@@ -204,39 +204,37 @@ The global scoping of Haskell type classes not only ensures coherence
 but also \emph{global uniqueness}~\cite{uniqueness}, as discussed in
 Section~\ref{sec:overview-coherence}. Unrestricted $\ourlang$ programs ensure coherence
 only, since multiple rules for the same type can coexist in the same
-program. We agree that for programs such as the Set example, it is
+program. We agree that for programs such as the |Set| example, it is
 highly desirable to ensure that the same ordering instance is used
 consistently. $\ourlang$ is a core calculus, meant to enable the
 design of source languages that utilize its power. It should be easy
 enough to design source languages on top of $\ourlang$ that forbid
 local scoping constructs and, instead, make all declared rules visible
-in a single global environemnt. This would retain several of the
+in a single global environment. This would retain several of the
 benefits of $\ourlang$ (such as first-class, higher-order rules, and
 coherent overlapping rules), while providing a form of global
 uniqueness. However this design would still be essentially
 non-modular, which is a key motivation for many alternatives to type
 classes to provide local scoping instead. 
 
-Global uniquess of instances is just a sufficient property to ensure
-consistent uses of the same instances for examples like Set.  However,
-the important point is not that we have global uniqueness, but that we
-can guarantee that the same instance is used consistently.  $\ourlang$
-does not have, admitedelly, a good solution for providing such
-consistency, but there is work on this direction which could provide
-alternatives for dealing with the problem. Genus~\cite{Zhang15LFO}
-tracks the types of instances to enforce consistent uses of instances.
-In Genus it is possible to have two sets using different orderings,
-but those two sets will have different types since they using
-different |Ord| instances.  So, taking the union of those two sets is
+Global uniqueness of instances is just a sufficient property to ensure
+consistent uses of the same instances for examples like |Set|. However,
+the important point is not to have global uniqueness, but to consistently use the same instance.  $\ourlang$
+admittedly does not provide a solution to enforce such
+consistency, but there is existing work with an alternative solution to deal with the problem. Genus~\cite{Zhang15LFO}
+tracks the types of instances to enforce their consistent use.
+For instance, in Genus two sets that use different orderings
+have different types that reflect which 
+|Ord| instance they use. As a consequence, taking the union of those two sets is
 not possible.  In contrast to $\ourlang$ Genus is focused on providing
 a robust source language implementation for generic
-programming. Althout the authors have proved some meta-theory results,
+programming. Although the Genus authors have proved some meta-theoretic results,
 neither type-safety nor coherence have been proved for Genus.  In
-dependently typed languages such as Agda or Idris, it is possible to
+dependently typed languages such as Agda and Idris, it is possible to
 parametrize types by the instances they use~\cite{brady}. This
-achieves a similar outcome to Genus approach to consistent usage of
-instances. Investigating the applicability of similar approaches to 
-$\ourlang$ is an interesting line for future work.
+achieves a similar outcome to Genus's approach to consistent usage of
+instances. Investigating the applicability of a similar approach to 
+$\ourlang$ is an interesting line of future work.
 
 \subsection{Focused Proof Search}
 \bruno{Tom, this is for you to fill in.}

@@ -10,9 +10,9 @@
 
 This section summarizes the relevant background on type classes, IP 
 and coherence, and introduces $\ourlang$'s key features for ensuring coherence.
-We begin by discussing Haskell type classes, since this is the oldest
-and most well-established IP mechanism, then go on to compare them with
-implicits in Scala.
+We first discuss Haskell type classes, the oldest
+and most well-established IP mechanism, and then compare them to
+Scala implicits.
 
 \subsection{Type Classes and Implicit Programming}\label{subsec:tclasses}
 
@@ -64,8 +64,8 @@ Using |Ord| we can define a generic sorting function
 > sort :: Ord a => [a] -> [a]
 
 \noindent that takes a list of elements of an arbitrary type |a| and
-returns a list of the same type, so long as ordering is supported
-on type |a|. The body of the function may refer to |<=| on type |a|.
+returns a list of the same type, as long as ordering is supported
+for type |a|. The body of the function may refer to |<=| on type |a|.
 
 \paragraph{Implicit programming}
 Type classes are an implicit 
@@ -80,7 +80,7 @@ Haskell interpreter:
 < Prelude > sort [ (3,'a'), (2,'c'), (3,'b') ]
 < [(2,'c'),(3,'a'),(3,'b')]
 
-\noindent In this example, the resolution process combines the two |Ord| instances 
+\noindent In this example, the resolution process combines the three |Ord| instances 
 to find a suitable implementation for |Ord (Int,Char)|.  The declarations given
 are sufficient to resolve an infinite number of other instances, such as
 |Ord (Char,(Int,Int))| and the like.
@@ -138,7 +138,7 @@ The overlapping declarations are clearly incoherent,
 since it is unclear whether |trans 3| should return
 |3| using the first instance, or |4| using the second instance.
 Because the second instance is more specific, one 
-might guess that it supersedes the first one; and that is indeed how
+might expect that it supersedes the first one; and that is indeed how
 Haskell assigns a meaning to overlapping instances.
 
 But now consider the following declaration.
@@ -147,8 +147,8 @@ But now consider the following declaration.
 > bad x = trans x  -- incoherent definition!
 
 If Haskell were to accept this definition, it
-must implement |trans| using the first instance,
-since it is applied at the arbitrary type |a|.
+would have to implement |trans| using the first instance,
+since |trans| is applied at the arbitrary type |a|.
 Now |bad 3| returns |3| but |trans 3| returns |4|,
 even though |bad| and |trans| are defined to be
 equal, a nasty impediment to equational reasoning!
@@ -156,36 +156,35 @@ equal, a nasty impediment to equational reasoning!
 For this reason Haskell rejects the program by default. A programmer who really
 wants such behaviour can enable the \emph{IncoherentInstances} compiler flag,
 which allows the program to typecheck. But the use of incoherent instances is
-discouraged.
+greatly discouraged.
 
 \paragraph{Global Uniqueness of Instances} A consequence 
 of having both coherence and at most one instance of a type class 
 per type in a program is \emph{global uniqueness} of instances~\cite{uniqueness}. That is, 
 at any point in the program type class resolution for a particular 
 type always resolves to the same value. 
-The usefulness of this property is nicely illustrated by a library that
+The usefulness of this property is illustrated by a library that
 provides a datatype for sets that is polymorphic in the elements along with a
 |union| operation:
 
 < union :: Ord a => Set a -> Set a -> Set a
 
 \noindent For efficiency reasons the sets are represented by a
-datastructure that orders the elements in a particular way. To deal with
-ordering it is natural to rely on the |Ord| type class, and the
-ordering it defines for the particular type |a|.  To preserve the
+datastructure that orders the elements in a particular way. 
+It is natural to rely on the |Ord| type class to deal with ordering for the particular type |a|.  To preserve the
 correct invariant, it is crucial that the ordering of elements in the
 set is always the same. The global uniqueness property guarantees this. If two
 distinct instances of |Ord| could be used in different parts of the
 program for the same type, then it would be possible to construct within the
 same program two sets using two different orderings (say ascending and
-descending order) in the same program, and then break the ordering invariant by
-unioning those two sets.
+descending order), and then break the ordering invariant by
+|union|-ing those two sets.
 
 Although global uniqueness is, in principle, a property that should hold in
 Haskell programs, Haskell implementations actually violate this property in
 various circumstances~
 \footnote{\url{http://stackoverflow.com/questions/12735274/breaking-data-set-integrity-without-generalizednewtypederiving}}.
-In fact it is ackowledged that providing a global uniqueness check is quite 
+In fact it is acknowledged that providing a global uniqueness check is quite 
 challenging for Haskell implementations~\footnote{\url{https://mail.haskell.org/pipermail/haskell-cafe/2012-October/103887.html}}.
 
 \subsection{Incoherence in Implicits}
@@ -239,27 +238,27 @@ Here the |implicit| keyword specifies that the actual argument should not be
 given explicitly; instead argument of the appropriate type will be synthesized from
 the available |implicit| declarations.
 
-In the nested scope, line~(3) defines a function |succ| of type
-|Int => Int| that takes argument |x| and returns |x+1|.  Again, 
-the |implicit| keyword in the declaration specifies that this value may be used to
-synthesise an implicit argument.  Line~(4) defines a function |bad|
+In the nested scope, line~(3) defines function |succ| of type
+|Int => Int| that takes argument |x| and returns |x+1|. Again, 
+the |implicit| keyword in the declaration specifies that |succ| may be used to
+synthesise implicit arguments.  Line~(4) defines a function |bad|
 with type parameter |a| which takes an argument |x| of type |a| and
 returns the value of function |trans| applied at type |a| to argument
 |x|.  Lines~(5) and~(6) shows that, as in the earlier example and for
 the same reason, |bad(3)| returns |3| while |trans(3)| returns |4|.
 This is an equally nasty impediment to equational reasoning, but
-unlike in Haskell, this is the expected behaviour: it is enabled
-by default and there is no way to disable it.
+unlike in Haskell, it is the intended behaviour: it is enabled
+by default and cannot be disabled.
 
 \subsection{An Overview of $\ourlang$}
 
-Our calculus $\ourlang$ resembles Haskell in requiring coherence and
-resembles Scala in permitting nested declarations. 
+Like Haskell our calculus $\ourlang$ requires coherence and
+like Scala it permits nested declarations. 
 Unrestricted $\ourlang$ programs do not guarantee global uniqueness.
 What are referred to as type class instances in Haskell are called
-\emph{rules}, while as in Scala no special declaration for type
-classes is required.  $\ourlang$ can be viewed as an improved variant
-of the implicit calculus~\cite{oliveira12implicit}, which is a calculus 
+\emph{rules}, and, like in Scala, no type class declarations
+are needed. $\ourlang$ improves upon 
+the implicit calculus~\cite{oliveira12implicit}, which is a calculus 
 designed to model the essence of Scala implicits. Like the implicit
 calculus it combines standard scoping mechanisms (abstractions and
 applications) and types \`a la System~F, with a
@@ -307,8 +306,8 @@ The type of the rule above is:
 
 < Int => Int
 
-\noindent This type denotes that the rule has type |Int| provided the 
-availability of a value of type |Int| in the implicit environment. 
+\noindent This type denotes that the rule has type |Int| provided 
+a value of type |Int| is available in the implicit environment. 
 The implicit environment is extended through rule application (analogous to
 extending the environment with function applications).
 Rule application is expressed as, for example:

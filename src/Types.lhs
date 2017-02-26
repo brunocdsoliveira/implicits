@@ -516,8 +516,8 @@ Figure~\ref{fig:resolution2} defines the main judgement $\tenv \ivturns \rulet$
 in terms of three interdependent auxiliary judgements. The first of these
 auxiliary judgements is $\bar{\alpha};\tenv \ivturns \rulet$, where
 the type variables $\bar{\alpha}$ are the free type variables in the
-original environment at the point of the query. Tracking the free type variables 
-of the original environment plays a crutial role in guaranteeing coherence 
+original environment at the point of the query. Tracking these free variables 
+plays a crucial role in guaranteeing coherence 
 and ensuring that resolution is stable under type substitutions.
 \bruno{Added the previous sentence. Referring to an example in Section 2 
 would be nice at this point.} 
