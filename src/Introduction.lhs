@@ -89,13 +89,14 @@ Various past work has pointed out limitations of type classes~\cite{named_instan
 In particular type classes allow at most one instance per type (or severely 
 restrict overlapping instances) to exist in a program. This means  
 that all instances must be visible globally, and local scoping of
-instances is not allowed. This form of global scoping goes against 
+instances is not allowed. 
+This form of global scoping goes against 
 modularity. Other restrictions of type classes are 
 that they are second class interfaces and that the type-directed rules 
 cannot be higher-order~\cite{oliveira12implicit}. 
 
 An alternative school of thought in the design of IP mechanisms favours \emph{flexibility}. For instance, 
-Scala implicits and Agda's instance arguments \bruno{others} do not impose all of
+Scala implicits and Agda's instance arguments do not impose all of
 the type class restrictions. For example, Scala supports local scoping of
 instances, which can be used to allow distinct 
 ``instances'' to exists for the same type in different scopes in the same
@@ -123,9 +124,14 @@ flexibility. Proponents of the Haskell school of thought argue that
 having coherence is extremely desirable, and flexibility should not
 come at the cost of that property. Proponents of flexible IP
 mechanisms argue that flexibility is more important and, in
-practice, problems due to incoherence are rare. The current
-state-of-affairs seems to indicate that both goals are at odds with
-each other, and cannot be easily reconciled.
+practice, problems due to incoherence are rare. 
+As far as we are aware only two designs preserve coherence, while
+allowing some extra flexibility for local scoping~\cite{modular,systemfg}. However
+neither of those designs supports overlapping instances and various
+other features, such as first-class and higher-order rules.
+%%The current
+%%state-of-affairs seems to indicate that both goals are at odds with
+%%each other, and cannot be easily reconciled.
 
 This paper presents \name\footnote{Cochise, 1804--1874, was chief of the Chokonen band of
       the Chiricahua Apache.}: the Calculus Of CoHerent ImplicitS. \name
@@ -176,7 +182,7 @@ In summary, our contributions are as follows:
 \item We significantly improve the design of resolution over the
   existing work on the implicit calculus by Oliveira et al.~\shortcite{oliveira12implicit}. The new design for
   resolution is more powerful and expressive; it is closely based on
-  principles of logic\bruno{should we say this?}; and is related 
+  principles of logic and the idea of propositions as types~\cite{propsastypes}; and is related 
   to the idea of focussing in proof search.  
 
 \item We provide a semantics in the form of a translation from \name
