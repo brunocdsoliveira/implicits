@@ -814,20 +814,32 @@ actual match.
 The algorithm for computing the most general domain-restricted unifier $\theta=
 \mgun{\bar{\alpha}}{\rulet_1}{\rulet_2}$ is a key component of the two
 algorithmic changes explained above.  Figure~\ref{fig:mgu} provides its
-definition, which is a non-trivial extension of traditional first-order
-unification~\cite{martellimonatanari}. The differences 
-arize because it has to account for type variable binders and the scope of type variables.
+definition, which is an extension of standard first-order
+unification~\cite{martellimonatanari}.  The domain restriction $\bar{\alpha}$
+denotes which type variables are to be treated as unification variables; all
+other type variables are to be treated as constants.  The differences with
+standard first-order unification arise because the algorithm has to account for
+type variable binders and the scope of type variables. For
+instance, using standard first-order unification for $\mgun{\beta}{\forall
+\alpha. \alpha \to \beta}{\forall \alpha.\alpha \to \alpha}$ would yield 
+the substitution $[\beta/\alpha]$. However, this solution is not
+acceptable because $\alpha$ is not in scope in $\tenv$.
 
-The algorithm itself is standard: the domain
-restriction $\bar{\alpha}$ merely denotes which type variables are to be
-treated as unification variables; all other type variables are to be treated as
-constants. 
+Rule \mylabel{U-InstL} implements the base case for scope-safe unification.
+It only creates a substitution $[\suty/\alpha]$ if $\alpha$ is one of the
+unification variables and if its instantiation does not refer to any type variables
+that have been introduced in the environment after $\alpha$. The latter
+relation is captured in the auxiliary judgement $\beta >_\tenv \alpha$.
+(We make an exception for unifiable type variables that have been introduced later:
+while the most general unifier itself may not yield a valid instantiation, it still 
+signifies the existence of an infinite number of more specific valid instantiations.)
+Rule \mylabel{U-InstR} is the symmetric form of \mylabel{U-InstR}.
 
-Only rule \tlabel{U-Univ} deserves two notes. Firstly, we assume that
-$\alpha$-renaming is used implicitly to use the same name $\beta$ for both
-bound type variables. Secondly, we have to be careful that $\beta$ does not
-escape its scope through $\theta$, which could happen when computing for
-example $\mathit{mgu}_{\alpha}(\forall \beta.\beta, \forall \beta.\alpha)$.
+Rule \mylabel{U-Var} is the standard reflexivity rule. Rules \mylabel{U-Fun}
+and \mylabel{U-Rul} are standard congruence rules that combine the
+unifications derived for their subterms. Rule \mylabel{U-Univ} is a congruence
+rule too, but additionally extends the environment $\tenv$ in the recursive
+call with the new type variable $\beta$ that is in scope in the subterms.
 
 % \paragraph{Ambiguity}
 % Some of the type variables $\bar{\alpha}$ may not be instantiated by the
