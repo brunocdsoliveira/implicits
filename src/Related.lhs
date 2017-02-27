@@ -88,8 +88,8 @@ particularly elegant framework that captures type classes and other
 forms of predicates on types. Like type classes, qualified types
 make a strong distinction between types and predicates over types, and
 scoping is global. Jones~\shortcite{coherence_qual} discusses the
-coherence of qualified types. The formal statement of coherence in $\ourlang$
-is similar to the one used in qualified types.\bruno{double-check that this is true.} 
+coherence of qualified types. The formal statement of determinacy in $\ourlang$
+essentially guarantees a strong form of coherence similar to the one used in qualified types. 
 
 \begin{comment}
  In his definition, the translation
@@ -154,9 +154,7 @@ the implicit calculus, but it resolves in $\ourlang$. Essentially
 resolving such query requires adding the rule type's context to the
 implicit environment in the course of the resolution process. But in
 the implicit calculus the implicit environment never changes during
-resolution, which significantly weakens the power of resolution. 
-\bruno{Should we say something like: Our design for resolution is much more disciplined and based in the principles 
-of logic.}
+resolution, which significantly weakens the power of resolution.
 \emph{Scala implicits}~\cite{implicits,scala} were themselves the
 inspiration for the implicit calculus and, therefore, share various
 similarities with $\ourlang$.  In Scala implicit arguments can be of
@@ -200,8 +198,8 @@ so important, as long as a proof exists.
 \end{comment}
 
 \subsection{Global Uniqueness and Same Instance Guarantee}
-The global scoping of Haskell type classes not only ensures coherence
-but also \emph{global uniqueness}~\cite{uniqueness}, as discussed in
+Haskell type classes not only ensures coherence
+but also \emph{global uniqueness}~\cite{uniqueness} (due to global scoping), as discussed in
 Section~\ref{sec:overview-coherence}. Unrestricted $\ourlang$ programs ensure coherence
 only, since multiple rules for the same type can coexist in the same
 program. We agree that for programs such as the |Set| example, it is
