@@ -518,10 +518,12 @@ Figure~\ref{fig:resolution2} defines the main judgement $\tenv \ivturns \rulet$
 in terms of three interdependent auxiliary judgements. The first of these
 auxiliary judgements is $\bar{\alpha};\tenv \ivturns \rulet$, where
 the type variables $\bar{\alpha}$ are the free type variables in the
-original environment at the point of the query. Tracking these free variables 
-plays a crucial role in guaranteeing coherence 
-and ensuring that resolution is stable under type substitutions; this is explained below.
-The main judgement
+original environment at the point of the query. Recall the |bad| example
+from Section~\ref{sec:overview:incoherence} where there is only one such free
+type variable: |b|. 
+Tracking these free variables plays a crucial role in guaranteeing coherence
+and ensuring that resolution is stable under all type substitutions that instantiate these variables, like $[|b| \mapsto |Int|]$; how we prevent these substitutions is explained below.  The
+main judgement
 retries these free variables in rule \mylabel{R-Main} with 
 the function $\mathit{tyvars}$:
 \newcommand{\tyvars}[1]{\mathit{tyvars}(#1)}
@@ -551,7 +553,7 @@ below.  Finally, rule \mylabel{L-RuleNoMatch} skips a rule type in the
 environment if it does not match. Its condition
 $\mathit{stable}(\bar{\alpha},\tenv,\rulet,\type)$ entails the opposite of rule
 \mylabel{L-RuleMatch}'s first condition: $\not\exists
-\Sigma:\quad\tenv;\rulet \ivturns \type; \Sigma$.
+\Sigma:~\tenv;\rulet \ivturns \type; \Sigma$.
 (We come back to the reason why the condition is stronger than this in
 Section~\ref{sec:coherence}.)
 As a consequence, rules \mylabel{L-RuleMatch} and \mylabel{L-RuleNoMatch}
