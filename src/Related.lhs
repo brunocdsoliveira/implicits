@@ -198,17 +198,17 @@ so important, as long as a proof exists.
 \end{comment}
 
 \subsection{Global Uniqueness and Same Instance Guarantee}
-Haskell type classes not only ensures coherence
+Haskell type classes not only ensure coherence
 but also \emph{global uniqueness}~\cite{uniqueness} (due to global scoping), as discussed in
 Section~\ref{sec:overview-coherence}. Unrestricted $\ourlang$ programs ensure coherence
-only, since multiple rules for the same type can coexist in the same
+only, as multiple rules for the same type can coexist in the same
 program. We agree that for programs such as the |Set| example, it is
 highly desirable to ensure that the same ordering instance is used
 consistently. $\ourlang$ is a core calculus, meant to enable the
 design of source languages that utilize its power. It should be easy
 enough to design source languages on top of $\ourlang$ that forbid
 local scoping constructs and, instead, make all declared rules visible
-in a single global environment. This would retain several of the
+in a single global environment. This would retain several of
 benefits of $\ourlang$ (such as first-class, higher-order rules, and
 coherent overlapping rules), while providing a form of global
 uniqueness. However this design would still be essentially
