@@ -121,24 +121,26 @@ If $\tenv \vturns \rulet \leadsto E$, then $|\tenv| \vdash E : |\rulet|$.
 
 Moreover, we can express three key properties of Figure~\ref{fig:resolution2}'s
 definition of resolution in terms of the generated evidence.
-\begin{lemma}[Determinacy]
-The generated evidence of resolution is uniquely determined.
-\[\forall \tenv, \rulet, E_1, E_2: \quad\quad \tenv \ivturns \rulet \leadsto E_1 ~\wedge~ \tenv \ivturns \rulet \leadsto E_2 \quad\Rightarrow\quad E_1 = E_2 \]
-\end{lemma}
+Firstly, the deterministic version of resolution is a sound variation on the original ambiguous resolution.
 \begin{lemma}[Soundness]
 Figure~\ref{fig:resolution2}'s definition of resolution is sound (but
 incomplete) with respect to Figure~\ref{fig:resolution1}'s definition.
 \[\forall \tenv, \rulet, E: \quad\quad \tenv \ivturns \rulet \leadsto E \quad\Rightarrow\quad \tenv \vturns \rulet \leadsto E \]
 \end{lemma}
-\begin{lemma}[Coherence]
+Secondly, the deterministic resolution guarantees a strong form of coherence:
+\begin{lemma}[Determinacy]
+The generated evidence of resolution is uniquely determined.
+\[\forall \tenv, \rulet, E_1, E_2: \quad\quad \tenv \ivturns \rulet \leadsto E_1 ~\wedge~ \tenv \ivturns \rulet \leadsto E_2 \quad\Rightarrow\quad E_1 = E_2 \]
+\end{lemma}
+Thirdly, on top of the immediate coherence of deterministic resolution, 
+an additional coherence property holds.  
+\begin{lemma}[Stability]
 Resolution is stable under substitution.
 \[\forall \tenv,\alpha,\tenv',\sigma,\rulet, E: \quad\quad 
 \tenv,\alpha,\tenv' \ivturns \rulet \leadsto E \quad\wedge\quad \tenv \vdash \sigma
 \quad\Rightarrow\quad 
 \tenv,\tenv'[\sigma/\alpha] \ivturns \rulet[\sigma/\alpha] \leadsto E[|\sigma|/\alpha] \]
 \end{lemma}
-\bruno{Not entirely sure that the naming for the lemmas matches with
-  what's on the literature, as I argued in my email}
 
 %-------------------------------------------------------------------------------
 \subsection{Evidence Generation in the Algorithm}
