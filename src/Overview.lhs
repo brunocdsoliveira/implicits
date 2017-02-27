@@ -250,7 +250,7 @@ This is an equally nasty impediment to equational reasoning, but
 unlike in Haskell, it is the intended behaviour: it is enabled
 by default and cannot be disabled.
 
-\subsection{An Overview of $\ourlang$}
+\subsection{An Overview of $\ourlang$}\label{sec:overview:ourlang}
 
 Like Haskell our calculus $\ourlang$ requires coherence and
 like Scala it permits nested declarations. 

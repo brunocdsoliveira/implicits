@@ -257,11 +257,13 @@ rules have overlapping conclusions. Hence, a deterministic resolution algorithm
 is non-obvious.
 % \item
 Secondly and more importantly, the definition is \emph{ambiguous}: a derivation
-can be shown by multiple different derivations. For instance, if we define
+can be shown by multiple different derivations. For instance, 
+consider again the resolution in the last example of Section~\ref{sec:overview:ourlang}:
+in the environment
 \[
 \Gamma_0 = (\tyint,\tybool,(\tybool\iarrow\tyint))
 \]
-then there are two different derivations for
+there are two different derivations for
 $\Gamma_0 \vturns \tyint$:
 \begin{equation*}
 \begin{array}{c}
