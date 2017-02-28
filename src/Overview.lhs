@@ -8,7 +8,7 @@
 \section{Overview}
 \label{sec:overview}
 
-This section summarizes the relevant background on type classes, IP 
+This section summarises the relevant background on type classes, IP 
 and coherence, and introduces $\ourlang$'s key features for ensuring coherence.
 We first discuss Haskell type classes, the oldest
 and most well-established IP mechanism, then compare them to
@@ -196,7 +196,7 @@ property, since different ``instances'' may exist for
 the same type in different scopes. Another interesting difference
 between implicits and type classes is that values of any type can be
 used as implicit parameters; there are no special constructs analogous
-to type class or instance declarations. Instead, implicits are modeled
+to type class or instance declarations. Instead, implicits are modelled
 with ordinary types. They can be abstracted over and do not suffer
 from the second-class nature of type classes. Such features mean that 
 Scala implicits have a wider range of applications than type classes. 
@@ -220,12 +220,12 @@ addition and multiplication in modular arithmetic.
 In Scala |%| is modulo division. Both addition and multiplication 
 include a third (implicit) parameter, which is the modulus 
 of the division. Although the modulus could be passed explicitly 
-this would be extremelly cumbersume. Instead it is desirable that 
+this would be extremely cumbersome. Instead it is desirable that 
 the modulus is passed implicitly. Scala implicits allow this, by simply marking 
 the |modulus| parameter in |add| and |mul| with the |implicit| keyword. 
 The third line shows how to set up an implicit value for the modulus. 
 Adding |implicit| before |val| signals that the value being defined 
-is available for synthesizing values of type |Int|. 
+is available for synthesising values of type |Int|. 
 Finally, |test| illustrates how expressions doing modular arithmetic 
 can be defined using the implicit modulus. Because Scala also 
 has local scoping, different modulus values can be used under 
@@ -242,7 +242,7 @@ be used to synthesise an implicit argument.
 Line~(2) defines a function |trans| with type parameter |a|,
 which takes an implicit argument |f| of type |a => a| and returns |f(x)|.
 Here the |implicit| keyword specifies that the actual argument should not be
-given explicitly; instead argument of the appropriate type will be synthesized from
+given explicitly; instead argument of the appropriate type will be synthesised from
 the available |implicit| declarations.
 
 
@@ -550,7 +550,7 @@ example from Section~\ref{sec:overview-coherence}
 
 yields the result |3| as the inner identity rule has precedence over the
 more specific incrementation rule in the outer scope. Yet, this lexical
-precedense alone is insufficient to guarantee coherence.
+precedence alone is insufficient to guarantee coherence.
 Consider the program
 
 > let bad : forall b.b -> b =
@@ -569,8 +569,8 @@ One might consider to resolve the incoherence by picking the lexically nearest
 rule that matches all possible instantiations of the query, e.g., |forall
 a. a -> a| in the example. While this poses no threat to type soundness, this
 form of incoherence is nevertheless undesirable for two reasons.
-Firstly, it makes the behavior of programs harder to predict, and, secondly,
-the behavior of programs is not stable under inlining. Indeed, if we inline the
+Firstly, it makes the behaviour of programs harder to predict, and, secondly,
+the behaviour of programs is not stable under inlining. Indeed, if we inline the
 function definition of |bad| at the call site and substitute the arguments, we obtain the specialised program
 
 > implicit (fun (x) (x) : forall a. a -> a) in
@@ -578,7 +578,7 @@ function definition of |bad| at the call site and substitute the arguments, we o
 >     query (Int -> Int) 3
 
 This program yields the result |4| while the original incoherent version would yield |3|.
-To avoid this unpredictable behavior, $\ourlang$ rejects incoherent programs.
+To avoid this unpredictable behaviour, $\ourlang$ rejects incoherent programs.
 
 %if False
 
@@ -621,7 +621,7 @@ following program is rejected:
 
 %if False
 
-The \emph{coherence} principle states under what conditions the behavior of
+The \emph{coherence} principle states under what conditions the behaviour of
 resolution is consistently predictable in the presence of
 overlapping rules. $\ourlang$ adopts this principle and rejects
 programs like the following one:
@@ -684,7 +684,7 @@ n.n+1$ and the second $f$ must be $\lambda x.x$.
 
 Here, both 
 
-  The coherence principle states under what conditions the behavior of
+  The coherence principle states under what conditions the behaviour of
   resolution is consistently predictable in the presence of
   overlapping rules. Without coherence, programming with implicit
   values is a tricky business, fragile and unpredictable.

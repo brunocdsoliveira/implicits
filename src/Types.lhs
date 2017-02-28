@@ -37,7 +37,7 @@ $\forall \alpha. \rulet$; and the novel \textit{rule} types $\rulet_1 \iarrow
 \rulet_2$.  In a rule type $\rulet_1 \iarrow \rulet_2$, type $\rulet_1$ is
 called the \textit{context} and type $\rulet_2$ the \textit{head}.
 
-Expressions $e$ include three abstraction-eliminination pairs.
+Expressions $e$ include three abstraction-elimination pairs.
 Binder $\lambda (x:\rulet). e$ abstracts expression $e$ over values of type $\rulet$,
 is eliminated by application $e_1\,e_2$, and refers to the bound value with variable $x$.
 Binder $\Lambda \alpha.e$ abstracts expression $e$ over types, is eliminated
@@ -342,7 +342,7 @@ resolution renders the meaning of a program ambiguous.
 
 Figure~\ref{fig:resolution2} defines judgement $\tenv \ivturns \rulet$, which
 is a syntax-directed deterministic variant of $\tenv \vturns \rulet$. This
-determinstic variant is sound with respect to the ambiguous definition. In
+deterministic variant is sound with respect to the ambiguous definition. In
 other words, $\tenv \vturns \rulet$ holds if $\tenv \ivturns \rulet$ holds.
 Yet, the opposite is not true. The deterministic judgement sacrifices some
 expressive power in exchange for better behavedness.
@@ -565,8 +565,8 @@ Hence, if a matching rule type $\rulet$ is found, we have that
 $\rulet \in \tenv$. Hence, the second auxiliary judgement
 plays much the same role as rule
 \mylabel{AR-IVar} in Figure~\ref{fig:resolution1}, which also selects a rule type $\rulet \in \tenv$. The difference is that rule \mylabel{AR-IVar} makes a non-deterministic
-choice, while the second auxiliary judgement makes determinstic committed choice
-that prioritizes rule types more to the right in the environment. For instance, $\tyint,\tyint \vturns \tyint$ has two ways to resolve, while $\tyint,\tyint \ivturns \tyint$ has only one because the second $\tyint$ in the environment shadows the first.
+choice, while the second auxiliary judgement makes deterministic committed choice
+that prioritises rule types more to the right in the environment. For instance, $\tyint,\tyint \vturns \tyint$ has two ways to resolve, while $\tyint,\tyint \ivturns \tyint$ has only one because the second $\tyint$ in the environment shadows the first.
 
 
 Finally, the third auxiliary judgement, $\tenv;\rulet \ivturns \type; \Sigma$,
@@ -659,7 +659,7 @@ empty.
 \end{center}
 }
 
-The auxililiary judgement expresses that all type variables $\bar{\alpha}$ 
+The auxiliary judgement expresses that all type variables $\bar{\alpha}$ 
 are resolved when matching against $\rulet$.
 Its base case, rule \mylabel{UA-Simp}, expresses
 that fixing the simple type $\type$ also fixes the type variables
