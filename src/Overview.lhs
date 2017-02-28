@@ -202,7 +202,7 @@ from the second-class nature of type classes. Such features mean that
 Scala implicits have a wider range of applications than type classes. 
 For example, they can be used to solve the problem of 
 \emph{implicit configurations}~\cite{Kiselyov04} naturally. The following 
-example, borrowed from Kiselyov and Shan, illustrates this:
+example, adapted from Kiselyov and Shan, illustrates this:
 
 \begin{code}
 def add(a : Int, b : Int)(implicit modulus : Int) = (a + b) % modulus  
@@ -211,13 +211,14 @@ implicit val defMod : Int = 4
 def test = add(mul(3,3), mul(5,5)) // returns 2
 \end{code}
 
-\noindent Here the idea is to model \emph{modular arithmetic}. 
-In modular arithmetic numbers that differ by multiples of a 
+\noindent Here the idea is to model \emph{modular arithmetic}, 
+where numbers
+that differ by multiples of a 
 given modulus are treated as identical.
 For example 2 + 3 = 1 (mod 4) because 2 + 3 and 1 differ 
 by a multiple of 4. The code shows the definition of 
 addition and multiplication in modular arithmetic. 
-In Scala |%| is modulo division. Both addition and multiplication 
+In Scala |%| is modulo division. Both \emph{add}ition and \emph{mul}tiplication 
 include a third (implicit) parameter, which is the modulus 
 of the division. Although the modulus could be passed explicitly 
 this would be extremelly cumbersume. Instead it is desirable that 
@@ -283,9 +284,10 @@ reasoning, since performing simple equational reasoning would lead to
 a different result. However unlike in Haskell, it is the intended
 behaviour: it is enabled by default and cannot be disabled.
 Interestingly the expression in line~(6), which is accepted in Haskell, is actually rejected in Scala. 
-Here the Scala compiler does detect two possible instances for |Int => Int|. 
-Rejecting line~(6) has another unfortunate consequence: now not only 
-semantics is not preserved under substitution, but typing is not preserved either!
+Here the Scala compiler does detect two possible instances for |Int => Int|,
+but does not select the most specific one. 
+Rejecting line~(6) has another unfortunate consequence: not only is the
+semantics not preserved under unfolding, but typing is not preserved either!
 Clearly preserving desirable properties such as coherence and type preservation is 
 a subtle matter in the presence of implicits and deserves careful study. 
 
