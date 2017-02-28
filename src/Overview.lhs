@@ -11,8 +11,8 @@
 This section summarizes the relevant background on type classes, IP 
 and coherence, and introduces $\ourlang$'s key features for ensuring coherence.
 We first discuss Haskell type classes, the oldest
-and most well-established IP mechanism, and then compare them to
-Scala implicits.
+and most well-established IP mechanism, then compare them to
+Scala implicits, and finally we introduce the coherence approach taken in $\ourlang$.
 
 \subsection{Type Classes and Implicit Programming}\label{subsec:tclasses}
 
@@ -187,18 +187,64 @@ various circumstances~
 In fact it is acknowledged that providing a global uniqueness check is quite 
 challenging for Haskell implementations~\footnote{\url{https://mail.haskell.org/pipermail/haskell-cafe/2012-October/103887.html}}.
 
-\subsection{Incoherence in Implicits}
+\subsection{Scala Implicits and Incoherence}
 
 Scala implicits~\cite{implicits} are an interesting alternative IP
 design. Unlike type classes, implicits have locally scoped
 rules. Consequently Scala does not have the global uniqueness
 property, since different ``instances'' may exist for
-the same type in different scopes.  Another interesting difference
+the same type in different scopes. Another interesting difference
 between implicits and type classes is that values of any type can be
 used as implicit parameters; there are no special constructs analogous
 to type class or instance declarations. Instead, implicits are modeled
 with ordinary types. They can be abstracted over and do not suffer
-from the second-class nature of type classes.
+from the second-class nature of type classes. Such features mean that 
+Scala implicits have a wider range of applications than type classes. 
+For example, they can be used to solve the problem of 
+\emph{implicit configurations}~\cite{Kiselyov04} naturally. The following 
+example, borrowed from Kiselyov and Shan, illustrates this:
+
+\begin{code}
+def add(a : Int, b : Int)(implicit modulus : Int) = (a + b) % modulus  
+def mul(a : Int, b : Int)(implicit modulus : Int) = (a * b) % modulus  
+implicit val defMod : Int = 4       
+def test = add(mul(3,3), mul(5,5)) // returns 2
+\end{code}
+
+\noindent Here the idea is to model \emph{modular arithmetic}. 
+In modular arithmetic numbers that differ by multiples of a 
+given modulus are treated as identical.
+For example 2 + 3 = 1 (mod 4) because 2 + 3 and 1 differ 
+by a multiple of 4. The code shows the definition of 
+addition and multiplication in modular arithmetic. 
+In Scala |%| is modulo division. Both addition and multiplication 
+include a third (implicit) parameter, which is the modulus 
+of the division. Although the modulus could be passed explicitly 
+this would be extremelly cumbersume. Instead it is desirable that 
+the modulus is passed implicitly. Scala implicits allow this, by simply marking 
+the |modulus| parameter in |add| and |mul| with the |implicit| keyword. 
+The third line shows how to set up an implicit value for the modulus. 
+Adding |implicit| before |val| signals that the value being defined 
+is available for synthesizing values of type |Int|. 
+Finally, |test| illustrates how expressions doing modular arithmetic 
+can be defined using the implicit modulus. Because Scala also 
+has local scoping, different modulus values can be used under 
+different scopes.
+
+\paragraph{Incoherence in Scala}
+Although Scala allows \emph{nested} local scoping and overlapping rules,
+\textit{coherence} is not guaranteed. Figure~\ref{fig:scala} illustrates
+the issue briefly, based on the example from Section~\ref{sec:overview-coherence}.
+Line~(1) defines a function |id| with type parameter |a|, which is simply
+the identity function of type |a => a|.
+The |implicit| keyword in the declaration specifies that this value may
+be used to synthesise an implicit argument.
+Line~(2) defines a function |trans| with type parameter |a|,
+which takes an implicit argument |f| of type |a => a| and returns |f(x)|.
+Here the |implicit| keyword specifies that the actual argument should not be
+given explicitly; instead argument of the appropriate type will be synthesized from
+the available |implicit| declarations.
+
 
 %format v1 = "\Varid{v_1}"
 %format v2 = "\Varid{v_2}"
@@ -207,14 +253,14 @@ from the second-class nature of type classes.
 \small
 \begin{code}
 trait A {
-   implicit def id[a] : a => a = x => x		// (1)
-   def trans[a](implicit f: a =>a) = f		// (2)
+   implicit def id[a] : a => a = x => x		   // (1)
+   def trans[a](x : a)(implicit f: a => a) = f(x)  // (2)
 }
 object B extends A {
-   implicit def succ : Int => Int = x => x + 1	// (3)
-   def bad[a](x : a) = trans[a](x)		// (4) incoherent definition!
-   val v1 = bad[Int](3)				// (5) evaluates to 3
-   val v2 = trans[Int](3)			// (6) evaluates to 4
+   implicit def succ : Int => Int = x => x + 1	   // (3)
+   def bad[a](x:a) : a = trans[a](x)		   // (4) incoherent definition!
+   val v1 = bad[Int](3)				   // (5) evaluates to 3
+   // val v2 = trans[Int](3)		           // (6) substituting bad by trans is rejected
 }
 \end{code}
 
@@ -224,49 +270,37 @@ object B extends A {
 
 \end{figure} 
 
-Although Scala allows \emph{nested} local scoping and overlapping rules,
-\textit{coherence} is also not guaranteed. 
-Figure~\ref{fig:scala} illustrates
-the issue briefly, based on the example from Section~\ref{sec:overview-coherence}.
-Line~(1) defines a function |id| with type parameter |a|, which is simply
-the identity function of type |a => a|.
-The |implicit| keyword in the declaration specifies that this value may
-be used to synthesise an implicit argument.
-Line~(2) defines a function |trans| with type parameter |a|,
-which takes an implicit argument |f| of type |a => a| and returns |f|.
-Here the |implicit| keyword specifies that the actual argument should not be
-given explicitly; instead argument of the appropriate type will be synthesized from
-the available |implicit| declarations.
-
-In the nested scope, line~(3) defines function |succ| of type
-|Int => Int| that takes argument |x| and returns |x+1|. Again, 
-the |implicit| keyword in the declaration specifies that |succ| may be used to
-synthesise implicit arguments.  Line~(4) defines a function |bad|
-with type parameter |a| which takes an argument |x| of type |a| and
-returns the value of function |trans| applied at type |a| to argument
-|x|.  Lines~(5) and~(6) shows that, as in the earlier example and for
-the same reason, |bad(3)| returns |3| while |trans(3)| returns |4|.
-This is an equally nasty impediment to equational reasoning, but
-unlike in Haskell, it is the intended behaviour: it is enabled
-by default and cannot be disabled.
+In the nested scope, line~(3) defines function |succ| of type |Int =>
+Int| that takes argument |x| and returns |x+1|. Again, the |implicit|
+keyword in the declaration specifies that |succ| may be used to
+synthesise implicit arguments. Line~(4) defines a function |bad| with
+type parameter |a| which takes an argument |x| of type |a| and returns
+the value of function |trans| applied at type |a| to argument
+|x|. Line~(5) shows that, as in the earlier example and for the same
+reason, |bad(3)| returns |3|. As with the Haskell example, accepting
+this definition is an equally nasty impediment to equational
+reasoning, since performing simple equational reasoning would lead to
+a different result. However unlike in Haskell, it is the intended
+behaviour: it is enabled by default and cannot be disabled.
+Interestingly the expression in line~(6), which is accepted in Haskell, is actually rejected in Scala. 
+Here the Scala compiler does detect two possible instances for |Int => Int|. 
+Rejecting line~(6) has another unfortunate consequence: now not only 
+semantics is not preserved under substitution, but typing is not preserved either!
+Clearly preserving desirable properties such as coherence and type preservation is 
+a subtle matter in the presence of implicits and deserves careful study. 
 
 \subsection{An Overview of $\ourlang$}\label{sec:overview:ourlang}
 
-Like Haskell our calculus $\ourlang$ requires coherence and
-like Scala it permits nested declarations. 
-Unrestricted $\ourlang$ programs do not guarantee global uniqueness.
-What are referred to as type class instances in Haskell are called
-\emph{rules}, and, like in Scala, no type class declarations
-are needed. $\ourlang$ improves upon 
-the implicit calculus~\cite{oliveira12implicit}, which is a calculus 
+Like Haskell $\ourlang$ requires coherence and
+like Scala it permits nested declarations, and does not guarantee global uniqueness.
+$\ourlang$ improves upon 
+the implicit calculus~\cite{oliveira12implicit}, which is an incoherent calculus 
 designed to model the essence of Scala implicits. Like the implicit
 calculus it combines standard scoping mechanisms (abstractions and
 applications) and types \`a la System~F, with a
 logic-programming-style query language.
-
 We now present the key features of $\ourlang$ and how
-these features are used for IP. For readability purposes we sometimes omit
-redundant type annotations and slightly simplify the syntax. 
+these features are used for IP.
 
 \paragraph{Fetching Values by Type} A central construct in
 $\ourlang$ is a query. Queries allow values to be fetched by type, not by name.  
@@ -302,11 +336,7 @@ of that type (in this case |Int|) in the implicit environment inside the body
 of the rule abstraction. Thus, queries over the rule abstraction type argument
 inside the rule body will succeed. 
 
-The type of the rule above is:
-
-< Int => Int
-
-\noindent This type denotes that the rule has type |Int| provided 
+The type of the rule above is |Int => Int|. This type denotes that the rule has type |Int| provided 
 a value of type |Int| is available in the implicit environment. 
 The implicit environment is extended through rule application (analogous to
 extending the environment with function applications).
@@ -350,9 +380,7 @@ The type of this rule is :
 \noindent Using two rule applications it is possible to provide the implicit 
 values to the two rule abstractions. For example:
 
-< implicit 1 in
-<  implicit True in 
-<    ((query Int) + 1, not (query Bool))
+< implicit 1 in implicit True in ((query Int) + 1, not (query Bool))
 
 \noindent which returns |(2,False)|.
 \end{comment} 
@@ -374,9 +402,7 @@ The following expression returns $(3, 4)$:
 %%     {\qask{(\tyInt\times\tyInt)}}.
 %%\]
 
-< implicit 3 in 
-<  implicit (rule Int (((query Int), (query Int) + 1))) in 
-<    query (Pair Int Int)
+< implicit 3 in implicit (rule Int (((query Int), (query Int) + 1))) in query (Pair Int Int)
 
 Note that higher-order rules are a feature introduced by the implicit calculus and 
 are neither supported in Haskell nor Scala.
@@ -392,30 +418,21 @@ the required integer pair. It does however contain the integer $3$ and a rule
 pair from an integer. Hence, the query is resolved with $(3,4)$, the
 result of applying the pair-producing rule to $3$.
 
-\paragraph{Polymorphic Rules and Queries} $\ourlang$ allows polymorphic rules. For example, the rule 
-%%\[
-%%\qLam{\alpha}{\qlam{\alpha}{(\qask{\alpha},\qask{\alpha})}},
-%%\]
 
 %format biglam a n = "\Lambda " a ". " n 
+%format dots = "\ldots"
 
-< biglam a (rule a (((query a),(query a))))
-
-\noindent abstracts over a type using standard type abstraction and then uses 
+\paragraph{Polymorphic Rules and Queries} $\ourlang$ allows polymorphic rules. For example, the rule 
+|biglam a (rule a (((query a),(query a))))|
+abstracts over a type using standard type abstraction and then uses 
 a rule abstraction to provide a value of type |a| in the implicit environment of 
-the rule body. This rule has type
-
-< forall a . a => Pair a a
-
+the rule body. This rule has type |forall a . a => Pair a a|
 and can be instantiated to multiple rules of monomorphic types
 %%\[
 %%\rulety{\tyint}{\tyint\times\tyint}, 
 %%\rulety{\tybool}{\tybool\times\tybool}, \cdots.
 %%\]
-
-%format dots = "\ldots"
-
-< Int => Pair Int Int, Bool => Pair Bool Bool, dots
+|Int => Pair Int Int, Bool => Pair Bool Bool, dots|.
 
 Multiple monomorphic queries can be resolved by the same
 rule. The following expression returns 
@@ -436,32 +453,13 @@ rule. The following expression returns
 
 %endif
 
-> implicit 3 in
->   implicit True in 
->     implicit (biglam a (rule a (((query a),(query a))))) in
->       (query (Pair Int Int), query (Pair Bool Bool))
+> implicit 3 in implicit True in implicit (biglam a (rule a (((query a),(query a))))) in (query (Pair Int Int), query (Pair Bool Bool))
 
 \paragraph{Combining Higher-Order and Polymorphic Rules} 
-The rule 
-%if False
-\[
-\qlam{\tyInt,\forall\alpha.\rulety{\alpha}{\alpha\times\alpha}}
- {\qask{((\tyInt\times\tyInt)\times(\tyInt\times\tyInt))}}
-\]
-%endif
-
-> rule Int (rule ((forall a . a => Pair a a)) (((query (Pair (Pair Int Int) (Pair Int Int)))))) 
-
+The rule | rule Int (rule ((forall a . a => Pair a a)) (((query (Pair (Pair Int Int) (Pair Int Int))))))|
 prescribes how to build a pair of integer pairs, inductively from an
 integer value, by consecutively applying the rule of type
-%if False
-\[
-\forall\alpha.\rulety{\alpha}{\alpha\times\alpha}
-\]
-%endif
-
-< forall a . a => Pair a a
-
+|forall a . a => Pair a a| 
 twice: first to an integer, and again to the result (an
 integer pair). For example, the following expression returns $((3,3),(3,3))$:
 
@@ -478,9 +476,7 @@ integer pair). For example, the following expression returns $((3,3),(3,3))$:
 \]
 %endif 
 
-> implicit 3 in
->  implicit (biglam a (rule a (((query a),(query a))))) in
->    (query (Pair (Pair Int Int) (Pair Int Int)))
+> implicit 3 in implicit (biglam a (rule a (((query a),(query a))))) in (query (Pair (Pair Int Int) (Pair Int Int)))
 
 %%rule (forall a . {a} => Pair a a) (((query a),(query a)))} in
 
