@@ -524,7 +524,7 @@ type variable: |b|.
 Tracking these free variables plays a crucial role in guaranteeing coherence
 and ensuring that resolution is stable under all type substitutions that instantiate these variables, like $[|b| \mapsto |Int|]$; how we prevent these substitutions is explained below.  The
 main judgement
-retries these free variables in rule \mylabel{R-Main} with 
+retains these free variables in rule \mylabel{R-Main} with 
 the function $\mathit{tyvars}$:
 \newcommand{\tyvars}[1]{\mathit{tyvars}(#1)}
 \begin{equation*}
