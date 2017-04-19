@@ -1,0 +1,50 @@
+
+* Presentation Improvements
+
+  Thank you for the suggestions to improve the presentation.  We will
+definitely take them into account. In particular we are very happy with the
+comment on making a punchline at the end of Section 2 on stability as the key
+idea; we agree that this will be very helpful to better convey the key idea to
+readers.
+
+  Tracking of variables, image what happens if we don't treat them spefically
+  and consider this example resolution query
+
+  a, a -> a |-_r forall b. b -> b
+
+
+* Bugs in the typing rules
+
+  We do indeed intentionally abuse the notation (we would not call
+  that bugs), but are happy to reformulate as you suggest to clarify
+  the intended meaning.
+
+  Should we say something about Show?
+
+* The intended type of bad on p. 5 is actually bad :: a -> a, 
+  and not bad :: Trans a => a -> a, because we want to force
+  the resolution of Trans at the definition of bad instead of
+  the call sites of bad.
+
+* Naming the implicit parameters only works if you want to directly
+  refer to them. It does not work in the case of recursive resolution,
+  e.g. Int => Bool, Int |- Bool, where multiple rules have to be combined.
+  In such cases the system figures out how to combine the rules; the programmer
+  does not have to write it himself.
+
+* Provide example for \beta >_\tenv  \alpha 
+
+REVIEW 3
+
+* We will give more practical examples of implicits, but this paper is mostly
+  about restrictions to obtain coherence. The two cited papers
+
+	B. C. d. S. Oliveira, A. Moors, and M. Odersky. 2010. Type classes as objects
+	and implicits. In OOPSLA. ACM, New York, NY, USA.
+
+
+	B. C. d. S. Oliveira, T. Schrijvers, W. Choi, W. Lee, and K. Yi. 2012.  e
+	Implicit Calculus: A New Foundation for Generic Programming. In PLDI ’12. ACM,
+	New York, NY, USA. 
+
+  provide many examples to motivate implicits.
