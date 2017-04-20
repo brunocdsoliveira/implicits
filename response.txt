@@ -1,6 +1,5 @@
 We thank all reviewers for the helpful comments.
 
-======
 Review 1
 ======
 
@@ -111,14 +110,14 @@ referred to on p.13. Consider for example resolving the type
   is the one that prevents rule U-InstL from applying and from producing an invalid
   substitution.
 
-======
+
 Review 3:
 ======
 
-* Our work is on an improvement to the implicit calculus. Our
+* Our work is an improvement to the implicit calculus. Our
   improvement is mainly about working out the restrictions needed to
-  ensure coherence. So it does not add any new programming features
-  per se. Practical examples illustrating the uses of
+  ensure coherence. So it does not add any new programming features.
+  Practical examples illustrating the uses of
   implicits were already presented in the following two cited papers:
 
 	B. C. d. S. Oliveira, A. Moors, and M. Odersky. 2010. Type classes as objects
