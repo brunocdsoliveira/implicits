@@ -68,14 +68,41 @@ referred to on p.13. Consider for example resolving the type
   In such cases the system figures out how to combine the rules; the programmer
   does not have to write the composition himself.
 
-* The β >Γ α judgement is related to the tracking of variables and the checking of
-  stability discussed above. 
-  It performs another necessary sanity check: a substitution [α := β] (*) due to
-  inlining is only possible if β is in scope of α. This property is verified in
-  terms of the relative positions of α and β in the environment: the latter must
-  appear before the former. 
-  
-  (*) This generalizes to substitutions [α := σ] where β is a free variable in σ.
+* The β >Γ α judgement is performs another necessary sanity check during unification.
+  Consider for example resolving the type 
+
+		ρ = (∀β.β → β) → Int
+
+  against the environment with a single rule
+
+  		Γ0 = ∀α.(∀β.β → α) → Int 
+
+  This will lead in rule Alg-M-Simp to the unification 
+ 
+		mgu_{Γ1,α}(∀α.(∀β.β → α) → Int,(∀β.β → β) → Int)
+
+  with 
+
+  		Γ1 = Γ0, α
+
+  After several steps, we get
+
+		mgu_{Γ2,α}(α,β)
+
+  with 
+
+  		Γ2 = Γ0, α, β
+
+  The result here cannot be [β := α] because β is universally quantified
+  and thus cannot be instantiated. This is why rule U-InstR should not apply;
+  the mechanism used is that mgu is indexed in the unifiable variables --   
+  only α in this example.
+
+  However, we also cannot have [α := β] because β is not in scope at the point
+  where α has to be instantiated. We see this because β occurs after α in the 
+  environment Γ2. This scope check is captured in judgement β >Γ2 α. This check
+  is the one that prevents rule U-InstL from applying and from producing an invalid
+  substitution.
 
 * Our work is on an improvement to the implicit calculus. Our
   improvement is mainly about working out the restrictions needed to
