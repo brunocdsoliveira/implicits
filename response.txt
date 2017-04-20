@@ -19,7 +19,7 @@ referred to on p.13. Consider for example resolving the type
 
   against the environment 
 
-  		Γ0 = ∀c.c → c ~> id, a, a → a ~> f 
+  		Γ0 = ∀c.c → c, a, a → a
 
   i.e.
 
@@ -40,10 +40,10 @@ referred to on p.13. Consider for example resolving the type
   rule a → a would be deemed unstable.
 
   However, there is an error in the above reasoning. Code inlining cannot
-  result in b being instantiated to a, because b is not free in the environment 
-  Γ0, which is the environment at the point in the code where the query happens.
-  To avoid this reasoning error, we keep track of the variables that are free
-  in the environment in Γ0. These are the variables that can be substituted, while
+  result in b being instantiated to a, because b is not in scope
+  at the point in the code where the query happens (i.e., b does not appear in Γ0).  
+  To avoid this reasoning error, we keep track of the variables that appear
+  in the environment Γ0. These are the variables that can be substituted, while
   the variables added to the environment by rule R-TAbs cannot be substituted.
 
   In the end, by tracking the free variables, we can accept the
@@ -67,7 +67,7 @@ referred to on p.13. Consider for example resolving the type
   refer to them. It does not work in the case of recursive
   resolution. For example consider the program:
 
-  \(Int => Bool) . \Int . ?Bool
+  \?(Int => Bool) . \?Int . ?Bool
 
   where multiple rules have to be combined to resolve ?Bool.
   In such cases the system figures out how to combine the rules; the programmer
@@ -131,5 +131,5 @@ Review 3:
   Thus our paper focuses only on coherence and examples about
   coherence. 
 
-  Nevertheless we will try our best to make the presentation more
-  acessible by taking all the suggestions into account.
+  Nevertheless we will do our best to make the presentation more
+  accessible by taking all the suggestions into account.
