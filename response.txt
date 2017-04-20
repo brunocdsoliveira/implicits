@@ -1,5 +1,9 @@
 We thank all reviewers for the helpful comments.
 
+======
+Review 1
+======
+
 * Presentation Improvements
 
 Thank you for the suggestions to improve the presentation.  We will
@@ -11,7 +15,7 @@ better convey the key idea to readers.
 We would like to clarify the need for tracking the type variables
 referred to on p.13. Consider for example resolving the type
 
-		ρ = b.b → b
+		ρ = ∀b.b → b
 
   against the environment 
 
@@ -42,6 +46,9 @@ referred to on p.13. Consider for example resolving the type
   in the environment in Γ0. These are the variables that can be substituted, while
   the variables added to the environment by rule R-TAbs cannot be substituted.
 
+  In the end, by tracking the free variables, we can accept the
+  resolution above, whereas without such tracking the program would be rejected.
+
   We will integrate this example in the text.
 
 
@@ -50,8 +57,6 @@ referred to on p.13. Consider for example resolving the type
   We do indeed intentionally abuse the notation (although we would not call
   that bugs), but are happy to reformulate as you suggest to clarify
   the intended meaning.
-
-  TODO: Should we say something about Show?
 
 * The intended type of bad on p. 5 is actually bad :: a -> a, 
   and not bad :: Trans a => a -> a, because we want to force
@@ -68,7 +73,9 @@ referred to on p.13. Consider for example resolving the type
   In such cases the system figures out how to combine the rules; the programmer
   does not have to write the composition himself.
 
-* The β >Γ α judgement is performs another necessary sanity check during unification.
+* The β >Γ α judgement performs a necessary sanity check during
+  unification, which is useful to prevent some invalid unifications
+  that would arise due to scoping issues.
   Consider for example resolving the type 
 
 		ρ = (∀β.β → β) → Int
@@ -79,7 +86,7 @@ referred to on p.13. Consider for example resolving the type
 
   This will lead in rule Alg-M-Simp to the unification 
  
-		mgu_{Γ1,α}(∀α.(∀β.β → α) → Int,(∀β.β → β) → Int)
+		mgu_{Γ1,α}((∀β.β → α) → Int,(∀β.β → β) → Int)
 
   with 
 
@@ -104,6 +111,10 @@ referred to on p.13. Consider for example resolving the type
   is the one that prevents rule U-InstL from applying and from producing an invalid
   substitution.
 
+======
+Review 3:
+======
+
 * Our work is on an improvement to the implicit calculus. Our
   improvement is mainly about working out the restrictions needed to
   ensure coherence. So it does not add any new programming features
@@ -119,3 +130,6 @@ referred to on p.13. Consider for example resolving the type
 
   Thus our paper focuses only on coherence and examples about
   coherence. 
+
+  Nevertheless we will try our best to make the presentation more
+  acessible by taking all the suggestions into account.
