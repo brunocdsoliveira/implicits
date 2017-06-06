@@ -1,0 +1,104 @@
+\documentclass[draft]{jfp1}
+\bibliographystyle{jfp}
+
+
+\usepackage{color}
+\usepackage{xspace}
+\usepackage{graphicx}
+\usepackage{latexsym}
+\usepackage{stmaryrd}
+%\usepackage{amsmath}
+\usepackage{amssymb}
+\let\proof\relax
+\let\endproof\relax
+\usepackage{amsthm}
+\usepackage{stmaryrd}
+\usepackage{mathpartir}
+\usepackage{wasysym}
+\usepackage{url}
+\usepackage{algorithm, algpseudocode}
+\usepackage{fancyvrb}
+%\usepackage[[style=1]{mdframed}
+\usepackage{comment}
+\usepackage{soul}
+
+\definecolor{light}{gray}{.75}
+
+\newtheorem{lemma}{Lemma}[section]
+\newtheorem{example}{Example}[section]
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{definition}{Definition}[section]
+\newtheorem{corollary}{Corollary}[section]
+
+\newcommand{\gbox}[1]{\colorbox{light}{$\!\!#1\!\!$}}
+\newcommand{\plw}[1]{[{\color{blue}\text{PLW:}} #1]}
+
+% for comments
+\input{macro-comments}
+\input{macros}
+\input{Preamble}
+%%%\input{lemmas}
+
+\title[Cochis: Deterministic and Coherent Implicits]{\name: Deterministic and Coherent Implicits}
+
+\author[T. Schrijvers, B. Oliveira and P. Wadler]
+       {TOM SCHRIJVERS \\
+        KU Leuven, Belgium \\
+        BRUNO C.D.S. OLIVEIRA \\
+        The University of Hong Kong \\
+        PHILIP WADLER \\ 
+        University of Edinburgh, UK
+}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+\input{src/Abstract}
+\end{abstract}
+
+
+
+
+\input{src/Introduction}
+
+\input{src/Overview}
+
+\input{src/Types}
+
+\input{src/Translation}
+
+%\input{src/SourceLang}
+
+\input{src/Related}
+
+\input{src/Conclusion}
+
+%%%%\appendixhead{OLIVEIRA}
+
+% Acknowledgments
+\paragraph{Acknowledgments}
+We are grateful to Ben Delaware, Derek Dreyer, Jeremy Gibbons, Scott
+Kilpatrick, eta Ziliani, the members of ROPAS and the
+anonymous reviewers for their comments and suggestions.  This work was
+partially supported by Korea Ministry of Education, Science and
+Technology/Korea Science and Enginering Foundation's ERC grant
+R11-2008-007-01002-0, Brain Korea 21, Mid-career Research Program 2010-0022061, and
+by Singapore Ministry of Education research grant MOE2010-T2-2-073.
+
+\newpage
+% Bibliography
+\bibliography{papers}
+
+\newpage
+% Appendix
+\appendix
+%%%\section*{APPENDIX}
+%%%\setcounter{section}{1}
+
+
+
+\input{src/Proofs}
+
+\end{document}

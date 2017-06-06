@@ -1,0 +1,2797 @@
+\figtwocol{fig:ftype}{System F Type System}{
+\begin{center}
+\framebox{
+\begin{minipage}{\textwidth}
+\bda{lc}
+\multicolumn{2}{c}{\myruleform{\Gamma \turns T}} \\ \\
+  (\texttt{F-WF-VarTy}) & 
+\myirule{
+           \alpha \in \Gamma
+ }{
+            \Gamma \turns \alpha
+} \\ \\
+  (\texttt{F-WF-FunTy}) & 
+\myirule{
+            \Gamma \turns T_1 \quad\quad \Gamma \turns T_2
+ }{
+            \Gamma \turns T_1 \arrow T_2
+} \\ \\
+  (\texttt{F-WF-UnivTy}) & 
+\myirule{
+            \Gamma, \alpha \turns T
+ }{
+            \Gamma \turns \forall \alpha.T
+} \\ \\
+\multicolumn{2}{c}{\myruleform{\Gamma \turns E : T}} \\ \\
+  (\texttt{F-Var}) & 
+\myirule{
+           (x : T) \in \Gamma
+ }{
+            \Gamma \turns x : T
+} \\ \\
+
+  (\texttt{F-Abs}) & 
+\myirule{
+           \Gamma, x : T_1 \turns E : T_2 \quad\quad \Gamma \turns T_1
+ }{
+           \Gamma \turns \lambda x:T_1.E : T_1 \rightarrow T_2
+} \\ \\
+
+  (\texttt{F-App}) & 
+\myirule{
+  \Gamma \turns E_1 : T_2 \rightarrow T_1 \quad\quad
+           \Gamma \turns E_2 : T_2
+          }{
+           \Gamma \turns E_1 \, E_2 : T_1
+} \\ \\
+
+  (\texttt{F-TApp}) & 
+\myirule{
+  \Gamma \turns E : \forall \alpha. T_2 \quad\quad \Gamma \turns T_1
+           }{
+            \Gamma \turns E \, T_1 : T_2[T_1/\alpha]
+} \\ \\
+
+  (\texttt{F-TAbs}) & 
+\myirule{
+   \Gamma, \alpha \turns E : T
+            }{
+             \Gamma \turns \Lambda \alpha.E : \forall \alpha. T 
+} \\ \\
+\eda
+\end{minipage}
+}
+\end{center}
+}
+
+%###############################################################################
+\section{Proofs}
+
+Throughout the proofs we refer to the type system rules of System F listed
+in Figure~\ref{fig:ftype}.
+
+%-------------------------------------------------------------------------------
+\subsection{Type Preservation}\label{proof:preservation}
+
+Lemma~\ref{lemma:tp:0} states that the translation preserves the well-formedness of types. 
+
+{\centering
+\fbox{
+\begin{minipage}{0.95\columnwidth}
+\begin{lemma}\label{lemma:tp:0}
+  If 
+\begin{equation*}
+    \tenv \turns \rulet
+\end{equation*}
+  then
+\begin{equation*}
+    |\tenv| \turns |\rulet|
+\end{equation*}
+\end{lemma}
+\end{minipage}
+}}
+
+\begin{proof}
+By structural induction on the expression and corresponding inference rule.
+\begin{description}
+\renewcommand{\itemsep}{10mm}
+%===============================================================================
+\item[\fbox{\texttt{(WF-VarTy)}}\quad$\tenv \turns \alpha$] \ \\
+%===============================================================================
+  It follows from the rule that $\alpha \in \tenv$. Hence, obviously $\alpha
+  \in |\tenv|$. Finally, by rule \mylabel{F-WF-VarTy}, and taking into account
+  that $|\alpha| = \alpha$, we conclude
+\begin{equation*}
+  |\tenv| \turns \alpha
+\end{equation*}
+
+%===============================================================================
+\item[\fbox{\texttt{(WF-FunTy)}}\quad$\tenv \turns \rulet_1 \arrow \rulet_2$] \ \\
+%===============================================================================
+  It follows from the induction hypotheses and the hypotheses of the rule that
+\begin{equation*}
+  |\tenv| \turns |\rulet_1| \quad \wedge \quad |\tenv| \turns |\rulet_2|
+\end{equation*}
+
+  Hence, by rule \mylabel{F-WF-FunTy}, and taking into account that
+  $|\rulet_1| \arrow |\rulet_2| = |\rulet_1 \arrow \rulet_2|$, we conclude that
+\begin{equation*}
+  |\tenv| \turns |\rulet_1 \arrow \rulet_2|
+\end{equation*}
+
+%===============================================================================
+\item[\fbox{\texttt{(WF-RulTy)}}\quad$\tenv \turns \rulet_1 \iarrow \rulet_2$] \ \\
+%===============================================================================
+  It follows from the induction hypotheses and the hypotheses of the rule that
+\begin{equation*}
+  |\tenv| \turns |\rulet_1| \quad \wedge \quad |\tenv| \turns |\rulet_2|
+\end{equation*}
+
+  Hence, by rule \mylabel{F-WF-FunTy}, and taking into account that
+  $|\rulet_1| \arrow |\rulet_2| = |\rulet_1 \iarrow \rulet_2|$, we conclude that
+\begin{equation*}
+  |\tenv| \turns |\rulet_1 \iarrow \rulet_2|
+\end{equation*}
+
+%===============================================================================
+\item[\fbox{\texttt{(WF-UnivTy)}}\quad$\tenv \turns \forall\alpha.\rulet$] \ \\
+%===============================================================================
+  It follows from the induction hypothesis and the hypothesis of the rule that
+\begin{equation*}
+  |\tenv,\alpha| \turns |\rulet|
+\end{equation*}
+  As $|\tenv,\alpha| = |\tenv|,\alpha$, we can simplify this to
+\begin{equation*}
+  |\tenv|,\alpha \turns |\rulet|
+\end{equation*}
+
+  Hence, by rule \mylabel{F-WF-UnivTy}, and taking into account that
+  $\forall\alpha.|\rulet| = |\forall\alpha.\rulet|$, we conclude that
+\begin{equation*}
+  |\tenv| \turns |\forall\alpha.\rulet|
+\end{equation*}
+
+\end{description}
+\end{proof}
+
+
+Lemma~\ref{lemma:tp:1} states that the translation of expressions to System F preserves
+types. Its proof relies on Lemma~\ref{lemma:tp:2}, which states that the translation
+of resolution preserves types.
+
+{\centering
+\fbox{
+\begin{minipage}{0.95\columnwidth}
+\begin{lemma}\label{lemma:tp:1}
+  If 
+\begin{equation*}
+    \tenv \turns e : \rho \leadsto E
+\end{equation*}
+  then
+\begin{equation*}
+    |\tenv| \turns E : |\rho|
+\end{equation*}
+\end{lemma}
+\end{minipage}
+}}
+
+\begin{proof}
+By structural induction on the expression and corresponding inference rule.
+\begin{description}
+\renewcommand{\itemsep}{10mm}
+%===============================================================================
+\item[\fbox{\texttt{(Ty-Var)}}\quad$\tenv \turns x : \rulet \leadsto x$] \ \\
+%===============================================================================
+
+ It follows from \mylabel{Ty-Var} that 
+\begin{equation*} 
+    (x : \rulet) \in \tenv
+\end{equation*} 
+
+Based on the definition of $|\cdot|$  it follows 
+\begin{equation*} 
+   (x : |\rulet|) \in |\tenv| 
+\end{equation*} 
+
+Thus we have by (\texttt{F-Var}) that
+\begin{equation*} 
+   |\tenv| \turns x : |\rulet|
+\end{equation*} 
+
+%===============================================================================
+\item[\fbox{\texttt{(Ty-Abs)}}\quad$\tenv \turns \lambda x:\rho_1.e : \rho_1 \rightarrow \rho_2 \leadsto \lambda x:|\rho_1|.E$] \ \\
+%===============================================================================
+
+  The first hypothesis of (\texttt{Ty-Abs}) is that
+\begin{equation*} 
+    \tenv, x : \rho_1 \turns e : \rho_2 \leadsto E
+\end{equation*} 
+  and thus by the induction hypothesis we have that
+\begin{equation*} 
+    |\tenv|, x : |\rho_1| \turns E : |\rho_2|
+\end{equation*} 
+
+  The second hypothesis of (\texttt{Ty-Abs}) is that
+\begin{equation*} 
+    \tenv \turns |\rho_1|
+\end{equation*} 
+  and thus by Lemma~\ref{lemma:tp:0} we have that
+\begin{equation*} 
+    |\tenv| \turns |\rho_1|
+\end{equation*} 
+
+  Hence, by \mylabel{F-Abs} we conclude 
+\begin{equation*} 
+    |\tenv| \turns \lambda x:|\rho_1|.E : |\rho_1 \rightarrow \rho_2|
+\end{equation*} 
+
+%===============================================================================
+\item[\fbox{\texttt{(Ty-App)}}\quad$\tenv \turns e_1\,e_2 : \rulet_1 \leadsto E_1\,E_2$] \ \\
+%===============================================================================
+
+  By the induction hypothesis, we have:
+\begin{equation*} 
+   |\tenv| \turns E_1 : |\rulet_2 \rightarrow \rulet_1| \quad\wedge\quad |\tenv| \turns E_2 : |\rulet_2|
+\end{equation*} 
+  and, because $|\rulet_2 \arrow \rulet_1| = |\rulet_2| \arrow |\rulet_1|$, we can write the former as
+\begin{equation*} 
+   |\tenv| \turns E_1 : |\rulet_2| \arrow |\rulet_1|
+\end{equation*} 
+
+  Then it follows by (\texttt{F-App}) that
+\begin{equation*} 
+   |\tenv| \turns E_1\, E_2 : |\rulet_1|
+\end{equation*} 
+
+%===============================================================================
+\item[\fbox{\texttt{(Ty-TAbs)}}\quad$\tenv \turns \Lambda \alpha.e : \forall \alpha. \rulet \leadsto \Lambda \alpha.E$]\ \\
+%===============================================================================
+
+  Based on (\texttt{Ty-TAbs}) and the induction hypothesis, we have
+\begin{equation*} 
+    |\tenv, \alpha| \turns E : |\rulet|
+\end{equation*}
+
+  Thus, based on (\texttt{F-TAbs}) and because $|\tenv,\alpha| = |\tenv|,\alpha$, we have
+\begin{equation*} 
+    |\tenv| \turns \Lambda \alpha. E : \forall \alpha.|\rulet|
+\end{equation*}
+  or, because $|\forall\alpha.\rulet|=\forall\alpha.|\rulet|$, we conclude
+\begin{equation*} 
+    |\tenv| \turns \Lambda \alpha. E : |\forall \alpha.\rulet|
+\end{equation*}
+
+%===============================================================================
+\item[\fbox{\texttt{(Ty-TApp)}}]\quad$\tenv \turns e\,\rulet_1 : \rulet_2[\rulet_1/\alpha] \leadsto E\,|\rulet_1|$\ \\
+%===============================================================================
+ 
+  By the first hypothesis of the rule and the induction hypothesis of the
+  lemma, it follows that
+\begin{equation*} 
+    |\tenv| \turns E : |\forall \alpha.\rulet_2|
+\end{equation*} 
+  From this we have by definition of $|\cdot|$
+\begin{equation*} 
+    |\tenv| \turns E : \forall{\alpha}.|\rulet_2|
+\end{equation*} 
+
+  By the second hypothesis of the rule and Lemma~\ref{lemma:tp:0} we also have
+\begin{equation*} 
+    |\tenv| \turns |\rulet_1|
+\end{equation*} 
+
+  It then follows from (\texttt{F-TApp}) that
+\begin{equation*} 
+    |\tenv| \turns E\,|\rulet_1| : |\rulet_2|[|\rulet_1|/\alpha]
+\end{equation*} 
+  This is easily seen to be equivalent to 
+\begin{equation*} 
+    |\tenv| \turns E\,|\rulet_1| : |\rulet_2[\rulet_1/\alpha]|
+\end{equation*} 
+
+%===============================================================================
+\item[\fbox{\texttt{(Ty-IAbs)}}\quad$\tenv \turns \ilambda \rulet_1.e : \rulet_1 \iarrow \rulet_2 \leadsto \lambda x:|\rulet_1|.E$]\ \\
+%===============================================================================
+
+  Based on the first hypothesis of the rule and the induction hypothesis, we have
+\begin{equation*} 
+    |\tenv, \rulet_1 \leadsto x| \turns E : |\rulet_2|
+\end{equation*}
+  or, using the definition of $|\cdot|$,
+\begin{equation*} 
+    |\tenv|, x : |\rulet_1| \turns E : |\rulet_2|
+\end{equation*}
+
+  Based on the second hypothesis of the rule and Lemma~\ref{lemma:tp:0} we have
+\begin{equation*} 
+    |\tenv| \turns |\rulet_1|
+\end{equation*}
+
+  Thus, based on (\texttt{F-Abs}) we have
+\begin{equation*} 
+    |\tenv| \turns \lambda x : |\rulet_1|.E : |\rulet_1| \arrow |\rulet_2|
+\end{equation*}
+  or, using the definition of $|\cdot|$ again,
+\begin{equation*} 
+    |\tenv| \turns \lambda x : |\rulet_1|.E : |\rulet_1 \iarrow \rulet_2|
+\end{equation*}
+ 
+%===============================================================================
+\item[\fbox{\texttt{(Ty-IApp)}}\quad$\tenv \turns e_1 \with e_2 : \rulet_1 \leadsto E_1\,E_2$] \ \\
+%===============================================================================
+
+  From the hypotheses of the rule and the induction hypothesis we have:
+\begin{equation*}
+    |\tenv| \turns E_1 : |\rulet_2 \iarrow \rulet_1| \quad\wedge\quad |\tenv| \turns E_2 : |\rulet_2|
+\end{equation*}
+
+  Based on the definition of $|\cdot|$, the first of these means 
+\begin{equation*}
+    |\tenv| \turns E_1 : |\rulet_2| \arrow |\rulet_1|
+\end{equation*}
+
+  Finally, based on (\texttt{F-App}), we know
+\begin{equation*}
+    |\tenv| \turns E_1\,E_2 : |\rulet_1|
+\end{equation*}
+
+%===============================================================================
+\item[\fbox{\texttt{(Ty-Query)}}\quad$\tenv \turns ?\rulet : \rulet \leadsto E$] \ \\
+%===============================================================================
+
+  Based on the first hypothesis of the rule and Lemma~\ref{lemma:resolution} we know
+\begin{equation*} 
+    |\tenv| \turns E : |\rulet|
+\end{equation*} 
+
+\end{description}
+\end{proof}
+
+%###############################################################################
+{\centering
+\fbox{
+\begin{minipage}{0.95\columnwidth}
+\begin{lemma}\label{lemma:resolution}\label{lemma:tp:2}
+  If 
+\begin{equation*}
+    \tenv \vturns \rulet \leadsto E
+\end{equation*}
+  and
+\begin{equation*}
+    \tenv \turns \rulet 
+\end{equation*}
+  then
+\begin{equation*}
+    |\tenv| \turns E : |\rulet|
+\end{equation*}
+\end{lemma}
+\end{minipage}
+}}
+
+\begin{proof}
+
+  By induction on the derivation.
+\begin{description}
+%===============================================================================
+\item[\fbox{\texttt{(AR-TAbs)}}\quad$\tenv \vturns \forall \alpha.\rulet \leadsto \Lambda \alpha.E$] \ \\
+%===============================================================================
+
+  From the hypothesis of the rule and the induction hypothesis, we have
+\begin{equation*}
+  |\tenv, \alpha| \vdash E : |\rulet|
+\end{equation*}
+  or alternatively, based on the definition of $|\cdot|$,
+\begin{equation*}
+  |\tenv|, \alpha \vdash E : |\rulet|
+\end{equation*}
+ 
+  Then, rule \mylabel{F-TAbs} allows us to conclude
+\begin{equation*}
+  |\tenv| \vdash \Lambda \alpha. E : \forall \alpha.|\rulet|
+\end{equation*}
+  or, again based on the definition of $|\cdot|$,
+\begin{equation*}
+  |\tenv| \vdash \Lambda \alpha. E : |\forall \alpha.\rulet|
+\end{equation*}
+
+%===============================================================================
+\item[\fbox{\texttt{(AR-TApp)}}]\quad$\tenv \vturns \rulet [\suty/\alpha] \leadsto E\,|\suty|$ \ \\
+%===============================================================================
+
+  From the first hypothesis of the rule and the induction hypothesis, we have
+\begin{equation*}
+  |\tenv| \vdash E : |\forall \alpha. \rulet|
+\end{equation*}
+  or alternatively, based on the definition of $|\cdot|$,
+\begin{equation*}
+  |\tenv| \vdash E : \forall \alpha. |\rulet|
+\end{equation*}
+
+  From the second hypothesis of the rule and Lemma~\ref{lemma:tp:0}, we have
+\begin{equation*}
+  |\tenv| \vdash |\suty|
+\end{equation*}
+
+  Then, rule \mylabel{F-TApp} allows us to conclude
+\begin{equation*}
+  |\tenv| \vdash E\,|\suty| : |\rulet|[|\suty|/\alpha]
+\end{equation*}
+  or, again based on the definition of $|\cdot|$,
+\begin{equation*}
+  |\tenv| \vdash E\,|\suty| : |\rulet[\suty/\alpha]|
+\end{equation*}
+
+%===============================================================================
+\item[\fbox{\texttt{(AR-IVar)}}]\quad$\tenv \vturns \rulet \leadsto x$ \ \\
+%===============================================================================
+
+  From the hypothesis of the rule and the definition of $|\cdot|$, we have
+\begin{equation*}
+  (x : |\rulet|) \in |\tenv|
+\end{equation*}
+
+  Thus, using rule \mylabel{F-Var}, we can conclude
+\begin{equation*}
+  |\tenv| \vdash x : |\rulet|
+\end{equation*}
+
+%===============================================================================
+\item[\fbox{\texttt{(AR-IAbs)}}]\quad$\tenv \vturns \rulet_1 \iarrow \rulet_2 \leadsto \lambda x:|\rulet_1|.E$ \ \\
+%===============================================================================
+
+  From the first hypothesis of the rule and the induction hypothesis, we have
+\begin{equation*}
+  |\tenv, \rulet_1 \leadsto x| \vdash E : |\rulet_2|
+\end{equation*}
+  or alternatively, based on the definition of $|\cdot|$,
+\begin{equation*}
+  |\tenv|, x : |\rulet_1| \vdash E : |\rulet_2|
+\end{equation*}
+
+  Then, rule \mylabel{F-Abs} allows us to conclude
+\begin{equation*}
+  |\tenv| \vdash \lambda x:|\rulet_1|.E : |\rulet_1| \arrow |\rulet_2|
+\end{equation*}
+
+  or, again based on the definition of $|\cdot|$,
+\begin{equation*}
+  |\tenv| \vdash \lambda x:|\rulet_1|.E : |\rulet_1 \iarrow \rulet_2|
+\end{equation*}
+
+%===============================================================================
+\item[\fbox{\texttt{(AR-IApp)}}]\quad$\tenv \vturns \rulet_2 \leadsto E_2\,E_1$ \ \\
+%===============================================================================
+
+  From the hypotheses of the rule and the induction hypothesis, we have
+\begin{equation*}
+  |\tenv| \vdash E_1 : |\rulet_1| \quad\wedge\quad
+  |\tenv| \vdash E_2 : |\rulet_1 \iarrow \rulet_2|
+\end{equation*}
+
+  The second conjunct can be reformulated, based on the definition of $|\cdot|$, to
+\begin{equation*}
+  |\tenv| \vdash E_2 : |\rulet_1| \arrow |\rulet_2|
+\end{equation*}
+
+  Then, rule \mylabel{F-App} allows us to conclude
+\begin{equation*}
+  |\tenv| \vdash E_2\,E_1 : |\rulet_2|
+\end{equation*}
+
+\end{description}
+\end{proof}
+
+
+%-------------------------------------------------------------------------------
+\subsection{Auxiliary Lemmas About Non-Determistic Resolution}
+
+The non-deterministic resolution judgement enjoys a number of
+typical binder-related properties.
+
+The first lemma is the weakening lemma: that states that an extended context
+preserves all the derivations of the original context.
+
+%###############################################################################
+{\centering
+\fbox{
+\begin{minipage}{0.95\columnwidth}
+\begin{lemma}[Weakening]\label{lemma:weakening}
+  If 
+\begin{equation*}
+  \tenv, \tenv' \vturns \rulet \leadsto E 
+\end{equation*}
+  then
+\begin{equation*}
+    \tenv, \tenv'', \tenv' \vturns \rulet \leadsto E
+\end{equation*}
+\end{lemma}
+\end{minipage}
+}}
+
+\begin{proof}
+The proof proceeds by straightfoward induction on the derivation of the hypothesis.
+\end{proof}
+
+The second lemma is the substitution lemma which states that
+we can drop an axiom from the context if it is already implied
+by the remainder of the context.
+
+%###############################################################################
+{\centering
+\fbox{
+\begin{minipage}{0.95\columnwidth}
+\begin{lemma}[Substitution]\label{lemma:substitution}
+  If 
+\begin{equation*}
+  \tenv, \rulet \leadsto x, \tenv' \vturns \rulet' \leadsto E'
+\end{equation*}
+  and
+\begin{equation*}
+  \tenv \vturns \rulet \leadsto E 
+\end{equation*}
+  then
+\begin{equation*}
+    \tenv, \tenv' \vturns \rulet' \leadsto E'[E/x]
+\end{equation*}
+\end{lemma}
+\end{minipage}
+}}
+
+\begin{proof}
+The proof proceeds by straightfoward induction on the derivation of the first
+hypothesis.
+
+The key case is the one for rule \mylabel{AR-IVar} where $\rulet' = \rulet$ and
+$E' = x$. In this case the second hypothesis gives us 
+\begin{equation*}
+\tenv \vturns \rulet \leadsto E
+\end{equation*}
+As $E = x[E/x]$, this also means
+\begin{equation*}
+\tenv \vturns \rulet \leadsto x[E/x]
+\end{equation*}
+Finally, we can apply the Weakening Lemma~\ref{lemma:weakening} to obtain the
+desired result.
+\begin{equation*}
+\tenv, \tenv' \vturns \rulet \leadsto x[E/x]
+\end{equation*}
+
+All other cases are straightforward.
+\end{proof}
+
+%-------------------------------------------------------------------------------
+\subsection{Soundness of Deterministic Resolution}
+
+Lemma~\ref{lemma:s23:4} states that deterministic resolution is
+sound with respect to non-deterministic resolution. 
+
+%###############################################################################
+{\centering
+\fbox{
+\begin{minipage}{0.95\columnwidth}
+\begin{lemma}\label{lemma:s23:4}
+  If 
+\begin{equation*}
+  \tenv \ivturns \rulet \leadsto E 
+\end{equation*}
+  then
+\begin{equation*}
+    \tenv \vturns \rulet \leadsto E
+\end{equation*}
+\end{lemma}
+\end{minipage}
+}}
+
+\begin{proof}
+The lemma immediately follows from Lemma~\ref{lemma:s23:3}.
+\end{proof}
+
+%###############################################################################
+{\centering
+\fbox{
+\begin{minipage}{0.95\columnwidth}
+\begin{lemma}\label{lemma:s23:3}
+  If 
+\begin{equation*}
+  \bar{\alpha}; \tenv \ivturns \rulet \leadsto E 
+\end{equation*}
+  then
+\begin{equation*}
+    \tenv \vturns \rulet \leadsto E
+\end{equation*}
+\end{lemma}
+\end{minipage}
+}}
+
+\begin{proof}
+The proof proceeds by induction on the derivation.
+\begin{description}
+\setlength{\itemsep}{1em}
+%===============================================================================
+\item[\fbox{\texttt{(R-IAbs)}}]\quad$\bar{\alpha};\tenv \ivturns \rulet_1 \iarrow \rulet_2 \leadsto \lambda x:|\rulet_1|.E$ \ \\
+%===============================================================================
+  From the first assumption of rule \mylabel{R-IAbs} and the induction hypothesis, we have
+\begin{equation*}
+  \tenv, x : \rulet_1 \vturns \rulet_2 \leadsto E
+\end{equation*}
+
+  Hence, from rule \mylabel{AR-IAbs} and the freshness condition on $x$ in
+rule \mylabel{R-IAbs} it follows that
+\begin{equation*}
+  \tenv \vturns \rulet_1 \iarrow \rulet_2 \leadsto \lambda x:|\rulet_1|.E
+\end{equation*}
+
+%===============================================================================
+\item[\fbox{\texttt{(R-TAbs)}}]\quad$\bar{\alpha};\tenv \ivturns \forall \alpha.\rulet \leadsto \Lambda \alpha.E$ \ \\
+%===============================================================================
+  From the precondition of rule \mylabel{R-TAbs} and the induction hypothesis, we have
+\begin{equation*}
+  \tenv,\alpha \vturns \rulet \leadsto E
+\end{equation*}
+
+  Hence, from rule \mylabel{AR-TAbs} it follows that
+\begin{equation*}
+  \tenv \vturns \forall \alpha.\rulet \leadsto \Lambda \alpha.E
+\end{equation*}
+
+%===============================================================================
+\item[\fbox{\texttt{(R-Simp)}}]\quad$\bar{\alpha};\tenv \ivturns \tau \leadsto E$ \ \\
+%===============================================================================
+
+  From the precondition of the rule, Lemma~\ref{lemma:s23:2} and the simple fact that
+  $\tenv \subseteq \tenv$, it follows that
+\begin{equation*}
+  \tenv \vturns \tau \leadsto E
+\end{equation*}
+\end{description}
+\end{proof}
+
+
+The above proof relies on the following auxiliary lemma for the 
+resolution of simple types. The proof of this auxiliary lemma proceeds
+by mutual induction with the proof of the main lemma.
+
+%###############################################################################
+{\centering
+\fbox{
+\begin{minipage}{0.95\columnwidth}
+\begin{lemma}\label{lemma:s23:2}
+  If 
+\begin{equation*}
+   \bar{\alpha}; \tenv; \tenv' \ivturns \tau \leadsto E
+\end{equation*}
+  and
+\begin{equation*}
+  \tenv' \subseteq \tenv 
+\end{equation*}
+  then
+\begin{equation*}
+  \tenv \vturns \tau \leadsto E
+\end{equation*}
+\end{lemma}
+\end{minipage}
+}}
+
+\begin{proof}
+The proof proceeds by induction on the derivation, mutually 
+with the previous proof.
+\begin{description}
+\setlength{\itemsep}{1em}
+%===============================================================================
+\item[\fbox{\texttt{(L-RuleMatch)}}]\quad$\bar{\alpha}; \tenv; \tenv', \rulet \leadsto x \ivturns \type \leadsto E[\bar{E}/\bar{x}]$ \ \\
+%===============================================================================
+  The first assumption of the rule is
+\begin{equation*}
+  \tenv; \rulet \leadsto x \ivturns \type \leadsto E; \bar{E} \leadsto \bar{x}
+\end{equation*}
+
+  From the lemma's assumption $(\tenv', \rulet \leadsto x) \subseteq \tenv$ we conclude
+  $(\rulet \leadsto x) \in \tenv$. Hence, by rule \mylabel{AR-Simp} we have
+\begin{equation*}
+  \tenv \vturns \rulet \leadsto x
+\end{equation*}
+
+  From the second precondition of the rule and the (mutual) induction hypothesis, we also have
+\begin{equation*}
+  \tenv \vturns \bar{\rulet} \leadsto \bar{E}
+\end{equation*}
+
+  The above three observations allow us to invoke the auxiliary Lemma~\ref{lemma:s23:1}
+  and conclude
+\begin{equation*}
+  \tenv \vturns \tau \leadsto E[\bar{E}/\bar{x}]
+\end{equation*}
+
+%===============================================================================
+\item[\fbox{\texttt{(L-Var), (L-TyVar), (L-RuleNoMatch)}}] \ \\
+%===============================================================================
+  Trivially by applying the induction hypothesis on the precondition of the rule.
+\end{description}
+\end{proof}
+
+The above proof relies on the following auxiliary lemma.
+
+%###############################################################################
+{\centering
+\fbox{
+\begin{minipage}{0.95\columnwidth}
+\begin{lemma}\label{lemma:s23:1}
+  If 
+\begin{equation*}
+   \tenv; \rulet \leadsto E \ivturns \type \leadsto E'; \bar{\rulet} \leadsto \bar{x}
+\end{equation*}
+  and
+\begin{equation*}
+  \tenv \vturns \rulet \leadsto E
+\end{equation*}
+  and
+\begin{equation*}
+  \tenv \vturns \bar{\rulet} \leadsto \bar{E}
+\end{equation*}
+  then
+\begin{equation*}
+  \tenv \vturns \tau \leadsto E'[\bar{E}/\bar{x}]
+\end{equation*}
+\end{lemma}
+\end{minipage}
+}}
+
+\begin{proof}
+The proof proceeds by induction on the derivation of the first assumption.
+\begin{description}
+\setlength{\itemsep}{1em}
+%===============================================================================
+\item[\fbox{\texttt{(M-Simp)}}]\quad$\tenv;\type\leadsto E \ivturns \type \leadsto E; \epsilon$ \ \\
+%===============================================================================
+  The first assumption of the lemma is the desired conclusion
+\begin{equation*}
+  \tenv \vturns \type \leadsto E
+\end{equation*}
+
+%===============================================================================
+\item[\fbox{\texttt{(M-IApp)}}]\quad$\tenv; \rulet_1 \iarrow \rulet_2 \leadsto E \ivturns \type \leadsto E'; \bar{\rulet} \leadsto \bar{x}, \rulet_1 \leadsto x$ \ \\
+%===============================================================================
+  The third hypothesis of the lemma then is
+\begin{equation*}
+  \tenv \vturns \bar{\rulet} \leadsto \bar{E} \quad\wedge\quad \tenv \vturns \rulet_1 \leadsto E_1
+\end{equation*}
+  The Weakening Lemma~\ref{lemma:weakening} turns the first conjunct into
+\begin{equation*}
+  \tenv, \rulet_1 \leadsto x \vturns \bar{\rulet} \leadsto \bar{E}
+\end{equation*}
+
+  The second hypothesis of the lemma then is
+\begin{equation*}
+  \tenv \vturns \rulet_1 \iarrow \rulet_2 \leadsto E
+\end{equation*}
+  By applying the Weakening Lemma~\ref{lemma:weakening} we get
+\begin{equation*}
+  \tenv, \rulet_1 \leadsto x \vturns \rulet_1 \iarrow \rulet_2 \leadsto E
+\end{equation*}
+  From rule \mylabel{AR-IVar} we can also conclude
+\begin{equation*}
+  \tenv, \rulet_1 \leadsto x \vturns \rulet_1 \leadsto x
+\end{equation*}
+  These two facts allow us to derive from rule \mylabel{AR-IApp}
+\begin{equation*}
+  \tenv, \rulet_1 \leadsto x \vturns \rulet_2 \leadsto E\,x 
+\end{equation*}
+
+  We now have the necessary ingredients to invoke the induction hypothesis
+  on the hypothesis of the rule and obtain
+\begin{equation*}
+  \tenv, \rulet_1 \leadsto x \vturns \type \leadsto E'[\bar{E}/\bar{x}]
+\end{equation*}
+
+  Finally, we use the second conjunct of the third hypothesis to invoke
+  the Substitution Lemma~\ref{lemma:substitution} on the above and
+  reach our desired conclusion
+\begin{equation*}
+  \tenv \vturns \type \leadsto E'[\bar{E}/\bar{x}][E_1/x]
+\end{equation*}
+
+%===============================================================================
+\item[\fbox{\texttt{(M-TApp)}}]\quad$\tenv; \forall\alpha.\rulet \leadsto E \ivturns \type \leadsto E'; \bar{\rulet} \leadsto \bar{x}$ \ \\
+%===============================================================================
+  Then the second hypothesis of the lemma is
+\begin{equation*}
+  \tenv \vturns \forall\alpha.\rulet \leadsto E
+\end{equation*}
+  This allows us to conclude by rule \mylabel{AR-TApp} that
+\begin{equation*}
+  \tenv \vturns \rulet[\suty/\alpha] \leadsto E\,|\suty|
+\end{equation*}
+
+  The third hypothesis of the lemma is
+\begin{equation*}
+  \tenv \vturns \bar{\rulet} \leadsto \bar{E}
+\end{equation*}
+
+  We now have the necessary ingredients to invoke the induction hypothesis
+  on the hypothesis of the rule and obtain the desired conclusion
+\begin{equation*}
+  \tenv \vturns \type \leadsto E'[\bar{E}/\bar{x}]
+\end{equation*}
+
+\end{description}
+\end{proof}
+
+% %-------------------------------------------------------------------------------
+% \subsection{Correctness of the Resolution Algorithm}
+% 
+% Lemma~\ref{lemma:sa:3} states that the resolution algorithm
+% $\vdash_{\mathit{alg}}$ is sound with respect to the deterministic resolution
+% specification $\vturns$.
+% 
+% Its proof relies on Lemma~\ref{lemma:sa:2}, which states that
+% the auxiliary relation $\vdash_{\mathit{match1st}}$ is sound, whose
+% proof in turn relies on Lemma~\ref{lemma:sa:1} which states that
+% the auxiliary relation $\vdash_{\mathit{match}}$ is sound.
+% 
+% The completeness proof proceeds in a similar fashion.
+% 
+% %###############################################################################
+% {\centering
+% \fbox{
+% \begin{minipage}{0.95\columnwidth}
+% \begin{lemma}\label{lemma:sa:1}
+%   If 
+% \begin{equation*}
+%     \rho;\bar{\rho};\bar{\alpha};\bar{\omega};E \vdash_{\mathit{match}} \tau \hookrightarrow \bar{\rho}';\bar{\omega'};E'
+% \end{equation*}
+%   then there exist $\bar{\rho}''$ with 
+% \begin{equation*}
+%   \bar{\rho}\theta \subseteq \bar{\rho'}
+% \end{equation*}
+%   where $\theta = [\bar{\rho''}/\bar{\alpha}]$,
+% 
+%   and 
+% \begin{equation*}
+%   \bar{\omega} \subseteq \bar{\omega}'
+% \end{equation*}
+% 
+%   such that forall $\env$ and $\bar{E}''$: 
+% 
+%   if
+% \begin{equation*}
+%   \bar{\alpha}; \env \vturns \rho_i' \leadsto E_i''\quad\quad (\forall \rho_i' \in \bar{\rho}')
+% \end{equation*}
+% 
+%   then 
+% \begin{equation*}
+%   \rho\theta \lhd \tau
+% \end{equation*}
+%   and
+% \begin{equation*}
+%   \bar{\alpha}; \env; \rho\theta \leadsto E|\theta|\eta \vdash_\downarrow \tau \leadsto E'\eta
+% \end{equation*}
+%   where $\eta = [\bar{E}''/\bar{\omega}']$
+% \end{lemma}
+% \end{minipage}
+% }}
+% 
+% \begin{proof}
+% The proof proceeds by induction on the derivation.
+% \begin{description}
+% %===============================================================================
+% \item[(\texttt{MTC-Simp})]\quad$\tau';\bar{\rho};\bar{\alpha};\bar{\omega};E \vdash_{\mathit{match}} \tau \hookrightarrow \bar{\rho}\theta;\bar{\omega};E|\theta|$ \ \\
+% %===============================================================================
+%   Obviously, we have that 
+% \begin{equation*}
+%   \bar{\omega} \subseteq \bar{\omega}
+% \end{equation*}
+% 
+%   and
+% \begin{equation*}
+%   \bar{\rho}\theta \subseteq \bar{\rho}\theta
+% \end{equation*}
+% 
+%   From rule \mylabel{MTC-Simp} we have
+% \begin{equation*}
+%   \theta = \mathit{mgu}_{\bar{\alpha}}(\tau,\tau')
+% \end{equation*}
+% 
+%   This means 
+% \begin{equation*}
+%   \tau'\theta = \tau
+% \end{equation*}
+% 
+%   Hence, from rule \mylabel{M-Simp} it follows that
+% \begin{equation*}
+%   \tau'\theta \lhd \tau
+% \end{equation*}
+% 
+%   Also, from rule \mylabel{I-Simp} it follows that
+% \begin{equation*}
+%   \bar{\alpha}; \env; \tau \leadsto E|\theta|\eta  \vdash_\downarrow \tau \leadsto E|\theta|\eta
+% \end{equation*}
+% 
+%   or, equivalently,
+% \begin{equation*}
+%   \bar{\alpha}; \env; \tau'\theta \leadsto E|\theta|\eta \vdash_\downarrow \tau \leadsto E|\theta|\eta
+% \end{equation*}
+% 
+% %===============================================================================
+% \item[(\texttt{MTC-IAbs})]\quad$\rho_1 \iarrow \rho_2;\bar{\rho};\bar{\alpha};\bar{\omega};E \vdash_{\mathit{match}} \tau \hookrightarrow \bar{\rho}';\bar{\omega};E'$ \ \\
+% %===============================================================================
+% 
+%   From the rule \mylabel{MTC-IAbs} and the induction hypothesis, it follows that
+% \begin{equation*}
+%   \bar{\omega}, \omega \subseteq \bar{\omega'}
+% \end{equation*}
+% 
+%   Hence,
+% \begin{equation*}
+%   \bar{\omega} \subseteq \bar{\omega'}
+% \end{equation*}
+% 
+%   Similarly, it follows that
+% \begin{equation*}
+%   (\bar{\rho},\rho_1)\theta \subseteq \bar{\rho}'
+% \end{equation*}
+% 
+%   Hence,
+% \begin{equation*}
+%   \bar{\rho}\theta \subseteq \bar{\rho}'
+% \end{equation*}
+% 
+%   Also, from the rule \mylabel{MTC-IAbs} and the induction hypothesis, it follows that
+% \begin{equation*}
+%   \rho_2\theta \lhd \tau
+% \end{equation*}
+% 
+%   and, by rule \mylabel{M-IApp}, we hence have
+% \begin{equation*}
+%   \rho_1\theta \iarrow \rho_2\theta \lhd \tau
+% \end{equation*}
+% 
+%   or, more succinctly,
+% \begin{equation*}
+%   (\rho_1 \iarrow \rho_2)\theta \lhd \tau
+% \end{equation*}
+% 
+%   Finally, from the rule \mylabel{MTC-IAbs} and the induction hypothesis, it follows that
+% \begin{equation*}
+%  \bar{\alpha}; \env; \rho_2\theta \leadsto (E\,\omega)|\theta|\eta \vdash_\downarrow \tau \leadsto E'\eta 
+% \end{equation*}
+% 
+%   or
+% \begin{equation*}
+%  \bar{\alpha}; \env; \rho_2\theta \leadsto (E\theta\eta)\,(\omega\eta) \vdash_\downarrow \tau \leadsto E'\eta 
+% \end{equation*}
+% 
+%   Using rule \mylabel{I-IAbs} we may then conclude
+% \begin{equation*}
+%  \bar{\alpha}; \env; \rho_1\theta \iarrow \rho_2\theta \leadsto E\theta\eta \vdash_\downarrow \tau \leadsto E'\eta 
+% \end{equation*}
+% 
+%   or, equivalently,
+% \begin{equation*}
+%  \bar{\alpha}; \env; (\rho_1 \iarrow \rho_2)\theta \leadsto E\theta\eta \vdash_\downarrow \tau \leadsto E'\eta 
+% \end{equation*}
+% 
+% %===============================================================================
+% \item[(\texttt{MTC-TAbs})]\quad$\forall \alpha.\rho;\bar{\rho};\bar{\alpha};\bar{\omega};E \vdash_{\mathit{match}} \tau \hookrightarrow \bar{\rho}';\bar{\omega};E'$ \ \\
+% %===============================================================================
+% 
+%   From the rule \mylabel{MTC-TAbs} and the induction hypothesis, it follows that
+% \begin{equation*}
+%   \bar{\omega} \subseteq \bar{\omega'}
+% \end{equation*}
+% 
+%   Similarly, it follows that
+% \begin{equation*}
+%   \bar{\rho}\theta \subseteq \bar{\rho}'
+% \end{equation*}
+% 
+%   Also it follows that
+% \begin{equation*}
+%   \rho\theta \lhd \tau
+% \end{equation*}
+% 
+%   or, equivalently,
+% \begin{equation*}
+%   \rho[\bar{\alpha}\theta/\bar{\alpha}][\alpha\theta/\alpha] \lhd \tau
+% \end{equation*}
+% 
+%   Hence, following rule \mylabel{MTC-TAbs}, we have that
+% \begin{equation*}
+%   \forall \alpha.(\rho[\bar{\alpha}\theta/\bar{\alpha}]) \lhd \tau
+% \end{equation*}
+% 
+%   or, equivalently,
+% \begin{equation*}
+%   (\forall \alpha.\rho)[\bar{\alpha}\theta/\bar{\alpha}] \lhd \tau
+% \end{equation*}
+% 
+%   Finally, from the rule \mylabel{MTC-TAbs} and the induction hypothesis, it follows that
+% \begin{equation*}
+%   \bar{\alpha}; \env; \rho\theta \leadsto (E\,\alpha)|\theta|\eta \vdash_\downarrow \tau \leadsto E'\eta 
+% \end{equation*}
+% 
+%   or, equivalently,
+% \begin{equation*}
+%   \bar{\alpha}; \env; \rho\theta \leadsto (E|\theta|[\alpha|\theta|/\alpha]\eta)\,(\alpha|\theta|) \vdash_\downarrow \tau \leadsto E'\eta 
+% \end{equation*}
+% 
+%   Hence, following rule \mylabel{I-TAbs}, we get
+% \begin{equation*}
+%   \bar{\alpha}; \env; (\forall \alpha.\rho)\theta \leadsto E|\theta|\eta \vdash_\downarrow \tau \leadsto E'\eta 
+% \end{equation*}
+% \end{description}
+% \end{proof}
+% 
+% %###############################################################################
+% {\centering
+% \fbox{
+% \begin{minipage}{0.95\columnwidth}
+% \begin{lemma}\label{lemma:sa:2}
+%   If 
+% \begin{equation*}
+%    \bar{\alpha}; \env \vdash_{\mathit{match1st}} \tau \hookrightarrow \bar{\rho}';\bar{\omega};E
+% \end{equation*}
+%   then there exist $\rho$ and $x$ such that
+% 
+% \begin{equation*}
+%   \elookup{\env}{\tau} = \rho \leadsto x
+% \end{equation*}
+% 
+% and for all $\env' \supseteq \env$
+% and for all $\bar{E}'$ such that
+% \begin{equation*}
+%   \bar{\alpha}; \env' \vturns \rho_i' \leadsto E_i'\quad\quad (\forall \rho_i' \in \bar{\rho}')
+% \end{equation*}
+% 
+% we have that
+% \begin{equation*}
+%   \bar{\alpha}; \env'; \rho \leadsto x \vdash_\downarrow \tau \leadsto E\eta
+% \end{equation*}
+% where $\eta = [\bar{E}'/\bar{\omega}]$.
+% \end{lemma}
+% \end{minipage}
+% }}
+% 
+% \begin{proof}
+% The proof proceeds by induction on the derivation.
+% \begin{description}
+% %===============================================================================
+% \item[(\texttt{M1-Head})]\quad$\bar{\alpha}; \env,\rho \leadsto x \vdash_{\mathit{match1st}} \tau \hookrightarrow \bar{\rho};\bar{\omega};E$ \ \\
+% %===============================================================================
+%   From rule \mylabel{M1-Head} and the previous lemma, we then have that
+% \begin{equation*}
+%   \rho \lhd \tau 
+% \end{equation*}
+%   
+%   Using rule \mylabel{L-Head} we can conclude that
+% \begin{equation*}
+%   \elookup{(\env,\rho\leadsto x)}{\tau} = \rho \leadsto x
+% \end{equation*}
+% 
+%   Similarly, we have that 
+% \begin{equation*}
+%   \bar{\alpha}; \env'; \rho \leadsto x\eta \vdash_\downarrow \tau \leadsto E\eta
+% \end{equation*}
+% 
+%   which simplifies to
+% \begin{equation*}
+%   \bar{\alpha}; \env'; \rho \leadsto x \vdash_\downarrow \tau \leadsto E\eta
+% \end{equation*}
+% 
+% %===============================================================================
+% \item[(\texttt{M1-Tail})]\quad$\bar{\alpha}; \env,\rho \leadsto x \vdash_{\mathit{match1st}} \tau \hookrightarrow \bar{\rho};\bar{\omega};E$ \ \\
+% %===============================================================================
+%   From rule \mylabel{M1-Tail} and the induction hypothesis, we then have that there
+%   exist $\rho'$ and $x'$ such that
+% \begin{equation*}
+%   \elookup{\env}{\tau} = \rho' \leadsto x'
+% \end{equation*}
+% 
+%   Also from rule \mylabel{M1-Tail} and a previous lemma, we have that
+% \begin{equation*}
+%   \rho \not\!\!\lhd \tau
+% \end{equation*}
+% 
+%   Hence, using rule \mylabel{L-Tail} we can conclude that 
+% \begin{equation*}
+%   \elookup{(\env,\rho\leadsto x)}{\tau} = \rho' \leadsto x'
+% \end{equation*}
+% 
+%   From rule \mylabel{M1-Tail} and the induction hypothesis, we also have that
+% \begin{equation*}
+%   \bar{\alpha}; \env'; \rho' \leadsto x' \vdash_\downarrow \tau \leadsto E\eta
+% \end{equation*}
+%   for $\env' \supseteq (\env,\rho \leadsto x)$.
+% 
+% \end{description}
+% \end{proof}
+% 
+% %###############################################################################
+% {\centering
+% \fbox{
+% \begin{minipage}{0.95\columnwidth}
+% \begin{lemma}\label{lemma:sa:3}
+%   If 
+% \begin{equation*}
+%    \bar{\alpha}; \env \vdash_{\mathit{alg}} \rho \leadsto E
+% \end{equation*}
+% 
+%   then
+% \begin{equation*}
+%   \bar{\alpha}; \env \vturns \rho \leadsto E
+% \end{equation*}
+% \end{lemma}
+% \end{minipage}
+% }}
+% 
+% \begin{proof}
+% The proof proceeds by induction on the derivation.
+% \begin{description}
+% %===============================================================================
+% \item[(\texttt{Alg-TAbs})]\quad$\bar{\alpha}; \env \vdash_{\mathit{alg}} \forall \alpha.\rho \leadsto \Lambda \alpha.E$ \ \\
+% %===============================================================================
+%   From rule \mylabel{Alg-TAbs} and the induction hypothesis, it follows that
+% \begin{equation*}
+%   \bar{\alpha}; \env \vdash_{\mathit{r}} \rho \leadsto E
+% \end{equation*}
+% 
+%   Using rule \mylabel{R-TAbs}, we then get
+% \begin{equation*}
+%   \bar{\alpha}; \env \vdash_{\mathit{r}} \forall \alpha.\rho \leadsto \Lambda \alpha.E
+% \end{equation*}
+% 
+% %===============================================================================
+% \item[(\texttt{Alg-IAbs})]\quad$\bar{\alpha}; \env \vdash_{\mathit{alg}} \rho_1 \iarrow \rho_2 \leadsto \lambda (x:|\rho_1|).E$ \ \\
+% %===============================================================================
+%   From rule \mylabel{Alg-IAbs} and the induction hypothesis, it follows that
+% \begin{equation*}
+%   \bar{\alpha}; \env, \rho_1 \leadsto x \vdash_{\mathit{r}} \rho_2 \leadsto E
+% \end{equation*}
+% 
+%   Using rule \mylabel{R-IAbs}, we then get
+% \begin{equation*}
+%   \bar{\alpha}; \env \vdash_{\mathit{r}} \rho_1 \iarrow \rho_2 \leadsto \lambda (x:|\rho_1|).E
+% \end{equation*}
+% 
+% %===============================================================================
+% \item[(\texttt{Alg-Simp})]\quad$\bar{\alpha}; \env \vdash_{\mathit{alg}} \tau \leadsto E[\bar{\omega}/\bar{E}]$ \ \\
+% %===============================================================================
+%   From rule \mylabel{Alg-Simp} and the previous lemma it follows that
+% \begin{equation*}
+%   \elookup{\env}{\tau} = \rho \leadsto x
+% \end{equation*}
+% 
+%   and
+% \begin{equation*}
+%   \bar{\alpha}; \env; \rho \leadsto x \vdash_\downarrow \tau \leadsto E[\bar{\omega}/\bar{E}]
+% \end{equation*}
+% 
+%   Hence, using rule \mylabel{R-Simp}, we conclude
+% \begin{equation*}
+%   \bar{\alpha}; \env \vturns \tau \leadsto E[\bar{\omega}/\bar{E}]
+% \end{equation*}
+% 
+% \end{description}
+% \end{proof}
+% 
+% %-------------------------------------------------------------------------------
+% % \subsection{Completeness of the Resolution Algorithm}
+% % 
+% % %###############################################################################
+% % {\centering
+% % \fbox{
+% % \begin{minipage}{0.95\columnwidth}
+% % \begin{lemma}\label{lemma:sa:2}
+% %   If 
+% % \begin{equation*}
+% %    \rho \lhd \tau
+% % \end{equation*}
+% % 
+% %   then for all $\rho^*, \bar{\rho}, \bar{\alpha}, \bar{\omega}, E, \theta$ such that
+% % \begin{equation*}
+% %   \rho = \rho^*\theta
+% % \end{equation*}
+% % 
+% %   where $\mathit{dom}(\theta) \subseteq \bar{\alpha}$, we have that
+% %   there exist $\bar{\rho}', \bar{\omega}', E'$ such that
+% % 
+% % \begin{equation*}
+% %   \rho^*; \bar{\rho}; \bar{\alpha}; \bar{\omega}; E \vdash_\mathit{match} \tau \hookrightarrow \bar{\rho}'; \bar{\omega}'; E'
+% % \end{equation*}
+% % \end{lemma}
+% % \end{minipage}
+% % }}
+% % 
+% % \begin{proof}
+% % The proof proceeds by induction on the derivation.
+% % \begin{description}
+% % %===============================================================================
+% % \item[(\texttt{M-Simp})]\quad$\tau \lhd \tau$ \ \\
+% % %===============================================================================
+% %   From the assumption and the definition of $\mathit{mgu}_{\bar{\alpha}}$, it follows that
+% % \begin{equation*}
+% %   \theta = \mathit{mgu}_{\bar{\alpha}}(\tau^*,\tau)
+% % \end{equation*}
+% % 
+% %   Hence, by rule \mylabel{MTC-Simp}, we conclude
+% % \begin{equation*}
+% %   \tau^*; \bar{\rho}; \bar{\alpha}; \bar{\omega}; E \vdash_\mathit{match} \tau \hookrightarrow \bar{\rho}\theta; \bar{\omega}; E\theta
+% % \end{equation*}
+% % 
+% % %===============================================================================
+% % \item[(\texttt{M-IApp})]\quad$\rho_1 \iarrow \rho_2 \lhd \tau$ \ \\
+% % %===============================================================================
+% %   From rule \mylabel{MTC-IAbs} and the induction hypothesis, we have that
+% % \begin{equation*}
+% %   \rho^*_2; \bar{\rho},\rho^*_1; \bar{\alpha}; \bar{\omega},\omega; E \vdash_\mathit{match} \tau \hookrightarrow \bar{\rho}'; \bar{\omega}'; E'
+% % \end{equation*}
+% % 
+% %   Hence, by rule \mylabel{MTC-IAbs}, we conclude
+% % \begin{equation*}
+% %   \rho^*_1 \iarrow \rho^*_2; \bar{\rho}; \bar{\alpha}; \bar{\omega}; E \vdash_\mathit{match} \tau \hookrightarrow \bar{\rho}'; \bar{\omega}'; E'
+% % \end{equation*}
+% % \end{description}
+% % \end{proof}
+% 
+%-------------------------------------------------------------------------------
+\subsection{Deterministic Resolution is Deterministic}\label{proof:determinism}
+
+%\newcommand{\unamb}{\vdash_{\mathit{unamb}}}
+
+%###############################################################################
+{\centering
+\fbox{
+\begin{minipage}{0.95\columnwidth}
+\begin{lemma}\label{lemma:determinism:0}
+  If 
+\begin{equation*}
+  \unamb \tenv
+\end{equation*}
+  and
+\begin{equation*}
+  \unamb \rulet
+\end{equation*}
+  and
+\begin{equation*}
+  \tenv \ivturns \rulet \leadsto E_1
+\end{equation*}
+and
+\begin{equation*}
+  \tenv \ivturns \rulet \leadsto E_2
+\end{equation*}
+then
+\begin{equation*}
+  E_1 = E_2
+\end{equation*}
+\end{lemma}
+\end{minipage}
+}}
+
+\begin{proof}
+From the third and fourth hypotheses of the lemma, the hypothesis
+of rule \mylabel{R-Main} and Lemma~\ref{lemma:determinism:1} the desired
+result follows
+\begin{equation*}
+  E_1 = E_2
+\end{equation*}
+\end{proof}
+
+%###############################################################################
+{\centering
+\fbox{
+\begin{minipage}{0.95\columnwidth}
+\begin{lemma}\label{lemma:determinism:1}
+  If 
+\begin{equation*}
+  \unamb \tenv
+\end{equation*}
+  and
+\begin{equation*}
+  \unamb \rulet
+\end{equation*}
+  and
+\begin{equation*}
+  \bar{\alpha};\tenv \ivturns \rulet \leadsto E_1
+\end{equation*}
+and
+\begin{equation*}
+  \bar{\alpha};\tenv \ivturns \rulet \leadsto E_2
+\end{equation*}
+then
+\begin{equation*}
+  E_1 = E_2
+\end{equation*}
+\end{lemma}
+\end{minipage}
+}}
+
+\begin{proof}
+The proof proceeds by induction on the derivation of the third hypothesis.
+\begin{description}
+\setlength{\itemsep}{1em}
+%===============================================================================
+\item[\fbox{\texttt{(R-IAbs)}}]\quad$\bar{\alpha};\tenv \ivturns \rulet_1 \iarrow \rulet_2 \leadsto \lambda\relation{x}{||\rulet_1||}.E_1$ \ \\
+%===============================================================================
+
+It follows that the lemma's fourth hypothesis is also derived by rule
+\mylabel{R-IAbs}. It follows from the lemma's second hypothesis that 
+\begin{equation*}
+  \unamb \rulet_1 \quad\wedge\quad \unamb \rulet_2
+\end{equation*}
+From this and lemma's first hypothesis, it follows that
+\begin{equation*}
+  \unamb \tenv,\rulet_1 \leadsto x
+\end{equation*}
+From the rule's hypothesis and the induction hypothesis, it follows that
+\begin{equation*}
+  E_1 = E_2
+\end{equation*}
+Hence, we may conclude
+\begin{equation*}
+  \lambda x:|\rulet_1|.E_1 = \lambda x:|\rulet_1|.E_2
+\end{equation*}
+
+%===============================================================================
+\item[\fbox{\texttt{(R-TAbs)}}]\quad$\bar{\alpha};\tenv \ivturns \forall \alpha. \rho \leadsto \Lambda\alpha.E_1$ \ \\
+%===============================================================================
+
+It follows that the lemma's fourth hypothesis is also derived by rule
+\mylabel{R-TAbs}. It follows from the lemma's second hypothesis that 
+\begin{equation*}
+  \unamb \rulet
+\end{equation*}
+From the lemma's first hypothesis, it follows that
+\begin{equation*}
+  \unamb \tenv, \alpha
+\end{equation*}
+From the rule's hypothesis and the induction hypothesis, it follows that
+\begin{equation*}
+  E_1 = E_2
+\end{equation*}
+Hence, we may conclude
+\begin{equation*}
+  \Lambda \alpha.E_1 = \Lambda \alpha.E_2
+\end{equation*}
+
+%===============================================================================
+\item[\fbox{\texttt{(R-Simp)}}]\quad$\bar{\alpha};\tenv \ivturns \type \leadsto E_1$ \ \\
+%===============================================================================
+
+It follows that the lemma's fourth hypothesis is also derived by rule
+\mylabel{R-Simp}. We obtain the desired result from Lemma~\ref{lemma:determinism:2}
+\begin{equation*}
+  E_1 = E_2
+\end{equation*}
+
+   
+\end{description}
+\end{proof}
+
+%###############################################################################
+{\centering
+\fbox{
+\begin{minipage}{0.95\columnwidth}
+\begin{lemma}\label{lemma:determinism:2}
+  If 
+\begin{equation*}
+  \unamb \tenv
+\end{equation*}
+  and
+\begin{equation*}
+  \unamb \tenv'
+\end{equation*}
+  and
+\begin{equation*}
+  \bar{\alpha};\tenv;\tenv' \ivturns \type \leadsto E_1
+\end{equation*}
+and
+\begin{equation*}
+  \bar{\alpha};\tenv;\tenv' \ivturns \type \leadsto E_2
+\end{equation*}
+then
+\begin{equation*}
+  E_1 = E_2
+\end{equation*}
+\end{lemma}
+\end{minipage}
+}}
+
+\begin{proof}
+The proof proceeds by induction on the derivation of the third hypothesis.
+\begin{description}
+\setlength{\itemsep}{1em}
+%===============================================================================
+\item[\fbox{\texttt{(L-RuleMatch)}}]\quad$\bar{\alpha};\tenv;\tenv',\rulet \leadsto x \ivturns \type \leadsto E_1[\bar{E}_1/\bar{x}]$ \ \\
+%===============================================================================
+  Then the fourth hypothesis was either derived from rule \mylabel{L-RuleMatch},
+  or from rule \mylabel{L-RuleNoMatch}. However, the hypothesis of the latter is
+  not satisfied: $\epsilon;E_1;\Sigma_1$ forms a counter-example. Hence, the fourth
+  hypothesis is also formed by rule \mylabel{L-RuleMatch}.
+
+  Then it follows from the first hypothesis of the rule and Lemma~\ref{lemma:determinism:3} that
+\begin{equation*}
+  E_1 = E_2 \quad\wedge\quad \Sigma_1 = \Sigma_2
+\end{equation*}
+  From the second hypothesis of the rule and Lemma~\ref{lemma:determinism:1} it also follows that
+\begin{equation*}
+  \bar{E}_1 = \bar{E_2}
+\end{equation*}
+  Hence, we may conclude
+\begin{equation*}
+  E_1[\bar{E}_1/\bar{x}] = E_2[\bar{E_2}/\bar{x}]
+\end{equation*}
+
+
+%===============================================================================
+\item[\fbox{\texttt{(L-RuleNoMatch)}}]\quad$\bar{\alpha};\tenv;\tenv',\rulet \leadsto x \ivturns \type \leadsto E_1'$ \ \\
+%===============================================================================
+  Then the fourth hypothesis was either derived from rule \mylabel{L-RuleMatch},
+  or from rule \mylabel{L-RuleNoMatch}. However, the hypothesis of the former is
+  not satisfied, as it would be a counter-example for the first hypothesis of
+  the assumed rule of the third hypothesis. Hence, the fourth hypothesis is also
+  formed by rule \mylabel{L-RuleNoMatch}.
+
+  From the second hypothesis of the lemma we derive $\unamb \tenv'$.
+  Then from the second hypothesis of the rule and the induction hypothesis we conclude
+  the desired result
+\begin{equation*}
+  E_1' = E_2'
+\end{equation*}
+
+%===============================================================================
+\item[\fbox{\texttt{(L-Var)}}]\quad$\bar{\alpha};\tenv;\tenv',x:\rulet \ivturns \type \leadsto E_1$ \ \\
+%===============================================================================
+  Clearly the fourth hypothesis is also derived by rule \mylabel{L-Var}.
+  Moreover, from the second hypothesis it follows that $\unamb \tenv'$.
+  Hence, from the induction hypothesis we conclude that
+\begin{equation*}
+  E_1 = E_2
+\end{equation*}
+
+%===============================================================================
+\item[\fbox{\texttt{(L-TyVar)}}]\quad$\bar{\alpha};\tenv;\tenv',\alpha \ivturns \type \leadsto E_1$ \ \\
+%===============================================================================
+  Clearly the fourth hypothesis is also derived by rule \mylabel{L-TyVar}.
+  Moreover, from the second hypothesis it follows that $\unamb \tenv'$.
+  Hence, from the induction hypothesis we conclude that
+\begin{equation*}
+  E_1 = E_2
+\end{equation*}
+\end{description}
+\end{proof}
+
+We annotated the judgement with the sequence of substitution types $\bar{\suty}$
+used to instantiate the universal quantifiers.
+
+{\centering
+\fbox{
+\begin{minipage}{0.95\columnwidth}
+\begin{center}
+$\ba{c}
+\myruleform{\bar{\suty};\tenv; \rulet~\gbox{\leadsto E} \ivturns \type~\gbox{\leadsto E'}; \Sigma}\\ \\
+\mylabel{M-Simp} \quad
+          {\epsilon;\tenv; \type~\gbox{\leadsto E} \ivturns \type~\gbox{\leadsto E}; \epsilon} \\ \\
+\mylabel{M-IApp} \quad
+  \myirule{\bar{\suty};\tenv, \rulet_1 \gbox{\leadsto x}; \rulet_2 ~\gbox{\leadsto E\,x} \ivturns \type~\gbox{\leadsto E'}; \Sigma 
+           \quad\quad\quad \gbox{x~\mathit{fresh}}
+          }
+          {\bar{\suty};\tenv; \rulet_1 \iarrow \rulet_2 ~\gbox{\leadsto E} \ivturns \type~\gbox{\leadsto E'}; \Sigma, \rulet_1~\gbox{\leadsto x}} \\ \\ 
+\mylabel{M-TApp} \quad
+  \myirule{\bar{\suty};\tenv; \rulet[\suty/\alpha] ~\gbox{\leadsto E\,|\suty|} \ivturns \type~\gbox{\leadsto E'; \Sigma}
+           \quad\quad\quad
+           \tenv \turns \suty
+          }
+          {\bar{\suty},\suty;\tenv; \forall \alpha. \rulet ~\gbox{\leadsto E} \ivturns \type~\gbox{\leadsto E'}; \Sigma} \\
+\ea
+$
+\end{center}
+\end{minipage}
+}}
+
+It is not difficult to see that any derivation of the annotated judgement
+is in one to one correspondence with a derivation of the unannotated 
+judgement.
+
+The judgement is deterministic.
+
+%###############################################################################
+{\centering
+\fbox{
+\begin{minipage}{0.95\columnwidth}
+\begin{lemma}\label{lemma:determinism:3}
+  If 
+\begin{equation*}
+  \bar{\alpha} \unamb \rulet
+\end{equation*}
+  and
+\begin{equation*}
+  \bar{\suty}_1 ; \tenv; \rulet[\bar{\suty}_2/\bar{\alpha}]\leadsto E[|\bar{\suty}_2|/\bar{\alpha}] \ivturns \type \leadsto E_1; \Sigma_1
+\end{equation*}
+and
+\begin{equation*}
+  \bar{\suty}_1' ; \tenv; \rulet[\bar{\suty}_2'/\bar{\alpha}]\leadsto E[|\bar{\suty}_2'|/\bar{\alpha}] \ivturns \type \leadsto E_2; \Sigma_2
+\end{equation*}
+then
+\begin{equation*}
+  \bar{\suty}_1 = \bar{\suty}_1' \quad\wedge\quad \bar{\suty}_2 = \bar{\suty}_2'
+  \quad\wedge\quad E_1 = E_2 \quad\wedge\quad \Sigma_1 = \Sigma_2
+  \quad\wedge\quad \unamb \Sigma_1
+\end{equation*}
+% where
+% \begin{equation*}
+% \begin{array}{c}
+%   \myruleform{\bar{\suty}; \rulet \vdash \type} \\ \\
+%   \mylabel{P-1} \quad \myirule{}{\epsilon; \type \vdash \type} \\ \\
+%   \mylabel{P-2} \quad \myirule{\bar{\suty}; \rulet_2 \vdash \type}{\bar{\suty}; \rulet_1 \iarrow \rulet_2 \vdash \type}
+%   \mylabel{P-3} \quad \myirule{\bar{\suty}; \rulet[\suty/\alpha] \vdash \type}{\suty,\bar{\suty}; \forall\alpha.\rulet \vdash \type}
+% \end{array}
+% \end{equation*}
+\end{lemma}
+\end{minipage}
+}}
+
+\begin{proof}
+The proof proceeds by induction on the derivation of the first hypothesis.
+\begin{description}
+\setlength{\itemsep}{1em}
+%===============================================================================
+\item[\fbox{\texttt{(UA-Simp)}}]\quad$\bar{\alpha} \unamb \type'$ \ \\
+%===============================================================================
+  Then the second and third hypothesis of the lemma must have been formed by rule \mylabel{M-Simp}
+  and hence 
+\begin{equation*}
+  \bar{\suty}_1 = \epsilon = \bar{\suty}_1'
+\end{equation*}
+  
+  For the same reason we have that $\type'[\bar{\suty}_2/\bar{\alpha}] = \type = \type'[\bar{\suty}_2'/\bar{\alpha}]$. Since we know that $\bar{\alpha} \subseteq \mathit{ftv}(\type)$, it must follow also that
+\begin{equation*}
+  \bar{\suty}_2 = \bar{\suty}_2'
+\end{equation*}
+
+  As a consequence, we also have that
+\begin{equation*}
+  E_1 = E[|\bar{\sigma}_2|/\bar{\alpha}] = E[|\bar{\sigma}_2'|/\bar{\alpha}] = E_2
+\end{equation*}
+
+  Finally, it also follows from rule \mylabel{M-Simp} that
+\begin{equation*}
+  \Sigma_1 = \epsilon = \Sigma_2
+\end{equation*}
+  and trivially
+\begin{equation*}
+  \unamb \epsilon
+\end{equation*}
+
+%===============================================================================
+\item[\fbox{\texttt{(UA-IAbs)}}]\quad$\bar{\alpha} \unamb \rulet_1 \iarrow \rulet_2$ \ \\
+%===============================================================================
+  Then the second and third hypothesis of the lemma must have been formed by rule \mylabel{M-IApp}.
+  From their two hypotheses and from the hypothesis of the rule and the induction hypothesis, we obtain
+  the desired results
+\begin{equation*}
+  \bar{\suty}_1 = \bar{\suty}_1' \quad\wedge\quad \bar{\suty}_2 = \bar{\suty}_2'
+  \quad\wedge\quad 
+  E_1 = E_2
+  \quad\wedge\quad
+  \Sigma_1, \rulet_1[|\bar{\sigma}_2|/\bar{\alpha}]\leadsto x
+  = 
+  \Sigma_2, \rulet_1[|\bar{\sigma}_2'|/\bar{\alpha}]\leadsto x
+\end{equation*}
+
+  We also derive from the induction hypothesis that $\unamb \Sigma_1$. 
+  Since $\bar{\alpha} \unamb \rulet_1 \iarrow \rulet_2$, we also have $\unamb \rulet_1$.
+  Hence we also conclude
+\begin{equation*}
+  \unamb \Sigma_1, \rulet_1 \leadsto x
+\end{equation*}
+
+%===============================================================================
+
+\item[\fbox{\texttt{(UA-TAbs)}}]\quad$\bar{\alpha} \unamb \forall \alpha.\rulet$ \ \\
+%===============================================================================
+  Then the second and third hypothesis of the lemma must have been formed by rule \mylabel{M-TApp},
+  with $\bar{\suty}_1 = \bar{\suty}_{1,1},\suty_{1,2}$ and $\bar{\suty}_1' = \bar{\suty}_{1,1}',\suty_{2,2}'$.
+  From their two hypotheses and from the hypothesis of the rule and the induction hypothesis, we obtain
+\begin{equation*}
+  \bar{\suty}_2,\suty_{1,2} = \bar{\suty}_2',\suty_{1,2}' 
+  \quad\wedge\quad 
+  \bar{\suty}_{1,1} = \bar{\suty}_{1,1}'
+  \quad\wedge\quad 
+  E_1 = E_2
+  \quad\wedge\quad 
+  \Sigma_1 = \Sigma_2
+  \quad\wedge\quad 
+  \unamb \Sigma_1
+\end{equation*}
+  
+  From this we conclude the desired result 
+\begin{equation*}
+  \bar{\suty}_1 = \bar{\suty}_1' \quad\wedge\quad \bar{\suty}_2 = \bar{\suty}_2'
+  \quad\wedge\quad 
+  E_1 = E_2
+  \quad\wedge\quad 
+  \Sigma_1 = \Sigma_2
+  \quad\wedge\quad 
+  \unamb \Sigma_1
+\end{equation*}
+   
+\end{description}
+\end{proof}
+
+%-------------------------------------------------------------------------------
+\subsection{Resolution Coherence}\label{proof:coherence}
+
+Deterministic resolution is stable under substitution.
+
+%###############################################################################
+{\centering
+\fbox{
+\begin{minipage}{0.95\columnwidth}
+\begin{lemma}\label{lemma:coherence:0}
+  If 
+\begin{equation*}
+   \tenv,\alpha,\tenv' \ivturns \rulet\leadsto E
+\end{equation*}
+  and
+\begin{equation*}
+  \tenv \turns \suty
+\end{equation*}
+  then
+\begin{equation*}
+  \tenv,\tenv'[\suty/\alpha] \ivturns \rulet[\suty/\alpha] \leadsto E[|\suty|/\alpha]
+\end{equation*}
+\end{lemma}
+\end{minipage}
+}}
+
+\begin{proof}
+  The hypothesis of rule \label{R-Main} then is
+\begin{equation*}
+  \mathit{ftv}(\tenv),\alpha,\mathit{ftv}(\tenv'); \tenv,\alpha,\tenv' \ivturns \rulet \leadsto E
+\end{equation*}
+
+  From Lemma~\ref{lemma:coherence:1} it follows that
+\begin{equation*}
+  \mathit{ftv}(\tenv),\mathit{ftv}(\tenv'); \tenv,\tenv'[\suty/\alpha] \ivturns \rulet[\suty/\alpha] \leadsto E[|\suty|/\alpha]
+\end{equation*}
+
+  As $\mathit{ftv}(\tenv') = \mathit{ftv}(\tenv'[\suty/\alpha])$, the desired result
+  follows from
+  rule \mylabel{R-Main}
+\begin{equation*}
+  \tenv,\tenv'[\suty/\alpha] \ivturns \rulet[\suty/\alpha] \leadsto E[|\suty|/\alpha]
+\end{equation*}
+\end{proof}
+
+%###############################################################################
+{\centering
+\fbox{
+\begin{minipage}{0.95\columnwidth}
+\begin{lemma}\label{lemma:coherence:1}
+  If 
+\begin{equation*}
+   \bar{\alpha},\alpha,\bar{\alpha}'; \tenv,\alpha,\tenv' \ivturns \rulet\leadsto E
+\end{equation*}
+  and
+\begin{equation*}
+  \tenv \turns \suty
+\end{equation*}
+  then
+\begin{equation*}
+  \bar{\alpha},\bar{\alpha}'; \tenv,\tenv'[\suty/\alpha] \ivturns \rulet[\suty/\alpha] \leadsto E[|\suty|/\alpha]
+\end{equation*}
+\end{lemma}
+\end{minipage}
+}}
+
+\begin{proof}
+\begin{description}
+\setlength{\itemsep}{1em}
+%===============================================================================
+\item[\fbox{\texttt{(R-IAbs)}}]\quad$\bar{\alpha},\alpha,\bar{\alpha}';\tenv,\alpha,\tenv'
+\ivturns \rulet_1 \iarrow \rulet_2 \leadsto \lambda\relation{x}{|\rulet_1|}.E$ \ \\
+%===============================================================================
+  From the rule's hypothesis and the induction hypothesis we have
+\begin{equation*}
+\bar{\alpha},\bar{\alpha}';\tenv,(\tenv',\rulet_1\leadsto x)[\suty/\alpha] \ivturns \rulet_2[\suty/\alpha] \leadsto E[|\suty|/\alpha]
+\end{equation*}
+
+  From the definition of substitution and rule \mylabel{R-IAbs} we then conclude
+\begin{equation*}
+\bar{\alpha},\bar{\alpha}';\tenv,\tenv'[\suty/\alpha] \ivturns (\rulet_1 \iarrow \rulet_2)[\suty/\alpha] \leadsto (\lambda x:|\rulet_1|.E)[|\suty|/\alpha]
+\end{equation*}
+
+%===============================================================================
+\item[\fbox{\texttt{(R-TAbs)}}]\quad$\bar{\alpha},\alpha,\bar{\alpha}';\tenv,\alpha,\tenv'
+\ivturns \forall\beta.\rulet \leadsto \Lambda\beta.E$ \ \\
+%===============================================================================
+  From the rule's hypothesis and the induction hypothesis we have
+\begin{equation*}
+\bar{\alpha},\bar{\alpha}';\tenv,(\tenv',\beta)[\suty/\alpha] \ivturns \rulet[\suty/\alpha] \leadsto E[|\suty|/\alpha]
+\end{equation*}
+
+  From the definition of substitution and rule \mylabel{R-TAbs} we then conclude
+\begin{equation*}
+\bar{\alpha},\bar{\alpha}';\tenv,\tenv'[\suty/\alpha] \ivturns (\forall\beta.\rulet)[\suty/\alpha] \leadsto (\Lambda\beta.E)[|\suty|/\alpha]
+\end{equation*}
+
+%===============================================================================
+\item[\fbox{\texttt{(R-Simp)}}]\quad$\bar{\alpha},\alpha,\bar{\alpha}';\tenv,\alpha,\tenv'
+\ivturns \type \leadsto E$ \ \\
+%===============================================================================
+  From the rule's hypothesis and Lemma~\ref{lemma:coherence:2} we conclude
+\begin{equation*}
+  \bar{\alpha},\bar{\alpha}'; \tenv,\tenv'[\suty/\alpha];\tenv''' \ivturns \type[\suty/\alpha] \leadsto E[|\suty|/\alpha]
+\end{equation*}
+  and
+\begin{equation*}
+  R(\tenv;\alpha;\tenv';\tenv,\alpha,\tenv';\tenv''';\suty)
+\end{equation*}
+  The latter could only have been obtained by ryle \mylabel{R-2}. 
+  Hence, we know that $\tenv''' = \tenv,\tenv'[\suty/\alpha]$ and the former is equivalent to
+\begin{equation*}
+  \bar{\alpha},\bar{\alpha}'; \tenv,\tenv'[\suty/\alpha];\tenv,\tenv'[\suty/\alpha] \ivturns \type[\suty/\alpha] \leadsto E[|\suty|/\alpha]
+\end{equation*}
+
+  With this fact we can conclude by rule \mylabel{R-Simp}
+\begin{equation*}
+\bar{\alpha},\bar{\alpha}';\tenv,\tenv'[\suty/\alpha] \ivturns \type[\suty/\alpha] \leadsto E[|\suty|/\alpha]
+\end{equation*}
+\end{description}
+\end{proof}
+
+%###############################################################################
+{\centering
+\fbox{
+\begin{minipage}{0.95\columnwidth}
+\begin{lemma}\label{lemma:coherence:2}
+  If 
+\begin{equation*}
+   \bar{\alpha},\alpha,\bar{\alpha}'; \tenv,\alpha,\tenv';\tenv'' \ivturns \type \leadsto E
+\end{equation*}
+  and
+\begin{equation*}
+  \tenv'' \subseteq \tenv,\alpha,\tenv'
+\end{equation*}
+  and
+\begin{equation*}
+  \tenv \turns \suty
+\end{equation*}
+  then
+\begin{equation*}
+  \bar{\alpha},\bar{\alpha}'; \tenv,\tenv'[\suty/\alpha];\tenv''' \ivturns \type[\suty/\alpha] \leadsto E[|\suty|/\alpha]
+\end{equation*}
+  and
+\begin{equation*}
+  R(\tenv;\alpha;\tenv';\tenv'';\tenv''';\suty)
+\end{equation*}
+\end{lemma}
+where
+\begin{equation*}
+\begin{array}{c}
+  \myruleform{R(\tenv;\alpha;\tenv';\tenv'';\tenv''';\suty)} \\ \\
+  \mylabel{R-1} \quad \myirule{}{R(\tenv_1,\tenv_2;\alpha;\tenv';\tenv_1;\tenv_1;\suty)} \\ \\
+  \mylabel{R-2} \quad \myirule{}{R(\tenv;\alpha;\tenv_1',\tenv_2';\tenv,\alpha,\tenv_1';\tenv,\tenv_1'[\suty/\alpha];\suty)}
+\end{array}
+\end{equation*}
+  
+\end{minipage}
+}}
+
+\begin{proof}
+\begin{description}
+\setlength{\itemsep}{1em}
+%===============================================================================
+\item[\fbox{\texttt{(L-RuleMatch)}}]\quad$
+  \bar{\alpha},\alpha,\bar{\alpha}'; \tenv,\alpha,\tenv'; \tenv'',\rulet \leadsto x \ivturns \type \leadsto E
+$ \ \\
+%===============================================================================
+  Then it follows from the first hypothesis of the rule and of Lemma~\ref{lemma:coherence:3}
+  that
+\begin{equation*}
+\tenv,\tenv'[\suty/\alpha]; \rulet[\suty/\alpha] \leadsto E[|\suty|/\alpha] \ivturns \type[\suty/\alpha] \leadsto E'[|\suty|/\alpha]; \bar{\rulet}[\suty/\alpha] \leadsto \bar{x}
+\end{equation*}
+
+  Also it follows from the second hypothesis of the rule and of Lemma~\ref{lemma:coherence:1}
+  that
+\begin{equation*}
+  \bar{\alpha},\bar{\alpha}'; \tenv,\tenv'[\suty/\alpha] \ivturns \bar{\rulet}[\suty/\alpha] \leadsto \bar{E}[|\suty|/\alpha]
+\end{equation*}
+
+  By combining these two observations with rule \mylabel{L-RuleMatch} we obtain the first desired result
+\begin{equation*}
+  \bar{\alpha},\bar{\alpha}'; \tenv,\tenv'[\suty/\alpha]; \tenv''',\rulet[\suty/\alpha] \leadsto x \ivturns \type[\suty/\alpha] \leadsto E[|\suty|/\alpha]
+\end{equation*}
+  
+  We obtain the second desired result by case analysis on $\tenv'' \subseteq \tenv,\alpha,\tenv'$:
+  \begin{enumerate}
+  \item $\tenv = \tenv_1,\rulet \leadsto x,\tenv_2 \quad\wedge\quad \tenv'' = \tenv_1$: \\
+  In this case we can use rule \mylabel{R-1} to establish:
+\begin{equation*}
+  R((\tenv_1,\rulet \leadsto x),\tenv_2;\alpha;\tenv';\tenv_1,\rulet \leadsto x;\tenv_1,\rulet \leadsto x;\sigma)
+\end{equation*}
+  which is equivalent to
+\begin{equation*}
+  R(\tenv;\alpha;\tenv';\tenv'',\rulet \leadsto x;\tenv'',\rulet \leadsto x;\sigma)
+\end{equation*}
+
+  \item $\tenv' = \tenv_1',\rulet \leadsto x, \tenv_2' \quad\wedge\quad \tenv'' = \tenv,\alpha,\tenv_1'$: \\
+  In this case we can use rule \mylabel{R-2} to establish:
+\begin{equation*}
+  R(\tenv;\alpha;(\tenv_1',\rulet \leadsto x),\tenv_2';\tenv,\alpha,(\tenv_1',\rulet \leadsto x);
+  \tenv,(\tenv_1',\rulet \leadsto x)[\suty/\alpha];\sigma)
+\end{equation*}
+  which is equivalent to
+\begin{equation*}
+  R(\tenv;\alpha;\tenv';\tenv'',\rulet \leadsto x;\tenv,(\tenv_1',\rulet \leadsto x)[\suty/\alpha];\sigma)
+\end{equation*}
+  \end{enumerate}
+
+%===============================================================================
+\item[\fbox{\texttt{(L-RuleNoMatch)}}]\quad$\bar{\alpha},\alpha,\bar{\alpha}'; \tenv,\alpha,\tenv'; \tenv'',\rulet \leadsto x \ivturns \type \leadsto E'$ \ \\
+%===============================================================================
+  The rule's first hypothesis states that
+\begin{equation*}
+  \not\exists \theta, E, \Sigma, \mathit{dom}(\theta) \subseteq (\bar{\alpha},\alpha,\bar{\alpha}'): \theta(\tenv,\alpha,\tenv'); \theta(\rulet)\leadsto x \ivturns \theta(\tau)\leadsto E; \Sigma
+\end{equation*}
+  Hence, the above also holds when we restrict $\theta$ to be of the form
+$\theta' \cdot [\suty/\alpha]$. In this case, the above simplifies to
+\begin{equation*}
+  \not\exists \theta', E, \Sigma, \mathit{dom}(\theta) \subseteq (\bar{\alpha},\bar{\alpha}'): \theta'(\tenv,\tenv'[\suty/\alpha]); \theta'(\rulet[\suty/\alpha])\leadsto x \ivturns \theta'(\tau[\suty/\alpha])\leadsto E; \Sigma
+\end{equation*}
+
+  From the rule's second hypothesis and the induction hypothesis we have
+\begin{equation*}
+  \bar{\alpha},\bar{\alpha}';\tenv,\tenv'[\suty/\alpha];\tenv''' \ivturns \type[\suty/\alpha] \leadsto E'[|\suty|/\alpha]
+\end{equation*}
+
+  With rule \mylabel{L-RuleNoMatch} we combine these two observations into the desired first result
+\begin{equation*}
+  \bar{\alpha},\bar{\alpha}';\tenv,(\tenv',\rulet \leadsto x)[\suty/\alpha];\tenv''' \ivturns \type[\suty/\alpha] \leadsto E'[|\suty|/\alpha]
+\end{equation*}
+
+  Similarly, following the rule's second hypothesis and the induction hypothesis we have:
+\begin{equation*}
+  R(\tenv;\alpha;\tenv';\tenv'';\tenv''';\suty)
+\end{equation*}
+
+  We do a case analysis on the derivation of this judgement.
+  \begin{enumerate}
+  \item \mylabel{R-1}: \\ Then we have
+\begin{equation*}
+  \tenv = \tenv_1,x:\rulet,\tenv_2  \quad\wedge\quad \tenv'' = \tenv_1 \quad\wedge\quad \tenv''' = \tenv_1
+\end{equation*}
+       By rule \mylabel{R-2} we then have
+\begin{equation*}
+R((\tenv_1,x:\rulet),\tenv_2;\alpha;\tenv';\tenv_1,\rulet \leadsto x;\tenv_1,\rulet\leadsto x;\suty)
+\end{equation*}
+        which, given all the equations we have, is equivalent to
+\begin{equation*}
+R(\tenv;\alpha;\tenv';\tenv'',\rulet\leadsto x;\tenv'',\rulet\leadsto x;\suty)
+\end{equation*}
+
+  \item \mylabel{R-2}: \\
+   Then we have
+\begin{equation*}
+  \tenv' = \tenv_1',\tenv_2'  \quad\wedge\quad \tenv'' = \tenv,\alpha,\tenv_1' \quad\wedge\quad 
+      \tenv''' = \tenv,\tenv_1'[\suty/\alpha]
+\end{equation*}
+
+  Since $\tenv'',\rulet \leadsto x \subseteq \tenv,\alpha,\tenv'$, it follows that $\tenv_2' = \rulet\leadsto x,\tenv_{2,2}'$.
+  Hence, by rule $\mylabel{R-2}$ we can establish
+\begin{equation*}
+R(\tenv;\alpha;(\tenv_1',\rulet\leadsto x),\tenv_2';\tenv,\alpha,(\tenv_1',\rulet \leadsto x);\tenv,(\tenv_1',\rulet\leadsto x)[\suty/\alpha];\suty)
+\end{equation*}
+        which, given all the equations we have, is equivalent to
+\begin{equation*}
+R(\tenv;\alpha;\tenv';\tenv'',\rulet\leadsto x;\tenv,(\tenv_1',\rulet \leadsto x)[\suty/\alpha];\suty)
+\end{equation*}
+  \end{enumerate}
+%===============================================================================
+\item[\fbox{\texttt{(L-Var)}}]\quad$\bar{\alpha},\alpha,\bar{\alpha}';\tenv,\alpha,\tenv';\tenv'', x : \rulet  \ivturns \type \leadsto E$ \ \\
+%===============================================================================
+  Then following the rule's hypothesis and the induction hypothesis we have:
+\begin{equation*}
+  \bar{\alpha},\bar{\alpha}';\tenv,\tenv'[\suty/\alpha];\tenv''' \ivturns \type[\suty/\alpha] \leadsto E[|\suty|/\alpha]
+\end{equation*}
+  By rule \mylabel{L-Var} and the definition of substitution we then have
+\begin{equation*}
+  \bar{\alpha},\bar{\alpha}';\tenv,\tenv'[\suty/\alpha];\tenv''',x:\rulet[\suty/\alpha] \ivturns \type[\suty/\alpha] \leadsto E[|\suty|/\alpha]
+\end{equation*}
+
+  Similarly, following the rule's hypothesis and the induction hypothesis we have:
+\begin{equation*}
+  R(\tenv;\alpha;\tenv';\tenv'';\tenv''';\suty)
+\end{equation*}
+
+  We do a case analysis on the derivation of this judgement.
+  \begin{enumerate}
+  \item \mylabel{R-1}: \\ Then we have
+\begin{equation*}
+  \tenv = \tenv_1,x:\rulet,\tenv_2  \quad\wedge\quad \tenv'' = \tenv_1 \quad\wedge\quad \tenv''' = \tenv_1
+\end{equation*}
+       By rule \mylabel{R-2} we then have
+\begin{equation*}
+R((\tenv_1,x:\rulet),\tenv_2;\alpha;\tenv';\tenv_1,x:\rulet;\tenv_1,x:\rulet;\suty)
+\end{equation*}
+        which, given all the equations we have, is equivalent to
+\begin{equation*}
+R(\tenv;\alpha;\tenv';\tenv'',x:\rulet;\tenv'',x:\rulet;\suty)
+\end{equation*}
+
+  \item \mylabel{R-2}: \\
+   Then we have
+\begin{equation*}
+  \tenv' = \tenv_1',\tenv_2'  \quad\wedge\quad \tenv'' = \tenv,\alpha,\tenv_1' \quad\wedge\quad 
+      \tenv''' = \tenv,\tenv_1'[\suty/\alpha]
+\end{equation*}
+
+  Since $\tenv'',x:\rulet \subseteq \tenv,\alpha,\tenv'$, it follows that $\tenv_2' = x:\rulet,\tenv_{2,2}'$.
+  Hence, by rule $\mylabel{R-2}$ we can establish
+\begin{equation*}
+R(\tenv;\alpha;(\tenv_1',x:\rulet),\tenv_2';\tenv,\alpha,(\tenv_1',x:\rulet);\tenv,(\tenv_1',x:\rulet)[\suty/\alpha];\suty)
+\end{equation*}
+        which, given all the equations we have, is equivalent to
+\begin{equation*}
+R(\tenv;\alpha;\tenv';\tenv'',x:\rulet;\tenv,(\tenv_1',x:\rulet)[\suty/\alpha];\suty)
+\end{equation*}
+  \end{enumerate}
+
+
+%===============================================================================
+\item[\fbox{\texttt{(L-TyVar)}}]\quad$\bar{\alpha},\alpha,\bar{\alpha}';\tenv,\alpha,\tenv';\tenv'',\beta \ivturns \type \leadsto E$ \ \\
+%===============================================================================
+  Then following the rule's hypothesis and the induction hypothesis we have:
+\begin{equation*}
+  \bar{\alpha},\bar{\alpha}';\tenv,\tenv'[\suty/\alpha];\tenv''' \ivturns \type[\suty/\alpha] \leadsto E[|\suty|/\alpha]
+\end{equation*}
+  By rule \mylabel{L-TyVar} and the definition of substitution we then have
+\begin{equation*}
+  \bar{\alpha},\bar{\alpha}';\tenv,\tenv'[\suty/\alpha];\tenv''',\beta \ivturns \type[\suty/\alpha] \leadsto E[|\suty|/\alpha]
+\end{equation*}
+
+  Similarly, following the rule's hypothesis and the induction hypothesis we have:
+\begin{equation*}
+  R(\tenv;\alpha;\tenv';\tenv'';\tenv''';\suty)
+\end{equation*}
+
+  We do a case analysis on the derivation of this judgement.
+  \begin{enumerate}
+  \item \mylabel{R-1}: \\ Then we have
+\begin{equation*}
+  \tenv = \tenv_1,\tenv_2  \quad\wedge\quad \tenv'' = \tenv_1 \quad\wedge\quad \tenv''' = \tenv_1
+\end{equation*}
+  We further distinguish between two mutually exclusive cases:
+  \begin{enumerate}
+  \item $\tenv_2 = \epsilon$ \\
+        It follows that $\alpha = \beta$ and we can establish by means of \mylabel{R-2} that
+\begin{equation*}
+R(\tenv_1,\tenv_2;\alpha;\epsilon,\tenv';\tenv_1,\tenv_2,\alpha;\tenv_1,\tenv_2,\epsilon[\suty/\alpha];\suty)
+\end{equation*}
+        which, given all the equations we have, is equivalent to
+\begin{equation*}
+R(\tenv;\alpha;\tenv';\tenv'',\beta;\tenv;\suty)
+\end{equation*}
+
+  \item $\tenv_2 \neq \epsilon$ \\
+       Then it follows that $\tenv_2 = \beta,\tenv_{2,2}$ and by rule \mylabel{R-2} we have
+\begin{equation*}
+R((\tenv_1,\beta),\tenv_{2,2};\alpha;\tenv';\tenv_1,\beta;\tenv_1,\beta;\suty)
+\end{equation*}
+        which, given all the equations we have, is equivalent to
+\begin{equation*}
+R(\tenv;\alpha;\tenv';\tenv'',\beta;\tenv_1,\beta;\suty)
+\end{equation*}
+  \end{enumerate}
+
+  \item \mylabel{R-2}: \\
+   Then we have
+\begin{equation*}
+  \tenv' = \tenv_1',\tenv_2'  \quad\wedge\quad \tenv'' = \tenv,\alpha,\tenv_1' \quad\wedge\quad 
+      \tenv''' = \tenv,\tenv_1'[\suty/\alpha]
+\end{equation*}
+
+  Since $\tenv'',\beta \subseteq \tenv,\alpha,\tenv'$, it follows that $\tenv_2' = \beta,\tenv_{2,2}'$.
+  Hence, by rule $\mylabel{R-2}$ we can establish
+\begin{equation*}
+R(\tenv;\alpha;(\tenv_1',\beta),\tenv_2';\tenv,\alpha,(\tenv_1',\beta);\tenv,(\tenv_1',\beta)[\suty/\alpha];\suty)
+\end{equation*}
+        which, given all the equations we have, is equivalent to
+\begin{equation*}
+R(\tenv;\alpha;\tenv';\tenv'',\beta;\tenv,(\tenv_1',\beta)[\suty/\alpha];\suty)
+\end{equation*}
+  \end{enumerate}
+
+\end{description}
+\end{proof}
+
+%###############################################################################
+{\centering
+\fbox{
+\begin{minipage}{0.95\columnwidth}
+\begin{lemma}\label{lemma:coherence:3}
+  If 
+\begin{equation*}
+   \tenv,\alpha,\tenv'; \rulet \leadsto E \ivturns \type \leadsto E'; \bar{\rulet} \leadsto \bar{x}
+\end{equation*}
+  and
+\begin{equation*}
+  \tenv \turns \suty
+\end{equation*}
+  then
+\begin{equation*}
+   \tenv,\tenv'[\suty/\alpha]; \rulet[\suty/\alpha] \leadsto E[|\suty|/\alpha] \ivturns \type[\suty/\alpha] \leadsto E'[|\suty|/\alpha]; \bar{\rulet}[\suty/\alpha] \leadsto \bar{x}
+\end{equation*}
+\end{lemma}
+\end{minipage}
+}}
+
+\begin{proof}
+\begin{description}
+\setlength{\itemsep}{1em}
+%===============================================================================
+\item[\fbox{\texttt{(M-Simp)}}]\quad$\tenv,\alpha,\tenv'; \type \leadsto E \ivturns \type \leadsto E; \epsilon$ \ \\
+%===============================================================================
+  The desired conclusion follows directly from rule \mylabel{M-Simp}
+\begin{equation*}
+  \tenv,\tenv'[\suty/\alpha]; \type[\suty/\alpha] \leadsto E[|\suty/\alpha|] \ivturns \type[\suty/\alpha] \leadsto E[|\suty/\alpha|]; \epsilon
+\end{equation*}
+
+%===============================================================================
+\item[\fbox{\texttt{(M-IApp)}}]\quad$\tenv,\alpha,\tenv'; \rulet_1 \iarrow \rulet_2 \leadsto E \ivturns \type \leadsto E'; \Sigma, \rulet_1 \leadsto x$ \ \\
+%===============================================================================
+  From the rule's hypothesis and the induction hypothesis we have 
+\begin{equation*}
+  \tenv,(\tenv',\rulet_1 \leadsto x)[\suty/\alpha]; \rulet_2[\suty/\alpha] \leadsto (E x)[|\suty|/\alpha] \ivturns \type[\suty/\alpha] \leadsto E'[|\suty|/\alpha]; \Sigma[\suty/\alpha]
+\end{equation*}
+
+  Then from the definition of substutition and rule \mylabel{M-IApp} we conclude
+\begin{equation*}
+  \tenv,\tenv'[\suty/\alpha]; (\rulet_1 \iarrow \rulet_2)[\suty/\alpha] \leadsto E[|\suty|/\alpha] \ivturns \type[\suty/\alpha] \leadsto E'[|\suty|/\alpha]; (\Sigma,\rulet_1 \leadsto x)[\suty/\alpha]
+\end{equation*}
+
+%===============================================================================
+\item[\fbox{\texttt{(M-TApp)}}]\quad$\tenv,\alpha,\tenv'; \forall\beta.\rulet \leadsto E \ivturns \type \leadsto E'; \Sigma$ \ \\
+%===============================================================================
+  From the rule's first hypothesis and the induction hypothesis we have 
+\begin{equation*}
+  \tenv,\tenv'[\suty/\alpha]; \rulet[\suty'/\beta][\suty/\alpha] \leadsto (E |\suty'|)[|\suty|/\alpha] \ivturns \type[\suty/\alpha] \leadsto E'[|\suty|/\alpha]; \Sigma[\suty/\alpha]
+\end{equation*}
+
+  From the rule's second hypothesis (and the preservation of well-typing under type-susbstitution) we have
+\begin{equation*}
+  \tenv,\tenv'[\suty/\alpha] \vdash \suty'[\suty'/\alpha]
+\end{equation*}
+
+  From these two facts we conclude by rule \mylabel{M-TApp}, reasoning modulo
+  the definition of substitution
+\begin{equation*}
+  \tenv,\tenv'[\suty/\alpha]; (\forall\beta.\rulet)[\suty/\alpha] \leadsto E[|\suty|/\alpha] \ivturns \type[\suty/\alpha] \leadsto E'[|\suty|/\alpha]; \Sigma[\suty/\alpha]
+\end{equation*}
+
+\end{description}
+\end{proof}
+
+%-------------------------------------------------------------------------------
+\subsection{Soundness of the Algorithm wrt Deterministic Resolution}
+
+%###############################################################################
+{\centering
+\fbox{
+\begin{minipage}{0.95\columnwidth}
+\begin{lemma}\label{lemma:asoundness:0}
+  If 
+\begin{equation*}
+  \tenv \alg \rulet \leadsto E
+\end{equation*}
+  then
+\begin{equation*}
+  \tenv \ivturns \rulet \leadsto E
+\end{equation*}
+\end{lemma}
+\end{minipage}
+}}
+
+\begin{proof}
+  From the hypothesis it follows that 
+\begin{equation*}
+  \mathit{tyvars}(\tenv);\tenv \alg \rulet \leadsto E
+\end{equation*}
+  Hence, by Lemma~\ref{lemma:asoundness:1} and rule \mylabel{R-Main} the desired conclusion follows
+\begin{equation*}
+  \tenv \ivturns \rulet \leadsto E
+\end{equation*}
+\end{proof}
+
+%###############################################################################
+{\centering
+\fbox{
+\begin{minipage}{0.95\columnwidth}
+\begin{lemma}\label{lemma:asoundness:1}
+  If 
+\begin{equation*}
+  \bar{\alpha};\tenv \alg \rulet \leadsto E
+\end{equation*}
+  then
+\begin{equation*}
+  \bar{\alpha};\tenv \ivturns \rulet \leadsto E
+\end{equation*}
+\end{lemma}
+\end{minipage}
+}}
+
+\begin{proof}
+The lemma follows from the isomorphism between the 
+rule sets of the two judgements and from Lemma~\ref{lemma:asoundness:2}.
+\end{proof}
+
+%###############################################################################
+{\centering
+\fbox{
+\begin{minipage}{0.95\columnwidth}
+\begin{lemma}\label{lemma:asoundness:2}
+  If 
+\begin{equation*}
+  \bar{\alpha};\tenv;\tenv' \alg \rulet \leadsto E
+\end{equation*}
+  then
+\begin{equation*}
+  \bar{\alpha};\tenv;\tenv' \ivturns \rulet \leadsto E
+\end{equation*}
+\end{lemma}
+\end{minipage}
+}}
+
+\begin{proof}
+The proof proceeds by induction on the derivation of the hypothesis.
+\begin{description}
+\setlength{\itemsep}{1em}
+%===============================================================================
+\item[\fbox{\texttt{(Alg-L-RuleMatch)}}]\quad$\bar{\alpha};\tenv; \tenv', \rulet~{\leadsto x} \alg \type~{\leadsto E[\bar{E}/\bar{x}]}$ \ \\
+%===============================================================================
+From the rule's first hypothesis and Lemma~\ref{lemma:asoundness:3} we have
+\begin{equation*}
+\tenv; \rulet \leadsto E \ivturns \type \leadsto E'; \bar{\rulet} \leadsto \bar{x}
+\end{equation*}
+Then, using Lemma~\ref{lemma:asoundness:1} and rule \mylabel{L-RuleMatch} we conclude
+\begin{equation*}
+\bar{\alpha};\tenv; \tenv', \rulet~{\leadsto x} \ivturns \type~{\leadsto E[\bar{E}/\bar{x}]}
+\end{equation*}
+
+%===============================================================================
+\item[\fbox{\texttt{(Alg-L-RuleNoMatch)}}]\quad$\bar{\alpha};\tenv;\tenv', \rulet~{\leadsto x}\alg \type~{\leadsto E'}$ \ \\
+%===============================================================================
+  From the rule's second hypothesis and the induction hypothesis we have
+\begin{equation*}
+  \bar{\alpha};\tenv;\tenv' \ivturns \type~{\leadsto E'}
+\end{equation*}
+
+  Then from the rule's first hypothesis and the negation of Lemma~\ref{lemma:asoundness:5}, we have:
+\begin{equation*}
+\not\exists E, \Sigma: \bar{\alpha};\tenv;\rulet \leadsto x; \epsilon \alg \type \leadsto E; \Sigma
+\end{equation*}
+  By Lemma~\ref{lemma:asoundness:3} we thus have
+\begin{equation*}
+\not\exists \theta, E, \Sigma, \mathit{dom}(\theta) \subseteq \bar{\alpha}: \theta(\tenv);\theta(\rulet) \leadsto x \ivturns \type \leadsto E; \Sigma
+\end{equation*}
+  Hence with rule \mylabel{L-RuleNoMatch} we conclude
+\begin{equation*}
+  \bar{\alpha};\tenv;\tenv',\rulet \leadsto x \ivturns \type~{\leadsto E'}
+\end{equation*}
+
+%===============================================================================
+\item[\fbox{\texttt{(Alg-L-Var)}}]\quad$\bar{\alpha};\tenv;\tenv',x:\rulet \alg \type~{\leadsto E}$ \ \\
+%===============================================================================
+From the rule's hypothesis and the induction hypothesis we obtain
+\begin{equation*}
+  \bar{\alpha};\tenv;\tenv' \ivturns \type~{\leadsto E}
+\end{equation*}
+By rule \mylabel{L-Var} we conclude
+\begin{equation*}
+  \bar{\alpha};\tenv;\tenv',x:\rulet \ivturns \type~{\leadsto E}
+\end{equation*}
+
+%===============================================================================
+\item[\fbox{\texttt{(Alg-L-TyVar)}}]\quad$\bar{\alpha};\tenv;\tenv',\alpha \alg \type~{\leadsto E}$ \ \\
+%===============================================================================
+From the rule's hypothesis and the induction hypothesis we obtain
+\begin{equation*}
+  \bar{\alpha};\tenv;\tenv' \ivturns \type~{\leadsto E}
+\end{equation*}
+By rule \mylabel{L-TyVar} we conclude
+\begin{equation*}
+  \bar{\alpha};\tenv;\tenv',\alpha \ivturns \type~{\leadsto E}
+\end{equation*}
+
+\end{description}
+\end{proof}
+
+We assume that the judgement is decorated with an additional argument, the substitution
+for the $\bar{\alpha}$ type variables.
+%###############################################################################
+{\centering
+\fbox{
+\begin{minipage}{0.95\columnwidth}
+\begin{lemma}\label{lemma:asoundness:3}
+  If 
+\begin{equation*}
+  \bar{\alpha};\tenv;\rulet \leadsto E; \Sigma \alg \type \leadsto E'; \Sigma',\theta(\Sigma); \theta
+\end{equation*}
+  and
+\begin{equation*}
+  \mathit{dom}(\theta) \subseteq \bar{\alpha}
+\end{equation*}
+  then
+\begin{equation*}
+  \theta(\tenv); \theta(\rulet) \leadsto |\theta|(E) \ivturns \theta(\type) \leadsto E'; \Sigma'
+\end{equation*}
+\end{lemma}
+\end{minipage}
+}}
+
+\begin{proof}
+The proof proceeds by induction on the derivation of the first hypothesis.
+\begin{description}
+\setlength{\itemsep}{1em}
+%===============================================================================
+\item[\fbox{\texttt{(Alg-M-Simp)}}]\quad$\bar{\alpha}; \tenv; \type' \leadsto E; \Sigma \alg \type \leadsto |\theta|(E); \epsilon,\theta(\Sigma);\theta$ \ \\
+%===============================================================================
+From the hypothesis of the rule and Lemma~\ref{lemma:asoundness:6} it follows that
+$\theta(\type') = \theta(\type)$. Hence, the target judgement can be rewritten as
+\begin{equation*}
+  \theta(\tenv); \theta(\type') \leadsto |\theta|(E) \ivturns \theta(\type') \leadsto |\theta|(E); \epsilon
+\end{equation*}
+This follows from rule \mylabel{M-Simp}.
+
+%===============================================================================
+\item[\fbox{\texttt{(Alg-M-IApp)}}]\quad$\bar{\alpha}; \tenv; \rulet_1 \iarrow \rulet_2~{\leadsto E}; \Sigma \alg \type~{\leadsto E'}; \Sigma',\theta(\rulet_1) \leadsto x, \theta(\Sigma);\theta$ \ \\
+%===============================================================================
+  From the hypothesis of the rule and the induction hypothesis, we have that
+\begin{equation*}
+ \theta(\tenv,\rulet_1 \leadsto x); \theta(\rulet_2) \leadsto |\theta|(E\,x) \ivturns \theta(\type) \leadsto E'; \Sigma' 
+\end{equation*}
+  By rule \mylabel{M-IApp} we may then conclude
+\begin{equation*}
+ \theta(\tenv); \theta(\rulet_1 \iarrow \rulet_2) \leadsto |\theta|(E) \ivturns \theta(\type) \leadsto E'; \Sigma',\theta(\rulet_1) \leadsto x
+\end{equation*} 
+
+%===============================================================================
+\item[\fbox{\texttt{(Alg-M-TApp)}}]\quad$\bar{\alpha}; \tenv; \forall \alpha. \rulet~{\leadsto E}; \Sigma \alg \type~{\leadsto E'}; \Sigma',\theta(\Sigma);\theta$ \ \\
+%===============================================================================
+  Then it follows from the rule's hypothesis and from the induction hypothesis that
+\begin{equation*}
+  \theta(\tenv); \theta(\rulet) \leadsto |\theta|(E\,\alpha) \ivturns \theta(\type) \leadsto E'; \Sigma'
+\end{equation*}
+  Hence, it follows from rule \mylabel{M-TApp} that
+\begin{equation*}
+  \theta(\tenv); \theta(\forall \alpha.\rulet) \leadsto |\theta|(E) \ivturns \theta(\type) \leadsto E'; \Sigma'
+\end{equation*}
+
+\end{description}
+\end{proof}
+
+
+%###############################################################################
+{\centering
+\fbox{
+\begin{minipage}{0.95\columnwidth}
+\begin{lemma}\label{lemma:asoundness:5}
+  If 
+\begin{equation*}
+  \bar{\alpha};\tenv;\rulet \leadsto E; \Sigma \alg \type \leadsto E'; \Sigma'
+\end{equation*}
+  then
+\begin{equation*}
+  \bar{\alpha}; \rulet \coh \type
+\end{equation*}
+\end{lemma}
+\end{minipage}
+}}
+
+\begin{proof}
+  The derivation of the conclusion is obtained by erasing the irrelevant arguments
+  from the derivation of the hypothesis.
+\end{proof}
+
+
+%###############################################################################
+{\centering
+\fbox{
+\begin{minipage}{0.95\columnwidth}
+\begin{lemma}\label{lemma:asoundness:6}
+  If 
+\begin{equation*}
+  \theta = \mgu{\type}{\type'}
+\end{equation*}
+  then
+\begin{equation*}
+  \theta(\type) = \theta(\type')
+\end{equation*}
+  and
+\begin{equation*}
+  \mathit{dom}(\theta) \subseteq \bar{\alpha}
+\end{equation*}
+
+\end{lemma}
+\end{minipage}
+}}
+
+\begin{proof}
+Straightforward induction on the derivation.
+\end{proof}
+
+%-------------------------------------------------------------------------------
+\subsection{Completeness of the Algorithm wrt Deterministic Resolution}
+
+%###############################################################################
+{\centering
+\fbox{
+\begin{minipage}{0.95\columnwidth}
+\begin{lemma}\label{lemma:acompleteness:0}
+  If 
+\begin{equation*}
+  \tenv \ivturns \rulet \leadsto E
+\end{equation*}
+  then
+\begin{equation*}
+  \tenv \alg \rulet \leadsto E
+\end{equation*}
+\end{lemma}
+\end{minipage}
+}}
+
+\begin{proof}
+  From the hypothesis it follows that 
+\begin{equation*}
+  \mathit{tyvars}(\tenv);\tenv \ivturns \rulet \leadsto E
+\end{equation*}
+  Hence, by Lemma~\ref{lemma:acompleteness:1} and rule \mylabel{Alg-R-Main} the desired conclusion follows
+\begin{equation*}
+  \tenv \alg \rulet \leadsto E
+\end{equation*}
+\end{proof}
+
+%###############################################################################
+{\centering
+\fbox{
+\begin{minipage}{0.95\columnwidth}
+\begin{lemma}\label{lemma:acompleteness:1}
+  If 
+\begin{equation*}
+  \bar{\alpha};\tenv \ivturns \rulet \leadsto E
+\end{equation*}
+  then
+\begin{equation*}
+  \bar{\alpha};\tenv \alg \rulet \leadsto E
+\end{equation*}
+\end{lemma}
+\end{minipage}
+}}
+
+\begin{proof}
+The lemma follows from the isomorphism between the 
+rule sets of the two judgements and from Lemma~\ref{lemma:acompleteness:2}.
+\end{proof}
+
+%###############################################################################
+{\centering
+\fbox{
+\begin{minipage}{0.95\columnwidth}
+\begin{lemma}\label{lemma:acompleteness:2}
+  If 
+\begin{equation*}
+  \bar{\alpha};\tenv;\tenv' \ivturns \rulet \leadsto E
+\end{equation*}
+  then
+\begin{equation*}
+  \bar{\alpha};\tenv;\tenv' \alg \rulet \leadsto E
+\end{equation*}
+\end{lemma}
+\end{minipage}
+}}
+
+\begin{proof}
+The proof proceeds by induction on the derivation of the hypothesis.
+\begin{description}
+\setlength{\itemsep}{1em}
+%===============================================================================
+\item[\fbox{\texttt{(L-RuleMatch)}}]\quad$\bar{\alpha};\tenv; \tenv', \rulet~{\leadsto x} \ivturns \type~{\leadsto E[\bar{E}/\bar{x}]}$ \ \\
+%===============================================================================
+From the rule's first hypothesis and Lemma~\ref{lemma:acompleteness:3} we have
+\begin{equation*}
+\epsilon; \tenv; \rulet \leadsto x; \epsilon \alg \type \leadsto E'; \bar{\rulet} \leadsto \bar{x}
+\end{equation*}
+Then, using Lemma~\ref{lemma:acompleteness:1} and rule \mylabel{Alg-L-RuleMatch} we conclude
+\begin{equation*}
+\bar{\alpha};\tenv; \tenv', \rulet~{\leadsto x} \alg \type~{\leadsto E[\bar{E}/\bar{x}]}
+\end{equation*}
+
+%===============================================================================
+\item[\fbox{\texttt{(L-RuleNoMatch)}}]\quad$\bar{\alpha};\tenv;\tenv', \rulet~{\leadsto x}\ivturns \type~{\leadsto E'}$ \ \\
+%===============================================================================
+  From the rule's second hypothesis and the induction hypothesis we have
+\begin{equation*}
+  \bar{\alpha};\tenv;\tenv' \alg \type~{\leadsto E'}
+\end{equation*}
+
+  From the rule's first hypothesis and the negation of Lemma~\ref{lemma:acompleteness:4}, we have:
+\begin{equation*}
+\bar{\alpha}; \rulet \not\coh \type
+\end{equation*}
+  Hence with rule \mylabel{Alg-L-RuleNoMatch} we conclude
+\begin{equation*}
+  \bar{\alpha};\tenv;\tenv',\rulet \leadsto x \alg \type~{\leadsto E'}
+\end{equation*}
+
+%===============================================================================
+\item[\fbox{\texttt{(L-Var)}}]\quad$\bar{\alpha};\tenv;\tenv',x:\rulet \ivturns \type~{\leadsto E}$ \ \\
+%===============================================================================
+From the rule's hypothesis and the induction hypothesis we obtain
+\begin{equation*}
+  \bar{\alpha};\tenv;\tenv' \alg \type~{\leadsto E}
+\end{equation*}
+By rule \mylabel{Alg-L-Var} we conclude
+\begin{equation*}
+  \bar{\alpha};\tenv;\tenv',x:\rulet \alg \type~{\leadsto E}
+\end{equation*}
+
+%===============================================================================
+\item[\fbox{\texttt{(L-TyVar)}}]\quad$\bar{\alpha};\tenv;\tenv',\alpha \ivturns \type~{\leadsto E}$ \ \\
+%===============================================================================
+From the rule's hypothesis and the induction hypothesis we obtain
+\begin{equation*}
+  \bar{\alpha};\tenv;\tenv' \alg \type~{\leadsto E}
+\end{equation*}
+By rule \mylabel{Alg-L-TyVar} we conclude
+\begin{equation*}
+  \bar{\alpha};\tenv;\tenv',\alpha \alg \type~{\leadsto E}
+\end{equation*}
+
+\end{description}
+\end{proof}
+
+%###############################################################################
+{\centering
+\fbox{
+\begin{minipage}{0.95\columnwidth}
+\begin{lemma}\label{lemma:acompleteness:3}
+  If 
+\begin{equation*}
+  \theta_1(\tenv); \theta_1(\rulet) \leadsto |\theta_1|(E) \ivturns \theta_1(\type) \leadsto |\theta_1|(E'); \theta_1(\Sigma')
+\end{equation*}
+  and
+\begin{equation*}
+  \mathit{dom}(\theta_1) \subseteq \bar{\alpha}
+\end{equation*}
+  then
+\begin{equation*}
+  \bar{\alpha};\tenv;\rulet \leadsto E; \Sigma \alg \type \leadsto |\theta_2|(E'); \theta_2(\Sigma',\Sigma)
+\end{equation*}
+  and
+\begin{equation*}
+  \mathit{dom}(\theta_2) \subseteq \bar{\alpha}
+\end{equation*}
+  and
+\begin{equation*}
+  \theta_1 \sqsubseteq \theta_2
+\end{equation*}
+\end{lemma}
+\end{minipage}
+}}
+
+\begin{proof}
+The proof proceeds by induction on the derivation of the first hypothesis.
+\begin{description}
+\setlength{\itemsep}{1em}
+%===============================================================================
+\item[\fbox{\texttt{(M-Simp)}}]\quad$\theta_1(\tenv); \theta_1(\type') \leadsto |\theta_1|(E) \ivturns \theta_1(\type) \leadsto |\theta_1|(E); \theta_1(\epsilon)$ \hfill where $\theta_1(\tenv) = \theta_1(\type')$. \\
+%===============================================================================
+
+From Lemma~\ref{lemma:acompleteness:5} and rule \mylabel{Alg-M-Simp} we then have
+\begin{equation*}
+  \bar{\alpha}; \tenv; \type' \leadsto E; \Sigma \alg \type \leadsto \theta_2(E); \theta_2(\Sigma)
+\end{equation*}
+
+%===============================================================================
+\item[\fbox{\texttt{(M-IApp)}}]\quad$\theta_1(\tenv); \theta_1(\rulet_1 \iarrow \rulet_2)~{\leadsto |\theta_1|(E)}\ivturns \theta_1(\type)~{\leadsto |\theta_1|(E')}; \theta_1(\Sigma',\rulet_1 \leadsto x)$ \ \\
+%===============================================================================
+  From the hypothesis of the rule and the induction hypothesis, we have that
+\begin{equation*}
+ \bar{\alpha};\tenv,\rulet_1 \leadsto x;\rulet_2 \leadsto E\,x; \rulet_1 \leadsto x, \Sigma \alg \type \leadsto |\theta_2|(E'); \theta_2(\Sigma',\rulet_1 \leadsto x, \Sigma) 
+\end{equation*}
+  By rule \mylabel{Alg-M-IApp} we may then conclude
+\begin{equation*}
+ \bar{\alpha};\tenv;\rulet_1 \iarrow \rulet_2 \leadsto E; \Sigma \alg \type \leadsto |\theta_2|(E'); \theta_2(\Sigma',\rulet_1 \leadsto x, \Sigma) 
+\end{equation*} 
+
+%===============================================================================
+\item[\fbox{\texttt{(M-TApp)}}]\quad$\theta_1(\tenv); \theta_1(\forall\alpha.\rulet) \leadsto |\theta_1|(E) \ivturns \theta_1(\type) \leadsto |\theta_1|(E'); \theta_1(\Sigma')$ \ \\
+%===============================================================================
+  From the hypothesis of the rule and the induction hypothesis, we have that
+\begin{equation*}
+ \bar{\alpha},\alpha;\tenv;\rulet \leadsto E\,\alpha; \Sigma \alg \type \leadsto |\theta_2|(E'); \theta_2(\Sigma',\Sigma) 
+\end{equation*}
+  Hence, it follows from rule \mylabel{Alg-M-TApp} that
+\begin{equation*}
+ \bar{\alpha};\tenv;\forall \alpha.\rulet \leadsto E; \Sigma \alg \type \leadsto |\theta_2|(E'); \theta_2(\Sigma',\Sigma) 
+\end{equation*}
+
+\end{description}
+\end{proof}
+
+%###############################################################################
+{\centering
+\fbox{
+\begin{minipage}{0.95\columnwidth}
+\begin{lemma}\label{lemma:acompleteness:4}
+  If 
+\begin{equation*}
+  \bar{\alpha}; \rulet \coh \type
+\end{equation*}
+  then for all $E, \tenv, \Sigma$ there exist $E', \Sigma'$ such that
+\begin{equation*}
+  \bar{\alpha};\tenv;\rulet \leadsto E; \Sigma \alg \type \leadsto E'; \Sigma'
+\end{equation*}
+\end{lemma}
+\end{minipage}
+}}
+
+\begin{proof}
+  The proof is straightforward induction on the derivation. The conclusion's judgement
+  is an annotated version of the hypothesis' judgement.
+\end{proof}
+
+%###############################################################################
+{\centering
+\fbox{
+\begin{minipage}{0.95\columnwidth}
+\begin{lemma}\label{lemma:acompleteness:5}
+  If 
+\begin{equation*}
+  \theta(\type) = \theta(\type')
+\end{equation*}
+  and
+\begin{equation*}
+  \mathit{dom}(\theta) \subseteq \bar{\alpha}
+\end{equation*}
+  then
+\begin{equation*}
+  \theta' = \mgu{\type}{\type'}
+\end{equation*}
+  and
+\begin{equation*}
+  \mathit{dom}(\theta') \subseteq \bar{\alpha}
+\end{equation*}
+  and
+\begin{equation*}
+  \theta \sqsubseteq \theta'
+\end{equation*}
+\end{lemma}
+\end{minipage}
+}}
+
+% \newcommand{\vdashr}[4]{#1; #2 \vturns #3 \leadsto #4}
+% 
+% \begin{proof}
+% The proof proceeds by induction on the $\bar{\alpha};\env \vdash_r \rho \leadsto E$ derivation.
+% \begin{description}
+% \renewcommand{\itemsep}{10mm}
+% %= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = 
+% \item[\texttt{(R-IAbs)}] \quad
+%     $\vdashr{\bar{\alpha}}{\env}{\rho_1 \iarrow \rho_2}{\lambda\relation{x}{||\rho_1||}.E}$ \ \\
+% %= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = 
+% From rule \mylabel{R-IAbs} and the induction hypothesis, it follows that
+% \begin{equation*}
+% \vdashr{\bar{\alpha}}{\theta(\env,\rho_1\leadsto x)}{\theta(\rho_2)}{\theta(E)}
+% \end{equation*}
+% Hence, using rule \mylabel{R-IAbs}, we conclude
+% \begin{equation*}
+% \vdashr{\bar{\alpha}}{\theta(\env)}{\theta(\rho_1\iarrow\rho_2)}{\theta(\lambda\relation{x}{||\rho_1||}.E)}
+% \end{equation*}
+% %= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = 
+% \item[\texttt{(R-TAbs)}] \quad
+%     $\vdashr{\bar{\alpha}}{\env}{\forall \alpha. \rho}{\Lambda\alpha.E}$ \ \\
+% %= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = 
+% From rule \mylabel{R-TAbs} and the induction hypothesis, it follows that
+% \begin{equation*}
+% \vdashr{\bar{\alpha},\alpha}{\theta(\env)}{\theta(\rho)}{\theta(E)}
+% \end{equation*}
+% Hence, using rule \mylabel{R-TAbs}, we conclude
+% \begin{equation*}
+% \vdashr{\bar{\alpha}}{\theta(\env)}{\theta(\forall \alpha. \rho)}{\theta(\Lambda\alpha.E)}
+% \end{equation*}
+% %= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = 
+% \item[\texttt{(R-Simp)}] \quad
+%     $\vdashr{\bar{\alpha}}{\env}{\tau}{E}$ \ \\
+% %= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = 
+% We distinguish two cases. Firstly, we assume
+% that $\theta(\tau)$ yields the simple type $\tau'$.
+% Then, it follows from rule \mylabel{R-Simp} and Lemma~\ref{} (TODO) that
+% \begin{equation*}
+% \elookup{\theta(\env)}{\theta(\tau)} = \theta(\rho)~\leadsto x
+% \end{equation*}
+% Similarly, it follows from rule \mylabel{R-Simp} and Lemma~\ref{} (TODO) that
+% \begin{equation*}
+% \bar{\alpha};\theta(\env); \theta(\rho)~\leadsto x
+%    \turns_\downarrow \theta(\type)~\leadsto \theta(E)
+% \end{equation*}
+% Hence, using rule \mylabel{R-Simp} we conclude
+% \begin{equation*}
+% \vdashr{\bar{\alpha}}{\theta(\env)}{\theta(\tau)}{\theta(E)}
+% \end{equation*}
+% 
+% Secondly, we assume that $\theta(\tau) = \forall \bar{\beta}.\tau'$.
+% This happens only if $\tau = \alpha$.
+% In this case, we can show:
+% \begin{equation*}
+% \vdashr{\bar{\alpha}}{\theta(\env)}{\theta(\tau)}{E'} \quad \wedge \quad E' \equiv_{\alpha,H} \theta(E)
+% \end{equation*}
+% if we take $E' = \Lambda\bar{\beta}.\theta(E)\,\bar{\beta}$
+% by repeated application of rule \mylabel{R-TAbs} and showing that
+% \begin{equation*}
+% \vdashr{\bar{\alpha},\bar{\beta}}{\theta(\env)}{\tau'}{\theta(E)\,\bar{\beta}}
+% \end{equation*}
+% 
+% %   \item $\theta(\tau) = \tau'$
+% %   \item $\theta(\tau) = \forall \bar{\alpha'}.\tau'$
+% \end{description}
+% \end{proof}
+
+
+% \begin{lemma}\label{lemma:substitution:lhd}
+% The $\rho \lhd \tau$ judgement is stable under substitution.
+% \[\forall \rho, \tau, \alpha, \suty: 
+%     \rho \lhd \tau \quad \rightarrow \quad \theta(\rho) \lhd \head{\theta(\tau)}
+% \]
+% where $\theta = [\suty/\alpha]$.
+% \end{lemma}
+% \begin{proof}
+% The proof proceeds by induction on the $\rho \lhd \tau$ derivation.
+% \begin{description}
+% \renewcommand{\itemsep}{10mm}
+% %= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = 
+% \item[\texttt{(M-IApp)}] \quad
+%     $\rho_1 \iarrow \rho_2 \lhd \tau$ \ \\
+% %= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = 
+% From rule \mylabel{M-IApp} and the induction hypothesis it follows that:
+% \begin{equation*}
+% \theta(\rho_2) \lhd \head{\theta(\tau)}
+% \end{equation*}
+% Then it follows from rule \mylabel{M-IApp} that:
+% \begin{equation*}
+% \theta(\rho_1) \iarrow \theta(\rho_2) \lhd \head{\theta(\tau)}
+% \end{equation*}
+% Hence, because $\theta(\rho_1) \iarrow \theta(\rho_2) = \theta(\rho_1 \iarrow \rho_2)$.
+% we conclude:
+% \begin{equation*}
+% \theta(\rho_1 \iarrow \rho_2) \lhd \head{\theta(\tau)}
+% \end{equation*}
+% 
+% %= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = 
+% \item[\texttt{(M-TApp)}] \quad
+%     $\forall \alpha. \rho \lhd \tau$ \ \\
+% %= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = 
+% From rule \mylabel{M-TApp} and the induction hypothesis it follows that:
+% \begin{equation*}
+% \theta(\rho[\suty'/\alpha']) \lhd \head{\theta(\tau)}
+% \end{equation*}
+% We can commute the two substitutions as follows because their
+% domains are disjoint:
+% \begin{equation*}
+% \theta(\rho)[\theta(\suty')/\alpha'] \lhd \head{\theta(\tau)}
+% \end{equation*}
+% Then, by rule \mylabel{M-TApp}, we get:
+% \begin{equation*}
+% \forall \alpha. \theta(\rho) \lhd \head{\theta(\tau)}
+% \end{equation*}
+% Finally, because $\forall \alpha. \theta(\rho) = \theta(\forall \alpha. \rho)$,
+% we conclude:
+% \begin{equation*}
+% \theta(\forall \alpha. \rho) \lhd \head{\theta(\tau)}
+% \end{equation*}
+% 
+% %= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = 
+% \item[\texttt{(M-Simp)}] \quad
+%     $\tau \lhd \tau$ \ \\
+% %= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = 
+% We distinguish three cases:
+% Firstly, we consider the case where $\tau = \rho_1 \arrow \rho_2$.
+% Then, $\theta(\tau) = \head{\theta(\tau)}$ by rule \mylabel{M-Simp}
+% we trivially have:
+% \begin{equation*}
+% \theta(\tau) \lhd \head{\theta(\tau)}
+% \end{equation*}
+% 
+% Secondly, we consider the case where $\tau = \alpha' \neq \alpha$.
+% Then, $\head(\theta(\tau)) = \head{\tau} = \tau$ and by rule 
+% \mylabel{M-Simp} we trivally have:
+% \begin{equation*}
+% \theta(\tau) \lhd \head{\theta(\tau)}
+% \end{equation*}
+% 
+% Thirdly, we consider the case where $\tau = \alpha$. Then $\theta(\tau) =
+% \suty$.  We have that $\suty$ is of the general form $\forall
+% \bar{\beta}.\tau'$. Hence, $\head{\theta(\tau)} = \tau'$.
+% Then we can establish the desired goal:
+% \begin{equation*}
+% \forall \bar{\beta}.\tau' \lhd \tau'
+% \end{equation*}
+% by repeated application of rule \mylabel{M-TApp}
+% choosing substitutions of the form $[\beta/\beta]$
+% and the trivial base case $\tau' \lhd \tau'$ shown by rule
+% \mylabel{M-Simp}.
+% 
+% \end{description}
+% \end{proof}
+% 
+% \begin{lemma}\label{lemma:substitution:lookup}
+% The $\elookup{\env}{\type} = \rho \leadsto x$ judgement is stable under substitution.
+% \[\forall \env, \bar{\alpha}, \type, \rho, \alpha, \suty: 
+%     \elookup{\env}{\type} = \rho \leadsto x
+%     \quad\rightarrow\quad
+%     \elookup{\theta(\env)}{\head{\theta(\type)}} = \theta(\rho) \leadsto x
+% \]
+% where $\theta = [\suty/\alpha]$.
+% \end{lemma}
+% \begin{proof}
+% The proof proceeds by induction on the $\elookup{\env}{\type} = \rho \leadsto x$ derivation.
+% \begin{description}
+% \renewcommand{\itemsep}{10mm}
+% %= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = 
+% \item[\texttt{(L-Head)}] \quad
+%     $\elookup{(\env,\rho \leadsto x)}{\type} = \rho \leadsto x$ \ \\
+% %= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = 
+% From rule \mylabel{L-Head} it follows that
+% \begin{equation*}
+% \rho \lhd \tau
+% \end{equation*}
+% Hence, from Lemma~\ref{lemma:substitution:lhd}, we know that:
+% \begin{equation*}
+% \theta(\rho) \lhd \head{\theta(\type)}
+% \end{equation*}
+% Thus we obtain with rule \mylabel{L-Head}:
+% \begin{equation*}
+% \elookup{(\theta(\env),\theta(\rho) \leadsto x)}{\head{\theta(\type)}} = \theta(\rho) \leadsto x
+% \end{equation*}
+% As $(\theta(\env),\theta(\rho) \leadsto x) = \theta(\env,\rho \leadsto x)$,
+% this yields the desired result:
+% \begin{equation*}
+% \elookup{\theta(\env,\rho \leadsto x)}{\head{\theta(\type)}} = \theta(\rho) \leadsto x
+% \end{equation*}
+% 
+% %= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = 
+% \item[\texttt{(L-Tail)}] \quad
+%     $\elookup{(\env,\rho_1 \leadsto x)}{\type} = \rho_2 \leadsto y$ \ \\
+% %= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = 
+% From rule \mylabel{L-Tail} and the induction hypothesis it follows that
+% \begin{equation*}
+% \elookup{\theta(\env)}{\head{\theta(\type)}} = \theta(\rho_2) \leadsto y
+% \end{equation*}
+% 
+% Also from rule \mylabel{L-Tail} we have
+% \begin{equation*}
+% \forall \theta': 
+% 	\theta'(\rulet_1) \mathop{\not\!\!\lhd} \head{\theta'(\type)}
+% \end{equation*}
+% As a consequence this also holds for every choice $\theta' = \theta'' \cdot \theta$.
+% \begin{equation*}
+% \forall \theta'': 
+% 	\theta''(\theta(\rulet_1)) \mathop{\not\!\!\lhd} \head{\theta''(\theta(\type))}
+% \end{equation*}
+% Now we apply the property that $\mathrm{hd} \cdot \theta'' = \mathrm{hd} \cdot \theta'' \cdot \mathrm{hd}$:
+% \begin{equation*}
+% \forall \theta'': 
+% 	\theta''(\theta(\rulet_1)) \mathop{\not\!\!\lhd} \head{\theta''(\head{\theta(\type)})}
+% \end{equation*}
+% We now have all the necessary ingredients to apply rule \mylabel{L-Tail}
+% and to conclude:
+% \begin{equation*}
+% \elookup{(\theta(\env),\theta(\rho_1) \leadsto x)}{\head{\theta(\type)}} = \theta(\rho_2) \leadsto y
+% \end{equation*}
+% Finally, as $(\theta(\env),\theta(\rho_1) \leadsto x) = \theta(\env, \rho_1
+% \leadsto x)$, we obtain the desired result:
+% \begin{equation*}
+% \elookup{\theta(\env,\rho_1 \leadsto x)}{\head{\theta(\type)}} = \theta(\rho_2) \leadsto y
+% \end{equation*}
+% 
+% \end{description}
+% \end{proof}

@@ -1,0 +1,196 @@
+\section{Type-Directed Translation to System F}
+\label{sec:trans}
+
+In this section we explain the dynamic semantics of $\name$ in terms
+of System F's dynamic semantics, by means of a type-directed translation. 
+This translation turns implicit contexts into explicit parameters and
+statically resolves all queries, much like Wadler and Blott's dictionary
+passing translation for type classes~\cite{adhoc}. 
+The advantage of this approach is that we simultaneously provide a meaning to
+well-typed $\name$ programs and an effective implementation that resolves
+all queries statically.
+
+The translation follows the type system presented in Section~\ref{sec:ourlang}.
+The additional machinery that is necessary (on top of the type system)
+corresponds to the grayed parts of Figures~\ref{fig:type}, \ref{fig:resolution1} and \ref{fig:resolution2}. 
+
+%-------------------------------------------------------------------------------
+\subsection{Type-Directed Translation}
+Figure~\ref{fig:type} presents the translation rules that convert $\name$
+expressions into ones of System F. 
+The gray parts of the figure extend the type system with the necessary
+information for the translation.
+
+The syntax of System F is as follows: 
+{\small
+  \[ \begin{array}{llrl}
+    \text{Types} & T & ::= & \alpha \mid T \arrow T 
+    \mid \forall \alpha. T \\ 
+    \text{Expressions} & E & ::=  & x \mid \lambda (x:T) . E \mid E\;E
+    \mid \Lambda \alpha . E \mid E\;T 
+  \end{array} \]}
+
+The gray extension to the syntax of type environments annotates every
+implicit rule type with explicit System F evidence in the form of a 
+term variable $x$.
+
+%- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+\paragraph{Translation of Types}
+
+The function $|\cdot|$ takes 
+$\name$ types $\rulet$ to System F types T: 
+\begin{equation*}
+\begin{array}{rcl@{\hspace{1cm}}rcl}
+|\alpha| & = & \alpha &
+|\forall \alpha. \rulet| & = & \forall \alpha. |\rulet| \\
+|\rulet_1 \arrow \rulet_2| & = & |\rulet_1| \arrow |\rulet_2| &
+|\rulet_1 \iarrow \rulet_2| & = & |\rulet_1| \arrow |\rulet_2| %\\
+\end{array}
+\end{equation*}
+Its reveals that implicit $\name$ arrows are translated to explicit System F function arrows.
+
+%- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+\paragraph{Translation of Terms}
+
+The type-directed translation judgment, which extends the typing judgment, is 
+\begin{center}
+  $\tenv \turns \relation{e}{\rulet}~\gbox{\leadsto E}$
+\end{center}
+This judgment states that the translation of $\name$ expression $e$ with
+type $\rulet$ is System~F expression $E$, with respect to type environment
+$\tenv$.
+
+Variables, lambda abstractions and applications
+are translated straightforwardly. Perhaps the only noteworthy 
+rule is \TyIAbs. This rule associates the type $\rulet_1$ with 
+the fresh variable $x$ in the type environment. 
+This creates the necessary evidence that can be used by resolutions 
+in the body of the rule abstraction to construct System F terms of type $|\rulet_1|$. 
+
+%- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+\paragraph{Resolution}
+The more interesting part of the translation happens when resolving queries.
+Queries are translated by rule $\TyQuery$ using the auxiliary resolution
+judgment $\ivturns$:
+\begin{equation*}
+\tenv \ivturns \rulet~\gbox{\leadsto E}
+\end{equation*}
+which is shown, in deterministic form, in Figure~\ref{fig:resolution2}.  The
+translation builds a System F term as evidence for the resolution.  
+
+The mechanism that builds evidence dualizes the process of peeling off
+abstractions and universal quantifiers: Rule \mylabel{R-IAbs}~wraps a lambda
+binder with a fresh variable $x$ around a System F expression $E$, which is
+generated from the resolution for the head of the rule ($\rulet_2$). Similarly,
+rule \mylabel{R-TAbs}~wraps a type lambda binder around the System F expression
+resulting from the resolution of $\rulet$.
+
+For simple types $\type$ rule \mylabel{R-Simp} delegates the work of
+building evidence, when a matching rule $\rulet$ type is found in the
+environment, to rule \mylabel{L-RuleMatch}. The evidence consists of two parts:
+$E$ is the evidence of matching $\type$ against $\rulet$. This match contains
+placeholders $\bar{x}$ for the contexts whose resolution is postponed by rule
+\mylabel{M-IAbs}. It falls to rule \mylabel{L-RuleMatch} to perform these
+postponed resolutions, obtain their evidence $\bar{E}$ and fill in the
+placeholders.
+
+%- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+\paragraph{Meta-Theory} The type-directed translation of $\name$ to System F exhibits a number
+of desirable properties.
+
+\begin{theorem}[Type-preserving translation]\label{thm:type:preservation} Let $e$ be an $\name$
+  expression, $\rulet$ be a type, $\tenv$ a type environment and $E$ be a System F expression. If
+  $\tenv \turns \relation{e}{\rulet} \leadsto E$, then $|\tenv| \turns \relation{E}{|\rulet|}$.
+\end{theorem}
+Here we define the translation of the type environment form $\name$ to System F as:
+\begin{equation*}
+\begin{array}{rcl@{\hspace{2cm}}rcl}
+|\epsilon| & = & \epsilon & |\tenv,\alpha| & = & |\tenv|, \alpha \\
+|\tenv,x : \rulet| & = & |\tenv|, x : |\rulet| &
+|\tenv, \rulet \leadsto x| & = & |\tenv|, x : |\rulet|
+\end{array}
+\end{equation*}
+
+An important lemma in the theorem's proof is the type preservation of 
+resolution.
+\begin{lemma}[Type-Preserving Resolution]
+Let $\tenv$ be a type environment, $\rulet$ be a type and E be a System F expression.
+If $\tenv \vturns \rulet \leadsto E$, then $|\tenv| \vdash E : |\rulet|$.
+\end{lemma}
+% Both the theorem and the lemma are proven in Appendix~\ref{proof:preservation}.
+
+Moreover, we can express three key properties of Figure~\ref{fig:resolution2}'s
+definition of resolution in terms of the generated evidence.
+Firstly, the deterministic version of resolution is a sound variation on the original ambiguous resolution.
+\begin{lemma}[Soundness]
+Figure~\ref{fig:resolution2}'s definition of resolution is sound (but
+incomplete) with respect to Figure~\ref{fig:resolution1}'s definition.
+\[\forall \tenv, \rulet, E: \quad\quad \tenv \ivturns \rulet \leadsto E \quad\Rightarrow\quad \tenv \vturns \rulet \leadsto E \]
+\end{lemma}
+Secondly, the deterministic resolution guarantees a strong form of coherence:
+\begin{lemma}[Determinacy]
+The generated evidence of resolution is uniquely determined.
+\[\forall \tenv, \rulet, E_1, E_2: \quad\quad \tenv \ivturns \rulet \leadsto E_1 ~\wedge~ \tenv \ivturns \rulet \leadsto E_2 \quad\Rightarrow\quad E_1 = E_2 \]
+\end{lemma}
+Thirdly, on top of the immediate coherence of deterministic resolution, 
+an additional coherence property holds.  
+\begin{lemma}[Stability]
+Resolution is stable under substitution.
+\[\forall \tenv,\alpha,\tenv',\sigma,\rulet, E: \quad\quad 
+\tenv,\alpha,\tenv' \ivturns \rulet \leadsto E \quad\wedge\quad \tenv \vdash \sigma
+\quad\Rightarrow\quad 
+\tenv,\tenv'[\sigma/\alpha] \ivturns \rulet[\sigma/\alpha] \leadsto E[|\sigma|/\alpha] \]
+\end{lemma}
+
+%-------------------------------------------------------------------------------
+\subsection{Evidence Generation in the Algorithm}
+
+The evidence generation in Figure~\ref{fig:algorithm} is largely similar to
+that in the deterministic specification of resolution in
+Figure~\ref{fig:resolution2}.
+With the evidence we can state the correctness of the algorithm.
+
+% The main difference, and complication, is due to the fact that the evidence for
+% type instantiation and recursive resolution is needed before these operations
+% actually take place, as the algorithm has to postpone them. For this reason, the
+% algorithm first produces placeholders that are later substituted for the actual
+% evidence.
+% 
+% The central relation is $\rulet; \bar{\rulet}; \bar{\alpha} \gbox{; \bar{\omega};
+% E}\turns_{\mathit{match}} \tau \hookrightarrow \bar{\rulet}' \gbox{;
+% \bar{\omega}'; E'}$. It captures the matching instantiation of context type
+% $\rulet$ against simple type $\tau$.  The input evidence for $\rulet$ is $E$, and
+% the output evidence for the instantiation is $E'$. The accumulating parameters
+% $\bar{\alpha}$ and $\bar{\rulet}$ denote that the instantiation of type variables
+% $\bar{\alpha}$ and the recursive resolution of $\bar{\rulet}$ have been
+% postponed. We use the $\bar{\alpha}$ themselves as convenient placeholders for
+% the instantiating types, and we use the synthetic $\bar{\omega}$ as placeholders for
+% the evidence of the $\bar{\rulet}$. The rules \mylabel{MTC-Abs} and \mylabel{MTC-Abs} 
+% introduce these two kinds of placeholders in the evidence. The former kind, $\bar{\alpha}$,
+% are substituted in rule \mylabel{MTC-Simp} where the actual type instantiatons $\bar{\theta}$
+% are computed. The latter kind, $\bar{\omega}$, are substituted later in rule \mylabel{Alg-Simp} where
+% the recursive resolutions take place.
+
+\begin{theorem}[Partial Correctness]
+Let $\tenv$ be a type environment, $\rulet$ be a type and E be a System F expression.
+Assume that $\epsilon \vdash_{\mathit{unamb}} \rulet$ and also $\forall \rulet_i \in \tenv: \epsilon \vdash_{\mathit{unamb}} \rulet_i$.
+Then $\tenv \ivturns \rulet \leadsto E$ if and only if $\tenv \vdash_{\mathit{alg}} \rulet \leadsto E$,
+provided that the algorithm terminates.
+\end{theorem}
+
+%-------------------------------------------------------------------------------
+\subsection{Dynamic Semantics}
+Finally, we define the dynamic semantics of $\name$ as the composition of
+the type-directed translation and System F's dynamic semantics.  Following
+Siek's notation~\cite{systemfg}, this dynamic semantics is:
+\[ \mathit{eval}(e) = V \quad\quad \textit{where } \epsilon \turns \relation{e}{\rulet} \leadsto E \textit{ and } E \rightarrow^* V  \]
+with $\rightarrow^*$ the reflexive, transitive closure of System F's standard single-step call-by-value reduction relation (see \cite[Chapter 23]{tapl}).
+
+Now we can state the conventional type safety theorem for $\name$:
+\begin{theorem}[Type Safety]
+If $\epsilon \turns \relation{e}{\rulet}$, then $\mathit{eval}(e) = V$ for
+some System F value $V$.
+\end{theorem}
+The proof follows trivially from Theorem~\ref{thm:type:preservation}.
+
+

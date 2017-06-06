@@ -1,0 +1,141 @@
+Implicit Progamming (IP) mechanisms infer values by a type-directed
+resolution process, making programs more compact and easier to read.
+Examples of IP mechanisms include Haskell's type classes, Scala's
+implicits, Agda's instance arguments, Coq's type classes, and Rust's
+traits.  The design of IP mechanisms has led to heated debate:
+proponents of one school argue the desirability of coherence, ensuring
+each implicit has a unique resolution; while proponents of another
+school argue for the power and flexibility of local scoping or
+overlapping instances.  The current state-of-affairs seems to indicate
+the two goals are at odds with one another, and cannot easily be
+reconciled.
+
+This paper presents \name, the Calculus Of CoHerent ImplicitS,
+an improved variant of the implicit calculus that offers flexibility
+while preserving coherence and avoiding ambiguity.  \name supports local scoping,
+overlapping instances, first-class instances, and higher-order
+rules, while remaining type safe and coherent.
+
+\name has a compact formulation.
+We introduce a logical formulation of how to resolve implicits, which
+is simple but ambiguous and incoherent, and a second formulation,
+which is less simple but unambiguous and coherent.  Every resolution
+of the second formulation is also a resolution of the first, but not
+conversely.  Parts of the second formulation bear a close resemblance
+to a standard technique for proof search called focussing.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% Haskell type classes are a highly successful mechanism for
+%% type-directed overloading. Greatly inspired by type classes, 
+%% many other languages (such as Scala, Agda,
+%% Coq and Rust) developed their own mechanisms 
+%% for type-directed overloaded. However, 
+
+%% Many other languages (such as Scala, Agda,
+%% Coq)\bruno{others?} include mechanisms inspired by type classes, but
+%% with some significant differences.
+
+%% \emph{Generic programming} (GP) is an increasingly important trend in
+%% programming languages. Well-known GP mechanisms, such as type classes
+%% and the C++0x concepts proposal, usually combine two features: 1) a special type of
+%% interfaces; and 2) \emph{implicit instantiation} of implementations of
+%% those interfaces.
+
+%% Scala \emph{implicits} are a GP language mechanism, inspired by type
+%% classes, that break with the tradition of coupling
+%% implicit instantiation with a special type of interface. Instead,
+%% implicits provide only implicit instantiation, which is generalized to
+%% work for \emph{any types}. 
+%% %%In particular, implicit instantiation works
+%% %%with any interface types in the language. 
+%% %% and those interface types 
+%% %%can be used to model concepts. 
+%% Scala implicits turn out to be quite
+%% powerful and useful to address many limitations that show up in other
+%% GP mechanisms.
+
+%% This paper synthesizes the key ideas of implicits formally in a minimal
+%% and general core calculus called the implicit calculus (\name),
+%% and it shows how to build source languages supporting implicit
+%% instantiation on top of it. A novelty of the calculus is its support
+%% for \emph{partial resolution} and \emph{higher-order rules} (a feature 
+%% that has been proposed before, but was never formalized or implemented).
+%% Ultimately, the implicit calculus provides a formal model of implicits, 
+%% which can be used by language designers to 
+%% study and inform implementations of similar mechanisms in their own languages.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%The calculus is relevant because it offers an interesting
+%% because it provides a simple model 
+
+%% This paper presents a core calculus generic programming
+
+%%Our paper addresses this lack of formalization; it paper presents a general,
+%%yet minimal calculus of implicits. The calculus offers the basic mechanisms for
+%%type-directed resolution and scoping of implicits. These mechanisms are the key
+%%ingredients for modeling powerful forms of implicit instantiation for source
+%%languages. A core feature of the calculus is the fact that resolution does not
+%%require a special concept-like interface, but works for any type.
+
+%%We present the syntax, operational semantics, type system, an efficient
+%%implementation through a type-directed translation, as well as correctness
+%%results. Finally, we show how generic programming constructs are translated
+%%into our calculus.
+
+%%\paragraph{Version 2:}
+%%Implicit programming that infers values by using type
+%%information has proven its benefits in practice. However, 
+%%years of experience have exposed several limitations in its current practice.
+%%For example, Haskell's type classes, which are the oldest and most
+%%prominent form of implicit programming have several
+%%limitations of its original design: no
+%%ability to control the \emph{scoping} of rules (instances); the \emph{second
+%%  class} nature of types classes compared to types; and type class
+%%and type class rules being limited to {first-order} cases.
+
+%%This paper presents a \textit{implicit calculus}: a powerful and expressive,
+%%yet minimalistic, calculus that provides an implicit programming model
+%%without the limitations of the current practice. The implicit calculus
+%%offers control over scoping, does not suffer from the second class
+%%nature of type classes, and incoorporates two features which
+%%have been discussed in the literature but for which there is
+%%currently no good solution: \emph{higher-order rules} and
+%%\emph{coherent support for overlapping rules}.  We present the
+%%syntax, operational semantics, type system, type-directed translation
+%%into System F, as well as correctness results. Finally, we show how
+%%Haskell and Scala's implicit programming constructs are translated
+%%into our calculus.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% Implicit programming that infers values by using type
+%% information has proven its benefits in practice. However, 
+%% years of experience have exposed several limitations in its current practice.
+%% For example, Haskell's type classes, which are the oldest and most
+%% prominent form of implicit programming have several
+%% limitations of its original design: no
+%% ability to control the \emph{scoping} of instances; the \emph{second
+%%   class} nature of types classes compared to types; and type class
+%% constraints being limited to \emph{first-order predicates}.
+
+%% This paper presents a \textit{implicit calculus}: a powerful and expressive,
+%% yet minimalistic, calculus that provides an implicit programming model
+%% without the limitations of the current practice. The implicit calculus
+%% offers control over scoping, does not suffer from the second class
+%% nature of type classes, and incoorporates two features which
+%% have been discussed in the literature but for which there is
+%% currently no good solution: \emph{higher-order predicates} and
+%% \emph{coherent support for overlapping instances}.  We present the
+%% syntax, operational semantics, type system, type-directed translation
+%% into System F, as well as correctness results. Finally, we show how
+%% Haskell and Scala's implicit programming constructs are translated
+%% into our calculus.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "../Main"
+%%% End: 
