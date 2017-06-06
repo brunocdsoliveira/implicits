@@ -323,8 +323,8 @@ environment, to serve as an actual argument.
 %%omitted thanks to type inference. Our calculus makes implicit queries
 %%always manifest in text. 
 
-\paragraph{Constructing Values with Type-Directed Rules} $\ourlang$ constructs values, using
-programmer-defined, type-directed rules (similar to functions). A rule (or rule
+\paragraph{Constructing Values with Type-Directed Rules} $\ourlang$ constructs values with 
+type-directed rules (similar to functions) defined by the programmer. A rule (or rule
 abstraction) defines how to compute, from implicit arguments, a value of a
 particular type. For example, here is a rule that given an implicit |Int| value, 
 adds one to that value:
@@ -455,14 +455,15 @@ rule. The following expression returns
 
 %endif
 
-> implicit 3 in implicit True in implicit (biglam a (rule a (((query a),(query a))))) in (query (Pair Int Int), query (Pair Bool Bool))
+> implicit 3 in implicit True in implicit (biglam a (rule a (((query a),(query a))))) in
+>   (query (Pair Int Int), query (Pair Bool Bool))
 
 \paragraph{Combining Higher-Order and Polymorphic Rules} 
-The rule | rule Int (rule ((forall a . a => Pair a a)) (((query (Pair (Pair Int Int) (Pair Int Int))))))|
-prescribes how to build a pair of integer pairs, inductively from an
-integer value, by consecutively applying the rule of type
+We can build a pair of integer pairs with the 
+rule | rule Int (rule ((forall a . a => Pair a a)) (((query (Pair (Pair Int Int) (Pair Int Int))))))|.
+It proceeds by applying the rule of type
 |forall a . a => Pair a a| 
-twice: first to an integer, and again to the result (an
+twice in a row: first to an integer, and again to the result (an
 integer pair). For example, the following expression returns $((3,3),(3,3))$:
 
 %if False
