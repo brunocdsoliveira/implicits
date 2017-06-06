@@ -283,7 +283,7 @@ this definition is an equally nasty impediment to equational
 reasoning, since performing simple equational reasoning would lead to
 a different result. However unlike in Haskell, it is the intended
 behaviour: it is enabled by default and cannot be disabled.
-Interestingly the expression in line~(6), which is accepted in Haskell, is actually rejected in Scala.\footnote{We have observed this behavior for Scala 2.11; for lack of a specifiation, it is not clear to us whether this behavior is intended.}
+Interestingly the expression in line~(6), which is accepted in Haskell, is actually rejected in Scala.\footnote{We have observed this behavior for Scala 2.11; for lack of a specification, it is not clear to us whether this behavior is intended.}
 Here the Scala compiler does detect two possible instances for |Int => Int|,
 but does not select the most specific one. 
 Rejecting line~(6) has another unfortunate consequence: not only is the

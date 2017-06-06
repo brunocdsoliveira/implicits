@@ -62,7 +62,9 @@ FIXED
 FIXED
  
 > p5. "parse values of any type α that implements the classes". I don't think it's correct to say that "types implement type classes", though I might be mistaken. I thought "types are instances of type classes".
-> 
+
+FIXED
+ 
 > p5. In the section on coherence state what it means for instances to be incoherent, instead of just saying "clearly incoherent". It's going to be "clearly incoherent" to readers still learning about this stuff, perhaps by reading your paper.
 > 
 > p5. The type
