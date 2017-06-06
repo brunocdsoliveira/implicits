@@ -112,7 +112,7 @@ coherence. For example, the expression:
 
 \noindent is rejected in Haskell due to \emph{ambiguity} of 
 \emph{type class resolution}~\cite{qual}.  Functions |show| and
-|read| print and parse values of any type |a| that implements 
+|read| print and parse values of any type |a| that instantiates
 the classes |Show| and |Read|.  The program is rejected because
 there is more that one possible choice for |a|, for example
 it could be |Int|, |Float|, or |Char|. 
@@ -170,7 +170,7 @@ provides a datatype for sets that is polymorphic in the elements along with a
 < union :: Ord a => Set a -> Set a -> Set a
 
 \noindent For efficiency reasons the sets are represented by a
-datastructure that orders the elements in a particular way. 
+data structure that orders the elements in a particular way. 
 It is natural to rely on the |Ord| type class to deal with ordering for the particular type |a|.  To preserve the
 correct invariant, it is crucial that the ordering of elements in the
 set is always the same. The global uniqueness property guarantees this. If two
@@ -222,7 +222,7 @@ In Scala |%| is modulo division. Both \emph{add}ition and \emph{mul}tiplication
 include a third (implicit) parameter, which is the modulus 
 of the division. Although the modulus could be passed explicitly 
 this would be extremely cumbersome. Instead it is desirable that 
-the modulus is passed implicitly. Scala implicits allow this, by simply marking 
+the modulus be passed implicitly. Scala implicits allow this, by simply marking 
 the |modulus| parameter in |add| and |mul| with the |implicit| keyword. 
 The third line shows how to set up an implicit value for the modulus. 
 Adding |implicit| before |val| signals that the value being defined 
