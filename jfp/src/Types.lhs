@@ -75,8 +75,8 @@ literals and types.
 
 \figtwocol{fig:type}{Type System and Type-directed Translation to System F}{
 \begin{center}
-\framebox{
-\begin{minipage}{\textwidth}
+\framebox{\scriptsize
+\begin{minipage}{.969\textwidth}
 \bda{c}
 \multicolumn{1}{c}{\myruleform{\tenv \turns \rulet}} \\ \\
 
@@ -203,10 +203,11 @@ is explained next.
 
 \figtwocol{fig:resolution1}{Ambiguous Resolution}{
 \begin{center}
-\framebox{$
-\ba{c}
+\framebox{\scriptsize
+\begin{minipage}{.969\textwidth}
+\bda{c}
 \myruleform{\tenv \vturns \rulet~\gbox{\leadsto E}}
-\quad\quad\quad
+\\ \\
 \mylabel{AR-IVar} \quad
   \myirule{\rulet~\gbox{\leadsto x} \in \tenv}
           {\tenv \vturns \rulet~\gbox{\leadsto x}}
@@ -214,21 +215,21 @@ is explained next.
 \mylabel{AR-TAbs} \quad
   \myirule{\tenv, \alpha \vturns \rulet~\gbox{\leadsto E}}
           {\tenv \vturns \forall \alpha. \rulet~\gbox{\leadsto \Lambda\alpha.E}} 
-\quad\quad\quad
-\mylabel{AR-TApp} \quad
-  \myirule{\tenv \vturns \forall \alpha. \rulet~\gbox{\leadsto E} \quad\quad \Gamma \turns \rulet'}
-          {\tenv \vturns \rulet[\rulet'/\alpha]~\gbox{\leadsto E~||\rulet'||}}
-\\ \\
+\quad
 \mylabel{AR-IAbs} \quad
   \myirule{\tenv, \rulet_1~\gbox{\leadsto x} \vturns \rulet_2~\gbox{\leadsto E} \quad\quad \gbox{x~\mathit{fresh}}}
           {\tenv \vturns \rulet_1 \iarrow \rulet_2~\gbox{\leadsto
             \lambda\relation{x}{||\rulet_1||}.E}} 
-\quad\quad\quad
+\\ \\
+\mylabel{AR-TApp} \quad
+  \myirule{\tenv \vturns \forall \alpha. \rulet~\gbox{\leadsto E} \quad\quad \Gamma \turns \rulet'}
+          {\tenv \vturns \rulet[\rulet'/\alpha]~\gbox{\leadsto E~||\rulet'||}}
+\quad
 \mylabel{AR-IApp} \quad
   \myirule{\tenv \vturns \rulet_1 \iarrow \rulet_2~\gbox{\leadsto E_2} \quad\quad \tenv \vturns \rulet_1~\gbox{\leadsto E_1}}
           {\tenv \vturns \rulet_2~~\gbox{\leadsto E_2~E_1}}
-\ea
-$
+\eda
+\end{minipage}
 }
 \end{center}
 }
@@ -271,7 +272,9 @@ $\Gamma_0 \vturns \tyint$:
    {\tyint \in \Gamma_0}
    {\Gamma_0 \vturns \tyint}
 \end{array}
-\quad \text{and} \quad\quad\quad\quad\quad\quad
+\end{equation*}
+and
+\begin{equation*}
 \begin{array}{c}
 \inferrule*[Left=\mylabel{AR-IApp}]
    {\inferrule*[Left=\mylabel{AR-IVar}] {(\tybool \iarrow \tyint) \in \Gamma_0}
@@ -384,15 +387,16 @@ then there are two ways to resolve $\tenv_1 \vdash \tyint \iarrow \tyint$:
 % instantiation of the outer context and of $\beta'$ with $[\tyint/\beta']$ also
 % to $\tyint \iarrow \tyint$.
 \begin{equation*}
-\begin{array}{@@{\hspace{2cm}}c@@{\hspace{2cm}}c}
 \inferrule*[Left=\mylabel{AR-TApp}]
   {\inferrule*[Left=\mylabel{AR-IVar}] 
     {(\forall \alpha.\alpha \iarrow \alpha) \in \tenv_1}
     {\tenv_1 \vturns \forall \alpha. \alpha \iarrow \alpha    }
   }
   {\tenv \vturns \tyint \iarrow \tyint}
-&
-\inferrule*[Left=\mylabel{AR-TApp}]
+\end{equation*}
+and
+\begin{equation*}
+\inferrule*[left=\mylabel{AR-TApp}]
   {\inferrule*[Left=\mylabel{AR-IApp}] 
     { \inferrule*[Left=\mylabel{AR-TApp}]
         { \inferrule*[Left=\mylabel{AR-IVar}]
@@ -409,10 +413,9 @@ then there are two ways to resolve $\tenv_1 \vdash \tyint \iarrow \tyint$:
     {\tenv_1 \vturns \forall \beta. \beta \iarrow \beta}
   }
   {\tenv \vturns \tyint \iarrow \tyint}
-\end{array}
 \end{equation*}
 
-The proof on the left only involves the predicative generalisation from
+The first proof only involves the predicative generalisation from
 $\tyint$ to $\alpha$. Yet, the second proof contains an impredicative
 generalisation from $\forall \beta. \beta \iarrow \beta$ to $\alpha$.
 Impredicativity is a well-known source of such problems in other settings, such
@@ -625,7 +628,7 @@ empty.
 \figtwocol{fig:unamb}{Unambiguous context types}{
 \begin{center}
 \framebox{
-\begin{minipage}{\textwidth}
+\begin{minipage}{0.969\textwidth}
 \bda{c}
 \myruleform{\unamb \rulet} 
 \quad\quad\quad
@@ -669,7 +672,7 @@ head. Rule \mylabel{UA-IAbs} skips over any contexts
 on the way to the head, but also recursively requires that these contexts are
 unambiguous. 
 
-Finally, the unambiguity condition is also imposed on the queried type $\rulet$
+Finally, the unambiguity condition is imposed on the queried type $\rulet$
 in rule \mylabel{Ty-Query} because this type too may extend the implicit
 environment in rule \mylabel{R-IAbs}.
 
