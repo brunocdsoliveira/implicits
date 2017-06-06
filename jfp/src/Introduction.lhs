@@ -33,7 +33,7 @@ goals: \emph{flexibility} and \emph{ease of reasoning}.
 Many programming languages aim at providing powerful, 
 flexible language constructs that allow programmers to achieve reuse, 
 and develop programs rapidly and concisely. Other programming languages aim 
-at easy reasoning about programs, as well as to avoid programming
+at easy reasoning about programs, as well as at avoiding programming
 pitfalls. Very often the two goals are at odds with each other, since 
 highly flexible programming mechanisms make reasoning harder. 
 Arguably the art of programming language design is to reconcile
@@ -99,14 +99,14 @@ An alternative school of thought in the design of IP mechanisms favours \emph{fl
 Scala implicits and Agda's instance arguments do not impose all of
 the type class restrictions. For example, Scala supports local scoping of
 instances, which can be used to allow distinct 
-``instances'' to exists for the same type in different scopes in the same
+``instances'' to exist for the same type in different scopes in the same
 program. Scala also allows a powerful form of overlapping 
 implicits~\cite{implicits}. The essence of this style of implicit
 programming is modelled by the \emph{implicit
   calculus}~\cite{oliveira12implicit}. The implicit 
 calculus supports a number of features that are not supported 
 by type classes. Besides local scoping, in the implicit calculus 
-\emph{any type} can be an implicit value. In contrast Haskell's type
+\emph{any type} can have an implicit value. In contrast Haskell's type
 class model only allows instances of classes (which can be viewed 
 as a special kind of record) to be passed implicitly. Finally the
 implicit calculus supports higher-order instances/rules: 

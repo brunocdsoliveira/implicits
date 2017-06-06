@@ -1,0 +1,434 @@
+>                          ICFP 2017 Review #83A
+>                      Updated 1 May 2017 12:42:37am EDT
+> ---------------------------------------------------------------------------
+>           Paper #83: Cochis: Deterministic and Coherent Implicits
+> ---------------------------------------------------------------------------
+> 
+>                       Overall merit: A. Good paper, I will champion it
+>                          Confidence: X. I am an expert in this area
+> 
+>                          ===== Paper summary =====
+> 
+> [This is a signed review from Ben Lippmeier <benl@ouroborus.net>. I sign all my reviews. If you continue this work then I'd be happy to read a draft of the next version]
+> 
+> Cochis: Deterministic and Coherent Implicits.
+> 
+> This is a worthwhile paper, but the presentation could be improved. There are also some bugs in the presented typing rules, though these are superficial and could be easily fixed.
+> 
+> The paper presents a simple System-F-like language extended with implicits after the Scala approach. The base language has been described in prior work, and the main contribution of this paper is to provide a version with coherent implicit resolution. The mechanism seems to hinge on the (L-RuleNoMatch) rule of Fig 4. Suppose we have a function application with an implicit argument, and we are searching the context for rules to use to build an expression for that argument. Suppose the type of the argument contains a variable (say α) bound in a higher scope. When searching the context for rules to build the expression of type α, then we must fail early if we find one that has a type which too specific to use right now, but would match if α were also instantiated to a more specific type. Checking for this case ensures that the code can be arbitrarily instantiated and inlined into other contexts without affecting how the implicit argument is resolved.
+> 
+> Overall I'm pleased to see this work. I've been wondering how to do this myself, and it's good to see a solution shrink-wrapped and ready to use. However, I found the presentation awkward in places, and there are some issues in the typing rules. I've included notes on the problems I had with the presentation, and hope this can be improved in a future version. The issues in the typing rules seem superficial in nature and should be easily fixed.
+> 
+> 
+> Presentation Issues:
+> 
+> 1. The fact that S2 starts out using the Haskell type class system is very strange, considering the presented calculus does not work like this. The syntax of Cochis is based more on the Scala approach, and supports locally defined implicit instances, unlike Haskell. The whole S2.1 is stock standard Haskell material that I imagine most ICFP readers will already know. The discussion in S2.2 about coherence was a good introduction, but you could have equally presented this material using a syntax closer to your own language (Cochis). I think the paper would make more sense if you skipped S2.2 entirely and went straight into S2.3. You can explain what coherence is when discussing the examples in S2.5.
+> 
+> 2. The key idea of the paper seems to be based around the concept of 'stability', and is expressed via the (Stable) and (L-RuleNoMatch) rules of Fig 4. However, this key idea is buried in deluge of technical material in S3.4 rather than being explained in simple terms back when you described coherence. I really would have liked some intuition for how your solution worked at the end of S2.5, right after the example with the body ?(Int -> Int) 3. The last sentence here is "To avoid this unpredictable behavior Cochis rejects incoherent programs". On my version of your paper I drew a circle around this sentence and wrote "HOW??!?" in big letters. Later I went back and added "Talk about stability!!". The writing here is like you've told a fabulous joke but then neglected to add the punch line.
+> 
+> 3. When working though S3.4 and the typing rules in Fig 4 I struggled to extract the general ideas behind each judgment form. You've provided four sorts of judgments, but have been stingy about supplying the intuition for what they are all for. In the writing it says things like "Tracking these free variables plays a crucial role in guaranteeing coherence ..." What role is that? It sounds important. A bit later it says ".. how we prevent these substitutions is explained below", but below I see ".. the auxiliary judgment (α; Γ ⊢ ρ) extends the type environment Γ ... " which is more low level technical detail but no more intuition for how your system actually fits together. There are several instances of this sort of problem, which I've tried to indicate in the detailed notes.
+> 
+> 
+> Bugs in the typing rules:
+> 
+> 1. In Fig 4. L-RuleMatch. Second premise. Your judgment form does not actually work on a list of ρ. The way you've written it makes it relate a single ρ to a single E, so giving it a list of ρ and expecting a list of E is a meta-level type error.
+> 
+> I'd write this rule instead with set-comprehension notation, like:
+> 
+>   Γ; ρ↝x ⊢ τ↝E; {p'_i ↝ x}^i
+> 
+>   { α; Γ ⊢ p_i ↝ E_i }^i
+> 
+> There are similar problems elsewhere in the paper, eg in Fig 6 Alg-L-RuleMatch.
+> 
+> 
+> 2. In the first premise of this same rule you've also used the ρ symbol for both the type in the input context, and for a list of bindings in the output context. I'd use ρ for one and ρ' for the other. Same for E/E.
+> 
+> 3. Some of your examples in the text use type-type application like (Show α) but there is no such application form in your rules.
+> 
+> 
+> Notes on the text:
+> 
+> p2. "global uniqueness of instances" (Zhang 2014). Can you find a more stable reference for this than a blog post? Later in S5.2 it says "... global scoping can be traced back to Wadler and Blott's (1989) original paper on type classes."
+
+TODO
+ 
+> p2. "to exists for the same type" => "to *exist* for the same type"
+
+FIXED
+ 
+> p2. "any type can be an implicit value" => "any type can *have* an implicit value"
+
+FIXED
+ 
+> p5. "parse values of any type α that implements the classes". I don't think it's correct to say that "types implement type classes", though I might be mistaken. I thought "types are instances of type classes".
+> 
+> p5. In the section on coherence state what it means for instances to be incoherent, instead of just saying "clearly incoherent". It's going to be "clearly incoherent" to readers still learning about this stuff, perhaps by reading your paper.
+> 
+> p5. The type
+> 
+>  bad :: α → α
+> 
+>  is missing the type class constraint:
+> 
+>  bad :: Trans α ⇒ α → α
+> 
+>  With the constraint the example makes more sense
+> 
+> p5. "A consequence of having both coherence and at most one instance of a type class per type in a program is global uniqueness". I thought "at most one instance of a type class per type in a program" *WAS* "global uniqueness" and that this implied "coherence".
+> 
+> p5. "For efficiency reasons.." weak writing. This is like saying "your luggage has been delayed for security reasons". If gaining good asymptotic runtime complexity for your algorithm relies on sets being ordered in some way then say that, rather than the nebulous "efficiency reasons".
+> 
+> p5. "then break the ordering invariant by union-ing those sets". It's not really the union operation that breaks the order invariant. The sets are ordered themselves, just in different ways.
+> 
+> p6. By about this point in the paper I thought you were really taking too long to get to the new material. I already know the basics of type classes and implicits. I was hoping for some insight into your new system by now.
+> 
+> p6. "values of any type can be used as implicit parameters". Values are used as implicit arguments.
+> 
+> p6. "do not suffer the second-class nature of type classes" Say why type classes are "second class".
+> 
+> p7. In these first view examples I was wondering why you don't just bind a name for the implicits?
+> 
+> Instead of writing
+> 
+>  λ?Int. ?Int + 1
+> 
+> Why not:
+> 
+>  λ?(x : Int). x + 1
+> 
+> You would probably still need syntax for producing an implicit argument of a particular type, eg for:
+> 
+>   foo ?Int
+> 
+> Though if the names of implicit function parameters came with the source term you wouldn't need the ugliness of generating fresh variables in the typing rules.
+> 
+> p8. You're using 'implicit e in e' sugar without having defined the desugaring yet. You said "with syntactic sugar". Give me the sugar.
+> 
+> p9 S2.5. Here you've given the key example of coherence, but missed the opportunity to give the reader the intuition about how your solution works. The last example here would lead naturally into a discussion of stability.
+> 
+> p10 S3.2 State why you need  (Γ, x:ρ) as well as (Γ,ρ↝x). They contain the same subterms.
+> 
+> p10 S3.3 With (Γ ⊢_r^a ρ) state that 'a' is for 'ambiguous'. I didn't realize this until a couple of pages later.
+> 
+> p10 S3.3 With (Int, Bool, (Bool ⇒ Int)) the syntax makes this look like a tuple, which it's not.
+> 
+> p11 Fig 2. You haven't explained the |ρ_1| syntax yet. This is used in a few places before it is defined, or even mentioned in the text.
+> 
+> p12 In the two derivations at the bottom of the page. The Γs in the conclusions are missing their subscripts.
+> 
+> p13. I found the section "Revised Resolution Rules" fairly difficult to read. Technical definitions are stated without giving the intuition, and the explanation jumps around instead of giving a connected story about how the system works.
+> 
+> p13 Explain what the components of the typing rules are used for in general terms before embarking on the details.
+> 
+>  With (α; Γ; Γ' ⊢ τ) a natural question is "Why have you got two environments". But the answer isn't given in plain language.
+> 
+> p13 with (α; Γ ⊢ ρ) Your judgment does not actually have this form. You're missing the elaborated expression.
+> 
+> p13 "the type variables α are the free type variables in the original environment". They look like binding occurrences of variables, not free variables.
+> 
+> p13 Tracking these free variables plays a crucial role in guaranteeing coherence. Perhaps crucial enough to give some hints about what the role is at this point? Don't leave me hanging.
+> 
+> p13 "It's condition stable(α,Γ,ρ,τ) entails the opposite of (L-RuleMatch)'s first condition:..." L-RuleMatch does not have that condition directly. It's embedded in another rule (Stable)
+> 
+> p13 "postponed resolvents are captured in the Σ argument" What are "resolvents" and why might we want to "postpone" them? You're giving low level details about the formalism but not enough high level intuition about how the system works.
+> 
+> p15 "we have opted not to differentiate between harmless and harmful ambiguity" Doing it properly doesn't seem like it would be much extra work.
+> 
+> p16 ".. algorithm that implements the non-algorithmic .." Blergh
+> 
+> p16 ".. replaces explicit quantification over all substitutions θ in rule (L-RuleNoMatch ..." This rule does not perform quantification. It looks like during copy-editing you've shifted this premise to its own rule but forgotten to update the text.
+> 
+> p16 S3.5 The order of explanation here does not follow the order the rules are presented in the figure, which makes it more difficult to follow.
+> 
+> p17 I don't really understand the need for the β >Γ α judgment. When you feel the need to write parenthesized sentences like "(We make an exception .." this is almost always because you haven't serialized your thoughts properly yet.
+> 
+> p19 Fig 7. The subscripts here are hard to read. Suggest writing ρ_{11} instead of ρ_{1,1} (drop the comma)
+> 
+> p22 S5.2 "allow instances that [do] not participate..."
+> 
+> p24 S6 Shortest conclusion section of all time. I suggest just folding the remaining citations into the related work section and drop the formal conclusion.
+> 
+> ===========================================================================
+>                            ICFP 2017 Review #83B
+> ---------------------------------------------------------------------------
+>           Paper #83: Cochis: Deterministic and Coherent Implicits
+> ---------------------------------------------------------------------------
+> 
+>                       Overall merit: B. OK paper, but I will not champion
+>                                         it
+>                          Confidence: Z. I am not an expert; my evaluation
+>                                         is that of an informed outsider
+> 
+>                          ===== Paper summary =====
+> 
+> This paper describes a generic model of implicit arguments, which can serve as a
+> common formal foundation for language features such as Haskell type classes or
+> Scala implicits. The paper identifies two properties that can be used to
+> characterize and compare different implicit language concepts, coherence and
+> global uniqueness. Coherence is a desirable property that guarantees unambiguous
+> semantics. It is often ensured by requiring the global uniqueness of instance
+> definitions, which, however, is an undesirable property, since it violates
+> modularity. The major contribution of this paper is the definition of a calculus
+> formalizing implicits that guarantees the coherence of implicit definitions
+> without requiring global uniqueness and allowing (to some degree) locally
+> different instance definitions. The paper formalizes type-directed instantiation
+> of implicit definitions and presents a translation of implicit definitions into
+> System F.
+> 
+>                       ===== Comments to authors =====
+> 
+> The paper is well written and motivates its goals with convincing examples. The
+> design seems to be a natural progression from previous work in this area.
+> 
+> 
+> Typos (page:line)
+> 
+> 
+> 1:29  to avoid -> avoiding
+
+FIXED
+ 
+> 5:41  datastructure -> data structure
+> 
+> 6:24  desirable ... is passed -> desirable ... be passed [subjunctive mood]
+> 
+> 13:25 excluse -> exclusive
+> 
+> 16:19 there -> the
+> 
+> 16:29 COH-Simp: typeset "COH" using \textsc
+> 
+> 17:11 (U-InstrR) is ... of (U-InstrR) -> (U-InstrR) is ... of (U-InstrL)
+> 
+> 18:39 COH-Simp: typeset "COH" using \textsc
+> 
+> 21:05 an Cochis -> a Cochis
+> 
+> 21:05 \Gamma a type -> \Gamma be a type
+> 
+> 22:02 Delete the first sentence.
+> 
+> ===========================================================================
+>                            ICFP 2017 Review #83C
+> ---------------------------------------------------------------------------
+>           Paper #83: Cochis: Deterministic and Coherent Implicits
+> ---------------------------------------------------------------------------
+> 
+>                       Overall merit: C. Weak paper, though I will not fight
+>                                         strongly against it
+>                          Confidence: Z. I am not an expert; my evaluation
+>                                         is that of an informed outsider
+> 
+>                          ===== Paper summary =====
+> 
+> This paper proposes an implicit calculus that is coherent (ie, having
+> a unique resolution for every query) but also flexible (ie,
+> supporting local scoping and overlapping instances).
+> 
+>                       ===== Comments to authors =====
+> 
+> This paper tackles an interesting and important problem. However, as
+> an informed outsider, the proposed solution looks too complex to me.
+> This may be due to the paper's presentation problems.
+> 
+> The paper is well written up to Section 2 (page 9) gently introducing
+> the notion of implicit programming and its problems. However, from
+> Section 3, it suddenly starts to give formal definitions and technical
+> details. I do not think this is a right way of presenting the solution
+> particularly because the solution is not just for compiler writers,
+> but also for normal programmers.
+> 
+> The main criteria for implicit calculus also include
+> comprehensibility, not just coherence and flexibility, because normal
+> programmers should be able to understand it and program with
+> it. Therefore, any proposal for a new implicit calculus must present
+> informal high-level ideas with instructive examples that can be
+> understood by normal programmers.
+> 
+> I am not sure whether the proposed solution satisfies comprehensibility
+> because the paper does not include any high-level overview of the
+> solution and just gives seemingly very complex definitions and
+> resolution rules.
+> 
+> ===========================================================================
+>                            ICFP 2017 Review #83D
+> ---------------------------------------------------------------------------
+>           Paper #83: Cochis: Deterministic and Coherent Implicits
+> ---------------------------------------------------------------------------
+> 
+>                       Overall merit: C. Weak paper, though I will not fight
+>                                         strongly against it
+>                          Confidence: X. I am an expert in this area
+> 
+>                       ===== Comments to authors =====
+> 
+> (I could only look at this paper briefly, and will only write a short
+> summary of my opinion rather than a full review.)
+> 
+> I read this paper in 2014 as a draft journal paper for the PLDI'12
+> work. I am aware of the delta between the present submission and the
+> previous journal draft (the way you restricted the rule-match rules to
+> get the stability property is very nice), as well as of the delta
+> between the original work and the journal draft (the nicer
+> implicit-abstraction, and the coherent version (which was rather crude
+> in my opinion, "just take the last one" is a way to make
+> this deterministic). Composing the two deltas together, we see a nicer
+> presentation of the PLDI'12 work and a coherent presentation that is
+> interesting. (I found the discussion of termination a bit rushed, on
+> the other hand, and its presentation could probably be improved.)
+> 
+> I am not convinced that this delta, compared to the PLDI'12
+> contributions, is enough for a new conference submission. I would
+> rather recommend (weakly) to reject the paper and encourage the author
+> to go for a standard journal publication process for enhanced
+> version. (I wondered if there had actually been a journal submission;
+> I would have liked to be able to read the reviews of this hypothetical
+> submission to understand the reason why this paper was hypothetically
+> not accepted in a journal, as I believe it is fine work and
+> I personally find the topic very interesting.)
+> 
+> 
+> ===========================================================================
+>                                   Comment
+>           Paper #83: Cochis: Deterministic and Coherent Implicits
+> ---------------------------------------------------------------------------
+> **PAGE LIMIT EXCEEDED**: The submitted version of this paper exceeds the limit of 24 pages (not including references) that was specified in the call for papers.  However, the main body of the paper does fit within the specified limit.  For this reason, reviewers are instructed to treat the appendix to this paper as it had been submitted as supplementary material.  In particular, this means that **reviewers may choose not to look at the material in the appendix**.
+> 
+> ===========================================================================
+>                Response by Bruno Oliveira <bruno@cs.hku.hk>
+>           Paper #83: Cochis: Deterministic and Coherent Implicits
+> ---------------------------------------------------------------------------
+> We thank all reviewers for the helpful comments.
+> We will do our best to make the presentation more
+> accessible by taking all the suggestions into account.
+> 
+> 
+> Review 1
+> ======
+> 
+> * Presentation Improvements
+> 
+> Thank you for the suggestions to improve the presentation.  We will
+> definitely take them into account. In particular we are very happy
+> with the comment on making a punchline at the end of Section 2 on
+> stability as the key idea; we agree that this will be very helpful to
+> better convey the key idea to readers.
+> 
+> We would like to clarify the need for tracking the type variables
+> referred to on p.13. Consider for example resolving the type
+> 
+>                 ρ = ∀b.b → b
+> 
+>   against the environment
+> 
+>                 Γ0 = ∀c.c → c, a, a → a
+> 
+>   i.e.
+> 
+>                 Γ0 ⊢ ρ
+> 
+>   Imagine what would happen if we did not track the type variables. Firstly,
+>   using rule R-TAbs we would extend the environment with b
+> 
+>                 Γ1 = Γ0, b
+> 
+>   and resolve the simple type
+> 
+>                 Γ1 ⊢ b → b
+> 
+>   which would get stuck on a → a when considering which rule matches in Γ1. In particular,
+>   L-RuleMatch does not apply because a → a is different from b → b. Also L-RuleNoMatch does
+>   not apply because a → a and b → b unify under the substitution [b := a]; thus skipping
+>   rule a → a would be deemed unstable.
+> 
+>   However, there is an error in the above reasoning. Code inlining cannot
+>   result in b being instantiated to a, because b is not in scope
+>   at the point in the code where the query happens (i.e., b does not appear in Γ0).
+>   To avoid this reasoning error, we keep track of the variables that appear
+>   in the environment Γ0. These are the variables that can be substituted, while
+>   the variables added to the environment by rule R-TAbs cannot be substituted.
+> 
+>   In the end, by tracking the free variables, we can accept the
+>   resolution above, whereas without such tracking the program would be rejected.
+> 
+>   We will integrate this example in the text.
+> 
+> 
+> * Bugs in the typing rules
+> 
+>   We do indeed intentionally abuse the notation (although we would not call
+>   that bugs), but are happy to reformulate as you suggest to clarify
+>   the intended meaning.
+> 
+> * The intended type of bad on p. 5 is actually bad :: a -> a,
+>   and not bad :: Trans a => a -> a, because we want to force
+>   the resolution of Trans at the definition of bad instead of
+>   the call sites of bad.
+> 
+> * Naming the implicit parameters only works if you want to directly
+>   refer to them. It does not work in the case of recursive
+>   resolution. For example consider the program:
+> 
+>   \?(Int => Bool) . \?Int . ?Bool
+> 
+>   where multiple rules have to be combined to resolve ?Bool.
+>   In such cases the system figures out how to combine the rules; the programmer
+>   does not have to write the composition himself.
+> 
+> * The β >Γ α judgement performs a necessary sanity check during
+>   unification, which is useful to prevent some invalid unifications
+>   that would arise due to scoping issues. Consider for example resolving the type
+> 
+>                 ρ = (∀β.β → β) → Int
+> 
+>   against the environment with a single rule
+> 
+>                 Γ0 = ∀α.(∀β.β → α) → Int
+> 
+>   This will lead in rule Alg-M-Simp to the unification
+> 
+>                 mgu_{Γ1,α}((∀β.β → α) → Int,(∀β.β → β) → Int)
+> 
+>   with
+> 
+>                 Γ1 = Γ0, α
+> 
+>   After several steps, we get
+> 
+>                 mgu_{Γ2,α}(α,β)
+> 
+>   with
+> 
+>                 Γ2 = Γ0, α, β
+> 
+>   The result here cannot be [β := α] because β is universally quantified
+>   and thus cannot be instantiated. This is why rule U-InstR should not apply;
+>   the mechanism used is that mgu is indexed in the unifiable variables --
+>   only α in this example.
+> 
+>   However, we also cannot have [α := β] because β is not in scope at the point
+>   where α has to be instantiated. We see this because β occurs after α in the
+>   environment Γ2. This scope check is captured in judgement β >Γ2 α. This check
+>   is the one that prevents rule U-InstL from applying and from producing an invalid
+>   substitution.
+> 
+> 
+> Review 3:
+> ======
+> 
+> * Our work is an improvement to the implicit calculus. Our
+>   improvement is mainly about working out the restrictions needed to
+>   ensure coherence. So it does not add any new programming features.
+>   Practical examples illustrating the uses of
+>   implicits were already presented in the following two cited papers:
+> 
+>         B. C. d. S. Oliveira, A. Moors, and M. Odersky. 2010. Type classes as objects
+>         and implicits. In OOPSLA. ACM, New York, NY, USA.
+> 
+>         B. C. d. S. Oliveira, T. Schrijvers, W. Choi, W. Lee, and K. Yi. 2012.  The
+>         Implicit Calculus: A New Foundation for Generic Programming. In PLDI ’12. ACM,
+>         New York, NY, USA.
+> 
+>   Thus our paper focuses only on coherence and examples about
+>   coherence.
