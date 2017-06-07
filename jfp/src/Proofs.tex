@@ -1,7 +1,7 @@
 \figtwocol{fig:ftype}{System F Type System}{
 \begin{center}
-\framebox{
-\begin{minipage}{\textwidth}
+\framebox{\scriptsize
+\begin{minipage}{0.969\textwidth}
 \bda{lc}
 \multicolumn{2}{c}{\myruleform{\Gamma \turns T}} \\ \\
   (\texttt{F-WF-VarTy}) & 
@@ -99,7 +99,7 @@ By structural induction on the expression and corresponding inference rule.
 \item[\fbox{\texttt{(WF-VarTy)}}\quad$\tenv \turns \alpha$] \ \\
 %===============================================================================
   It follows from the rule that $\alpha \in \tenv$. Hence, obviously $\alpha
-  \in |\tenv|$. Finally, by rule \mylabel{F-WF-VarTy}, and taking into account
+  \in |\tenv|$. Finally, by means of rule \mylabel{F-WF-VarTy}, and taking into account
   that $|\alpha| = \alpha$, we conclude
 \begin{equation*}
   |\tenv| \turns \alpha
@@ -1267,7 +1267,7 @@ then
 }}
 
 \begin{proof}
-From the third and fourth hypotheses of the lemma, the hypothesis
+From the lemma's third and fourth hypotheses, the hypothesis
 of rule \mylabel{R-Main} and Lemma~\ref{lemma:determinism:1} the desired
 result follows
 \begin{equation*}
@@ -1405,7 +1405,7 @@ The proof proceeds by induction on the derivation of the third hypothesis.
   Then the fourth hypothesis was either derived from rule \mylabel{L-RuleMatch},
   or from rule \mylabel{L-RuleNoMatch}. However, the hypothesis of the latter is
   not satisfied: $\epsilon;E_1;\Sigma_1$ forms a counter-example. Hence, the fourth
-  hypothesis is also formed by rule \mylabel{L-RuleMatch}.
+  hypothesis is also construted with rule \mylabel{L-RuleMatch}.
 
   Then it follows from the first hypothesis of the rule and Lemma~\ref{lemma:determinism:3} that
 \begin{equation*}
@@ -2207,6 +2207,7 @@ By rule \mylabel{L-TyVar} we conclude
 
 We assume that the judgement is decorated with an additional argument, the substitution
 for the $\bar{\alpha}$ type variables.
+
 %###############################################################################
 {\centering
 \fbox{
