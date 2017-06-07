@@ -136,9 +136,9 @@ Thirdly, on top of the immediate coherence of deterministic resolution,
 an additional coherence property holds.  
 \begin{lemma}[Stability]
 Resolution is stable under substitution.
-\[\forall \tenv,\alpha,\tenv',\sigma,\rulet, E: \quad\quad 
-\tenv,\alpha,\tenv' \ivturns \rulet \leadsto E \quad\wedge\quad \tenv \vdash \sigma
-\quad\Rightarrow\quad 
+\[\forall \tenv,\alpha,\tenv',\sigma,\rulet, E: \enskip\
+\tenv,\alpha,\tenv' \ivturns \rulet \leadsto E \enskip\wedge\enskip \tenv \vdash \sigma
+\enskip\Rightarrow\enskip 
 \tenv,\tenv'[\sigma/\alpha] \ivturns \rulet[\sigma/\alpha] \leadsto E[|\sigma|/\alpha] \]
 \end{lemma}
 
