@@ -445,11 +445,11 @@ instantiation with) monotypes $\suty$.
 
 \figtwocol{fig:resolution2}{Deterministic Resolution and Translation to System F}{
 \begin{center}
-\framebox{$
-\ba{c}
+\framebox{\scriptsize
+\begin{minipage}{0.969\textwidth}
+\bda{c}
 \Sigma ::= \epsilon \mid \Sigma, \rulet~\gbox{\leadsto x} \\ \\
-\myruleform{\tenv \ivturns \rulet~\gbox{\leadsto E}}
-\quad\quad\quad 
+\myruleform{\tenv \ivturns \rulet~\gbox{\leadsto E}} \\ \\
 \mylabel{R-Main} \quad
   \myirule{\mathit{tyvars}(\tenv);\tenv \ivturns \rulet~\gbox{\leadsto E}}
           {\tenv \ivturns \rulet~\gbox{\leadsto E}} \\ \\
@@ -474,7 +474,7 @@ instantiation with) monotypes $\suty$.
   \myirule{\tenv; \rulet~\gbox{\leadsto x} \ivturns \tau~\gbox{\leadsto E}; \overline{\rulet~\gbox{\leadsto x}} \\
             \bar{\alpha};\tenv \ivturns \bar{\rulet}~\gbox{\leadsto \bar{E}}
           }
-          {\bar{\alpha};\tenv;\tenv',\rulet~\gbox{\leadsto x} \ivturns \type~\gbox{\leadsto E[\bar{E}/\bar{x}]}} \quad\quad\quad
+          {\bar{\alpha};\tenv;\tenv',\rulet~\gbox{\leadsto x} \ivturns \type~\gbox{\leadsto E[\bar{E}/\bar{x}]}} \\
 \mylabel{L-RuleNoMatch} \quad
   \myirule{
 	\mathit{stable}(\bar{\alpha},\tenv,\rulet,\type) \\
@@ -506,13 +506,12 @@ instantiation with) monotypes $\suty$.
            \tenv \turns \suty
           }
           {\tenv; \forall \alpha. \rulet ~\gbox{\leadsto E} \ivturns \type~\gbox{\leadsto E'}; \Sigma} \\ \\ \\
-\myruleform{\mathit{stable}(\bar{\alpha},\tenv,\rulet,\type)}
-\quad\quad\quad 
+\myruleform{\mathit{stable}(\bar{\alpha},\tenv,\rulet,\type)} \\ \\
 \mylabel{Stable} \quad
   \myirule{\not\exists \theta, E, \Sigma, \mathit{dom}(\theta) \subseteq \bar{\alpha}: \theta(\tenv); \theta(\rulet)~\gbox{\leadsto x} \ivturns \theta(\tau)~\gbox{\leadsto E}; \Sigma}
           {\mathit{stable}(\bar{\alpha},\tenv,\rulet,\type)}
-\ea
-$
+\eda
+\end{minipage}
 }
 \end{center}
 }
@@ -736,8 +735,7 @@ actually identical.
 %- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 \paragraph{Algorithmic No-Match Check}
 
-The first difference is situated in rule \mylabel{Alg-L-RuleNoMatch} of the second
-judgement. Instead of an explicit quantification over all possible
+The first difference is can be found in the second judgement's Rule \mylabel{Alg-L-RuleNoMatch}. Instead of an explicit quantification over all possible
 substitutions, this rule uses the more algorithmic judgement
 $\bar{\alpha};\tenv;\rulet\coh\type$. This auxiliary judgement checks algorithmically
 whether there context type $\rulet$ matches $\type$ under any possible instantiation
@@ -758,7 +756,7 @@ of the type variables $\bar{\alpha}$.
 %         {\bar{\alpha};\rulet_1 \iarrow \rulet_2\coh \tau}
 % \eda
 
-The definition of $\bar{\alpha};\tenv;\rulet \coh \type$ is a variation on that of
+The definition of the judgement $\bar{\alpha};\tenv;\rulet \coh \type$ is a variation on that of
 the declarative judgement $\tenv; \rulet \ivturns \type; \Sigma$. There are
 three differences. 
 % \begin{enumerate}
@@ -856,29 +854,29 @@ call with the new type variable $\beta$ that is in scope in the subterms.
 
 \figtwocol{fig:algorithm}{Resolution Algorithm}{
 \begin{center}
-\framebox{$
-\ba{c}
-\myruleform{\tenv \alg \rulet~\gbox{\leadsto E}} \quad\quad\quad
+\framebox{\scriptsize
+\begin{minipage}{0.969\textwidth}
+\bda{c}
+\myruleform{\tenv \alg \rulet~\gbox{\leadsto E}} \\ \\
 
 \mylabel{Alg-R-Main}\quad
 \myirule{\mathit{tyvars}(\tenv);\tenv \alg \rulet~\gbox{\leadsto E}}
         {\tenv \alg \rulet~\gbox{\leadsto E}}  \\ \\
 
-\myruleform{\bar{\alpha};\tenv \alg \rulet~\gbox{\leadsto E}} 
+\myruleform{\bar{\alpha};\tenv \alg \rulet~\gbox{\leadsto E}}  \\ \\
 
-\quad\quad\quad
+\mylabel{Alg-R-IAbs}\quad
+\myirule{\bar{\alpha};\tenv, \rulet_1~\gbox{\leadsto x} \alg \rulet_2~\gbox{\leadsto E} \quad\quad \gbox{x~\mathit{fresh}}}
+        {\bar{\alpha};\tenv \alg \rulet_1 \iarrow \rulet_2 ~\gbox{\leadsto \lambda(x : ||\rulet_1||). E}} \quad\enskip
+
+\mylabel{Alg-R-TAbs}\quad
+\myirule{\bar{\alpha};\tenv,\alpha \alg \rulet ~\gbox{\leadsto E}}
+        {\bar{\alpha};\tenv \alg \forall \alpha. \rulet ~\gbox{\leadsto \Lambda \alpha. E}}  \\ \\
 
 \mylabel{Alg-R-Simp}\quad
 \myirule{\bar{\alpha};\tenv;\tenv \alg \tau~\gbox{\leadsto E}}
         {\bar{\alpha};\tenv \alg \tau ~\gbox{\leadsto E} }  \\ \\
 
-\mylabel{Alg-R-IAbs}\quad
-\myirule{\bar{\alpha};\tenv, \rulet_1~\gbox{\leadsto x} \alg \rulet_2~\gbox{\leadsto E} \quad\quad \gbox{x~\mathit{fresh}}}
-        {\bar{\alpha};\tenv \alg \rulet_1 \iarrow \rulet_2 ~\gbox{\leadsto \lambda(x : ||\rulet_1||). E}} \quad\quad\quad
-
-\mylabel{Alg-R-TAbs}\quad
-\myirule{\bar{\alpha};\tenv,\alpha \alg \rulet ~\gbox{\leadsto E}}
-        {\bar{\alpha};\tenv \alg \forall \alpha. \rulet ~\gbox{\leadsto \Lambda \alpha. E}}  \\ \\
 
 % \mylabel{Alg-Simp}\quad
 % \myirule{\bar{\alpha};\tenv \turns_{\mathit{match1st}} \tau \hookrightarrow \bar{\rulet}\gbox{; \bar{\omega}; E} \quad\quad \bar{\alpha};\tenv \alg \rulet_i~\gbox{\leadsto E_i} \quad (\forall \rulet_i \in \bar{\rulet})}
@@ -921,29 +919,29 @@ call with the new type variable $\beta$ that is in scope in the subterms.
 \myirule{\bar{\alpha},\alpha; \tenv,\alpha; \rulet~\gbox{\leadsto E\,\alpha}; \Sigma \alg \type~\gbox{\leadsto E'}; \Sigma'}
         {\bar{\alpha}; \tenv; \forall \alpha. \rulet~\gbox{\leadsto E}; \Sigma \alg \type~\gbox{\leadsto E'}; \Sigma'} 
 \\ \\
-\myruleform{\bar{\alpha};\tenv;\rulet\coh \tau}
-\quad\quad\quad
-\mylabel{COH-Simp}\quad
-\myirule{\theta = \mgun{\bar{\alpha}}{\tau}{\tau'}
-        }
-        {\bar{\alpha};\tenv;\tau'\coh \tau}  \\ \\
+\myruleform{\bar{\alpha};\tenv;\rulet\coh \tau} \\ \\
 \mylabel{Coh-TApp}\quad
 \myirule{\bar{\alpha},\alpha;\tenv,\alpha;\rulet \coh \tau}
         {\bar{\alpha};\tenv;\forall \alpha. \rulet\coh \tau}  
 \quad\quad\quad
 \mylabel{Coh-IApp}\quad
 \myirule{\bar{\alpha};\tenv;\rulet_2 \coh \tau}
-        {\bar{\alpha};\tenv;\rulet_1 \iarrow \rulet_2\coh \tau}
-\ea
-$
+        {\bar{\alpha};\tenv;\rulet_1 \iarrow \rulet_2\coh \tau} \\ \\
+\mylabel{COH-Simp}\quad
+\myirule{\theta = \mgun{\bar{\alpha}}{\tau}{\tau'}
+        }
+        {\bar{\alpha};\tenv;\tau'\coh \tau}  
+\eda
+\end{minipage}
 }
 \end{center}
 }
 
 \figtwocol{fig:mgu}{Most General Unifier}{
 \begin{center}
-\framebox{$
-\ba{c}
+\framebox{\scriptsize
+\begin{minipage}{0.969\textwidth}
+\bda{c}
 % \multicolumn{1}{c}{\myruleform{\theta = \mathit{mgu}_{\bar{\alpha}}(\rulet_1,\rulet_2)}} \\ \\
 % \mylabel{U-InstL}\quad\myirule{ \alpha \in \bar{\alpha}
 %         } 
@@ -1028,8 +1026,8 @@ $
 }
 { \beta >_{\tenv_1,\beta,\tenv_2,\alpha,\tenv_3} \alpha }
 
-\ea
-$
+\eda
+\end{minipage}
 }
 \end{center}
 }
@@ -1090,8 +1088,8 @@ This can be done by making the condition part of the well-formedness relation fo
 
 \figtwocol{fig:termination}{Termination Condition}{
 \begin{center}
-\framebox{
-\begin{minipage}{.81\textwidth}
+\framebox{\scriptsize
+\begin{minipage}{.969\textwidth}
 \begin{equation*}
 \ba{c}
 \myruleform{\term{\rulet}}
@@ -1105,8 +1103,8 @@ This can be done by making the condition part of the well-formedness relation fo
           {\term{\forall \alpha. \rulet}} 
 \\ \\
 \TermRule \quad
-  \myirule{\term{\rulet_1} \quad\quad \term{\rulet_2} \\ 
-           \tau_1 = \head{\rulet_1} \quad\quad \tau_2 = \head{\rulet_2} \quad\quad \tnorm{\tau_1} < \tnorm{\tau_2} \\
+  \myirule{\term{\rulet_1} \quad\quad \term{\rulet_2} \quad\quad
+           \tau_1 = \head{\rulet_1} \quad\quad \tau_2 = \head{\rulet_2} \\ \tnorm{\tau_1} < \tnorm{\tau_2} \\
            \forall \alpha \in \ftv{\rulet_1} \cup \ftv{\rulet_2}: \; \occ{\alpha}{\tau_1} \leq \occ{\alpha}{\tau_2}}  
           {\term{\rulet_1 \iarrow \rulet_2}} 
   \\ \\
