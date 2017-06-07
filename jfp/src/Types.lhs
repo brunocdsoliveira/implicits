@@ -392,7 +392,7 @@ then there are two ways to resolve $\tenv_1 \vdash \tyint \iarrow \tyint$:
     {(\forall \alpha.\alpha \iarrow \alpha) \in \tenv_1}
     {\tenv_1 \vturns \forall \alpha. \alpha \iarrow \alpha    }
   }
-  {\tenv \vturns \tyint \iarrow \tyint}
+  {\tenv_1 \vturns \tyint \iarrow \tyint}
 \end{equation*}
 and
 \begin{equation*}
@@ -412,7 +412,7 @@ and
     }
     {\tenv_1 \vturns \forall \beta. \beta \iarrow \beta}
   }
-  {\tenv \vturns \tyint \iarrow \tyint}
+  {\tenv_1 \vturns \tyint \iarrow \tyint}
 \end{equation*}
 
 The first proof only involves the predicative generalisation from
@@ -559,7 +559,7 @@ $\mathit{stable}(\bar{\alpha},\tenv,\rulet,\type)$ entails the opposite of rule
 (We come back to the reason why the condition is stronger than this in
 Section~\ref{sec:coherence}.)
 As a consequence, rules \mylabel{L-RuleMatch} and \mylabel{L-RuleNoMatch}
-are mutually excluse and \emph{the judgement effectively commits to the
+are mutually exclusive and \emph{the judgement effectively commits to the
 right-most matching rule in $\tenv'$}.
 We maintain the invariant that $\tenv'$ is a prefix of $\tenv$; rule
 \mylabel{R-Simp} provides $\tenv$ as the initial value for $\tenv'$.
@@ -719,7 +719,7 @@ grabs them and passes them on to all uses of rule \mylabel{L-RuleNoMatch}.
 \newcommand{\mgun}[4][\tenv]{\textit{mgu}_{#1;#2}(#3,#4)}
 
 Figure~\ref{fig:algorithm} contains an algorithm that implements the
-non-algorithmic deterministic resolution rules of Figure~\ref{fig:resolution2}.
+deterministic resolution rules of Figure~\ref{fig:resolution2}.
 It differs from the latter in two important ways: 
 firstly, it replaces explicit quantification over all substitutions $\theta$ in rule
 \mylabel{L-RuleNoMatch} with a tractable approach to coherence checking;
@@ -738,7 +738,7 @@ actually identical.
 The first difference is can be found in the second judgement's Rule \mylabel{Alg-L-RuleNoMatch}. Instead of an explicit quantification over all possible
 substitutions, this rule uses the more algorithmic judgement
 $\bar{\alpha};\tenv;\rulet\coh\type$. This auxiliary judgement checks algorithmically
-whether there context type $\rulet$ matches $\type$ under any possible instantiation
+whether the context type $\rulet$ matches $\type$ under any possible instantiation
 of the type variables $\bar{\alpha}$.
 % \bda{c}
 % \myruleform{\bar{\alpha};\rulet\coh \tau}
@@ -782,7 +782,7 @@ any other unifier restricted to the same domain $\bar{\alpha}$:
 \iota(\theta(\rulet_1)) = \iota(\theta(\rulet_2))
 \end{equation*}
 If this most-general unifier exists, a match has been established.
-If no unifier exists, then rule \textsc{COH-Simp} does not apply.
+If no unifier exists, then rule \textsc{Coh-Simp} does not apply.
 % \item
 Thirdly, since the coherence check considers the substitution of the type variables
 $\bar{\alpha}$ that occur in the environment at the point of the query, rule
@@ -834,7 +834,7 @@ relation is captured in the auxiliary judgement $\beta >_\tenv \alpha$.
 (We make an exception for unifiable type variables that have been introduced later:
 while the most general unifier itself may not yield a valid instantiation, it still 
 signifies the existence of an infinite number of more specific valid instantiations.)
-Rule \mylabel{U-InstR} is the symmetric form of \mylabel{U-InstR}.
+Rule \mylabel{U-InstR} is the symmetric form of \mylabel{U-InstL}.
 
 Rule \mylabel{U-Var} is the standard reflexivity rule. Rules \mylabel{U-Fun}
 and \mylabel{U-Rul} are standard congruence rules that combine the
@@ -927,7 +927,7 @@ call with the new type variable $\beta$ that is in scope in the subterms.
 \mylabel{Coh-IApp}\quad
 \myirule{\bar{\alpha};\tenv;\rulet_2 \coh \tau}
         {\bar{\alpha};\tenv;\rulet_1 \iarrow \rulet_2\coh \tau} \\ \\
-\mylabel{COH-Simp}\quad
+\mylabel{Coh-Simp}\quad
 \myirule{\theta = \mgun{\bar{\alpha}}{\tau}{\tau'}
         }
         {\bar{\alpha};\tenv;\tau'\coh \tau}  
@@ -1001,19 +1001,19 @@ call with the new type variable $\beta$ that is in scope in the subterms.
         { [\suty/\alpha] = \mgun{\bar{\alpha}}{\suty}{\alpha}} \\ \\
 
 \mylabel{U-Fun}\quad
-\myirule{\theta_1 = \mgun{\bar{\alpha}}{\rulet_{1,1}}{\rulet_{2,1}}
+\myirule{\theta_1 = \mgun{\bar{\alpha}}{\rulet_{11}}{\rulet_{21}}
          \quad\quad
-         \theta_2 = \mgun{\bar{\alpha}}{\theta_1(\rulet_{1,2})}{\theta_1(\rulet_{2,2})}
+         \theta_2 = \mgun{\bar{\alpha}}{\theta_1(\rulet_{12})}{\theta_1(\rulet_{22})}
         } 
-        {\theta_2 \cdot \theta_1 = \mgun{\bar{\alpha}}{\rulet_{1,1} \arrow \rulet_{1,2}}{\rulet_{2,1} \arrow \rulet_{2,2}}}  \\ \\
+        {\theta_2 \cdot \theta_1 = \mgun{\bar{\alpha}}{\rulet_{11} \arrow \rulet_{12}}{\rulet_{21} \arrow \rulet_{22}}}  \\ \\
 
 
 \mylabel{U-Rul}\quad
-\myirule{\theta_1 = \mgun{\bar{\alpha}}{\rulet_{1,1}}{\rulet_{2,1}}
+\myirule{\theta_1 = \mgun{\bar{\alpha}}{\rulet_{11}}{\rulet_{21}}
          \quad\quad
-         \theta_2 = \mgun{\bar{\alpha}}{\theta_1(\rulet_{1,2})}{\theta_1(\rulet_{2,2})}
+         \theta_2 = \mgun{\bar{\alpha}}{\theta_1(\rulet_{12})}{\theta_1(\rulet_{22})}
         } 
-        {\theta_2 \cdot \theta_1 = \mgun{\bar{\alpha}}{\rulet_{1,1} \iarrow \rulet_{1,2}}{\rulet_{2,1} \iarrow \rulet_{2,2}}}  \\ \\
+        {\theta_2 \cdot \theta_1 = \mgun{\bar{\alpha}}{\rulet_{11} \iarrow \rulet_{12}}{\rulet_{21} \iarrow \rulet_{22}}}  \\ \\
 
 \mylabel{U-Univ}\quad
 \myirule{\theta = \mgun[\tenv,\beta]{\bar{\alpha}}{\rulet_{1}}{\rulet_{2}}

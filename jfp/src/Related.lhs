@@ -5,7 +5,7 @@
 \section{Related Work}
 \label{sec:related}
 
-This section discusses related work. The most closely related work can
+The most closely related work can
 be divided into three strands: IP mechanisms that support local
 scoping with coherence, but forbid overlapping rules and lack other
 types of flexibility; IP mechanisms that have global scoping and
@@ -79,7 +79,7 @@ arise from global scoping~\cite{named_instance,implicit_explicit} in the context
 of Haskell type classes. Both \emph{named instances}~\cite{named_instance} and 
 \emph{Explicit Haskell}~\cite{implicit_explicit} preserve 
 most design choices taken in type clases (including global scoping), 
-but allow instances that not participate in the 
+but allow instances that do not participate in the 
 automatic resolution process to be named. This enables the possibility of overriding 
 the compiler's default resolution result with a user-defined choice.
 

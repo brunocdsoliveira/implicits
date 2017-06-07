@@ -118,7 +118,9 @@ FIXED
 > p11 Fig 2. You haven't explained the |ρ_1| syntax yet. This is used in a few places before it is defined, or even mentioned in the text.
 > 
 > p12 In the two derivations at the bottom of the page. The Γs in the conclusions are missing their subscripts.
-> 
+
+FIXED
+ 
 > p13. I found the section "Revised Resolution Rules" fairly difficult to read. Technical definitions are stated without giving the intuition, and the explanation jumps around instead of giving a connected story about how the system works.
 > 
 > p13 Explain what the components of the typing rules are used for in general terms before embarking on the details.
@@ -138,7 +140,9 @@ FIXED
 > p15 "we have opted not to differentiate between harmless and harmful ambiguity" Doing it properly doesn't seem like it would be much extra work.
 > 
 > p16 ".. algorithm that implements the non-algorithmic .." Blergh
-> 
+
+FIXED
+ 
 > p16 ".. replaces explicit quantification over all substitutions θ in rule (L-RuleNoMatch ..." This rule does not perform quantification. It looks like during copy-editing you've shifted this premise to its own rule but forgotten to update the text.
 > 
 > p16 S3.5 The order of explanation here does not follow the order the rules are presented in the figure, which makes it more difficult to follow.
@@ -146,9 +150,13 @@ FIXED
 > p17 I don't really understand the need for the β >Γ α judgment. When you feel the need to write parenthesized sentences like "(We make an exception .." this is almost always because you haven't serialized your thoughts properly yet.
 > 
 > p19 Fig 7. The subscripts here are hard to read. Suggest writing ρ_{11} instead of ρ_{1,1} (drop the comma)
-> 
+
+FIXED
+ 
 > p22 S5.2 "allow instances that [do] not participate..."
-> 
+
+FIXED
+ 
 > p24 S6 Shortest conclusion section of all time. I suggest just folding the remaining citations into the related work section and drop the formal conclusion.
 > 
 > ===========================================================================
@@ -192,25 +200,45 @@ FIXED
 FIXED
  
 > 5:41  datastructure -> data structure
-> 
+
+FIXED
+ 
 > 6:24  desirable ... is passed -> desirable ... be passed [subjunctive mood]
-> 
+
+FIXED
+ 
 > 13:25 excluse -> exclusive
-> 
+
+FIXED
+ 
 > 16:19 there -> the
-> 
+
+FIXED
+ 
 > 16:29 COH-Simp: typeset "COH" using \textsc
-> 
+
+FIXED
+ 
 > 17:11 (U-InstrR) is ... of (U-InstrR) -> (U-InstrR) is ... of (U-InstrL)
-> 
+
+FIXED
+ 
 > 18:39 COH-Simp: typeset "COH" using \textsc
-> 
+
+FIXED
+ 
 > 21:05 an Cochis -> a Cochis
-> 
+
+FIXED
+ 
 > 21:05 \Gamma a type -> \Gamma be a type
-> 
+
+FIXED
+ 
 > 22:02 Delete the first sentence.
-> 
+
+FIXED
+ 
 > ===========================================================================
 >                            ICFP 2017 Review #83C
 > ---------------------------------------------------------------------------
