@@ -40,10 +40,13 @@
 >   { α; Γ ⊢ p_i ↝ E_i }^i
 > 
 > There are similar problems elsewhere in the paper, eg in Fig 6 Alg-L-RuleMatch.
-> 
-> 
+ 
+FIXED
+ 
 > 2. In the first premise of this same rule you've also used the ρ symbol for both the type in the input context, and for a list of bindings in the output context. I'd use ρ for one and ρ' for the other. Same for E/E.
-> 
+
+FIXED
+ 
 > 3. Some of your examples in the text use type-type application like (Show α) but there is no such application form in your rules.
 > 
 > 

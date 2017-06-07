@@ -80,35 +80,33 @@ literals and types.
 \bda{c}
 \multicolumn{1}{c}{\myruleform{\tenv \turns \rulet}} \\ \\
 
-\WFVarTy \quad
-  \myirule{ \alpha \in \tenv }
-          { \tenv \turns \alpha } \quad\quad\quad
-\WFFunTy \quad
-  \myirule{\tenv \turns \rulet_1 \quad\quad \tenv \turns \rulet_2}
-          {\tenv \turns \rulet_1 \arrow \rulet_2} \\ \\
-\WFAbsTy \quad
-  \myirule{ \tenv, \alpha \turns \rulet}
-          { \tenv \turns \forall\alpha.\rulet } \quad\quad\quad
-\WFRulTy \quad
-  \myirule{\tenv \turns \rulet_1 \quad\quad \tenv \turns \rulet_2}
-          {\tenv \turns \rulet_1 \iarrow \rulet_2}
+  \myrule{WF-VarTy}
+         { \alpha \in \tenv }
+         { \tenv \turns \alpha } \quad\quad\quad
+  \myrule{WF-FunTy}
+         {\tenv \turns \rulet_1 \quad\quad \tenv \turns \rulet_2}
+         {\tenv \turns \rulet_1 \arrow \rulet_2} \\ \\
+  \myrule{WF-AbsTy}
+         { \tenv, \alpha \turns \rulet}
+         { \tenv \turns \forall\alpha.\rulet } \quad\quad\quad
+  \myrule{WF-RulTy}
+         {\tenv \turns \rulet_1 \quad\quad \tenv \turns \rulet_2}
+         {\tenv \turns \rulet_1 \iarrow \rulet_2}
 \eda
 
-\bda{lc} 
+\bda{c} 
 
-& \multicolumn{1}{c}{
+\multicolumn{1}{c}{
   \myruleform{\tenv \turns \relation{e}{\rulet}~\gbox{\leadsto E}}} \\
 \\
 
-\TyVar &
-\myirule
+\myrule{Ty-Var}
 { (\relation{x}{\rulet}) \in \tenv}
 { \tenv \turns \relation{x}{\rulet}~\gbox{\leadsto x}
 } 
 \\ \\
 
-\TyAbs &
-\myirule
+\myrule{Ty-Abs}
 { \tenv,\relation{x}{\rulet_1} \turns \relation{e}{\rulet_2}~\gbox{\leadsto E}
   \quad\quad\quad \tenv \turns \rulet_1 
 }
@@ -116,8 +114,7 @@ literals and types.
   ~\gbox{\leadsto \lambda \relation{x}{||\rulet_1||}.E} } 
 \\ \\
 
-\TyApp &
-\myirule
+\myrule{Ty-App}
 { \tenv \turns \relation{e_1}{\rulet_1 \arrow \rulet_2}~\gbox{\leadsto E_1} 
   \quad\quad\quad
   \tenv \turns \relation{e_2}{\rulet_1}~\gbox{\leadsto E_2}
@@ -125,22 +122,22 @@ literals and types.
 { \tenv \turns \relation{e_1\,e_2}{\rulet_2}~\gbox{\leadsto E_1\,E_2}} 
 \\ \\
 
-\TyTAbs&
-  \myirule {  \tenv,\alpha \turns \relation{e}{\rulet}~\gbox{\leadsto E_1} 
+  \myrule  {Ty-TAbs}
+           {  \tenv,\alpha \turns \relation{e}{\rulet}~\gbox{\leadsto E_1} 
            }
            { \tenv \turns \relation{\Lambda \alpha.e}{\forall
                \alpha.\rulet}~\gbox{\leadsto \Lambda \alpha.E_1} }
 \\ \\
-\TyTApp&
-  \myirule { \tenv \turns \relation{e}{\forall \alpha.\rulet_2}~\gbox{\leadsto E}
+  \myrule  {Ty-TApp}
+           { \tenv \turns \relation{e}{\forall \alpha.\rulet_2}~\gbox{\leadsto E}
               \quad\quad\quad
               \tenv \turns \rulet_1 
            }
            { \tenv \turns \relation{e\,\rulet_1}{\rulet_2 [\rulet_1 /\alpha]}~\gbox{\leadsto
     E~||\rulet_1||}} 
 \\ \\
-\TyIAbs&
-  \myirule { \tenv, \rulet_1 \gbox{\leadsto x} \turns \relation{e}{\rulet_2}~\gbox{\leadsto
+  \myrule  {Ty-IAbs}
+           { \tenv, \rulet_1 \gbox{\leadsto x} \turns \relation{e}{\rulet_2}~\gbox{\leadsto
     E} 
              \quad \tenv \turns \rulet_1 
              \quad \unamb \rulet_1
@@ -148,16 +145,15 @@ literals and types.
            { \tenv \turns \relation{\ilambda \rulet_1.e}{\rulet_1 \iarrow \rulet_2}~\gbox{\leadsto
     \lambda \relation{x}{||\rulet_1||}. E}}
 \\ \\
-\TyIApp&
-  \myirule { \tenv \turns \relation{e_1}{\rulet_2 \iarrow
+  \myrule  {Ty-IApp}
+           { \tenv \turns \relation{e_1}{\rulet_2 \iarrow
       \rulet_1~\gbox{\leadsto E_1}} 
              \quad\quad\quad
              \tenv \turns \relation{e_2}{\rulet_2}~\gbox{\leadsto E_2}}
            { \tenv \turns \relation{e_1 \with e_2}{\rulet_1}~\gbox{\leadsto
     E_1~E_2}}
 \\ \\
-\TyQuery &
-\myirule
+\myrule {Ty-Query}
 { \tenv \vturns \rulet~\gbox{\leadsto E} \quad\quad\quad \tenv \turns \rulet \quad\quad\quad \unamb \rulet}
 { \tenv \turns \relation{?\rulet}{\rulet}~\gbox{\leadsto E}
 } 
@@ -208,25 +204,25 @@ is explained next.
 \bda{c}
 \myruleform{\tenv \vturns \rulet~\gbox{\leadsto E}}
 \\ \\
-\mylabel{AR-IVar} \quad
-  \myirule{\rulet~\gbox{\leadsto x} \in \tenv}
+  \myrule {AR-IVar}
+          {\rulet~\gbox{\leadsto x} \in \tenv}
           {\tenv \vturns \rulet~\gbox{\leadsto x}}
 \\ \\
-\mylabel{AR-TAbs} \quad
-  \myirule{\tenv, \alpha \vturns \rulet~\gbox{\leadsto E}}
+  \myrule {AR-TAbs}
+          {\tenv, \alpha \vturns \rulet~\gbox{\leadsto E}}
           {\tenv \vturns \forall \alpha. \rulet~\gbox{\leadsto \Lambda\alpha.E}} 
 \quad
-\mylabel{AR-IAbs} \quad
-  \myirule{\tenv, \rulet_1~\gbox{\leadsto x} \vturns \rulet_2~\gbox{\leadsto E} \quad\quad \gbox{x~\mathit{fresh}}}
+  \myrule {AR-IAbs}
+          {\tenv, \rulet_1~\gbox{\leadsto x} \vturns \rulet_2~\gbox{\leadsto E} \quad\quad \gbox{x~\mathit{fresh}}}
           {\tenv \vturns \rulet_1 \iarrow \rulet_2~\gbox{\leadsto
             \lambda\relation{x}{||\rulet_1||}.E}} 
 \\ \\
-\mylabel{AR-TApp} \quad
-  \myirule{\tenv \vturns \forall \alpha. \rulet~\gbox{\leadsto E} \quad\quad \Gamma \turns \rulet'}
+  \myrule {AR-TApp}
+          {\tenv \vturns \forall \alpha. \rulet~\gbox{\leadsto E} \quad\quad \Gamma \turns \rulet'}
           {\tenv \vturns \rulet[\rulet'/\alpha]~\gbox{\leadsto E~||\rulet'||}}
 \quad
-\mylabel{AR-IApp} \quad
-  \myirule{\tenv \vturns \rulet_1 \iarrow \rulet_2~\gbox{\leadsto E_2} \quad\quad \tenv \vturns \rulet_1~\gbox{\leadsto E_1}}
+  \myrule {AR-IApp}
+          {\tenv \vturns \rulet_1 \iarrow \rulet_2~\gbox{\leadsto E_2} \quad\quad \tenv \vturns \rulet_1~\gbox{\leadsto E_1}}
           {\tenv \vturns \rulet_2~~\gbox{\leadsto E_2~E_1}}
 \eda
 \end{minipage}
@@ -450,65 +446,64 @@ instantiation with) monotypes $\suty$.
 \bda{c}
 \Sigma ::= \epsilon \mid \Sigma, \rulet~\gbox{\leadsto x} \\ \\
 \myruleform{\tenv \ivturns \rulet~\gbox{\leadsto E}} \\ \\
-\mylabel{R-Main} \quad
-  \myirule{\mathit{tyvars}(\tenv);\tenv \ivturns \rulet~\gbox{\leadsto E}}
+  \myrule {R-Main}
+          {\mathit{tyvars}(\tenv);\tenv \ivturns \rulet~\gbox{\leadsto E}}
           {\tenv \ivturns \rulet~\gbox{\leadsto E}} \\ \\
 \multicolumn{1}{c}{\myruleform{\bar{\alpha}; \tenv \ivturns \rulet~\gbox{\leadsto E}}} \\ \\
 %%\quad\quad\quad
-\mylabel{R-IAbs} \quad
-  \myirule{\bar{\alpha};\tenv, \rulet_1~\gbox{\leadsto x} \ivturns \rulet_2~\gbox{\leadsto E} \quad\quad \gbox{x~\mathit{fresh}}}
-          {\bar{\alpha};\tenv \ivturns \rulet_1 \iarrow \rulet_2~\gbox{\leadsto
+  \myrule{R-IAbs}
+         {\bar{\alpha};\tenv, \rulet_1~\gbox{\leadsto x} \ivturns \rulet_2~\gbox{\leadsto E} \quad\quad \gbox{x~\mathit{fresh}}}
+         {\bar{\alpha};\tenv \ivturns \rulet_1 \iarrow \rulet_2~\gbox{\leadsto
             \lambda\relation{x}{||\rulet_1||}.E}} 
 \quad\quad
-\mylabel{R-TAbs} \quad
-  \myirule{\bar{\alpha};\tenv,\alpha \ivturns \rulet~\gbox{\leadsto E}}
-          {\bar{\alpha};\tenv \ivturns \forall \alpha. \rulet~\gbox{\leadsto \Lambda\alpha.E}} 
+  \myrule{R-TAbs}
+         {\bar{\alpha};\tenv,\alpha \ivturns \rulet~\gbox{\leadsto E}}
+         {\bar{\alpha};\tenv \ivturns \forall \alpha. \rulet~\gbox{\leadsto \Lambda\alpha.E}} 
 \\ \\
-\mylabel{R-Simp} \quad
- \myirule{\bar{\alpha};\tenv;\tenv \ivturns \type~\gbox{\leadsto E}}
-         {\bar{\alpha};\tenv \ivturns \type~\gbox{\leadsto E}} 
+ \myrule{R-Simp}
+        {\bar{\alpha};\tenv;\tenv \ivturns \type~\gbox{\leadsto E}}
+        {\bar{\alpha};\tenv \ivturns \type~\gbox{\leadsto E}} 
 \\ \\ \\
 \myruleform{\bar{\alpha};\tenv;\tenv' \ivturns \type~\gbox{\leadsto E}}\\ \\
 
-\mylabel{L-RuleMatch} \quad
-  \myirule{\tenv; \rulet~\gbox{\leadsto x} \ivturns \tau~\gbox{\leadsto E}; \overline{\rulet~\gbox{\leadsto x}} \\
-            \bar{\alpha};\tenv \ivturns \bar{\rulet}~\gbox{\leadsto \bar{E}}
+  \myrule{L-RuleMatch}
+          {\tenv; \rulet~\gbox{\leadsto x} \ivturns \tau~\gbox{\leadsto E}; \overline{\rulet'~\gbox{\leadsto x}} \\
+            \bar{\alpha};\tenv \ivturns \rulet'~\gbox{\leadsto E'} \quad (\forall \rulet' \in \overline{\rulet}')
           }
-          {\bar{\alpha};\tenv;\tenv',\rulet~\gbox{\leadsto x} \ivturns \type~\gbox{\leadsto E[\bar{E}/\bar{x}]}} \\
-\mylabel{L-RuleNoMatch} \quad
-  \myirule{
+          {\bar{\alpha};\tenv;\tenv',\rulet~\gbox{\leadsto x} \ivturns \type~\gbox{\leadsto E[\bar{E}'/\bar{x}]}} \\
+  \myrule{L-RuleNoMatch}{
 	\mathit{stable}(\bar{\alpha},\tenv,\rulet,\type) \\
 %   \not\exists \theta, E, \Sigma, \mathit{dom}(\theta) \subseteq \bar{\alpha}: \theta(\tenv); \theta(\rulet)~\gbox{\leadsto x} \ivturns \theta(\tau)~\gbox{\leadsto E}; \Sigma \\
            \bar{\alpha};\tenv;\tenv' \ivturns \type~\gbox{\leadsto E'}
           }
           {\bar{\alpha};\tenv;\tenv',\rulet~\gbox{\leadsto x} \ivturns \type~\gbox{\leadsto E'}} \\ \\
-\mylabel{L-Var} \quad
-  \myirule{\bar{\alpha};\tenv;\tenv' \ivturns \type~\gbox{\leadsto E}
-          }
-          {\bar{\alpha};\tenv;\tenv',x:\rulet \ivturns \type~\gbox{\leadsto E}} 
+  \myrule{L-Var}
+         {\bar{\alpha};\tenv;\tenv' \ivturns \type~\gbox{\leadsto E}
+         }
+         {\bar{\alpha};\tenv;\tenv',x:\rulet \ivturns \type~\gbox{\leadsto E}} 
 \quad\quad\quad
-\mylabel{L-TyVar} \quad
-  \myirule{\bar{\alpha};\tenv;\tenv' \ivturns \type~\gbox{\leadsto E}
-          }
-          {\bar{\alpha};\tenv;\tenv',\alpha \ivturns \type~\gbox{\leadsto E}} 
+  \myrule{L-TyVar}
+         {\bar{\alpha};\tenv;\tenv' \ivturns \type~\gbox{\leadsto E}
+         }
+         {\bar{\alpha};\tenv;\tenv',\alpha \ivturns \type~\gbox{\leadsto E}} 
 \\ \\ \\
 \myruleform{\tenv; \rulet~\gbox{\leadsto E} \ivturns \type~\gbox{\leadsto E'}; \Sigma}\\ \\
-\mylabel{M-Simp} \quad
-          {\tenv; \type~\gbox{\leadsto E} \ivturns \type~\gbox{\leadsto E}; \epsilon} \\ \\
-\mylabel{M-IApp} \quad
-  \myirule{\tenv, \rulet_1 \gbox{\leadsto x}; \rulet_2 ~\gbox{\leadsto E\,x} \ivturns \type~\gbox{\leadsto E'}; \Sigma 
-           \quad\quad\quad \gbox{x~\mathit{fresh}}
-          }
-          {\tenv; \rulet_1 \iarrow \rulet_2 ~\gbox{\leadsto E} \ivturns \type~\gbox{\leadsto E'}; \Sigma, \rulet_1~\gbox{\leadsto x}} \\ \\ 
-\mylabel{M-TApp} \quad
-  \myirule{\tenv; \rulet[\suty/\alpha] ~\gbox{\leadsto E\,||\suty||} \ivturns \type~\gbox{\leadsto E'}; \Sigma
-           \quad\quad\quad
-           \tenv \turns \suty
-          }
-          {\tenv; \forall \alpha. \rulet ~\gbox{\leadsto E} \ivturns \type~\gbox{\leadsto E'}; \Sigma} \\ \\ \\
+  \myrule{M-Simp}
+         {}
+         {\tenv; \type~\gbox{\leadsto E} \ivturns \type~\gbox{\leadsto E}; \epsilon} \\ \\
+  \myrule{M-IApp}
+         {\tenv, \rulet_1 \gbox{\leadsto x}; \rulet_2 ~\gbox{\leadsto E\,x} \ivturns \type~\gbox{\leadsto E'}; \Sigma 
+          \quad\quad\quad \gbox{x~\mathit{fresh}}
+         }
+         {\tenv; \rulet_1 \iarrow \rulet_2 ~\gbox{\leadsto E} \ivturns \type~\gbox{\leadsto E'}; \Sigma, \rulet_1~\gbox{\leadsto x}} \\ \\ 
+  \myrule{M-TApp}
+         {\tenv; \rulet[\suty/\alpha] ~\gbox{\leadsto E\,||\suty||} \ivturns \type~\gbox{\leadsto E'}; \Sigma
+          \quad\quad\quad
+          \tenv \turns \suty
+         }
+         {\tenv; \forall \alpha. \rulet ~\gbox{\leadsto E} \ivturns \type~\gbox{\leadsto E'}; \Sigma} \\ \\ \\
 \myruleform{\mathit{stable}(\bar{\alpha},\tenv,\rulet,\type)} \\ \\
-\mylabel{Stable} \quad
-  \myirule{\not\exists \theta, E, \Sigma, \mathit{dom}(\theta) \subseteq \bar{\alpha}: \theta(\tenv); \theta(\rulet)~\gbox{\leadsto x} \ivturns \theta(\tau)~\gbox{\leadsto E}; \Sigma}
+  \myrule{Stable}{\not\exists \theta, E, \Sigma, \mathit{dom}(\theta) \subseteq \bar{\alpha}: \theta(\tenv); \theta(\rulet)~\gbox{\leadsto x} \ivturns \theta(\tau)~\gbox{\leadsto E}; \Sigma}
           {\mathit{stable}(\bar{\alpha},\tenv,\rulet,\type)}
 \eda
 \end{minipage}
@@ -624,30 +619,30 @@ for this purpose.} This judgement is defined in Figure~\ref{fig:unamb}
 in terms of the auxiliary judgement $\bar{\alpha} \unamb \rulet$ which
 takes an additional sequence of type variables $\alpha$ that is initially
 empty.
-\figtwocol{fig:unamb}{Unambiguous context types}{
+\figtwocol{fig:unamb}{Unambiguous Context Types}{
 \begin{center}
 \framebox{
 \begin{minipage}{0.969\textwidth}
 \bda{c}
 \myruleform{\unamb \rulet} 
 \quad\quad\quad
-\mylabel{UA-Main} \quad
-\myirule{\epsilon \unamb \rulet}
-        {\unamb \rulet}
+\myrule{UA-Main}
+       {\epsilon \unamb \rulet}
+       {\unamb \rulet}
 \\ \\
 \myruleform{\bar{\alpha} \unamb \rulet} 
 \quad\quad\quad
-\mylabel{UA-Simp} \quad
-\myirule{\bar{\alpha} \subseteq \mathit{ftv}(\type)}
-        {\bar{\alpha} \unamb \type}
+\myrule{UA-Simp}
+       {\bar{\alpha} \subseteq \mathit{ftv}(\type)}
+       {\bar{\alpha} \unamb \type}
 \\ \\
-\mylabel{UA-TAbs} \quad
-\myirule{\bar{\alpha},\alpha \unamb \rulet}
-        {\bar{\alpha} \unamb \forall \alpha.\rulet} 
+\myrule{UA-TAbs}
+       {\bar{\alpha},\alpha \unamb \rulet}
+       {\bar{\alpha} \unamb \forall \alpha.\rulet} 
 \quad\quad\quad
-\mylabel{UA-IAbs} \quad
-\myirule{\unamb \rulet_1 \quad\quad \bar{\alpha} \unamb \rulet_2}
-        {\bar{\alpha} \unamb \rulet_1 \iarrow \rulet_2} \\ \\
+\myrule{UA-IAbs}
+       {\unamb \rulet_1 \quad\quad \bar{\alpha} \unamb \rulet_2}
+       {\bar{\alpha} \unamb \rulet_1 \iarrow \rulet_2} \\ \\
 % \mylabel{UA-TAbsAlt} \quad
 % \myirule{\bar{\alpha} \vdash_{\mathit{unamb}} \rulet}
 %         {\bar{\alpha} \vdash_{\mathit{unamb}} \forall \alpha.\rulet}
@@ -859,22 +854,18 @@ call with the new type variable $\beta$ that is in scope in the subterms.
 \bda{c}
 \myruleform{\tenv \alg \rulet~\gbox{\leadsto E}} \\ \\
 
-\mylabel{Alg-R-Main}\quad
-\myirule{\mathit{tyvars}(\tenv);\tenv \alg \rulet~\gbox{\leadsto E}}
+\myrule{Alg-R-Main}{\mathit{tyvars}(\tenv);\tenv \alg \rulet~\gbox{\leadsto E}}
         {\tenv \alg \rulet~\gbox{\leadsto E}}  \\ \\
 
 \myruleform{\bar{\alpha};\tenv \alg \rulet~\gbox{\leadsto E}}  \\ \\
 
-\mylabel{Alg-R-IAbs}\quad
-\myirule{\bar{\alpha};\tenv, \rulet_1~\gbox{\leadsto x} \alg \rulet_2~\gbox{\leadsto E} \quad\quad \gbox{x~\mathit{fresh}}}
+\myrule{Alg-R-IAbs}{\bar{\alpha};\tenv, \rulet_1~\gbox{\leadsto x} \alg \rulet_2~\gbox{\leadsto E} \quad\quad \gbox{x~\mathit{fresh}}}
         {\bar{\alpha};\tenv \alg \rulet_1 \iarrow \rulet_2 ~\gbox{\leadsto \lambda(x : ||\rulet_1||). E}} \quad\enskip
 
-\mylabel{Alg-R-TAbs}\quad
-\myirule{\bar{\alpha};\tenv,\alpha \alg \rulet ~\gbox{\leadsto E}}
+\myrule{Alg-R-TAbs}{\bar{\alpha};\tenv,\alpha \alg \rulet ~\gbox{\leadsto E}}
         {\bar{\alpha};\tenv \alg \forall \alpha. \rulet ~\gbox{\leadsto \Lambda \alpha. E}}  \\ \\
 
-\mylabel{Alg-R-Simp}\quad
-\myirule{\bar{\alpha};\tenv;\tenv \alg \tau~\gbox{\leadsto E}}
+\myrule{Alg-R-Simp}{\bar{\alpha};\tenv;\tenv \alg \tau~\gbox{\leadsto E}}
         {\bar{\alpha};\tenv \alg \tau ~\gbox{\leadsto E} }  \\ \\
 
 
@@ -884,51 +875,42 @@ call with the new type variable $\beta$ that is in scope in the subterms.
 
 \multicolumn{1}{c}{\myruleform{\bar{\alpha};\tenv;\tenv' \alg \type~\gbox{\leadsto E} }} \\ \\
 
-\mylabel{Alg-L-RuleMatch}\quad
-\myirule{\epsilon; \tenv; \rulet~\gbox{\leadsto x}; \epsilon \alg \type~\gbox{\leadsto E}; \bar{\rulet}~\gbox{\leadsto \bar{x}} \quad\quad
-         \bar{\alpha};\tenv \alg \bar{\rulet}~\gbox{\leadsto \bar{E}}}
-        {\bar{\alpha};\tenv; \tenv', \rulet~\gbox{\leadsto x} \alg \type~\gbox{\leadsto E[\bar{E}/\bar{x}] }}  \\ \\
+\myrule{Alg-L-RuleMatch}{\epsilon; \tenv; \rulet~\gbox{\leadsto x}; \epsilon \alg \type~\gbox{\leadsto E}; \bar{\rulet}'~\gbox{\leadsto \bar{x}'} \quad\quad
+         \bar{\alpha};\tenv \alg \rulet'~\gbox{\leadsto E'} \quad (\forall \rulet' \in \bar{\rulet}')
+        }
+        {\bar{\alpha};\tenv; \tenv', \rulet~\gbox{\leadsto x} \alg \type~\gbox{\leadsto E[\bar{E}'/\bar{x}'] }}  \\ \\
 
-\mylabel{Alg-L-RuleNoMatch}\quad
-\myirule{\bar{\alpha};\tenv;\rulet \not\coh \type \quad\quad
+\myrule{Alg-L-RuleNoMatch}{\bar{\alpha};\tenv;\rulet \not\coh \type \quad\quad
          \bar{\alpha};\tenv;\tenv' \alg \type~\gbox{\leadsto E'}}
         {\bar{\alpha};\tenv;\tenv', \rulet~\gbox{\leadsto x}\alg \type~\gbox{\leadsto E'}}  \\ \\
-\mylabel{Alg-L-Var} \quad
-  \myirule{\bar{\alpha};\tenv;\tenv' \alg \type~\gbox{\leadsto E}
+  \myrule{Alg-L-Var}{\bar{\alpha};\tenv;\tenv' \alg \type~\gbox{\leadsto E}
           }
           {\bar{\alpha};\tenv;\tenv',x:\rulet \alg \type~\gbox{\leadsto E}} 
 \quad\quad\quad
-\mylabel{Alg-L-TyVar} \quad
-  \myirule{\bar{\alpha};\tenv;\tenv' \alg \type~\gbox{\leadsto E}
+  \myrule{Alg-L-TyVar}{\bar{\alpha};\tenv;\tenv' \alg \type~\gbox{\leadsto E}
           }
           {\bar{\alpha};\tenv;\tenv',\alpha \alg \type~\gbox{\leadsto E}} 
 \\ \\
 
 \multicolumn{1}{c}{\myruleform{\bar{\alpha}; \tenv; \rulet~\gbox{\leadsto E}; \Sigma \alg \type~\gbox{\leadsto E'}; \Sigma'}} \\ \\
 
-\mylabel{Alg-M-Simp}\quad
-\myirule{\theta = \mgun{\bar{\alpha}}{\type}{\type'}
+\myrule{Alg-M-Simp}{\theta = \mgun{\bar{\alpha}}{\type}{\type'}
         }
         {\bar{\alpha}; \tenv; \type'~\gbox{\leadsto E}; \Sigma \alg \type~\gbox{\leadsto ||\theta||(E)}; \theta(\Sigma)}  \\ \\
 
-\mylabel{Alg-M-IApp}\quad
-\myirule{\bar{\alpha}; \tenv, \rulet_1~\gbox{\leadsto x}; \rulet_2~\gbox{\leadsto E\,x}; \rulet_1~\gbox{\leadsto x}, \Sigma \alg \type~\gbox{\leadsto E'}; \Sigma'\quad\quad \gbox{x~\mathit{fresh}}}
+\myrule{Alg-M-IApp}{\bar{\alpha}; \tenv, \rulet_1~\gbox{\leadsto x}; \rulet_2~\gbox{\leadsto E\,x}; \rulet_1~\gbox{\leadsto x}, \Sigma \alg \type~\gbox{\leadsto E'}; \Sigma'\quad\quad \gbox{x~\mathit{fresh}}}
         {\bar{\alpha}; \tenv; \rulet_1 \iarrow \rulet_2~\gbox{\leadsto E}; \Sigma \alg \type~\gbox{\leadsto E'}; \Sigma'}  \\ \\
 
-\mylabel{Alg-M-TApp}\quad
-\myirule{\bar{\alpha},\alpha; \tenv,\alpha; \rulet~\gbox{\leadsto E\,\alpha}; \Sigma \alg \type~\gbox{\leadsto E'}; \Sigma'}
+\myrule{Alg-M-TApp}{\bar{\alpha},\alpha; \tenv,\alpha; \rulet~\gbox{\leadsto E\,\alpha}; \Sigma \alg \type~\gbox{\leadsto E'}; \Sigma'}
         {\bar{\alpha}; \tenv; \forall \alpha. \rulet~\gbox{\leadsto E}; \Sigma \alg \type~\gbox{\leadsto E'}; \Sigma'} 
 \\ \\
 \myruleform{\bar{\alpha};\tenv;\rulet\coh \tau} \\ \\
-\mylabel{Coh-TApp}\quad
-\myirule{\bar{\alpha},\alpha;\tenv,\alpha;\rulet \coh \tau}
+\myrule{Coh-TApp}{\bar{\alpha},\alpha;\tenv,\alpha;\rulet \coh \tau}
         {\bar{\alpha};\tenv;\forall \alpha. \rulet\coh \tau}  
 \quad\quad\quad
-\mylabel{Coh-IApp}\quad
-\myirule{\bar{\alpha};\tenv;\rulet_2 \coh \tau}
+\myrule{Coh-IApp}{\bar{\alpha};\tenv;\rulet_2 \coh \tau}
         {\bar{\alpha};\tenv;\rulet_1 \iarrow \rulet_2\coh \tau} \\ \\
-\mylabel{Coh-Simp}\quad
-\myirule{\theta = \mgun{\bar{\alpha}}{\tau}{\tau'}
+\myrule{Coh-Simp}{\theta = \mgun{\bar{\alpha}}{\tau}{\tau'}
         }
         {\bar{\alpha};\tenv;\tau'\coh \tau}  
 \eda
@@ -981,42 +963,38 @@ call with the new type variable $\beta$ that is in scope in the subterms.
 \myruleform{\theta = \mgun{\bar{\alpha}}{\rulet_1}{\rulet_2}}
 \hspace{1cm}
 
-\mylabel{U-InstL}\quad\myirule{ 
+\myrule{U-InstL}{ 
 	  \alpha \in \bar{\alpha}
           \quad\quad
           \forall \beta\in\mathit{ftv}(\suty):~~ \beta \in \bar{\alpha} \vee \beta >_\tenv \alpha
         } 
         { [\suty/\alpha] = \mgun{\bar{\alpha}}{\alpha}{\suty}}  \\ \\
 
-\mylabel{U-Var}\quad
-\myirule{
+\myrule{U-Var}{
         } 
         { \epsilon = \mgun{\bar{\alpha}}{\beta}{\beta}}  \hspace{1cm}
 
-\mylabel{U-InstR}\quad\myirule{ 
+\myrule{U-InstR}{ 
 	  \alpha \in \bar{\alpha}
           \quad\quad
           \forall \beta\in\mathit{ftv}(\suty):~~ \beta \in \bar{\alpha} \vee \beta >_\tenv \alpha
         } 
         { [\suty/\alpha] = \mgun{\bar{\alpha}}{\suty}{\alpha}} \\ \\
 
-\mylabel{U-Fun}\quad
-\myirule{\theta_1 = \mgun{\bar{\alpha}}{\rulet_{11}}{\rulet_{21}}
+\myrule{U-Fun}{\theta_1 = \mgun{\bar{\alpha}}{\rulet_{11}}{\rulet_{21}}
          \quad\quad
          \theta_2 = \mgun{\bar{\alpha}}{\theta_1(\rulet_{12})}{\theta_1(\rulet_{22})}
         } 
         {\theta_2 \cdot \theta_1 = \mgun{\bar{\alpha}}{\rulet_{11} \arrow \rulet_{12}}{\rulet_{21} \arrow \rulet_{22}}}  \\ \\
 
 
-\mylabel{U-Rul}\quad
-\myirule{\theta_1 = \mgun{\bar{\alpha}}{\rulet_{11}}{\rulet_{21}}
+\myrule{U-Rul}{\theta_1 = \mgun{\bar{\alpha}}{\rulet_{11}}{\rulet_{21}}
          \quad\quad
          \theta_2 = \mgun{\bar{\alpha}}{\theta_1(\rulet_{12})}{\theta_1(\rulet_{22})}
         } 
         {\theta_2 \cdot \theta_1 = \mgun{\bar{\alpha}}{\rulet_{11} \iarrow \rulet_{12}}{\rulet_{21} \iarrow \rulet_{22}}}  \\ \\
 
-\mylabel{U-Univ}\quad
-\myirule{\theta = \mgun[\tenv,\beta]{\bar{\alpha}}{\rulet_{1}}{\rulet_{2}}
+\myrule{U-Univ}{\theta = \mgun[\tenv,\beta]{\bar{\alpha}}{\rulet_{1}}{\rulet_{2}}
         } 
         {\theta = \mgun{\bar{\alpha}}{\forall \beta.\rulet_{1}}{\forall \beta.\rulet_{2}}}  \\ \\
 
@@ -1094,16 +1072,13 @@ This can be done by making the condition part of the well-formedness relation fo
 \ba{c}
 \myruleform{\term{\rulet}}
 \quad\quad\quad
-\TermSimpl \quad
-  \myirule{}
+  \myrule{T-Simp}{}
           {\term{\tau}} 
 \quad\quad\quad
-\TermForall \quad
-  \myirule{\term{\rulet}}
+  \myrule{T-Forall}{\term{\rulet}}
           {\term{\forall \alpha. \rulet}} 
 \\ \\
-\TermRule \quad
-  \myirule{\term{\rulet_1} \quad\quad \term{\rulet_2} \quad\quad
+  \myrule{T-Rule}{\term{\rulet_1} \quad\quad \term{\rulet_2} \quad\quad
            \tau_1 = \head{\rulet_1} \quad\quad \tau_2 = \head{\rulet_2} \\ \tnorm{\tau_1} < \tnorm{\tau_2} \\
            \forall \alpha \in \ftv{\rulet_1} \cup \ftv{\rulet_2}: \; \occ{\alpha}{\tau_1} \leq \occ{\alpha}{\tau_2}}  
           {\term{\rulet_1 \iarrow \rulet_2}} 
