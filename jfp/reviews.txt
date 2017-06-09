@@ -113,13 +113,21 @@ FIXED
 > p9 S2.5. Here you've given the key example of coherence, but missed the opportunity to give the reader the intuition about how your solution works. The last example here would lead naturally into a discussion of stability.
 > 
 > p10 S3.2 State why you need  (Γ, x:ρ) as well as (Γ,ρ↝x). They contain the same subterms.
-> 
+
+We don't explain the greyed parts until Section 4.
+ 
 > p10 S3.3 With (Γ ⊢_r^a ρ) state that 'a' is for 'ambiguous'. I didn't realize this until a couple of pages later.
-> 
+
+Added footnote.
+ 
 > p10 S3.3 With (Int, Bool, (Bool ⇒ Int)) the syntax makes this look like a tuple, which it's not.
-> 
+
+Dropped outer parentheses.
+ 
 > p11 Fig 2. You haven't explained the |ρ_1| syntax yet. This is used in a few places before it is defined, or even mentioned in the text.
-> 
+
+We don't explain the greyed parts until Section 4.
+ 
 > p12 In the two derivations at the bottom of the page. The Γs in the conclusions are missing their subscripts.
 
 FIXED

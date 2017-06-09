@@ -230,7 +230,7 @@ is explained next.
 \end{center}
 }
 
-Figure~\ref{fig:resolution1} provides a first (ambiguous) definition of the
+Figure~\ref{fig:resolution1} provides a first (ambiguous\footnote{Hence the subscript $a$ for ambiguous in the judgement form $\tenv \vturns \rulet$.}) definition of the
 resolution judgement. Its underlying principle is
 resolution in logic. 
 Intuitively, $\tenv\vturns \rulet$ holds if $\tenv$ entails $\rulet$, where the types in $\tenv$ and
@@ -258,7 +258,7 @@ can be shown by multiple different derivations. For instance,
 consider again the resolution in the last example of Section~\ref{sec:overview:ourlang}:
 in the environment
 \[
-\Gamma_0 = (\tyint,\tybool,(\tybool\iarrow\tyint))
+\Gamma_0 = \tyint,\tybool,(\tybool\iarrow\tyint)
 \]
 there are two different derivations for
 $\Gamma_0 \vturns \tyint$:
@@ -285,6 +285,165 @@ While this may seem harmless at the type-level, at the value-level each
 derivation corresponds to a (possibly) different value. Hence, ambiguous
 resolution renders the meaning of a program ambiguous.
 % \end{enumerate}
+
+We next address these two issues one by one.
+
+%-------------------------------------------------------------------------------
+\subsection{Type-Directed Resolution with Focusing}
+
+To obtain a type-directed formulation of resolution, we adopt a solution from
+proof search known as \emph{focusing}~\cite{Focusing}. This solution makes sure
+that only one inference rule applies at any given point and thereby rules out
+trivial forms of nondeterminism.
+
+As an example of such trivial nondeterminism consider
+the following two ways of resolving $a$ given 
+$\tenv = a~\gbox{\leadsto x}$:
+\begin{equation*}
+\begin{array}{c}
+\inferrule*[right=(AR-IVar)]
+   {a~\gbox{\leadsto x} \in \tenv}
+   {\tenv \vturns a~\gbox{\leadsto x}}
+\end{array}
+\end{equation*}
+% ==========
+% TC a |= a
+
+\noindent
+versus
+\begin{equation*}
+\begin{array}{c}
+\inferrule*[right=(AR-IApp)]
+   {
+      \inferrule*[right=(AR-IAbs)]
+         {
+            \inferrule*[right=AR-IVar]
+               { a~\gbox{\leadsto y} \in \tenv'}
+               { \tenv' \vturns a ~\gbox{\leadsto y} }
+         }
+         {\tenv \vturns a \iarrow a ~\gbox{\leadsto \lambda y. y}} \\
+      \inferrule*[Right=(AR-IVar)]
+         {a ~\gbox{\leadsto x} \in \tenv}
+         {\tenv \vturns a ~\gbox{\leadsto x}}
+   }
+   {\tenv \vturns a~\gbox{\leadsto (\lambda y.y)\,x}}
+\end{array}
+\end{equation*}
+where $\tenv' = \tenv,a~\gbox{\leadsto y}$. While these are two different
+proofs, they do not lead to different behavior -- the elaborated terms in grey
+are $\beta$-equivalent. 
+We will see that focusing provides a straightjacket that allows only the first
+and more direct of these two proofs. More generally, without loss of
+expressivity focusing only allows proofs whose elaboration is in
+$\beta$-reduced and $\eta$-expanded form.
+
+\figtwocol{fig:resolutionf}{Focusing Resolution}{
+\begin{center}
+\framebox{\scriptsize
+\begin{minipage}{.969\textwidth}
+\bda{c}
+\Sigma ::= \epsilon \mid \Sigma, \rulet~\gbox{\leadsto x} \\ \\
+\myruleform{\tenv \fturns [\rulet]~\gbox{\leadsto E}}
+\\ \\
+  \myrule {FR-TAbs}
+          {\tenv, \alpha \fturns [\rulet]~\gbox{\leadsto E}}
+          {\tenv \fturns [\forall \alpha. \rulet]~\gbox{\leadsto \Lambda\alpha.E}} 
+\quad
+  \myrule {FR-IAbs}
+          {\tenv, \rulet_1~\gbox{\leadsto x} \fturns [\rulet_2]~\gbox{\leadsto E} \quad\quad \gbox{x~\mathit{fresh}}}
+          {\tenv \fturns [\rulet_1 \iarrow \rulet_2]~\gbox{\leadsto
+            \lambda\relation{x}{||\rulet_1||}.E}} 
+\\ \\
+  \myrule {FR-Simp}
+          {\rulet~\gbox{\leadsto x} \in \tenv \\ 
+           \tenv; [\rulet]~\gbox{\leadsto x} \fturns \type~\gbox{\leadsto E};\bar{\rulet}' ~\gbox{\leadsto \bar{x}'}  \\
+           \tenv \fturns [\rulet']~\gbox{\leadsto E'} \enskip (\forall \rulet' \in \bar{\rulet}')
+          }
+          {\tenv \fturns [\type]~\gbox{\leadsto E[\bar{E}'/\bar{x}']}}
+\\ \\
+\myruleform{\tenv; [\rulet]~\gbox{\leadsto E} \fturns \type~\gbox{\leadsto E'}; \Sigma}
+\\ \\
+  \myrule {FR-TApp}
+          {\tenv \vdash \rulet' \\\\
+           \tenv; [[\rulet'/\alpha]\rulet]~\gbox{\leadsto E\,||\rulet'||} \fturns \type~\gbox{\leadsto E'}; \Sigma
+          }
+          {\tenv; [\forall \alpha.\rulet]~\gbox{\leadsto E} \fturns \type~\gbox{\leadsto E'}; \Sigma}
+\quad
+  \myrule {FR-IApp}
+          {\gbox{x~\text{fresh}} \\\\
+           \tenv; [\rulet_2]~\gbox{\leadsto E\,x} \fturns \type~\gbox{\leadsto E'}; \Sigma}
+          {\tenv; [\rulet_1 \iarrow \rulet_2]~\gbox{\leadsto E} \fturns \type~\gbox{\leadsto E'}; \Sigma, \rulet_1~\gbox{\leadsto x}}
+\\ \\
+  \myrule {FR-Simp}
+          {}
+          {\tenv; [\type]~\gbox{\leadsto E} \fturns \type~\gbox{\leadsto E}; \epsilon}
+
+\eda
+\end{minipage}
+}
+\end{center}
+}
+
+Figure~\ref{fig:resolutionf} presents our definition of resolution with
+focusing. The main judgment $\tenv \fturns [\rulet]~\gbox{\leadsto E}$ is
+defined with the help of the auxiliary judgement $\tenv;
+[\rulet]~\gbox{\leadsto E} \fturns ~\gbox{\leadsto E'}; \Sigma$. Both definitions are
+by induction on the type $\rulet$ enclosed in square brackets.
+The focusing approach refines the grammar of types to distinguish a special
+class of \emph{simple} types as the base case of the induction:
+{\bda{llrl}
+    \text{Context Types} & \rulet \hide{\in 2^\meta{RType}} & ::= & 
+    \forall \alpha. \rulet \mid \rulet_1 \iarrow \rulet_2 \mid \type \\
+    \text{Simple Types}  & \type                            & ::=  & \alpha \mid \rulet_1 \arrow \rulet_2 \\
+  \eda }
+
+The main judgement $\tenv \fturns [\rulet]~\gbox{\leadsto E}$ focuses on the
+type $\rulet$ that is to be resolved -- we call this type the ``goal''. There
+are three rules, for the three possible syntactic forms of $\rulet$.
+%
+Rules~\mylabel{FR-TAbs} and~\mylabel{FR-IAbs} decompose the goal by
+applying implication and quantifier introductions respectively.  Once the goal
+is stripped down to a simple type $\type$,
+Rule~\mylabel{FR-Simp} selects a rule $\rulet$ from the
+environment $\tenv$ to discharge it. The selected rule must \emph{match} the
+goal, a notion that is captured by the auxiliary judgment. Matching
+gives rise to a sequence $\Sigma$ of new (and hopefully simpler) goals
+that are resolved recursively.
+
+% The second auxiliary judgment
+% $\leftRule{\tyEnv}{\constraint}{\classConstraint}{\programTheory}$ focuses on
+% the axiom $\constraint$ and checks whether it matches the simple goal
+% $\classConstraint$. Again, there are three rules for the three possible forms
+% the axiom can take.
+% %
+% Rule~\textsc{($\classConstraint$L)} expresses the base case
+% where the axiom is identical to the goal and there are no new goals.
+% %
+% Rule~\textsc{($\Rightarrow$L)} handles an implication axiom $\constraint_1
+% \Rightarrow \constraint_2$ by recursively checking whether $\constraint_2$
+% matches the goal. At the same time it yields a new goal $\constraint_1$ which
+% needs to be entailed in order for the axiom to apply.
+% %
+% Finally, Rule~\textsc{($\forall$L)} handles universal quantification by
+% instantiating the quantified variable in a way that recursively yields a match.
+% 
+% It is not difficult to see that this type-directed formulation of entailment
+% greatly reduces the number of proofs for given goal.\footnote{Without loss of expressive power. See for example~\cite{FrankFocusing}.} For instance, for the
+% example above there is only one proof:
+% \begin{equation*}
+% \begin{array}{c}
+% \inferrule*
+%    { \inferrule*[right=($\classConstraint$R)]
+%         { \mathit{Eq}\,a \in \fullTheory \\
+%           \inferrule*[right=($\classConstraint$L)]
+%              {}
+%              {\leftRule{\tyEnv}{\mathit{Eq}\,a}{\mathit{Eq}\,a}{\bullet}}
+%         }
+%         {\rightRule{\fullTheory}{\tyEnv}{\mathit{Eq}\,a}}
+%    }
+%    {\proveConstraint{\fullTheory}{\tyEnv}{\mathit{Eq}\,a}}
+% \end{array}
+% \end{equation*}
 
 %-------------------------------------------------------------------------------
 \subsection{Deterministic Resolution}\label{subsec:det}
