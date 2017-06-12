@@ -363,18 +363,18 @@ $\beta$-reduced and $\eta$-expanded form.
 \\ \\
 \myruleform{\tenv; [\rulet]~\gbox{\leadsto E} \fturns \type~\gbox{\leadsto E'}; \Sigma}
 \\ \\
-  \myrule {FR-TApp}
+  \myrule {FM-TApp}
           {\tenv \vdash \rulet' \\\\
            \tenv; [[\rulet'/\alpha]\rulet]~\gbox{\leadsto E\,||\rulet'||} \fturns \type~\gbox{\leadsto E'}; \Sigma
           }
           {\tenv; [\forall \alpha.\rulet]~\gbox{\leadsto E} \fturns \type~\gbox{\leadsto E'}; \Sigma}
-\quad
-  \myrule {FR-IApp}
+\\ \\
+  \myrule {FM-IApp}
           {\gbox{x~\text{fresh}} \\\\
            \tenv; [\rulet_2]~\gbox{\leadsto E\,x} \fturns \type~\gbox{\leadsto E'}; \Sigma}
           {\tenv; [\rulet_1 \iarrow \rulet_2]~\gbox{\leadsto E} \fturns \type~\gbox{\leadsto E'}; \Sigma, \rulet_1~\gbox{\leadsto x}}
 \\ \\
-  \myrule {FR-Simp}
+  \myrule {FM-Simp}
           {}
           {\tenv; [\type]~\gbox{\leadsto E} \fturns \type~\gbox{\leadsto E}; \epsilon}
 
@@ -410,40 +410,39 @@ goal, a notion that is captured by the auxiliary judgment. Matching
 gives rise to a sequence $\Sigma$ of new (and hopefully simpler) goals
 that are resolved recursively.
 
-% The second auxiliary judgment
-% $\leftRule{\tyEnv}{\constraint}{\classConstraint}{\programTheory}$ focuses on
-% the axiom $\constraint$ and checks whether it matches the simple goal
-% $\classConstraint$. Again, there are three rules for the three possible forms
-% the axiom can take.
-% %
-% Rule~\textsc{($\classConstraint$L)} expresses the base case
-% where the axiom is identical to the goal and there are no new goals.
-% %
-% Rule~\textsc{($\Rightarrow$L)} handles an implication axiom $\constraint_1
-% \Rightarrow \constraint_2$ by recursively checking whether $\constraint_2$
-% matches the goal. At the same time it yields a new goal $\constraint_1$ which
-% needs to be entailed in order for the axiom to apply.
-% %
-% Finally, Rule~\textsc{($\forall$L)} handles universal quantification by
-% instantiating the quantified variable in a way that recursively yields a match.
-% 
-% It is not difficult to see that this type-directed formulation of entailment
-% greatly reduces the number of proofs for given goal.\footnote{Without loss of expressive power. See for example~\cite{FrankFocusing}.} For instance, for the
-% example above there is only one proof:
-% \begin{equation*}
-% \begin{array}{c}
-% \inferrule*
-%    { \inferrule*[right=($\classConstraint$R)]
-%         { \mathit{Eq}\,a \in \fullTheory \\
-%           \inferrule*[right=($\classConstraint$L)]
-%              {}
-%              {\leftRule{\tyEnv}{\mathit{Eq}\,a}{\mathit{Eq}\,a}{\bullet}}
-%         }
-%         {\rightRule{\fullTheory}{\tyEnv}{\mathit{Eq}\,a}}
-%    }
-%    {\proveConstraint{\fullTheory}{\tyEnv}{\mathit{Eq}\,a}}
-% \end{array}
-% \end{equation*}
+The auxiliary judgment
+$\tenv ; [\rulet]~\gbox{\leadsto E} \fturns \type~\gbox{\leadsto E'};\Sigma$ focuses on
+the rule $\rulet$ and checks whether it matches the simple goal
+$\type$. Again, there are three rules for the three possible forms
+the rule can take.
+%
+Rule~\mylabel{FM-TApp} handles universal quantification by
+instantiating the quantified variable $\alpha$ in a way that recursively yields a match.
+%
+Rule~\mylabel{FM-IApp} handles an implication rule $\rulet_1
+\iarrow \rulet_2$ by recursively checking whether $\rulet_2$
+matches the goal. At the same time it yields a new goal $\rulet_1$ which
+needs to be resolved in order for the rule to apply.
+%
+Finally, Rule~\mylabel{FM-Simp} 
+expresses the base case
+where the axiom is identical to the goal and there are no new goals.
+
+It is not difficult to see that this type-directed formulation of entailment
+greatly reduces the number of proofs for given goal.\footnote{Without loss of
+expressive power. See for example~\cite{FrankFocusing}.} For instance, for the
+example above there is only one proof:
+\begin{equation*}
+\begin{array}{c}
+   \inferrule*[right=\mylabel{FR-Simp}]
+     { a \in \tenv \\
+       \inferrule*[right=\mylabel{FM-Simp}]
+         {}
+         {\tenv; [a] ~\gbox{\leadsto x} \fturns a~\gbox{\leadsto x}; \epsilon }
+     }
+     {\tenv \fturns [a] ~\gbox{\leadsto x}}
+\end{array}
+\end{equation*}
 
 %-------------------------------------------------------------------------------
 \subsection{Deterministic Resolution}\label{subsec:det}
