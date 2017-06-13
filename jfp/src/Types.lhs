@@ -445,7 +445,149 @@ example above there is only one proof:
 \end{equation*}
 
 %-------------------------------------------------------------------------------
-\subsection{Deterministic Resolution}\label{subsec:det}
+\subsection{Deterministic and Stable Resolution}\label{subsec:det}
+
+While focusing provides a syntax-directed definition of resolution, it does not
+make resolution entirely deterministic. There are still two sources of
+non-determinism: 1) the impredicative instantiation of type variable $\alpha$
+with a rule type $\rulet'$ in Rule~\mylabel{FM-TApp}, and 2) the
+nondeterministic selection of a rule type $\rulet$ from the type environment
+$\tenv$ in Rule~\mylabel{FR-Simp}. This section eradicates those two remaining
+sources of nondeterminism to obtain an entirely deterministic formulation
+of resolution. On top of that, it imposes an additional \emph{stability} condition
+to make resolution ``super''-deterministic: resolution is preserved under
+type substitution.
+
+%- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+\paragraph{Predicative Instantiation}
+
+To see why the impredicative instantation in Rule~\mylabel{FM-TApp} causes
+nondeterminism, consider two ways resolving $\tenv_1 \vdash \tyint \iarrow \tyint$
+against the environment $\tenv_1 = \forall \alpha.\alpha \iarrow \alpha$:\footnote{
+For the sake of compactness the example uses the original ambiguous definition of resolution.
+ Similarly problematic examples can be created for the focusing-based definition.}
+\begin{equation*}
+\inferrule*[Left=\mylabel{AR-TApp}]
+  {\inferrule*[Left=\mylabel{AR-IVar}] 
+    {(\forall \alpha.\alpha \iarrow \alpha) \in \tenv_1}
+    {\tenv_1 \vturns \forall \alpha. \alpha \iarrow \alpha    }
+  }
+  {\tenv_1 \vturns \tyint \iarrow \tyint}
+\end{equation*}
+and
+\begin{equation*}
+\inferrule*[left=\mylabel{AR-TApp}]
+  {\inferrule*[Left=\mylabel{AR-IApp}] 
+    { \inferrule*[Left=\mylabel{AR-TApp}]
+        { \inferrule*[Left=\mylabel{AR-IVar}]
+            {(\forall \alpha. \alpha \iarrow \alpha) \in \tenv_1}
+            {\tenv_1 \vturns (\forall \alpha. \alpha \iarrow \alpha)}
+        }
+        {\tenv_1 \vturns (\forall \beta. \beta \iarrow \beta) \iarrow (\forall \beta. \beta \iarrow \beta)}
+        \quad\quad\quad
+    \\
+      \inferrule*[Left=\mylabel{AR-IVar}]
+        {(\forall \beta. \beta \iarrow \beta) \in \tenv_1}
+        {\tenv_1 \vturns (\forall \beta. \beta \iarrow \beta)}
+    }
+    {\tenv_1 \vturns \forall \beta. \beta \iarrow \beta}
+  }
+  {\tenv_1 \vturns \tyint \iarrow \tyint}
+\end{equation*}
+The first proof only involves the predicative generalisation from
+$\tyint$ to $\alpha$. Yet, the second proof contains an impredicative
+generalisation from $\forall \beta. \beta \iarrow \beta$ to $\alpha$.
+Impredicativity is a well-known source of such problems in other settings, such
+as in type inference for the polymorphic $\lambda$-calculus~\cite{boehm85,pfenning93}. The established solution also works here: restrict to predicativity. 
+For this reason we introduce the syntactic sort of monotypes:
+{\bda{llrl}
+    \text{Monotypes}     & \suty                            & ::=  & \alpha \mid \suty \arrow \suty
+  \eda }
+We only allow generalisation over (or dually,
+instantiation with) monotypes $\suty$:
+\bda{c}
+  \myrule {AR-TApp'}
+          {\tenv \vturns \forall \alpha. \rulet~\gbox{\leadsto E} \quad\quad \Gamma \turns \rulet'}
+          {\tenv \vturns \rulet[\suty/\alpha]~\gbox{\leadsto E~||\suty||}}
+\eda
+
+%- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+\paragraph{Committed Choice}
+The other remaining source of nondeterminism is the nondeterministic choice
+$\rulet \in \tenv$ that appears in Rule~\mylabel{FR-Simp}. Consider the trivial
+example of resolving the goal $\tyint$ against the environment $\tenv = \tyint~\gbox{\leadsto
+x}, \tyint~\gbox{\leadsto y}$. Both rules in the environment match the goal and yield
+different, i.e., incoherent, elaborations.
+
+Our solution is to replace the nondeterministic relation $\rulet \in \tenv$ by
+a deterministic one that selects the first matching rule in the environment and
+commits to it. In fact, we replace all three hypotheses of Rule~\mylabel{FR-Simp}
+by a new judgement $\tenv;[\tenv'] \ivturns \type~\gbox{\leadsto E}$ which resolves
+$\type$ with the first matching rule in the environment $\tenv'$ and performs
+any recursive resolutions against the environment $\tenv$. Of course, the modified
+Rule~\mylabel{FR-Simp} invokes this judgement with two copies of the same environment, i.e.,
+$\tenv' = \tenv$.
+\bda{c}
+  \myrule {FR-Simp'}
+          {\tenv; [\tenv] \ivturns \type~\gbox{\leadsto E}
+          }
+          {\tenv \fturns [\type]~\gbox{\leadsto E}}
+\eda
+The judgement itelf is defined in a syntax-direct manner, by structural induction on the
+environment $\tenv'$:
+\bda{c}
+\myruleform{\tenv;[\tenv'] \ivturns \type~\gbox{\leadsto E}}\\ \\
+
+  \myrule{DL-RuleMatch}
+          {\tenv; [\rulet]~\gbox{\leadsto x} \ivturns \tau~\gbox{\leadsto E}; \overline{\rulet'~\gbox{\leadsto x}} \\
+            \tenv \ivturns [\rulet']~\gbox{\leadsto E'} \quad (\forall \rulet' \in \overline{\rulet}')
+          }
+          {\tenv;[\tenv',\rulet~\gbox{\leadsto x}] \ivturns \type~\gbox{\leadsto E[\bar{E}'/\bar{x}]}} \\ \\
+  \myrule{DL-RuleNoMatch}{
+           \not\exists E, \Sigma: \tenv; [\rulet]~\gbox{\leadsto x} \ivturns \type~\gbox{\leadsto E}; \Sigma \\
+           \tenv;[\tenv'] \ivturns \type~\gbox{\leadsto E'}
+          }
+          {\tenv;[\tenv',\rulet~\gbox{\leadsto x}] \ivturns \type~\gbox{\leadsto E'}} \\ \\
+  \myrule{DL-Var}
+         {\tenv;[\tenv'] \ivturns \type~\gbox{\leadsto E}
+         }
+         {\tenv;[\tenv',x:\rulet] \ivturns \type~\gbox{\leadsto E}} 
+\quad\quad\quad
+  \myrule{DL-TyVar}
+         {\tenv;[\tenv'] \ivturns \type~\gbox{\leadsto E}
+         }
+         {\tenv;[\tenv',\alpha] \ivturns \type~\gbox{\leadsto E}} 
+\eda
+
+Rule~\mylabel{DL-RuleMatch} concerns the case where the first entry in the 
+environment matches the goal. Its behavior is the same as in the
+original definition of Rule~\mylabel{FR-Simp}.
+
+Rule~\mylabel{DL-RuleNoMatch} is mutually exclusive with the above rule: it
+skips the first entry in the environment only iff it does not match to look for
+a matching rule deeper in the environment. This implements the committed choice
+semantics: the first matching rule is committed to and further rules are not
+considered.
+
+Finally, Rules~\mylabel{DL-Var} and \mylabel{DL-TyVar} skip the irrelevant
+non-rule entries in the type environment.
+
+It is not difficult to see that with the above definition there is only one way
+to resolve the goal $\tyint$ against the environment $\tenv =
+\tyint~\gbox{\leadsto x}, \tyint~\gbox{\leadsto y}$. The first matching
+entry, which elaborates to $y$, is committed to and the second entry is not
+considered.
+
+%- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+\paragraph{Stability}
+
+%- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+\paragraph{Summary}
+
+%- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+\paragraph{Legacy}
+
+% forall a. a => a |- int => int
 
 % In order to eradicate the non-determinism in resolution we implement the following
 % measures:
