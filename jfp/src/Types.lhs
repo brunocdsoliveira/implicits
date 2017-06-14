@@ -448,11 +448,14 @@ example above there is only one proof:
 \subsection{Deterministic and Stable Resolution}\label{subsec:det}
 
 While focusing provides a syntax-directed definition of resolution, it does not
-make resolution entirely deterministic. There are still two sources of
-non-determinism: 1) the impredicative instantiation of type variable $\alpha$
-with a rule type $\rulet'$ in Rule~\mylabel{FM-TApp}, and 2) the
-nondeterministic selection of a rule type $\rulet$ from the type environment
-$\tenv$ in Rule~\mylabel{FR-Simp}. This section eradicates those two remaining
+make resolution entirely deterministic. There are still three sources of
+non-determinism: 
+1) the \emph{impredicative} instantiation of type variable $\alpha$
+with a rule type $\rulet'$ in Rule~\mylabel{FM-TApp}, 
+2) the \emph{ambiguous} instantiation of type variable $\alpha$
+with a rule type $\rulet'$ in Rule~\mylabel{FM-TApp},
+and 3) nondeterministic selection of a rule type $\rulet$ from the type environment
+$\tenv$ in Rule~\mylabel{FR-Simp}. This section eradicates those three remaining
 sources of nondeterminism to obtain an entirely deterministic formulation
 of resolution. On top of that, it imposes an additional \emph{stability} condition
 to make resolution ``super''-deterministic: resolution is preserved under
@@ -503,397 +506,26 @@ For this reason we introduce the syntactic sort of monotypes:
 {\bda{llrl}
     \text{Monotypes}     & \suty                            & ::=  & \alpha \mid \suty \arrow \suty
   \eda }
-We only allow generalisation over (or dually,
-instantiation with) monotypes $\suty$:
+We only allow generalisation over monotypes $\suty$:
 \bda{c}
   \myrule {AR-TApp'}
           {\tenv \vturns \forall \alpha. \rulet~\gbox{\leadsto E} \quad\quad \Gamma \turns \rulet'}
           {\tenv \vturns \rulet[\suty/\alpha]~\gbox{\leadsto E~||\suty||}}
 \eda
-
-%- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-\paragraph{Committed Choice}
-The other remaining source of nondeterminism is the nondeterministic choice
-$\rulet \in \tenv$ that appears in Rule~\mylabel{FR-Simp}. Consider the trivial
-example of resolving the goal $\tyint$ against the environment $\tenv = \tyint~\gbox{\leadsto
-x}, \tyint~\gbox{\leadsto y}$. Both rules in the environment match the goal and yield
-different, i.e., incoherent, elaborations.
-
-Our solution is to replace the nondeterministic relation $\rulet \in \tenv$ by
-a deterministic one that selects the first matching rule in the environment and
-commits to it. In fact, we replace all three hypotheses of Rule~\mylabel{FR-Simp}
-by a new judgement $\tenv;[\tenv'] \ivturns \type~\gbox{\leadsto E}$ which resolves
-$\type$ with the first matching rule in the environment $\tenv'$ and performs
-any recursive resolutions against the environment $\tenv$. Of course, the modified
-Rule~\mylabel{FR-Simp} invokes this judgement with two copies of the same environment, i.e.,
-$\tenv' = \tenv$.
+In the focusing-based formulation, this constraint is formulated dually:
+we only allow instantiation with monotypes $\suty$:
 \bda{c}
-  \myrule {FR-Simp'}
-          {\tenv; [\tenv] \ivturns \type~\gbox{\leadsto E}
+  \myrule {FM-TApp'}
+          {\tenv \vdash \rulet' \\\\
+           \tenv; [[\suty/\alpha]\rulet]~\gbox{\leadsto E\,||\suty||} \fturns \type~\gbox{\leadsto E'}; \Sigma
           }
-          {\tenv \fturns [\type]~\gbox{\leadsto E}}
+          {\tenv; [\forall \alpha.\rulet]~\gbox{\leadsto E} \fturns \type~\gbox{\leadsto E'}; \Sigma}
 \eda
-The judgement itelf is defined in a syntax-direct manner, by structural induction on the
-environment $\tenv'$:
-\bda{c}
-\myruleform{\tenv;[\tenv'] \ivturns \type~\gbox{\leadsto E}}\\ \\
-
-  \myrule{DL-RuleMatch}
-          {\tenv; [\rulet]~\gbox{\leadsto x} \ivturns \tau~\gbox{\leadsto E}; \overline{\rulet'~\gbox{\leadsto x}} \\
-            \tenv \ivturns [\rulet']~\gbox{\leadsto E'} \quad (\forall \rulet' \in \overline{\rulet}')
-          }
-          {\tenv;[\tenv',\rulet~\gbox{\leadsto x}] \ivturns \type~\gbox{\leadsto E[\bar{E}'/\bar{x}]}} \\ \\
-  \myrule{DL-RuleNoMatch}{
-           \not\exists E, \Sigma: \tenv; [\rulet]~\gbox{\leadsto x} \ivturns \type~\gbox{\leadsto E}; \Sigma \\
-           \tenv;[\tenv'] \ivturns \type~\gbox{\leadsto E'}
-          }
-          {\tenv;[\tenv',\rulet~\gbox{\leadsto x}] \ivturns \type~\gbox{\leadsto E'}} \\ \\
-  \myrule{DL-Var}
-         {\tenv;[\tenv'] \ivturns \type~\gbox{\leadsto E}
-         }
-         {\tenv;[\tenv',x:\rulet] \ivturns \type~\gbox{\leadsto E}} 
-\quad\quad\quad
-  \myrule{DL-TyVar}
-         {\tenv;[\tenv'] \ivturns \type~\gbox{\leadsto E}
-         }
-         {\tenv;[\tenv',\alpha] \ivturns \type~\gbox{\leadsto E}} 
-\eda
-
-Rule~\mylabel{DL-RuleMatch} concerns the case where the first entry in the 
-environment matches the goal. Its behavior is the same as in the
-original definition of Rule~\mylabel{FR-Simp}.
-
-Rule~\mylabel{DL-RuleNoMatch} is mutually exclusive with the above rule: it
-skips the first entry in the environment only iff it does not match to look for
-a matching rule deeper in the environment. This implements the committed choice
-semantics: the first matching rule is committed to and further rules are not
-considered.
-
-Finally, Rules~\mylabel{DL-Var} and \mylabel{DL-TyVar} skip the irrelevant
-non-rule entries in the type environment.
-
-It is not difficult to see that with the above definition there is only one way
-to resolve the goal $\tyint$ against the environment $\tenv =
-\tyint~\gbox{\leadsto x}, \tyint~\gbox{\leadsto y}$. The first matching
-entry, which elaborates to $y$, is committed to and the second entry is not
-considered.
-
-%- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-\paragraph{Stability}
-
-%- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-\paragraph{Summary}
-
-%- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-\paragraph{Legacy}
-
-% forall a. a => a |- int => int
-
-% In order to eradicate the non-determinism in resolution we implement the following
-% measures:
-% \begin{enumerate}
-% \item We provide a syntax-directed definition of resolution, based on the idea of
-%       \emph{focused proof search} in logic~\cite{focusing,Miller91b,Liang:2009}, where at most one
-%       rule applies in any given situation. 
-% 
-%       Our approach organizes resolution into two alternating phases that
-%       pivots on an environment lookup (\mylabel{R-IVar}) which shifts
-%       the focus from the queried type to an implicit rule type in the environment. 
-%       The first phase performs \emph{backward chaining}: it applies only
-%       elimination rules (\mylabel{R-TAbs},\mylabel{R-IAbs}) to the query type
-%       to reason towards the given rules in the environment.
-% 
-%       In constrast, the second phase performs \emph{forward chaining}; it
-%       reasons from the selected environment rule towards the query type. It does so
-%       by applying only introduction rules (\mylabel{R-TApp},\mylabel{R-IApp}), but in
-%       \emph{inverted form}, i.e., from the environment type towards the query type.
-% 
-% \item Our approach differs from focused proof search in the selection of the focus.
-%       This is typically a nondeterminstic choice in focused proof search, but we make
-%       it deterministic in two ways: 
-%       \begin{enumerate}
-%       \item by implementing a stack discipline: only the first (in LIFO order) matching rule type can be selected, and
-%       \item we do not include any recursive resolutions in the matching decisions; this keeps
-%             matching a shallow procedure which does not require any form of backtracking.
-%       \end{enumerate}
-% 
-% \item We rule out two forms of non-determinism in the instantiation of
-%       polymorphic types:
-%       \begin{enumerate}
-%       \item We disallow ambiguous types where quantified type variables
-%             are not determined by the head of the type, such as 
-%             $\forall \alpha.\tyint$ or $\forall \alpha. \alpha \iarrow \tyint$.
-% 
-%       \item We do not allow type variables to be instantiated by types with
-%             abstractions (universal quantifiers or implicit arrows) as these
-%             may subsequently be eliminated again (possibly by instantiation 
-%             with other abstractions). For instance, $\forall \alpha. \alpha \iarrow \alpha$
-% 	    can be instantiated directly with $[\tyint/\alpha]$ to $\tyint
-% \iarrow \tyint$.  Alternatively, it could be first instantiated with $[(\forall
-% \beta. \beta \iarrow \beta)/\alpha]$ to $(\forall \beta. \beta \iarrow \beta)
-% \iarrow \forall \beta'. \beta' \iarrow \beta'$, and then after further
-% instantiation of the outer context and of $\beta'$ with $[\tyint/\beta']$ also
-% to $\tyint \iarrow \tyint$.
-%  
-%       \end{enumerate}
-% 
-% \end{enumerate}
-
-Figure~\ref{fig:resolution2} defines judgement $\tenv \ivturns \rulet$, which
-is a syntax-directed deterministic variant of $\tenv \vturns \rulet$. This
-deterministic variant is sound with respect to the ambiguous definition. In
-other words, $\tenv \vturns \rulet$ holds if $\tenv \ivturns \rulet$ holds.
-Yet, the opposite is not true. The deterministic judgement sacrifices some
-expressive power in exchange for better behavedness.
-
-%- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-\paragraph{Revised Syntax}
-
-To facilitate the definition of the deterministic resolution
-judgement we split the syntax of types into three different
-sorts: \emph{context} types, \emph{simple} types and \emph{monotypes}.
-{\bda{llrl}
-    \text{Context Types} & \rulet \hide{\in 2^\meta{RType}} & ::= & 
-    \forall \alpha. \rulet \mid \rulet_1 \iarrow \rulet_2 \mid \type \\
-    \text{Simple Types}  & \type                            & ::=  & \alpha \mid \rulet_1 \arrow \rulet_2 \\
-    \text{Monotypes}     & \suty                            & ::=  & \alpha \mid \suty \arrow \suty
-    % \text{Expressions} & |e| & ::=  &
-    % x \mid \lambda (x:\rulet).e \mid e_1\,e_2 \mid \Lambda \alpha. e \mid e\,\rulet \mid \query \rulet \mid \ilambda \rulet. e \mid e_1 \with e_2 \\
-  \eda }
-
- \emph{Context types} $\rulet$ correspond to the original types $\rulet$.
-\emph{Simple types} $\type$ are a restricted form of context types without
-toplevel quantifiers and toplevel implicit arrows. Singling out this restricted
-form turns out to be convenient for the type-directed formulation of the judgement.
-
-\emph{Monotypes} $\suty$ are a further refinement of simple types without
-universal quantifiers and implicit arrows anywhere. They help us to address a
-form of ambiguity due to the \emph{impredicativity} of Rule~\mylabel{AR-TApp}.
-For instance, if we define $\tenv_1 = \forall \alpha.\alpha \iarrow \alpha$,
-then there are two ways to resolve $\tenv_1 \vdash \tyint \iarrow \tyint$: 
-
-%       \item We do not allow type variables to be instantiated by types with
-%             abstractions (universal quantifiers or implicit arrows) as these
-%             may subsequently be eliminated again (possibly by instantiation 
-%             with other abstractions). For instance, $\forall \alpha. \alpha \iarrow \alpha$
-% 	    can be instantiated directly with $[\tyint/\alpha]$ to $\tyint
-% \iarrow \tyint$.  Alternatively, it could be first instantiated with $[(\forall
-% \beta. \beta \iarrow \beta)/\alpha]$ to $(\forall \beta. \beta \iarrow \beta)
-% \iarrow \forall \beta'. \beta' \iarrow \beta'$, and then after further
-% instantiation of the outer context and of $\beta'$ with $[\tyint/\beta']$ also
-% to $\tyint \iarrow \tyint$.
-\begin{equation*}
-\inferrule*[Left=\mylabel{AR-TApp}]
-  {\inferrule*[Left=\mylabel{AR-IVar}] 
-    {(\forall \alpha.\alpha \iarrow \alpha) \in \tenv_1}
-    {\tenv_1 \vturns \forall \alpha. \alpha \iarrow \alpha    }
-  }
-  {\tenv_1 \vturns \tyint \iarrow \tyint}
-\end{equation*}
-and
-\begin{equation*}
-\inferrule*[left=\mylabel{AR-TApp}]
-  {\inferrule*[Left=\mylabel{AR-IApp}] 
-    { \inferrule*[Left=\mylabel{AR-TApp}]
-        { \inferrule*[Left=\mylabel{AR-IVar}]
-            {(\forall \alpha. \alpha \iarrow \alpha) \in \tenv_1}
-            {\tenv_1 \vturns (\forall \alpha. \alpha \iarrow \alpha)}
-        }
-        {\tenv_1 \vturns (\forall \beta. \beta \iarrow \beta) \iarrow (\forall \beta. \beta \iarrow \beta)}
-        \quad\quad\quad
-    \\
-      \inferrule*[Left=\mylabel{AR-IVar}]
-        {(\forall \beta. \beta \iarrow \beta) \in \tenv_1}
-        {\tenv_1 \vturns (\forall \beta. \beta \iarrow \beta)}
-    }
-    {\tenv_1 \vturns \forall \beta. \beta \iarrow \beta}
-  }
-  {\tenv_1 \vturns \tyint \iarrow \tyint}
-\end{equation*}
-
-The first proof only involves the predicative generalisation from
-$\tyint$ to $\alpha$. Yet, the second proof contains an impredicative
-generalisation from $\forall \beta. \beta \iarrow \beta$ to $\alpha$.
-Impredicativity is a well-known source of such problems in other settings, such
-as in type inference for the polymorphic $\lambda$-calculus~\cite{boehm85,pfenning93}. The established solution also works here: restrict to predicativity. This is where the monotype
-sort $\suty$ comes in: we only allow generalisation over (or dually,
-instantiation with) monotypes $\suty$.
-
-% ------------------------------------ R-IVar
-% forall a. a => a |- forall a. a => a
-% ------------------------------------ R-TApp
-% forall a. a => a |- int => int
-% 
-% 
-% ------------------------------------ R-IVar
-% forall a. a => a |- forall a. a => a
-% ------------------------------------------------------------ R-TApp
-% forall a. a => a |- (forall b. b => b) => (forall b. b => b)              ...
-% ------------------------------------------------------------------------------------------
-% forall a. a => a |- forall b. b => b
-% ------------------------------------ R-TApp
-% forall a. a => a |- int => int
-
-%- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-\paragraph{Revised Resolution Rules}
-
-\newcommand{\elookup}[3][\bar{\alpha}]{{#2}_{#1}\langle{#3}\rangle}
-
-\figtwocol{fig:resolution2}{Deterministic Resolution and Translation to System F}{
-\begin{center}
-\framebox{\scriptsize
-\begin{minipage}{0.969\textwidth}
-\bda{c}
-\Sigma ::= \epsilon \mid \Sigma, \rulet~\gbox{\leadsto x} \\ \\
-\myruleform{\tenv \ivturns \rulet~\gbox{\leadsto E}} \\ \\
-  \myrule {R-Main}
-          {\mathit{tyvars}(\tenv);\tenv \ivturns \rulet~\gbox{\leadsto E}}
-          {\tenv \ivturns \rulet~\gbox{\leadsto E}} \\ \\
-\multicolumn{1}{c}{\myruleform{\bar{\alpha}; \tenv \ivturns \rulet~\gbox{\leadsto E}}} \\ \\
-%%\quad\quad\quad
-  \myrule{R-IAbs}
-         {\bar{\alpha};\tenv, \rulet_1~\gbox{\leadsto x} \ivturns \rulet_2~\gbox{\leadsto E} \quad\quad \gbox{x~\mathit{fresh}}}
-         {\bar{\alpha};\tenv \ivturns \rulet_1 \iarrow \rulet_2~\gbox{\leadsto
-            \lambda\relation{x}{||\rulet_1||}.E}} 
-\quad\quad
-  \myrule{R-TAbs}
-         {\bar{\alpha};\tenv,\alpha \ivturns \rulet~\gbox{\leadsto E}}
-         {\bar{\alpha};\tenv \ivturns \forall \alpha. \rulet~\gbox{\leadsto \Lambda\alpha.E}} 
-\\ \\
- \myrule{R-Simp}
-        {\bar{\alpha};\tenv;\tenv \ivturns \type~\gbox{\leadsto E}}
-        {\bar{\alpha};\tenv \ivturns \type~\gbox{\leadsto E}} 
-\\ \\ \\
-\myruleform{\bar{\alpha};\tenv;\tenv' \ivturns \type~\gbox{\leadsto E}}\\ \\
-
-  \myrule{L-RuleMatch}
-          {\tenv; \rulet~\gbox{\leadsto x} \ivturns \tau~\gbox{\leadsto E}; \overline{\rulet'~\gbox{\leadsto x}} \\
-            \bar{\alpha};\tenv \ivturns \rulet'~\gbox{\leadsto E'} \quad (\forall \rulet' \in \overline{\rulet}')
-          }
-          {\bar{\alpha};\tenv;\tenv',\rulet~\gbox{\leadsto x} \ivturns \type~\gbox{\leadsto E[\bar{E}'/\bar{x}]}} \\
-  \myrule{L-RuleNoMatch}{
-	\mathit{stable}(\bar{\alpha},\tenv,\rulet,\type) \\
-%   \not\exists \theta, E, \Sigma, \mathit{dom}(\theta) \subseteq \bar{\alpha}: \theta(\tenv); \theta(\rulet)~\gbox{\leadsto x} \ivturns \theta(\tau)~\gbox{\leadsto E}; \Sigma \\
-           \bar{\alpha};\tenv;\tenv' \ivturns \type~\gbox{\leadsto E'}
-          }
-          {\bar{\alpha};\tenv;\tenv',\rulet~\gbox{\leadsto x} \ivturns \type~\gbox{\leadsto E'}} \\ \\
-  \myrule{L-Var}
-         {\bar{\alpha};\tenv;\tenv' \ivturns \type~\gbox{\leadsto E}
-         }
-         {\bar{\alpha};\tenv;\tenv',x:\rulet \ivturns \type~\gbox{\leadsto E}} 
-\quad\quad\quad
-  \myrule{L-TyVar}
-         {\bar{\alpha};\tenv;\tenv' \ivturns \type~\gbox{\leadsto E}
-         }
-         {\bar{\alpha};\tenv;\tenv',\alpha \ivturns \type~\gbox{\leadsto E}} 
-\\ \\ \\
-\myruleform{\tenv; \rulet~\gbox{\leadsto E} \ivturns \type~\gbox{\leadsto E'}; \Sigma}\\ \\
-  \myrule{M-Simp}
-         {}
-         {\tenv; \type~\gbox{\leadsto E} \ivturns \type~\gbox{\leadsto E}; \epsilon} \\ \\
-  \myrule{M-IApp}
-         {\tenv, \rulet_1 \gbox{\leadsto x}; \rulet_2 ~\gbox{\leadsto E\,x} \ivturns \type~\gbox{\leadsto E'}; \Sigma 
-          \quad\quad\quad \gbox{x~\mathit{fresh}}
-         }
-         {\tenv; \rulet_1 \iarrow \rulet_2 ~\gbox{\leadsto E} \ivturns \type~\gbox{\leadsto E'}; \Sigma, \rulet_1~\gbox{\leadsto x}} \\ \\ 
-  \myrule{M-TApp}
-         {\tenv; \rulet[\suty/\alpha] ~\gbox{\leadsto E\,||\suty||} \ivturns \type~\gbox{\leadsto E'}; \Sigma
-          \quad\quad\quad
-          \tenv \turns \suty
-         }
-         {\tenv; \forall \alpha. \rulet ~\gbox{\leadsto E} \ivturns \type~\gbox{\leadsto E'}; \Sigma} \\ \\ \\
-\myruleform{\mathit{stable}(\bar{\alpha},\tenv,\rulet,\type)} \\ \\
-  \myrule{Stable}{\not\exists \theta, E, \Sigma, \mathit{dom}(\theta) \subseteq \bar{\alpha}: \theta(\tenv); \theta(\rulet)~\gbox{\leadsto x} \ivturns \theta(\tau)~\gbox{\leadsto E}; \Sigma}
-          {\mathit{stable}(\bar{\alpha},\tenv,\rulet,\type)}
-\eda
-\end{minipage}
-}
-\end{center}
-}
-
-Figure~\ref{fig:resolution2} defines the main judgement $\tenv \ivturns \rulet$ 
-in terms of three interdependent auxiliary judgements. The first of these
-auxiliary judgements is $\bar{\alpha};\tenv \ivturns \rulet$, where
-the type variables $\bar{\alpha}$ are the free type variables in the
-original environment at the point of the query. Recall the |bad| example
-from Section~\ref{sec:overview:incoherence} where there is only one such free
-type variable: |b|. 
-Tracking these free variables plays a crucial role in guaranteeing coherence
-and ensuring that resolution is stable under all type substitutions that instantiate these variables, like $[|b| \mapsto |Int|]$; how we prevent these substitutions is explained below.  The
-main judgement
-retains these free variables in rule \mylabel{R-Main} with 
-the function $\mathit{tyvars}$:
-\newcommand{\tyvars}[1]{\mathit{tyvars}(#1)}
-\begin{equation*}
-\begin{array}{rcl@@{\hspace{2cm}}rcl}
-\tyvars{\epsilon}     & = & \epsilon &
-\tyvars{\tenv,\alpha} & = & \tyvars{\tenv},\alpha \\
-\tyvars{\tenv,x : \rulet} & = & \tyvars{\tenv} &
-\tyvars{\tenv,\rulet~\gbox{\leadsto x}} & = & \tyvars{\tenv} 
-\end{array}
-\end{equation*}
-While the auxiliary judgement $\bar{\alpha};\tenv \ivturns \rulet$ extends the
-type environment $\tenv$, it does not update the type variables $\bar{\alpha}$.
-This judgement is syntax-directed on the query type $\rulet$.  Its job is to
-strip $\rulet$ down to a simple type $\type$ using literal copies of the
-ambiguous rules \mylabel{AR-TAbs} and \mylabel{AR-IAbs}, and then to hand it
-off to the second auxiliary judgement in rule \mylabel{R-Simp}.
-
-The second auxiliary judgement, $\bar{\alpha}; \tenv; \tenv' \ivturns \type$,
-is syntax-directed on $\tenv'$: it traverses $\tenv'$ from right to left until
-it finds a rule type $\rulet$ that matches the simple type $\type$.  Rules
-\mylabel{L-Var} and \mylabel{L-TyVar} skip the irrelevant entries in the
-environment. Rule \mylabel{L-RuleMatch} identifies a matching rule type
-$\rulet$ -- where matching is determined by with the third auxiliary judgement
--- and takes care of recursively resolving its context types; details follow
-below.  Finally, rule \mylabel{L-RuleNoMatch} skips a rule type in the
-environment if it does not match. Its condition
-$\mathit{stable}(\bar{\alpha},\tenv,\rulet,\type)$ entails the opposite of rule
-\mylabel{L-RuleMatch}'s first condition: $\not\exists
-\Sigma:~\tenv;\rulet \ivturns \type; \Sigma$.
-(We come back to the reason why the condition is stronger than this in
-Section~\ref{sec:coherence}.)
-As a consequence, rules \mylabel{L-RuleMatch} and \mylabel{L-RuleNoMatch}
-are mutually exclusive and \emph{the judgement effectively commits to the
-right-most matching rule in $\tenv'$}.
-We maintain the invariant that $\tenv'$ is a prefix of $\tenv$; rule
-\mylabel{R-Simp} provides $\tenv$ as the initial value for $\tenv'$.
-Hence, if a matching rule type $\rulet$ is found, we have that
-$\rulet \in \tenv$. Hence, the second auxiliary judgement
-plays much the same role as rule
-\mylabel{AR-IVar} in Figure~\ref{fig:resolution1}, which also selects a rule type $\rulet \in \tenv$. The difference is that rule \mylabel{AR-IVar} makes a non-deterministic
-choice, while the second auxiliary judgement makes deterministic committed choice
-that prioritises rule types more to the right in the environment. For instance, $\tyint,\tyint \vturns \tyint$ has two ways to resolve, while $\tyint,\tyint \ivturns \tyint$ has only one because the second $\tyint$ in the environment shadows the first.
-
-
-Finally, the third auxiliary judgement, $\tenv;\rulet \ivturns \type; \Sigma$,
-determines whether the rule type $\rulet$ matches the simple type~$\type$. The
-judgement is defined by structural induction on $\rulet$, which is step by step
-instantiated to $\type$. 
-Any recursive resolutions are deferred in this process -- the
-postponed resolvents are captured in the $\Sigma$ argument. This
-way they do not influence the matching decision and backtracking is avoided.
-Instead, the recursive resolutions are executed, as part of rule
-\mylabel{L-RuleMatch}, after the rule has been committed to.
-Rule \mylabel{M-Simp} constitutes the base case where the rule type equals the
-target type. Rule \mylabel{M-IApp} is the counterpart of the original
-rule \mylabel{R-IApp} where the implication arrow $\rulet_1 \iarrow \rulet_2$
-is instantiated to $\rulet_2$; the resolution of $\rulet_1$ is deferred.
-Lastly, rule \mylabel{M-TApp} is the counterpart of the original rule \mylabel{R-TApp}.
-The main difference is that it only uses
-monotypes $\suty$ to substitute the type variable; this implements the predicativity
-restriction explained above.
-
-The relation to the ambiguous definition of resolution can be summarized as follows:
-if $\tenv;\rulet \ivturns \type; \bar{\rulet}$
-with
-$\tenv \vturns \rulet$ and $\tenv \vturns \bar{\rulet}$, then
-$\tenv \vturns \type$.
 
 %- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 \paragraph{Non-Ambiguity Constraints}
 
-The rule \mylabel{M-TApp} does not explain how the substitution
+Rule \mylabel{FM-TApp'} does not explain how the substitution
 $[\suty/\alpha]$ for the rule type $\forall \alpha.\rulet$ should be obtained.
 At first sight it seems that the choice of $\suty$ is free and thus a source of
 non-determinism. However, in many cases the choice is not free at all, but is
@@ -968,42 +600,699 @@ unambiguous.
 
 Finally, the unambiguity condition is imposed on the queried type $\rulet$
 in rule \mylabel{Ty-Query} because this type too may extend the implicit
-environment in rule \mylabel{R-IAbs}.
+environment in rule \mylabel{FR-IAbs}.
 
 Note that the definition rules out harmless ambiguity, such as that in the type
 $\forall \alpha. \tyint$. When we match the head of this type $\tyint$ with the
 simple type $\tyint$, the matching succeeds without actually determining how
 the type variable $\alpha$ should be instantiated. Here the ambiguity is
 harmless, because it does not affect the semantics. Yet, for the sake of
-simplicity, we have opted to not differentiate between harmless and harmful
+simplicity of the metatheory, we have opted to not differentiate between harmless and harmful
 ambiguity.
 
-%-------------------------------------------------------------------------------
-\paragraph{Coherence Enforcement}\label{sec:coherence}
 
-In order to enforce coherence, rule \mylabel{L-RuleNoMatch} makes sure that the
-decision to not select a context type is stable under all possible
-substitutions $\theta$.  Consider for instance the |bad| example from Section~\ref{sec:overview:incoherence}: when looking up |b -> b|, the rule 
-|Int -> Int| does not match and is otherwise skipped. Yet, under the substitution
-$\theta = [|b| \mapsto |Int|]$ the rule would match after all. In
-order to avoid this unstable situation, rule \mylabel{L-RuleNoMatch} only skips a context
-type in the implicit environment, if there is no substitution $\theta$ for
-which the type would match the context type.
+%- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+\paragraph{Committed Choice}
+The other remaining source of nondeterminism is the nondeterministic choice
+$\rulet \in \tenv$ that appears in Rule~\mylabel{FR-Simp}. Consider the trivial
+example of resolving the goal $\tyint$ against the environment $\tenv = \tyint~\gbox{\leadsto
+x}, \tyint~\gbox{\leadsto y}$. Both rules in the environment match the goal and yield
+different, i.e., incoherent, elaborations.
 
-This approach is similar to the treatment of overlapping type class instances
-or overlapping type family instances in Haskell. However, there is one
-important complicating factor here: the query type may contain universal
-quantifiers.  Consider a query for |forall a. a -> a|. In this case we wish to
-rule out entirely the context type |Int -> Int| as a potential match. Even
-though it matches under the substitution $\theta = [|a| \mapsto |Int|]$,
-that covers only one instantiation while the query clearly requires a resolvent that
-covers all possible instantiations.
+Our solution is to replace the nondeterministic relation $\rulet \in \tenv$ by
+a deterministic one that selects the first matching rule in the environment and
+commits to it. In fact, we replace all three hypotheses of Rule~\mylabel{FR-Simp}
+by a new judgement $\tenv;[\tenv'] \ivturns \type~\gbox{\leadsto E}$ which resolves
+$\type$ with the first matching rule in the environment $\tenv'$ and performs
+any recursive resolutions against the environment $\tenv$. Of course, the modified
+Rule~\mylabel{FR-Simp} invokes this judgement with two copies of the same environment, i.e.,
+$\tenv' = \tenv$.
+\bda{c}
+  \myrule {FR-Simp'}
+          {\tenv; [\tenv] \ivturns \type~\gbox{\leadsto E}
+          }
+          {\tenv \fturns [\type]~\gbox{\leadsto E}}
+\eda
+The judgement itelf is defined in a syntax-direct manner, by structural induction on the
+environment $\tenv'$:
+\bda{c}
+\myruleform{\tenv;[\tenv'] \ivturns \type~\gbox{\leadsto E}}\\ \\
 
-We clearly identify which type variables $\bar{\alpha}$ are to be considered
-for substitution by rule \mylabel{L-RuleNoMatch} by parametrising the
-judgements by this set. These are the type variables that occur in the environment
-$\tenv$ at the point of the query. The main resolution judgement $\ivturns \rulet$
-grabs them and passes them on to all uses of rule \mylabel{L-RuleNoMatch}.
+  \myrule{DL-RuleMatch}
+          {\tenv; [\rulet]~\gbox{\leadsto x} \ivturns \tau~\gbox{\leadsto E}; \overline{\rulet'~\gbox{\leadsto x}} \\
+            \tenv \ivturns [\rulet']~\gbox{\leadsto E'} \quad (\forall \rulet' \in \overline{\rulet}')
+          }
+          {\tenv;[\tenv',\rulet~\gbox{\leadsto x}] \ivturns \type~\gbox{\leadsto E[\bar{E}'/\bar{x}]}} \\ \\
+  \myrule{DL-RuleNoMatch}{
+           \not\exists E, \Sigma: \tenv; [\rulet]~\gbox{\leadsto x} \ivturns \type~\gbox{\leadsto E}; \Sigma \\
+           \tenv;[\tenv'] \ivturns \type~\gbox{\leadsto E'}
+          }
+          {\tenv;[\tenv',\rulet~\gbox{\leadsto x}] \ivturns \type~\gbox{\leadsto E'}} \\ \\
+  \myrule{DL-Var}
+         {\tenv;[\tenv'] \ivturns \type~\gbox{\leadsto E}
+         }
+         {\tenv;[\tenv',x:\rulet] \ivturns \type~\gbox{\leadsto E}} 
+\quad\quad\quad
+  \myrule{DL-TyVar}
+         {\tenv;[\tenv'] \ivturns \type~\gbox{\leadsto E}
+         }
+         {\tenv;[\tenv',\alpha] \ivturns \type~\gbox{\leadsto E}} 
+\eda
+
+Rule~\mylabel{DL-RuleMatch} concerns the case where the first entry in the 
+environment matches the goal. Its behavior is the same as in the
+original definition of Rule~\mylabel{FR-Simp}.
+
+Rule~\mylabel{DL-RuleNoMatch} is mutually exclusive with the above rule: it
+skips the first entry in the environment only iff it does not match to look for
+a matching rule deeper in the environment. This implements the committed choice
+semantics: the first matching rule is committed to and further rules are not
+considered.
+
+Finally, Rules~\mylabel{DL-Var} and \mylabel{DL-TyVar} skip the irrelevant
+non-rule entries in the type environment.
+
+It is not difficult to see that with the above definition there is only one way
+to resolve the goal $\tyint$ against the environment $\tenv =
+\tyint~\gbox{\leadsto x}, \tyint~\gbox{\leadsto y}$. The first matching
+entry, which elaborates to $y$, is committed to and the second entry is not
+considered.
+
+%- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+\paragraph{Stability}
+
+While the above committed-choice formulation of resolution is deterministic, it
+is a rather fragile, or \emph{unstable}, notion of resolution. Consider for
+example resolving the goal $\tyint$ against the environment $\tenv =
+\tyint~\gbox{\leadsto x}, \alpha~\gbox{\leadsto y}$.  This scenario
+arises for instance when type checking the expression $e = \ilambda \tyint. (\Lambda \alpha. \ilambda \alpha. \query \tyint)\,\tyint$.
+Our definition of resolution skips the first entry in the environment because $\alpha$ does not
+match $\tyint$, commits to the second entry because $\tyint$ obviously matches
+$\tyint$, and elaborates to $x$.
+
+However, this resolution is not stable. Consider what happens when we apply a
+seemingly innocuous refactoring to the expression $e$ by $\beta$-reducing the
+type application. This yields the new, and supposedly equivalent, expression
+$e' = \ilambda \tyint. \ilambda \tyint. \query \tyint$.  The direct impact of
+this refactoring on the resolution problem is to substitute the type variable
+$\alpha$ for $\tyint$. As a consequence the resolution commits now to the first
+entry and elaborates to $y$ instead of $x$. Hence, more generally, the above
+definition of resolution is not stable under type substitution. This is problematic
+because it defies the common expectation that simple refactorings like the one
+above do not change a program's behavior.
+
+To avoid this problem and obtain stability under type substitution, we tighten
+the requirement of Rule~\mylabel{DL-RuleNoMatch}: a
+rule in the environment can only be skipped iff that rule does not match under any possible
+substitution of type variables. With this tightened requirement the scenario
+above simply does not resolve: unstable resolutions are invalid.
+\bda{c}
+  \myrule{DL-RuleNoMatch'}{
+	\mathit{stable}(\tenv,\rulet,\type,\gbox{x}) \\
+%   \not\exists \theta, E, \Sigma, \mathit{dom}(\theta) \subseteq \bar{\alpha}: \theta(\tenv); \theta(\rulet)~\gbox{\leadsto x} \ivturns \theta(\tau)~\gbox{\leadsto E}; \Sigma \\
+           \tenv;[\tenv'] \ivturns \type~\gbox{\leadsto E'}
+          }
+          {\tenv;[\tenv',\rulet~\gbox{\leadsto x}] \ivturns \type~\gbox{\leadsto E'}}
+\eda
+where a first stab at a formalisation of the stability condition is:
+\bda{c}
+\myruleform{\mathit{stable}(\tenv,\rulet,\type,\gbox{x})} \\ \\
+  \myrule{Stable}{\not\exists \theta, \gbox{E}, \Sigma:\enskip \theta(\tenv); [\theta(\rulet)]~\gbox{\leadsto x} \ivturns \theta(\tau)~\gbox{\leadsto E}; \Sigma}
+          {\mathit{stable}(\tenv,\rulet,\type,\gbox{x})}
+\eda
+
+The above formulation of the condition is a bit too lax; we to be more precise
+about the domain and range of the substitution $\theta$.  Indeed, substitution
+does not make sense for every type variable in the environment.  Consider for
+example resolving the type $\forall \beta. \beta \arrow \beta$ against the
+environment $\tenv_0 = \forall \gamma. \gamma \arrow \gamma~\gbox{\leadsto x},
+\alpha, \alpha \arrow \alpha ~\gbox{\leadsto y}$.  Using
+Rule~\mylabel{FR-TAbs}, we would recursively resolve $\beta \arrow \beta$
+against the extended environment $\tenv_1 = \tenv_0, \beta$. Next we get stuck
+as neither Rule~\mylabel{DL-RuleMatch} nor Rule~\mylabel{DL-RuleNoMatch'}
+applies. The former does not apply because $\alpha \arrow \alpha$ does not
+match $\beta \arrow \beta$.  Also the latter does not apply because there are
+two substitutions such that $\theta(\alpha \arrow \alpha)$ matches
+$\theta(\beta \arrow \beta)$ and hence skipping $\alpha \arrow \alpha$ is
+deemed unstable.
+
+However, if we look more closely at these substitutions, we see that none of
+them make sense. Essentially, there are two groups of subsitutions:
+\begin{itemize}
+\item Those substitutions that instantiate $\beta$, of which $\theta =
+      [\alpha/\beta]$ is a prominent example. These substitutions do not make sense
+      because code inlining cannot result in $\beta$ being instantiated to
+      $\alpha$ or to any other type, because $\beta$ is not in scope
+      at the point in the code where the query happens (i.e., $\beta$ does not appear in $\tenv_0$).
+      Hence, considering substitutions of $\beta$ does not make sense.
+
+\newcommand{\tyvars}[1]{\mathit{tyvars}(#1)}
+      Figure~\ref{fig:resolution2}, which puts all the measures together to
+      obtain a type-directed, deterministic and stable resolution, addresses the
+      issue as follows. It introduces a top-level judgement $\tenv \ivturns \rulet ~\gbox{\leadsto E}$
+      to handle a query that delegates to the focusing-based judgements we have described above.
+      The only contribution of the new main judgement, which is defined by a single rule, is to gather the type variables $\bar{\alpha}$
+      that appear in the environment at the point of the query by means of the function $\tyvars{\tenv}$, 
+      and to pass them on through the auxiliary judgements to the point where the stability check is performed.
+      Hence, the auxiliary judgements $\bar{\alpha}; \tenv \ivturns \rulet~\gbox{\leadsto E}$, $\bar{\alpha}; \tenv; \tenv' \ivturns \type~\gbox{\leadsto E}$
+      and $\mathit{stable}(\bar{\alpha};\tenv;\rulet;\type;\gbox{x})$ now all feature an additional argument $\bar{\alpha}$ of
+      type variables that can be substituted.
+
+\begin{equation*}
+\begin{array}{rcl@@{\hspace{1.5cm}}rcl}
+\tyvars{\epsilon}     & = & \epsilon &
+\tyvars{\tenv,\alpha} & = & \tyvars{\tenv},\alpha \\
+\tyvars{\tenv,x : \rulet} & = & \tyvars{\tenv} &
+\tyvars{\tenv,\rulet~\gbox{\leadsto x}} & = & \tyvars{\tenv} 
+\end{array}
+\end{equation*}
+      
+
+\item The substitution $\theta' = [\beta/\alpha]$ also generates a match. However, this 
+      substitution also does not make sense because code inlining can only result in substitutions 
+      of $\alpha$ by types that are well-scoped in prefix of the environment before $\alpha$.
+      In the case of the example this means that we can only considering substitutions
+      $[\rulet/\alpha]$ where $\forall \gamma. \gamma \arrow \gamma~\gbox{\leadsto x} \vdash \rulet$. In
+      other words, $\rulet$ cannot have any free type variables. Obviously there is no such
+      $\rulet$ that yields a match.
+\end{itemize}
+  
+\figtwocol{fig:subst}{Valid Substitutions}{
+\begin{center}
+\framebox{\scriptsize
+\begin{minipage}{0.969\textwidth}
+\bda{c}
+\theta ::= \epsilon \mid [\rulet/\alpha] \cdot \theta \\ \\
+\myruleform{\bar{\alpha};\tenv\vdash\theta} \\ \\
+  \myrule {S-Empty}
+          {}
+          {\bar{\alpha}; \tenv \vdash \epsilon} \\ \\
+  \myrule {S-Cons}
+          {\tenv \vdash \rulet \\
+           \bar{\alpha},\bar{\alpha'}; \tenv, \theta(\tenv') \vdash \theta
+          }
+          {\bar{\alpha},\alpha,\bar{\alpha'}; \tenv, \alpha, \tenv' \vdash [\rulet/\alpha] \cdot \theta}
+\eda
+\end{minipage}
+}
+\end{center}
+}
+   
+%- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+\paragraph{Summary}
+
+\figtwocol{fig:resolution2}{Deterministic Resolution and Translation to System F}{
+\begin{center}
+\framebox{\scriptsize
+\begin{minipage}{0.969\textwidth}
+\bda{c}
+\Sigma ::= \epsilon \mid \Sigma, \rulet~\gbox{\leadsto x} \\ \\
+\myruleform{\tenv \ivturns \rulet~\gbox{\leadsto E}} \\ \\
+  \myrule {R-Main}
+          {\mathit{tyvars}(\tenv);\tenv \ivturns \rulet~\gbox{\leadsto E}}
+          {\tenv \ivturns \rulet~\gbox{\leadsto E}} \\ \\
+\multicolumn{1}{c}{\myruleform{\bar{\alpha}; \tenv \ivturns \rulet~\gbox{\leadsto E}}} \\ \\
+%%\quad\quad\quad
+  \myrule{R-IAbs}
+         {\bar{\alpha};\tenv, \rulet_1~\gbox{\leadsto x} \ivturns \rulet_2~\gbox{\leadsto E} \quad\quad \gbox{x~\mathit{fresh}}}
+         {\bar{\alpha};\tenv \ivturns \rulet_1 \iarrow \rulet_2~\gbox{\leadsto
+            \lambda\relation{x}{||\rulet_1||}.E}} 
+\quad\quad
+  \myrule{R-TAbs}
+         {\bar{\alpha};\tenv,\alpha \ivturns \rulet~\gbox{\leadsto E}}
+         {\bar{\alpha};\tenv \ivturns \forall \alpha. \rulet~\gbox{\leadsto \Lambda\alpha.E}} 
+\\ \\
+ \myrule{R-Simp}
+        {\bar{\alpha};\tenv;\tenv \ivturns \type~\gbox{\leadsto E}}
+        {\bar{\alpha};\tenv \ivturns \type~\gbox{\leadsto E}} 
+\\ \\ \\
+\myruleform{\bar{\alpha};\tenv;\tenv' \ivturns \type~\gbox{\leadsto E}}\\ \\
+
+  \myrule{L-RuleMatch}
+          {\tenv; \rulet~\gbox{\leadsto x} \ivturns \tau~\gbox{\leadsto E}; \overline{\rulet'~\gbox{\leadsto x}} \\
+            \bar{\alpha};\tenv \ivturns \rulet'~\gbox{\leadsto E'} \quad (\forall \rulet' \in \overline{\rulet}')
+          }
+          {\bar{\alpha};\tenv;\tenv',\rulet~\gbox{\leadsto x} \ivturns \type~\gbox{\leadsto E[\bar{E}'/\bar{x}]}} \\
+  \myrule{L-RuleNoMatch}{
+	\mathit{stable}(\bar{\alpha},\tenv,\rulet,\type) \\
+%   \not\exists \theta, E, \Sigma, \mathit{dom}(\theta) \subseteq \bar{\alpha}: \theta(\tenv); \theta(\rulet)~\gbox{\leadsto x} \ivturns \theta(\tau)~\gbox{\leadsto E}; \Sigma \\
+           \bar{\alpha};\tenv;\tenv' \ivturns \type~\gbox{\leadsto E'}
+          }
+          {\bar{\alpha};\tenv;\tenv',\rulet~\gbox{\leadsto x} \ivturns \type~\gbox{\leadsto E'}} \\ \\
+  \myrule{L-Var}
+         {\bar{\alpha};\tenv;\tenv' \ivturns \type~\gbox{\leadsto E}
+         }
+         {\bar{\alpha};\tenv;\tenv',x:\rulet \ivturns \type~\gbox{\leadsto E}} 
+\quad\quad\quad
+  \myrule{L-TyVar}
+         {\bar{\alpha};\tenv;\tenv' \ivturns \type~\gbox{\leadsto E}
+         }
+         {\bar{\alpha};\tenv;\tenv',\alpha \ivturns \type~\gbox{\leadsto E}} 
+\\ \\ \\
+\myruleform{\tenv; \rulet~\gbox{\leadsto E} \ivturns \type~\gbox{\leadsto E'}; \Sigma}\\ \\
+  \myrule{M-Simp}
+         {}
+         {\tenv; \type~\gbox{\leadsto E} \ivturns \type~\gbox{\leadsto E}; \epsilon} \\ \\
+  \myrule{M-IApp}
+         {\tenv, \rulet_1 \gbox{\leadsto x}; \rulet_2 ~\gbox{\leadsto E\,x} \ivturns \type~\gbox{\leadsto E'}; \Sigma 
+          \quad\quad\quad \gbox{x~\mathit{fresh}}
+         }
+         {\tenv; \rulet_1 \iarrow \rulet_2 ~\gbox{\leadsto E} \ivturns \type~\gbox{\leadsto E'}; \Sigma, \rulet_1~\gbox{\leadsto x}} \\ \\ 
+  \myrule{M-TApp}
+         {\tenv; \rulet[\suty/\alpha] ~\gbox{\leadsto E\,||\suty||} \ivturns \type~\gbox{\leadsto E'}; \Sigma
+          \quad\quad\quad
+          \tenv \turns \suty
+         }
+         {\tenv; \forall \alpha. \rulet ~\gbox{\leadsto E} \ivturns \type~\gbox{\leadsto E'}; \Sigma} \\ \\ \\
+\myruleform{\mathit{stable}(\bar{\alpha},\tenv,\rulet,\type)} \\ \\
+  \myrule{Stable}{\not\exists \theta, E, \Sigma, \mathit{dom}(\theta) \subseteq \bar{\alpha}: \theta(\tenv); \theta(\rulet)~\gbox{\leadsto x} \ivturns \theta(\tau)~\gbox{\leadsto E}; \Sigma}
+          {\mathit{stable}(\bar{\alpha},\tenv,\rulet,\type)}
+\eda
+\end{minipage}
+}
+\end{center}
+}
+
+% %- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+% \paragraph{Legacy}
+% 
+% % forall a. a => a |- int => int
+% 
+% % In order to eradicate the non-determinism in resolution we implement the following
+% % measures:
+% % \begin{enumerate}
+% % \item We provide a syntax-directed definition of resolution, based on the idea of
+% %       \emph{focused proof search} in logic~\cite{focusing,Miller91b,Liang:2009}, where at most one
+% %       rule applies in any given situation. 
+% % 
+% %       Our approach organizes resolution into two alternating phases that
+% %       pivots on an environment lookup (\mylabel{R-IVar}) which shifts
+% %       the focus from the queried type to an implicit rule type in the environment. 
+% %       The first phase performs \emph{backward chaining}: it applies only
+% %       elimination rules (\mylabel{R-TAbs},\mylabel{R-IAbs}) to the query type
+% %       to reason towards the given rules in the environment.
+% % 
+% %       In constrast, the second phase performs \emph{forward chaining}; it
+% %       reasons from the selected environment rule towards the query type. It does so
+% %       by applying only introduction rules (\mylabel{R-TApp},\mylabel{R-IApp}), but in
+% %       \emph{inverted form}, i.e., from the environment type towards the query type.
+% % 
+% % \item Our approach differs from focused proof search in the selection of the focus.
+% %       This is typically a nondeterminstic choice in focused proof search, but we make
+% %       it deterministic in two ways: 
+% %       \begin{enumerate}
+% %       \item by implementing a stack discipline: only the first (in LIFO order) matching rule type can be selected, and
+% %       \item we do not include any recursive resolutions in the matching decisions; this keeps
+% %             matching a shallow procedure which does not require any form of backtracking.
+% %       \end{enumerate}
+% % 
+% % \item We rule out two forms of non-determinism in the instantiation of
+% %       polymorphic types:
+% %       \begin{enumerate}
+% %       \item We disallow ambiguous types where quantified type variables
+% %             are not determined by the head of the type, such as 
+% %             $\forall \alpha.\tyint$ or $\forall \alpha. \alpha \iarrow \tyint$.
+% % 
+% %       \item We do not allow type variables to be instantiated by types with
+% %             abstractions (universal quantifiers or implicit arrows) as these
+% %             may subsequently be eliminated again (possibly by instantiation 
+% %             with other abstractions). For instance, $\forall \alpha. \alpha \iarrow \alpha$
+% % 	    can be instantiated directly with $[\tyint/\alpha]$ to $\tyint
+% % \iarrow \tyint$.  Alternatively, it could be first instantiated with $[(\forall
+% % \beta. \beta \iarrow \beta)/\alpha]$ to $(\forall \beta. \beta \iarrow \beta)
+% % \iarrow \forall \beta'. \beta' \iarrow \beta'$, and then after further
+% % instantiation of the outer context and of $\beta'$ with $[\tyint/\beta']$ also
+% % to $\tyint \iarrow \tyint$.
+% %  
+% %       \end{enumerate}
+% % 
+% % \end{enumerate}
+% 
+% Figure~\ref{fig:resolution2} defines judgement $\tenv \ivturns \rulet$, which
+% is a syntax-directed deterministic variant of $\tenv \vturns \rulet$. This
+% deterministic variant is sound with respect to the ambiguous definition. In
+% other words, $\tenv \vturns \rulet$ holds if $\tenv \ivturns \rulet$ holds.
+% Yet, the opposite is not true. The deterministic judgement sacrifices some
+% expressive power in exchange for better behavedness.
+% 
+% %- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+% \paragraph{Revised Syntax}
+% 
+% To facilitate the definition of the deterministic resolution
+% judgement we split the syntax of types into three different
+% sorts: \emph{context} types, \emph{simple} types and \emph{monotypes}.
+% {\bda{llrl}
+%     \text{Context Types} & \rulet \hide{\in 2^\meta{RType}} & ::= & 
+%     \forall \alpha. \rulet \mid \rulet_1 \iarrow \rulet_2 \mid \type \\
+%     \text{Simple Types}  & \type                            & ::=  & \alpha \mid \rulet_1 \arrow \rulet_2 \\
+%     \text{Monotypes}     & \suty                            & ::=  & \alpha \mid \suty \arrow \suty
+%     % \text{Expressions} & |e| & ::=  &
+%     % x \mid \lambda (x:\rulet).e \mid e_1\,e_2 \mid \Lambda \alpha. e \mid e\,\rulet \mid \query \rulet \mid \ilambda \rulet. e \mid e_1 \with e_2 \\
+%   \eda }
+% 
+%  \emph{Context types} $\rulet$ correspond to the original types $\rulet$.
+% \emph{Simple types} $\type$ are a restricted form of context types without
+% toplevel quantifiers and toplevel implicit arrows. Singling out this restricted
+% form turns out to be convenient for the type-directed formulation of the judgement.
+% 
+% \emph{Monotypes} $\suty$ are a further refinement of simple types without
+% universal quantifiers and implicit arrows anywhere. They help us to address a
+% form of ambiguity due to the \emph{impredicativity} of Rule~\mylabel{AR-TApp}.
+% For instance, if we define $\tenv_1 = \forall \alpha.\alpha \iarrow \alpha$,
+% then there are two ways to resolve $\tenv_1 \vdash \tyint \iarrow \tyint$: 
+% 
+% %       \item We do not allow type variables to be instantiated by types with
+% %             abstractions (universal quantifiers or implicit arrows) as these
+% %             may subsequently be eliminated again (possibly by instantiation 
+% %             with other abstractions). For instance, $\forall \alpha. \alpha \iarrow \alpha$
+% % 	    can be instantiated directly with $[\tyint/\alpha]$ to $\tyint
+% % \iarrow \tyint$.  Alternatively, it could be first instantiated with $[(\forall
+% % \beta. \beta \iarrow \beta)/\alpha]$ to $(\forall \beta. \beta \iarrow \beta)
+% % \iarrow \forall \beta'. \beta' \iarrow \beta'$, and then after further
+% % instantiation of the outer context and of $\beta'$ with $[\tyint/\beta']$ also
+% % to $\tyint \iarrow \tyint$.
+% \begin{equation*}
+% \inferrule*[Left=\mylabel{AR-TApp}]
+%   {\inferrule*[Left=\mylabel{AR-IVar}] 
+%     {(\forall \alpha.\alpha \iarrow \alpha) \in \tenv_1}
+%     {\tenv_1 \vturns \forall \alpha. \alpha \iarrow \alpha    }
+%   }
+%   {\tenv_1 \vturns \tyint \iarrow \tyint}
+% \end{equation*}
+% and
+% \begin{equation*}
+% \inferrule*[left=\mylabel{AR-TApp}]
+%   {\inferrule*[Left=\mylabel{AR-IApp}] 
+%     { \inferrule*[Left=\mylabel{AR-TApp}]
+%         { \inferrule*[Left=\mylabel{AR-IVar}]
+%             {(\forall \alpha. \alpha \iarrow \alpha) \in \tenv_1}
+%             {\tenv_1 \vturns (\forall \alpha. \alpha \iarrow \alpha)}
+%         }
+%         {\tenv_1 \vturns (\forall \beta. \beta \iarrow \beta) \iarrow (\forall \beta. \beta \iarrow \beta)}
+%         \quad\quad\quad
+%     \\
+%       \inferrule*[Left=\mylabel{AR-IVar}]
+%         {(\forall \beta. \beta \iarrow \beta) \in \tenv_1}
+%         {\tenv_1 \vturns (\forall \beta. \beta \iarrow \beta)}
+%     }
+%     {\tenv_1 \vturns \forall \beta. \beta \iarrow \beta}
+%   }
+%   {\tenv_1 \vturns \tyint \iarrow \tyint}
+% \end{equation*}
+% 
+% The first proof only involves the predicative generalisation from
+% $\tyint$ to $\alpha$. Yet, the second proof contains an impredicative
+% generalisation from $\forall \beta. \beta \iarrow \beta$ to $\alpha$.
+% Impredicativity is a well-known source of such problems in other settings, such
+% as in type inference for the polymorphic $\lambda$-calculus~\cite{boehm85,pfenning93}. The established solution also works here: restrict to predicativity. This is where the monotype
+% sort $\suty$ comes in: we only allow generalisation over (or dually,
+% instantiation with) monotypes $\suty$.
+% 
+% % ------------------------------------ R-IVar
+% % forall a. a => a |- forall a. a => a
+% % ------------------------------------ R-TApp
+% % forall a. a => a |- int => int
+% % 
+% % 
+% % ------------------------------------ R-IVar
+% % forall a. a => a |- forall a. a => a
+% % ------------------------------------------------------------ R-TApp
+% % forall a. a => a |- (forall b. b => b) => (forall b. b => b)              ...
+% % ------------------------------------------------------------------------------------------
+% % forall a. a => a |- forall b. b => b
+% % ------------------------------------ R-TApp
+% % forall a. a => a |- int => int
+% 
+% %- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+% \paragraph{Revised Resolution Rules}
+% 
+% \newcommand{\elookup}[3][\bar{\alpha}]{{#2}_{#1}\langle{#3}\rangle}
+% 
+% \figtwocol{fig:resolution2}{Deterministic Resolution and Translation to System F}{
+% \begin{center}
+% \framebox{\scriptsize
+% \begin{minipage}{0.969\textwidth}
+% \bda{c}
+% \Sigma ::= \epsilon \mid \Sigma, \rulet~\gbox{\leadsto x} \\ \\
+% \myruleform{\tenv \ivturns \rulet~\gbox{\leadsto E}} \\ \\
+%   \myrule {R-Main}
+%           {\mathit{tyvars}(\tenv);\tenv \ivturns \rulet~\gbox{\leadsto E}}
+%           {\tenv \ivturns \rulet~\gbox{\leadsto E}} \\ \\
+% \multicolumn{1}{c}{\myruleform{\bar{\alpha}; \tenv \ivturns \rulet~\gbox{\leadsto E}}} \\ \\
+% %%\quad\quad\quad
+%   \myrule{R-IAbs}
+%          {\bar{\alpha};\tenv, \rulet_1~\gbox{\leadsto x} \ivturns \rulet_2~\gbox{\leadsto E} \quad\quad \gbox{x~\mathit{fresh}}}
+%          {\bar{\alpha};\tenv \ivturns \rulet_1 \iarrow \rulet_2~\gbox{\leadsto
+%             \lambda\relation{x}{||\rulet_1||}.E}} 
+% \quad\quad
+%   \myrule{R-TAbs}
+%          {\bar{\alpha};\tenv,\alpha \ivturns \rulet~\gbox{\leadsto E}}
+%          {\bar{\alpha};\tenv \ivturns \forall \alpha. \rulet~\gbox{\leadsto \Lambda\alpha.E}} 
+% \\ \\
+%  \myrule{R-Simp}
+%         {\bar{\alpha};\tenv;\tenv \ivturns \type~\gbox{\leadsto E}}
+%         {\bar{\alpha};\tenv \ivturns \type~\gbox{\leadsto E}} 
+% \\ \\ \\
+% \myruleform{\bar{\alpha};\tenv;\tenv' \ivturns \type~\gbox{\leadsto E}}\\ \\
+% 
+%   \myrule{L-RuleMatch}
+%           {\tenv; \rulet~\gbox{\leadsto x} \ivturns \tau~\gbox{\leadsto E}; \overline{\rulet'~\gbox{\leadsto x}} \\
+%             \bar{\alpha};\tenv \ivturns \rulet'~\gbox{\leadsto E'} \quad (\forall \rulet' \in \overline{\rulet}')
+%           }
+%           {\bar{\alpha};\tenv;\tenv',\rulet~\gbox{\leadsto x} \ivturns \type~\gbox{\leadsto E[\bar{E}'/\bar{x}]}} \\
+%   \myrule{L-RuleNoMatch}{
+% 	\mathit{stable}(\bar{\alpha},\tenv,\rulet,\type) \\
+% %   \not\exists \theta, E, \Sigma, \mathit{dom}(\theta) \subseteq \bar{\alpha}: \theta(\tenv); \theta(\rulet)~\gbox{\leadsto x} \ivturns \theta(\tau)~\gbox{\leadsto E}; \Sigma \\
+%            \bar{\alpha};\tenv;\tenv' \ivturns \type~\gbox{\leadsto E'}
+%           }
+%           {\bar{\alpha};\tenv;\tenv',\rulet~\gbox{\leadsto x} \ivturns \type~\gbox{\leadsto E'}} \\ \\
+%   \myrule{L-Var}
+%          {\bar{\alpha};\tenv;\tenv' \ivturns \type~\gbox{\leadsto E}
+%          }
+%          {\bar{\alpha};\tenv;\tenv',x:\rulet \ivturns \type~\gbox{\leadsto E}} 
+% \quad\quad\quad
+%   \myrule{L-TyVar}
+%          {\bar{\alpha};\tenv;\tenv' \ivturns \type~\gbox{\leadsto E}
+%          }
+%          {\bar{\alpha};\tenv;\tenv',\alpha \ivturns \type~\gbox{\leadsto E}} 
+% \\ \\ \\
+% \myruleform{\tenv; \rulet~\gbox{\leadsto E} \ivturns \type~\gbox{\leadsto E'}; \Sigma}\\ \\
+%   \myrule{M-Simp}
+%          {}
+%          {\tenv; \type~\gbox{\leadsto E} \ivturns \type~\gbox{\leadsto E}; \epsilon} \\ \\
+%   \myrule{M-IApp}
+%          {\tenv, \rulet_1 \gbox{\leadsto x}; \rulet_2 ~\gbox{\leadsto E\,x} \ivturns \type~\gbox{\leadsto E'}; \Sigma 
+%           \quad\quad\quad \gbox{x~\mathit{fresh}}
+%          }
+%          {\tenv; \rulet_1 \iarrow \rulet_2 ~\gbox{\leadsto E} \ivturns \type~\gbox{\leadsto E'}; \Sigma, \rulet_1~\gbox{\leadsto x}} \\ \\ 
+%   \myrule{M-TApp}
+%          {\tenv; \rulet[\suty/\alpha] ~\gbox{\leadsto E\,||\suty||} \ivturns \type~\gbox{\leadsto E'}; \Sigma
+%           \quad\quad\quad
+%           \tenv \turns \suty
+%          }
+%          {\tenv; \forall \alpha. \rulet ~\gbox{\leadsto E} \ivturns \type~\gbox{\leadsto E'}; \Sigma} \\ \\ \\
+% \myruleform{\mathit{stable}(\bar{\alpha},\tenv,\rulet,\type)} \\ \\
+%   \myrule{Stable}{\not\exists \theta, E, \Sigma, \mathit{dom}(\theta) \subseteq \bar{\alpha}: \theta(\tenv); \theta(\rulet)~\gbox{\leadsto x} \ivturns \theta(\tau)~\gbox{\leadsto E}; \Sigma}
+%           {\mathit{stable}(\bar{\alpha},\tenv,\rulet,\type)}
+% \eda
+% \end{minipage}
+% }
+% \end{center}
+% }
+% 
+% Figure~\ref{fig:resolution2} defines the main judgement $\tenv \ivturns \rulet$ 
+% in terms of three interdependent auxiliary judgements. The first of these
+% auxiliary judgements is $\bar{\alpha};\tenv \ivturns \rulet$, where
+% the type variables $\bar{\alpha}$ are the free type variables in the
+% original environment at the point of the query. Recall the |bad| example
+% from Section~\ref{sec:overview:incoherence} where there is only one such free
+% type variable: |b|. 
+% Tracking these free variables plays a crucial role in guaranteeing coherence
+% and ensuring that resolution is stable under all type substitutions that instantiate these variables, like $[|b| \mapsto |Int|]$; how we prevent these substitutions is explained below.  The
+% main judgement
+% retains these free variables in rule \mylabel{R-Main} with 
+% the function $\mathit{tyvars}$:
+% \newcommand{\tyvars}[1]{\mathit{tyvars}(#1)}
+% \begin{equation*}
+% \begin{array}{rcl@@{\hspace{2cm}}rcl}
+% \tyvars{\epsilon}     & = & \epsilon &
+% \tyvars{\tenv,\alpha} & = & \tyvars{\tenv},\alpha \\
+% \tyvars{\tenv,x : \rulet} & = & \tyvars{\tenv} &
+% \tyvars{\tenv,\rulet~\gbox{\leadsto x}} & = & \tyvars{\tenv} 
+% \end{array}
+% \end{equation*}
+% While the auxiliary judgement $\bar{\alpha};\tenv \ivturns \rulet$ extends the
+% type environment $\tenv$, it does not update the type variables $\bar{\alpha}$.
+% This judgement is syntax-directed on the query type $\rulet$.  Its job is to
+% strip $\rulet$ down to a simple type $\type$ using literal copies of the
+% ambiguous rules \mylabel{AR-TAbs} and \mylabel{AR-IAbs}, and then to hand it
+% off to the second auxiliary judgement in rule \mylabel{R-Simp}.
+% 
+% The second auxiliary judgement, $\bar{\alpha}; \tenv; \tenv' \ivturns \type$,
+% is syntax-directed on $\tenv'$: it traverses $\tenv'$ from right to left until
+% it finds a rule type $\rulet$ that matches the simple type $\type$.  Rules
+% \mylabel{L-Var} and \mylabel{L-TyVar} skip the irrelevant entries in the
+% environment. Rule \mylabel{L-RuleMatch} identifies a matching rule type
+% $\rulet$ -- where matching is determined by with the third auxiliary judgement
+% -- and takes care of recursively resolving its context types; details follow
+% below.  Finally, rule \mylabel{L-RuleNoMatch} skips a rule type in the
+% environment if it does not match. Its condition
+% $\mathit{stable}(\bar{\alpha},\tenv,\rulet,\type)$ entails the opposite of rule
+% \mylabel{L-RuleMatch}'s first condition: $\not\exists
+% \Sigma:~\tenv;\rulet \ivturns \type; \Sigma$.
+% (We come back to the reason why the condition is stronger than this in
+% Section~\ref{sec:coherence}.)
+% As a consequence, rules \mylabel{L-RuleMatch} and \mylabel{L-RuleNoMatch}
+% are mutually exclusive and \emph{the judgement effectively commits to the
+% right-most matching rule in $\tenv'$}.
+% We maintain the invariant that $\tenv'$ is a prefix of $\tenv$; rule
+% \mylabel{R-Simp} provides $\tenv$ as the initial value for $\tenv'$.
+% Hence, if a matching rule type $\rulet$ is found, we have that
+% $\rulet \in \tenv$. Hence, the second auxiliary judgement
+% plays much the same role as rule
+% \mylabel{AR-IVar} in Figure~\ref{fig:resolution1}, which also selects a rule type $\rulet \in \tenv$. The difference is that rule \mylabel{AR-IVar} makes a non-deterministic
+% choice, while the second auxiliary judgement makes deterministic committed choice
+% that prioritises rule types more to the right in the environment. For instance, $\tyint,\tyint \vturns \tyint$ has two ways to resolve, while $\tyint,\tyint \ivturns \tyint$ has only one because the second $\tyint$ in the environment shadows the first.
+% 
+% 
+% Finally, the third auxiliary judgement, $\tenv;\rulet \ivturns \type; \Sigma$,
+% determines whether the rule type $\rulet$ matches the simple type~$\type$. The
+% judgement is defined by structural induction on $\rulet$, which is step by step
+% instantiated to $\type$. 
+% Any recursive resolutions are deferred in this process -- the
+% postponed resolvents are captured in the $\Sigma$ argument. This
+% way they do not influence the matching decision and backtracking is avoided.
+% Instead, the recursive resolutions are executed, as part of rule
+% \mylabel{L-RuleMatch}, after the rule has been committed to.
+% Rule \mylabel{M-Simp} constitutes the base case where the rule type equals the
+% target type. Rule \mylabel{M-IApp} is the counterpart of the original
+% rule \mylabel{R-IApp} where the implication arrow $\rulet_1 \iarrow \rulet_2$
+% is instantiated to $\rulet_2$; the resolution of $\rulet_1$ is deferred.
+% Lastly, rule \mylabel{M-TApp} is the counterpart of the original rule \mylabel{R-TApp}.
+% The main difference is that it only uses
+% monotypes $\suty$ to substitute the type variable; this implements the predicativity
+% restriction explained above.
+% 
+% The relation to the ambiguous definition of resolution can be summarized as follows:
+% if $\tenv;\rulet \ivturns \type; \bar{\rulet}$
+% with
+% $\tenv \vturns \rulet$ and $\tenv \vturns \bar{\rulet}$, then
+% $\tenv \vturns \type$.
+% 
+% %- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+% \paragraph{Non-Ambiguity Constraints}
+% 
+% The rule \mylabel{M-TApp} does not explain how the substitution
+% $[\suty/\alpha]$ for the rule type $\forall \alpha.\rulet$ should be obtained.
+% At first sight it seems that the choice of $\suty$ is free and thus a source of
+% non-determinism. However, in many cases the choice is not free at all, but is
+% instead determined fully by the simple type $\type$ that we want to match.
+% However, the choice is not always forced by the matching. Take for instance the context type $\forall \alpha. (\alpha \arrow \tystr)
+% \iarrow (\tystr \arrow \alpha) \iarrow (\tystr \arrow \tystr)$. This 
+% type encodes the well-known ambiguous Haskell type |forall a. (Show a, Read a) => String -> String| of the expression |read . show|. The
+% choice of $\alpha$ is ambiguous when matching against the simple type $\tystr
+% \arrow \tystr$. Yet, the choice is critical for two reasons. Firstly, if we
+% guess the wrong instantiation $\suty$ for $\alpha$, then it may not be possible
+% to recursively resolve $(\tystr \arrow \alpha)[\suty/\alpha]$ or $(\alpha \arrow
+% \tystr)[\suty/\alpha]$, while with a lucky guess both can be resolved.
+% Secondly, for different choices of $\suty$ the types $(\tystr \arrow
+% \alpha)[\suty/\alpha]$ and $(\alpha \arrow \tystr)[\suty/\alpha]$ can be resolved
+% in completely different ways.
+% 
+% In order to avoid any problems, we conservatively forbid all ambiguous context
+% types in the implicit environment with the $\unamb \rulet_1$
+% side-condition in rule \mylabel{Ty-IAbs} of Figure~\ref{fig:type}.\footnote{An
+% alternative design to avoid such ambiguity would instantiate unused type
+% variables to a dummy type, like GHC's \texttt{GHC.Prim.Any}, which is only used
+% for this purpose.} This judgement is defined in Figure~\ref{fig:unamb}
+% in terms of the auxiliary judgement $\bar{\alpha} \unamb \rulet$ which
+% takes an additional sequence of type variables $\alpha$ that is initially
+% empty.
+% \figtwocol{fig:unamb}{Unambiguous Context Types}{
+% \begin{center}
+% \framebox{
+% \begin{minipage}{0.969\textwidth}
+% \bda{c}
+% \myruleform{\unamb \rulet} 
+% \quad\quad\quad
+% \myrule{UA-Main}
+%        {\epsilon \unamb \rulet}
+%        {\unamb \rulet}
+% \\ \\
+% \myruleform{\bar{\alpha} \unamb \rulet} 
+% \quad\quad\quad
+% \myrule{UA-Simp}
+%        {\bar{\alpha} \subseteq \mathit{ftv}(\type)}
+%        {\bar{\alpha} \unamb \type}
+% \\ \\
+% \myrule{UA-TAbs}
+%        {\bar{\alpha},\alpha \unamb \rulet}
+%        {\bar{\alpha} \unamb \forall \alpha.\rulet} 
+% \quad\quad\quad
+% \myrule{UA-IAbs}
+%        {\unamb \rulet_1 \quad\quad \bar{\alpha} \unamb \rulet_2}
+%        {\bar{\alpha} \unamb \rulet_1 \iarrow \rulet_2} \\ \\
+% % \mylabel{UA-TAbsAlt} \quad
+% % \myirule{\bar{\alpha} \vdash_{\mathit{unamb}} \rulet}
+% %         {\bar{\alpha} \vdash_{\mathit{unamb}} \forall \alpha.\rulet}
+% % \quad\quad\quad
+% % \mylabel{UA-IAbsAlt} \quad
+% % \myirule{\epsilon \vdash_{\mathit{unamb}} \rulet_1 \quad\quad \bar{\alpha},\mathit{ftv}(\rulet_1) \vdash_{\mathit{unamb}} \rulet_2}
+% %         {\bar{\alpha} \vdash_{\mathit{unamb}} \rulet_1 \iarrow \rulet_2} \\ \\
+% \eda
+% \end{minipage}
+% }
+% \end{center}
+% }
+% 
+% The auxiliary judgement expresses that all type variables $\bar{\alpha}$ 
+% are resolved when matching against $\rulet$.
+% Its base case, rule \mylabel{UA-Simp}, expresses
+% that fixing the simple type $\type$ also fixes the type variables
+% $\bar{\alpha}$. Inductive rule \mylabel{UA-TAbs}
+% accumulates the bound type variables $\bar{\alpha}$ before the
+% head. Rule \mylabel{UA-IAbs} skips over any contexts
+% on the way to the head, but also recursively requires that these contexts are
+% unambiguous. 
+% 
+% Finally, the unambiguity condition is imposed on the queried type $\rulet$
+% in rule \mylabel{Ty-Query} because this type too may extend the implicit
+% environment in rule \mylabel{R-IAbs}.
+% 
+% Note that the definition rules out harmless ambiguity, such as that in the type
+% $\forall \alpha. \tyint$. When we match the head of this type $\tyint$ with the
+% simple type $\tyint$, the matching succeeds without actually determining how
+% the type variable $\alpha$ should be instantiated. Here the ambiguity is
+% harmless, because it does not affect the semantics. Yet, for the sake of
+% simplicity, we have opted to not differentiate between harmless and harmful
+% ambiguity.
+% 
+% %-------------------------------------------------------------------------------
+% \paragraph{Coherence Enforcement}\label{sec:coherence}
+% 
+% In order to enforce coherence, rule \mylabel{L-RuleNoMatch} makes sure that the
+% decision to not select a context type is stable under all possible
+% substitutions $\theta$.  Consider for instance the |bad| example from Section~\ref{sec:overview:incoherence}: when looking up |b -> b|, the rule 
+% |Int -> Int| does not match and is otherwise skipped. Yet, under the substitution
+% $\theta = [|b| \mapsto |Int|]$ the rule would match after all. In
+% order to avoid this unstable situation, rule \mylabel{L-RuleNoMatch} only skips a context
+% type in the implicit environment, if there is no substitution $\theta$ for
+% which the type would match the context type.
+% 
+% This approach is similar to the treatment of overlapping type class instances
+% or overlapping type family instances in Haskell. However, there is one
+% important complicating factor here: the query type may contain universal
+% quantifiers.  Consider a query for |forall a. a -> a|. In this case we wish to
+% rule out entirely the context type |Int -> Int| as a potential match. Even
+% though it matches under the substitution $\theta = [|a| \mapsto |Int|]$,
+% that covers only one instantiation while the query clearly requires a resolvent that
+% covers all possible instantiations.
+% 
+% We clearly identify which type variables $\bar{\alpha}$ are to be considered
+% for substitution by rule \mylabel{L-RuleNoMatch} by parametrising the
+% judgements by this set. These are the type variables that occur in the environment
+% $\tenv$ at the point of the query. The main resolution judgement $\ivturns \rulet$
+% grabs them and passes them on to all uses of rule \mylabel{L-RuleNoMatch}.
 
 %-------------------------------------------------------------------------------
 \subsection{Algorithm}
