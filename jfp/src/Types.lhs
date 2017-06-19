@@ -1303,104 +1303,109 @@ unambiguous, deterministic and stable definition of resolution.
 % $\tenv$ at the point of the query. The main resolution judgement $\ivturns \rulet$
 % grabs them and passes them on to all uses of rule \mylabel{L-RuleNoMatch}.
 
-%-------------------------------------------------------------------------------
-\subsection{Algorithm}
+%===============================================================================
+\section{Resolution Algorithm}
 
 \newcommand{\alg}{\turns_{\mathit{alg}}}
 \newcommand{\coh}{\turns_{\mathit{coh}}}
 \newcommand{\mgu}[3][\bar{\alpha}]{\textit{mgu}_{#1}(#2,#3)}
 \newcommand{\mgun}[4][\tenv]{\textit{mgu}_{#1;#2}(#3,#4)}
 
-Figure~\ref{fig:algorithm} contains an algorithm that implements the
+This section presents in Figure~\ref{fig:algorithm} an algorithm that implements the
 deterministic resolution rules of Figure~\ref{fig:resolution2}.
 It differs from the latter in two important ways: 
-firstly, it replaces explicit quantification over all substitutions $\theta$ in rule
-\mylabel{L-RuleNoMatch} with a tractable approach to coherence checking;
-and, secondly, it computes rather than guesses type substitutions in rule
-\mylabel{M-TApp}. 
+firstly, it computes rather than guesses type substitutions in rule
+\mylabel{M-TApp}; 
+and secondly,
+it replaces explicit quantification over all substitutions $\theta$ in rule
+\mylabel{Stable} with a tractable approach to coherence checking.
 
-The definition of the algorithm is structured in much the same way
+The definition of the algorithm is structured in the same way
 as the declarative specification: with one main judgement and three
 auxiliary ones that have similar roles. In fact, since the differences
 are not situated in the main and first auxiliary judgement, these are
 actually identical.
 
 %- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-\paragraph{Algorithmic No-Match Check}
+\paragraph{Deferred Variable Instantiation}
+The first difference is situated in the third
+auxiliary judgement $\bar{\alpha};\tenv;\rulet;\Sigma \alg \type ; \Sigma'$.
+While its declarative counterpart immediately instantiates the quantified type
+variable in Rule~\mylabel{M-TApp}, this algorithmic formulation defers the
+instantiation to the point where a deterministic choice can be made. As long as
+the type variables $\bar{\alpha}$ have not been instantiated, the judgement
+keeps track of them in its first argument. The actual instantiation happens in
+the base case, Rule \mylabel{Alg-M-Simp}. This last rule performs the deferred
+instantiation of type variables $\bar{\alpha}$ by computing the \emph{most
+general unifier} $\theta = \mgun{\bar{\alpha}}{\type'}{\type}$. The unification
+algorithm, which we present below, computes the most general substitution
+$\theta$ that is valid (i.e., $\bar{\alpha}; \tenv \vdash \theta$) and
+that equates the two types (i.e., $\theta(\type) = \theta(\type')$).
 
-The first difference is can be found in the second judgement's Rule \mylabel{Alg-L-RuleNoMatch}. Instead of an explicit quantification over all possible
-substitutions, this rule uses the more algorithmic judgement
+In order to subject the recursive goals to this
+substitution, the algorithmic judgement
+makes use of an accumulating parameter $\Sigma$.  This accumulator $\Sigma$
+represents all the goals collected so far in which type variables
+have not been substituted yet. In contrast, $\Sigma'$ denotes all obligations
+with type variables already substituted.
+
+Finally, observe that rule \mylabel{Alg-L-RuleMatch} invokes the algorithmic
+judgement with an empty set of not-yet-instantiated type variables and an empty
+accumulator $\Sigma$.
+
+The following example illustrates the differences between the declarative
+judgement:
+\bda{c}
+  \inferrule*[Right=\mylabel{M-TApp}]
+    {\inferrule*[Right=\mylabel{M-IApp}]
+       {\inferrule*[Right=\mylabel{M-Simp}]
+           {}
+           {\tenv; [\tyint]~\gbox{\leadsto x\,\tyint\,y} \vdash \tyint ~\gbox{\leadsto x\,\tyint\,y}; \epsilon}
+       }
+       {\tenv; [\tyint \iarrow \tyint]~\gbox{\leadsto x\,\tyint} \ivturns \tyint ~\gbox{\leadsto x\,\tyint\,y}; \tyint ~\gbox{\leadsto y}}
+    }
+    {\tenv; [\forall \alpha. \alpha \iarrow \alpha]~\gbox{\leadsto x} \ivturns \tyint ~\gbox{\leadsto x\,\tyint\,y}; \tyint ~\gbox{\leadsto y}}
+\eda
+and its algorithmic counterpart:
+\bda{c}
+  \inferrule*[Right=\mylabel{Alg-M-TApp}]
+    {\inferrule*[Right=\mylabel{Alg-M-IApp}]
+       {\inferrule*[Right=\mylabel{Alg-M-Simp}]
+           {[\tyint/\alpha] = \mgun{\alpha}{\alpha}{\tyint}}
+           {\alpha; \tenv; [\alpha]~\gbox{\leadsto x\,\alpha\,y}; \alpha~\gbox{\leadsto y} \vdash \tyint ~\gbox{\leadsto x\,\tyint\,y}; \epsilon}
+       }
+       {\alpha; \tenv; [\alpha \iarrow \alpha]~\gbox{\leadsto x\,\alpha}; \epsilon \ivturns \tyint ~\gbox{\leadsto x\,\tyint\,y}; \tyint ~\gbox{\leadsto y}}
+    }
+    {\epsilon; \tenv; [\forall \alpha. \alpha \iarrow \alpha]~\gbox{\leadsto x}; \epsilon \ivturns \tyint ~\gbox{\leadsto x\,\tyint\,y}; \tyint ~\gbox{\leadsto y}}
+\eda
+
+%- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+\paragraph{Algorithmic Stability Check}
+
+The second difference can be found in the second judgement's Rule \mylabel{Alg-L-RuleNoMatch}. Instead of
+using the $\mathit{stable}(\bar{\alpha},\tenv,\rulet~\gbox{\leadsto x},\type)$ judgement, which quantifies over all valid 
+substitutions, this rule uses the algorithmic judgement
 $\bar{\alpha};\tenv;\rulet\coh\type$. This auxiliary judgement checks algorithmically
 whether the context type $\rulet$ matches $\type$ under any possible instantiation
 of the type variables $\bar{\alpha}$.
-% \bda{c}
-% \myruleform{\bar{\alpha};\rulet\coh \tau}
-% \quad\quad\quad
-% \mylabel{COH-Simp}\quad
-% \myirule{\theta = \textit{mgu}_{\bar{\alpha}}(\tau,\tau')
-%         }
-%         {\bar{\alpha};\tau'\coh \tau}  \\ \\
-% \mylabel{Coh-TApp}\quad
-% \myirule{\bar{\alpha},\alpha;\rulet \coh \tau}
-%         {\bar{\alpha};\forall \alpha. \rulet\coh \tau}  
-% \quad\quad\quad
-% \mylabel{Coh-IApp}\quad
-% \myirule{\bar{\alpha};\rulet_2 \coh \tau}
-%         {\bar{\alpha};\rulet_1 \iarrow \rulet_2\coh \tau}
-% \eda
 
-The definition of the judgement $\bar{\alpha};\tenv;\rulet \coh \type$ is a variation on that of
-the declarative judgement $\tenv; \rulet \ivturns \type; \Sigma$. There are
-three differences. 
-% \begin{enumerate}
-% \item
-Firstly, since the judgement is only concerned with matchability, no recursive
-resolvents $\Sigma$ are collected. 
-% \item
-Secondly, instead of guessing the type instantiation ahead of time in rule
-$\mylabel{M-TApp}$, rule $\mylabel{Coh-TApp}$ defers the instantiation to the
-base case, rule \mylabel{Coh-Simp}. This last rule performs the deferred
-instantiation of type variables $\bar{\alpha}$ by computing the \emph{most general
-domain-restricted unifier} $\theta = \mgun{\bar{\alpha}}{\type'}{\type}$.
-A substitution $\theta$ is a unifier of two types $\rulet_1$ and $\rulet_2$ iff
-$\theta(\rulet_1) = \theta(\rulet_2)$. A unifier $\theta$ is restricted to domain
-$\bar{\alpha}$ if $\dom(\theta) \subseteq \bar{\alpha}$.
-A most general domain-restricted unifier $\theta$ subsumes
-any other unifier restricted to the same domain $\bar{\alpha}$:
-\begin{equation*}
-\forall \eta: \quad \mathit{dom}(\eta) \subseteq \bar{\alpha} \wedge
-\eta(\rulet_1) = \eta(\rulet_2)  
-\quad\Rightarrow\quad
-\exists \iota: \mathit{dom}(\iota) \subseteq \bar{\alpha} \wedge
-\iota(\theta(\rulet_1)) = \iota(\theta(\rulet_2))
-\end{equation*}
-If this most-general unifier exists, a match has been established.
-If no unifier exists, then rule \textsc{Coh-Simp} does not apply.
-% \item
-Thirdly, since the coherence check considers the substitution of the type variables
-$\bar{\alpha}$ that occur in the environment at the point of the query, rule
-\mylabel{Alg-L-RuleNoMatch} pre-populates the substitutable variables of the
-$\coh$ judgement with them.
-% \end{enumerate}
+We apply the same deferred-instantation technique as with the first difference: Instead,
+of applying a substitution first and then checking whether the rule matches the goal, we 
+defer the instantiation to the end where we can deterministically pick one (i.e., the most general
+) instantiation instad of considering all valid instantiations. 
+As a consequence of the similarity, 
+the definition of the judgement $\bar{\alpha};\tenv;\rulet \coh \type$ is a
+variation on that of $\bar{\alpha}; \tenv; \rulet~\gbox{\leadsto
+E}; \Sigma \alg \type~\gbox{\leadsto E'}; \Sigma'$.
 
-%- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-\paragraph{Deferred Variable Instantiation}
-The second main difference is situated in the third auxiliary judgement
-$\bar{\alpha};\tenv;\rulet;\Sigma \alg \type ; \Sigma'$. This judgement is 
-in fact an extended version of $\bar{\alpha};\tenv;\rulet\coh\type$ that does 
-collect the recursive resolution obligations in $\Sigma'$ just like the 
-corresponding judgement in the declarative specification. The main difference
-with the latter is that it uses the deferred approach to instantiating 
-type variables. In order to subject the resolution obligations to this
-substitution, which is computed in rule \mylabel{Alg-M-Simp}, the judgement
-makes use of an accumulating parameter $\Sigma$.  This accumulator $\Sigma$
-represents all the obligations collected so far in which type variables
-have not been substituted yet. In contrast, $\Sigma'$ denotes all obligations
-with type variables already substituted.
-Finally, note that rule \mylabel{Alg-L-RuleMatch} does not pre-populate the 
-type variables with those of the environment: we only want to instantiate
-the type variables that appear in the context type $\rulet$ itself for an 
-actual match.
+There are two differences. Firstly, since the judgement is only concerned with
+matchability, no recursive resolvents $\Sigma$ are collected nor are any
+elaborations tracked.
+Secondly, since the coherence check considers the substitution of the type
+variables $\bar{\alpha}$ that occur in the environment at the point of the
+query, rule \mylabel{Alg-L-RuleNoMatch} pre-populates the substitutable
+variables of the $\coh$ judgement with them. Contrast this with the matching
+judgement where only the rule's quantified variables are instantiated.
 
 %- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 \paragraph{Domain-Restricted Unification}
