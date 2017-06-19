@@ -1327,7 +1327,7 @@ are not situated in the main and first auxiliary judgement, these are
 actually identical.
 
 %- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-\paragraph{Deferred Variable Instantiation}
+\subsection{Deferred Variable Instantiation}
 The first difference is situated in the third
 auxiliary judgement $\bar{\alpha};\tenv;\rulet;\Sigma \alg \type ; \Sigma'$.
 While its declarative counterpart immediately instantiates the quantified type
@@ -1380,7 +1380,7 @@ and its algorithmic counterpart:
 \eda
 
 %- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-\paragraph{Algorithmic Stability Check}
+\subsection{Algorithmic Stability Check}
 
 The second difference can be found in the second judgement's Rule \mylabel{Alg-L-RuleNoMatch}. Instead of
 using the $\mathit{stable}(\bar{\alpha},\tenv,\rulet~\gbox{\leadsto x},\type)$ judgement, which quantifies over all valid 
@@ -1408,21 +1408,59 @@ variables of the $\coh$ judgement with them. Contrast this with the matching
 judgement where only the rule's quantified variables are instantiated.
 
 %- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-\paragraph{Domain-Restricted Unification}
+\subsection{Scope-Aware Unification}
 
-The algorithm for computing the most general domain-restricted unifier $\theta=
-\mgun{\bar{\alpha}}{\rulet_1}{\rulet_2}$ is a key component of the two
-algorithmic changes explained above.  Figure~\ref{fig:mgu} provides its
-definition, which is an extension of standard first-order
-unification~\cite{martellimonatanari}.  The domain restriction $\bar{\alpha}$
-denotes which type variables are to be treated as unification variables; all
-other type variables are to be treated as constants.  The differences with
-standard first-order unification arise because the algorithm has to account for
-type variable binders and the scope of type variables. For
-instance, using standard first-order unification for $\mgun{\beta}{\forall
-\alpha. \alpha \to \beta}{\forall \alpha.\alpha \to \alpha}$ would yield 
-the substitution $[\beta/\alpha]$. However, this solution is not
-acceptable because $\alpha$ is not in scope in $\tenv$.
+The unification algorithm $\theta= \mgun{\bar{\alpha}}{\rulet_1}{\rulet_2}$ is
+a key component of the two algorithmic changes explained above.
+
+Figure~\ref{fig:mgu} provides its definition, which is an extension of standard
+first-order unification~\cite{martellimonatanari}. The domain restriction
+$\bar{\alpha}$ denotes which type variables are to be treated as unification
+variables; all other type variables are to be treated as constants. The returned
+substitution is 
+a unifier of $\rulet_1$ and $\rulet_2$, i.e., $\theta(\rulet_1) = \theta(\rulet_2)$.
+Moreover, it is a most general unifier, i.e., any other unifier can be written as
+a composition of $\theta$ with another substitution.
+
+The differences with standard first-order unification arise because the
+algorithm has to account for the scope of type variables. Indeed, as we have already
+explained in Section~\ref{subsec:det}, we expect that the returned substitution
+is valid, i.e., $\bar{\alpha};\tenv \vdash \theta$.
+For instance, using standard first-order unification for $\mgun{\beta}{\forall
+\alpha. \alpha \to \beta}{\forall \alpha.\alpha \to \alpha}$ would yield the
+\emph{invalid}
+substitution $[\beta/\alpha]$. The substitution is invalid because
+$\alpha$ is not in scope in $\tenv$.
+
+A second scope-related issue is that the most general unifier may not be a
+valid substitution, while more specific unifiers may be valid.  Consider for
+instance unifying $\alpha$ with $\beta \arrow \beta$ where $\tenv = \alpha,
+\beta$ and both $\alpha$ and $\beta$ are unification variables. The most
+general unifier is obviously $[\beta \arrow \beta/\alpha]$. However this
+unifier is clearly not valid, as $\alpha$ apears before $\beta$ in the
+environment. In contrast, there are infinitely many more specific unifiers
+that are valid, all of the form $[\rulet\arrow\rulet/\alpha,\rulet/\beta]$ where
+$\rulet$ is a closed type.
+
+Fortunately, by a stroke of luck, the above is not a problem for either
+of our two use cases:
+\begin{itemize}
+\item
+The first use case is that in Rule~\mylabel{Alg-M-Simp} where this is not a
+problem because the scenario never arises. In
+$\mgu{\bar{\alpha}}{\type'}{\type}$ only $\type'$ contains unification
+variables and hence the range of the substitution never contains any
+unification variables. As a consequence the above exampe and others like
+it cannot occur.
+\item
+The second use case, in Rule~\mylabel{Coh-Simp}, is
+only interested in the existence of a valid substitution. We neither care
+which one it is nor whether it is the most general one. Moreover, as
+illustrated above, whenever there is a most general substitution that is invalid
+due to the relative position of unification variables in the environment, we
+can always construct a more specific valid substitution by substituting the remaining
+unification variables by closed types.
+\end{itemize}
 
 Rule \mylabel{U-InstL} implements the base case for scope-safe unification.
 It only creates a substitution $[\suty/\alpha]$ if $\alpha$ is one of the
@@ -1563,24 +1601,28 @@ call with the new type variable $\beta$ that is in scope in the subterms.
 %         } 
 %         {\theta = \mathit{mgu}_{\bar{\alpha}}(\forall \beta.\rulet_{1},\forall \beta.\rulet_{2})}  \\ \\
 
-\myruleform{\theta = \mgun{\bar{\alpha}}{\rulet_1}{\rulet_2}}
-\hspace{1cm}
+\myruleform{\theta = \mgun{\bar{\alpha}}{\rulet_1}{\rulet_2}} \\ \\
 
-\myrule{U-InstL}{ 
-	  \alpha \in \bar{\alpha}
-          \quad\quad
-          \forall \beta\in\mathit{ftv}(\suty):~~ \beta \in \bar{\alpha} \vee \beta >_\tenv \alpha
+\myrule{U-Main}{ 
+           \theta = \mgun{\bar{\alpha}}{\rulet_1}{\rulet_2}\\
+	   \beta \in \bar{\alpha} \vee \beta >_\tenv \alpha \quad(\forall [\suty/\alpha] \in \theta, \forall \beta \in \mathit{ftv}(\suty))
         } 
-        { [\suty/\alpha] = \mgun{\bar{\alpha}}{\alpha}{\suty}}  \\ \\
+        { \theta = \mgun{\bar{\alpha}}{\rulet_1}{\rulet_2}}  \\ \\
+
+\myruleform{\theta = \mgun{\bar{\alpha}}{\rulet_1}{\rulet_2}} \\ \\
 
 \myrule{U-Var}{
         } 
-        { \epsilon = \mgun{\bar{\alpha}}{\beta}{\beta}}  \hspace{1cm}
+        { \epsilon = \mgun{\bar{\alpha}}{\beta}{\beta}}  \\
+
+
+\myrule{U-InstL}{ 
+	  \alpha \in \bar{\alpha}
+        } 
+        { [\suty/\alpha] = \mgun{\bar{\alpha}}{\alpha}{\suty}}  \qquad
 
 \myrule{U-InstR}{ 
 	  \alpha \in \bar{\alpha}
-          \quad\quad
-          \forall \beta\in\mathit{ftv}(\suty):~~ \beta \in \bar{\alpha} \vee \beta >_\tenv \alpha
         } 
         { [\suty/\alpha] = \mgun{\bar{\alpha}}{\suty}{\alpha}} \\ \\
 
