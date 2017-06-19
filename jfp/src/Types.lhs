@@ -429,8 +429,9 @@ expresses the base case
 where the axiom is identical to the goal and there are no new goals.
 
 It is not difficult to see that this type-directed formulation of entailment
-greatly reduces the number of proofs for given goal.\footnote{Without loss of
-expressive power. See for example~\cite{FrankFocusing}.} For instance, for the
+greatly reduces the number of proofs for given goal.
+%\footnote{Without loss of expressive power. See for example~\cite{FrankFocusing}.} 
+For instance, for the
 example above there is only one proof:
 \begin{equation*}
 \begin{array}{c}
@@ -708,7 +709,7 @@ substitution of type variables. With this tightened requirement the scenario
 above simply does not resolve: unstable resolutions are invalid.
 \bda{c}
   \myrule{DL-RuleNoMatch'}{
-	\mathit{stable}(\tenv,\rulet,\type,\gbox{x}) \\
+	\mathit{stable}(\tenv,\rulet~\gbox{\leadsto x},\type) \\
 %   \not\exists \theta, E, \Sigma, \mathit{dom}(\theta) \subseteq \bar{\alpha}: \theta(\tenv); \theta(\rulet)~\gbox{\leadsto x} \ivturns \theta(\tau)~\gbox{\leadsto E}; \Sigma \\
            \tenv;[\tenv'] \ivturns \type~\gbox{\leadsto E'}
           }
@@ -716,9 +717,9 @@ above simply does not resolve: unstable resolutions are invalid.
 \eda
 where a first stab at a formalisation of the stability condition is:
 \bda{c}
-\myruleform{\mathit{stable}(\tenv,\rulet,\type,\gbox{x})} \\ \\
+\myruleform{\mathit{stable}(\tenv,\rulet~\gbox{\leadsto x},\type)} \\ \\
   \myrule{Stable}{\not\exists \theta, \gbox{E}, \Sigma:\enskip \theta(\tenv); [\theta(\rulet)]~\gbox{\leadsto x} \ivturns \theta(\tau)~\gbox{\leadsto E}; \Sigma}
-          {\mathit{stable}(\tenv,\rulet,\type,\gbox{x})}
+          {\mathit{stable}(\tenv,\rulet~\gbox{\leadsto x},\type)}
 \eda
 
 The above formulation of the condition is a bit too lax; we to be more precise
@@ -737,7 +738,7 @@ $\theta(\beta \arrow \beta)$ and hence skipping $\alpha \arrow \alpha$ is
 deemed unstable.
 
 However, if we look more closely at these substitutions, we see that none of
-them make sense. Essentially, there are two groups of subsitutions:
+them make sense. Essentially, there are two groups of substitutions:
 \begin{itemize}
 \item Those substitutions that instantiate $\beta$, of which $\theta =
       [\alpha/\beta]$ is a prominent example. These substitutions do not make sense
@@ -746,7 +747,6 @@ them make sense. Essentially, there are two groups of subsitutions:
       at the point in the code where the query happens (i.e., $\beta$ does not appear in $\tenv_0$).
       Hence, considering substitutions of $\beta$ does not make sense.
 
-\newcommand{\tyvars}[1]{\mathit{tyvars}(#1)}
       Figure~\ref{fig:resolution2}, which puts all the measures together to
       obtain a type-directed, deterministic and stable resolution, addresses the
       issue as follows. It introduces a top-level judgement $\tenv \ivturns \rulet ~\gbox{\leadsto E}$
@@ -755,48 +755,45 @@ them make sense. Essentially, there are two groups of subsitutions:
       that appear in the environment at the point of the query by means of the function $\tyvars{\tenv}$, 
       and to pass them on through the auxiliary judgements to the point where the stability check is performed.
       Hence, the auxiliary judgements $\bar{\alpha}; \tenv \ivturns \rulet~\gbox{\leadsto E}$, $\bar{\alpha}; \tenv; \tenv' \ivturns \type~\gbox{\leadsto E}$
-      and $\mathit{stable}(\bar{\alpha};\tenv;\rulet;\type;\gbox{x})$ now all feature an additional argument $\bar{\alpha}$ of
+      and $\mathit{stable}(\bar{\alpha};\tenv;\rulet~\gbox{\leadsto x};\type)$ now all feature an additional argument $\bar{\alpha}$ of
       type variables that can be substituted.
 
-\begin{equation*}
-\begin{array}{rcl@@{\hspace{1.5cm}}rcl}
-\tyvars{\epsilon}     & = & \epsilon &
-\tyvars{\tenv,\alpha} & = & \tyvars{\tenv},\alpha \\
-\tyvars{\tenv,x : \rulet} & = & \tyvars{\tenv} &
-\tyvars{\tenv,\rulet~\gbox{\leadsto x}} & = & \tyvars{\tenv} 
-\end{array}
-\end{equation*}
-      
-
 \item The substitution $\theta' = [\beta/\alpha]$ also generates a match. However, this 
-      substitution also does not make sense because code inlining can only result in substitutions 
+      substitution does not make sense either because code inlining can only result in substitutions 
       of $\alpha$ by types that are well-scoped in prefix of the environment before $\alpha$.
       In the case of the example this means that we can only considering substitutions
       $[\rulet/\alpha]$ where $\forall \gamma. \gamma \arrow \gamma~\gbox{\leadsto x} \vdash \rulet$. In
       other words, $\rulet$ cannot have any free type variables. Obviously there is no such
       $\rulet$ that yields a match.
 \end{itemize}
+ 
+In summary, Figure~\ref{fig:subst} formalises our notion of valid substitutions
+with the judgement $\bar{\alpha};\tenv \vdash \theta$. It assumes an inductive
+syntax for substitutions as sequences of single variable substitutions.
+{\bda{llrl}
+    \text{Substitutions}     & \theta & ::=  & \epsilon \mid [\rulet/\alpha] \cdot \theta
+  \eda }
+Rule~\mylabel{S-Empty} states that the empty substitution is $\epsilon$ is
+trivially valid. Rule~\mylabel{S-Cons} covers the inductive case
+$[\rulet/\alpha] \cdot \theta$. It says that the single variable substitution
+$[\rulet/\alpha]$ is valid if $\alpha$ appears in the sequence of substitutable type
+variables, expressed by the structural pattern $\bar{\alpha},\alpha,\bar{\alpha}'$.
+Moreover, $\alpha$ must appear in the type environment, expressed by a similar
+structural pattern $\tenv,\alpha,\tenv'$. Lastly, the type $\rulet$ must be well-scoped
+with respect to the environment prefix $\tenv$.
+In addition, the remainder $\theta$ must be valid with respect to the remaining type
+variables $\bar{\alpha},\bar{\alpha}'$ and the type environment after substitution of $\alpha$.
+
+
   
-\figtwocol{fig:subst}{Valid Substitutions}{
-\begin{center}
-\framebox{\scriptsize
-\begin{minipage}{0.969\textwidth}
-\bda{c}
-\theta ::= \epsilon \mid [\rulet/\alpha] \cdot \theta \\ \\
-\myruleform{\bar{\alpha};\tenv\vdash\theta} \\ \\
-  \myrule {S-Empty}
-          {}
-          {\bar{\alpha}; \tenv \vdash \epsilon} \\ \\
-  \myrule {S-Cons}
-          {\tenv \vdash \rulet \\
-           \bar{\alpha},\bar{\alpha'}; \tenv, \theta(\tenv') \vdash \theta
-          }
-          {\bar{\alpha},\alpha,\bar{\alpha'}; \tenv, \alpha, \tenv' \vdash [\rulet/\alpha] \cdot \theta}
-\eda
-\end{minipage}
-}
-\end{center}
-}
+\figtwocol{fig:subst}{Valid Substitutions}{ \begin{center}
+\framebox{\scriptsize \begin{minipage}{0.969\textwidth} \bda{c} \theta ::=
+\epsilon \mid [\rulet/\alpha] \cdot \theta \\ \\
+\myruleform{\bar{\alpha};\tenv\vdash\theta} \\ \\ \myrule {S-Empty} {}
+{\bar{\alpha}; \tenv \vdash \epsilon} \\ \\ \myrule {S-Cons} {\tenv \vdash
+\rulet \\ \bar{\alpha},\bar{\alpha'}; \tenv, \theta(\tenv') \vdash \theta }
+{\bar{\alpha},\alpha,\bar{\alpha'}; \tenv, \alpha, \tenv' \vdash
+[\rulet/\alpha] \cdot \theta} \eda \end{minipage} } \end{center} }
    
 %- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 \paragraph{Summary}
@@ -809,69 +806,81 @@ them make sense. Essentially, there are two groups of subsitutions:
 \Sigma ::= \epsilon \mid \Sigma, \rulet~\gbox{\leadsto x} \\ \\
 \myruleform{\tenv \ivturns \rulet~\gbox{\leadsto E}} \\ \\
   \myrule {R-Main}
-          {\mathit{tyvars}(\tenv);\tenv \ivturns \rulet~\gbox{\leadsto E}}
+          {\tyvars{\tenv};\tenv \ivturns [\rulet]~\gbox{\leadsto E}}
           {\tenv \ivturns \rulet~\gbox{\leadsto E}} \\ \\
-\multicolumn{1}{c}{\myruleform{\bar{\alpha}; \tenv \ivturns \rulet~\gbox{\leadsto E}}} \\ \\
+\left.
+\begin{array}{rcl@@{\hspace{1.5cm}}rcl}
+\tyvars{\epsilon}     & = & \epsilon &
+\tyvars{\tenv,\alpha} & = & \tyvars{\tenv},\alpha \\
+\tyvars{\tenv,x : \rulet} & = & \tyvars{\tenv} &
+\tyvars{\tenv,\rulet~\gbox{\leadsto x}} & = & \tyvars{\tenv} 
+\end{array}
+\right. \\ \\
+\multicolumn{1}{c}{\myruleform{\bar{\alpha}; \tenv \ivturns [\rulet]~\gbox{\leadsto E}}} \\ \\
 %%\quad\quad\quad
   \myrule{R-IAbs}
-         {\bar{\alpha};\tenv, \rulet_1~\gbox{\leadsto x} \ivturns \rulet_2~\gbox{\leadsto E} \quad\quad \gbox{x~\mathit{fresh}}}
-         {\bar{\alpha};\tenv \ivturns \rulet_1 \iarrow \rulet_2~\gbox{\leadsto
+         {\bar{\alpha};\tenv, \rulet_1~\gbox{\leadsto x} \ivturns [\rulet_2]~\gbox{\leadsto E} \quad\quad \gbox{x~\mathit{fresh}}}
+         {\bar{\alpha};\tenv \ivturns [\rulet_1 \iarrow \rulet_2]~\gbox{\leadsto
             \lambda\relation{x}{||\rulet_1||}.E}} 
 \quad\quad
   \myrule{R-TAbs}
-         {\bar{\alpha};\tenv,\alpha \ivturns \rulet~\gbox{\leadsto E}}
-         {\bar{\alpha};\tenv \ivturns \forall \alpha. \rulet~\gbox{\leadsto \Lambda\alpha.E}} 
+         {\bar{\alpha};\tenv,\alpha \ivturns [\rulet]~\gbox{\leadsto E}}
+         {\bar{\alpha};\tenv \ivturns [\forall \alpha. \rulet]~\gbox{\leadsto \Lambda\alpha.E}} 
 \\ \\
  \myrule{R-Simp}
-        {\bar{\alpha};\tenv;\tenv \ivturns \type~\gbox{\leadsto E}}
-        {\bar{\alpha};\tenv \ivturns \type~\gbox{\leadsto E}} 
+        {\bar{\alpha};\tenv;[\tenv] \ivturns \type~\gbox{\leadsto E}}
+        {\bar{\alpha};\tenv \ivturns [\type]~\gbox{\leadsto E}} 
 \\ \\ \\
-\myruleform{\bar{\alpha};\tenv;\tenv' \ivturns \type~\gbox{\leadsto E}}\\ \\
+\myruleform{\bar{\alpha};\tenv;[\tenv'] \ivturns \type~\gbox{\leadsto E}}\\ \\
 
   \myrule{L-RuleMatch}
-          {\tenv; \rulet~\gbox{\leadsto x} \ivturns \tau~\gbox{\leadsto E}; \overline{\rulet'~\gbox{\leadsto x}} \\
-            \bar{\alpha};\tenv \ivturns \rulet'~\gbox{\leadsto E'} \quad (\forall \rulet' \in \overline{\rulet}')
+          {\tenv; [\rulet]~\gbox{\leadsto x} \ivturns \tau~\gbox{\leadsto E}; \overline{\rulet'~\gbox{\leadsto x}} \\
+            \bar{\alpha};\tenv \ivturns [\rulet']~\gbox{\leadsto E'} \quad (\forall \rulet' \in \overline{\rulet}')
           }
-          {\bar{\alpha};\tenv;\tenv',\rulet~\gbox{\leadsto x} \ivturns \type~\gbox{\leadsto E[\bar{E}'/\bar{x}]}} \\
+          {\bar{\alpha};\tenv;[\tenv',\rulet~\gbox{\leadsto x}] \ivturns \type~\gbox{\leadsto E[\bar{E}'/\bar{x}]}} \\
   \myrule{L-RuleNoMatch}{
-	\mathit{stable}(\bar{\alpha},\tenv,\rulet,\type) \\
+	\mathit{stable}(\bar{\alpha},\tenv,\rulet~\gbox{\leadsto x},\type) \\
 %   \not\exists \theta, E, \Sigma, \mathit{dom}(\theta) \subseteq \bar{\alpha}: \theta(\tenv); \theta(\rulet)~\gbox{\leadsto x} \ivturns \theta(\tau)~\gbox{\leadsto E}; \Sigma \\
-           \bar{\alpha};\tenv;\tenv' \ivturns \type~\gbox{\leadsto E'}
+           \bar{\alpha};\tenv;[\tenv'] \ivturns \type~\gbox{\leadsto E'}
           }
-          {\bar{\alpha};\tenv;\tenv',\rulet~\gbox{\leadsto x} \ivturns \type~\gbox{\leadsto E'}} \\ \\
+          {\bar{\alpha};\tenv;[\tenv',\rulet~\gbox{\leadsto x}] \ivturns \type~\gbox{\leadsto E'}} \\ \\
   \myrule{L-Var}
-         {\bar{\alpha};\tenv;\tenv' \ivturns \type~\gbox{\leadsto E}
+         {\bar{\alpha};\tenv;[\tenv'] \ivturns \type~\gbox{\leadsto E}
          }
-         {\bar{\alpha};\tenv;\tenv',x:\rulet \ivturns \type~\gbox{\leadsto E}} 
+         {\bar{\alpha};\tenv;[\tenv',x:\rulet] \ivturns \type~\gbox{\leadsto E}} 
 \quad\quad\quad
   \myrule{L-TyVar}
-         {\bar{\alpha};\tenv;\tenv' \ivturns \type~\gbox{\leadsto E}
+         {\bar{\alpha};\tenv;[\tenv'] \ivturns \type~\gbox{\leadsto E}
          }
-         {\bar{\alpha};\tenv;\tenv',\alpha \ivturns \type~\gbox{\leadsto E}} 
+         {\bar{\alpha};\tenv;[\tenv',\alpha] \ivturns \type~\gbox{\leadsto E}} 
 \\ \\ \\
-\myruleform{\tenv; \rulet~\gbox{\leadsto E} \ivturns \type~\gbox{\leadsto E'}; \Sigma}\\ \\
+\myruleform{\tenv; [\rulet]~\gbox{\leadsto E} \ivturns \type~\gbox{\leadsto E'}; \Sigma}\\ \\
   \myrule{M-Simp}
          {}
-         {\tenv; \type~\gbox{\leadsto E} \ivturns \type~\gbox{\leadsto E}; \epsilon} \\ \\
+         {\tenv; [\type]~\gbox{\leadsto E} \ivturns \type~\gbox{\leadsto E}; \epsilon} \\ \\
   \myrule{M-IApp}
-         {\tenv, \rulet_1 \gbox{\leadsto x}; \rulet_2 ~\gbox{\leadsto E\,x} \ivturns \type~\gbox{\leadsto E'}; \Sigma 
+         {\tenv, \rulet_1 \gbox{\leadsto x}; [\rulet_2] ~\gbox{\leadsto E\,x} \ivturns \type~\gbox{\leadsto E'}; \Sigma 
           \quad\quad\quad \gbox{x~\mathit{fresh}}
          }
-         {\tenv; \rulet_1 \iarrow \rulet_2 ~\gbox{\leadsto E} \ivturns \type~\gbox{\leadsto E'}; \Sigma, \rulet_1~\gbox{\leadsto x}} \\ \\ 
+         {\tenv; [\rulet_1 \iarrow \rulet_2] ~\gbox{\leadsto E} \ivturns \type~\gbox{\leadsto E'}; \Sigma, \rulet_1~\gbox{\leadsto x}} \\ \\ 
   \myrule{M-TApp}
-         {\tenv; \rulet[\suty/\alpha] ~\gbox{\leadsto E\,||\suty||} \ivturns \type~\gbox{\leadsto E'}; \Sigma
+         {\tenv; [\rulet[\suty/\alpha]] ~\gbox{\leadsto E\,||\suty||} \ivturns \type~\gbox{\leadsto E'}; \Sigma
           \quad\quad\quad
           \tenv \turns \suty
          }
-         {\tenv; \forall \alpha. \rulet ~\gbox{\leadsto E} \ivturns \type~\gbox{\leadsto E'}; \Sigma} \\ \\ \\
-\myruleform{\mathit{stable}(\bar{\alpha},\tenv,\rulet,\type)} \\ \\
-  \myrule{Stable}{\not\exists \theta, E, \Sigma, \mathit{dom}(\theta) \subseteq \bar{\alpha}: \theta(\tenv); \theta(\rulet)~\gbox{\leadsto x} \ivturns \theta(\tau)~\gbox{\leadsto E}; \Sigma}
-          {\mathit{stable}(\bar{\alpha},\tenv,\rulet,\type)}
+         {\tenv; [\forall \alpha. \rulet] ~\gbox{\leadsto E} \ivturns \type~\gbox{\leadsto E'}; \Sigma} \\ \\ \\
+\myruleform{\mathit{stable}(\bar{\alpha},\tenv,\rulet~\gbox{\leadsto x},\type)} \\ \\
+  \myrule{Stable}{\not\exists \theta, E, \Sigma: \enskip \bar{\alpha},\tenv \vdash \theta
+           \quad \theta(\tenv); [\theta(\rulet)]~\gbox{\leadsto x} \ivturns \theta(\tau)~\gbox{\leadsto E}; \Sigma}
+          {\mathit{stable}(\bar{\alpha},\tenv,\rulet~\gbox{\leadsto x},\type)}
 \eda
 \end{minipage}
 }
 \end{center}
-}
+} 
+
+Figure~\ref{fig:resolution2} puts all the above measures together in our
+unambiguous, deterministic and stable definition of resolution.
 
 % %- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 % \paragraph{Legacy}
