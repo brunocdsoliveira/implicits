@@ -159,7 +159,9 @@ FIXED
 > p16 S3.5 The order of explanation here does not follow the order the rules are presented in the figure, which makes it more difficult to follow.
 > 
 > p17 I don't really understand the need for the β >Γ α judgment. When you feel the need to write parenthesized sentences like "(We make an exception .." this is almost always because you haven't serialized your thoughts properly yet.
-> 
+
+REWRITTEN - EXPANDED - FIXED
+ 
 > p19 Fig 7. The subscripts here are hard to read. Suggest writing ρ_{11} instead of ρ_{1,1} (drop the comma)
 
 FIXED

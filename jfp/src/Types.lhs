@@ -1308,8 +1308,8 @@ unambiguous, deterministic and stable definition of resolution.
 
 \newcommand{\alg}{\turns_{\mathit{alg}}}
 \newcommand{\coh}{\turns_{\mathit{coh}}}
-\newcommand{\mgu}[3][\bar{\alpha}]{\textit{mgu}_{#1}(#2,#3)}
-\newcommand{\mgun}[4][\tenv]{\textit{mgu}_{#1;#2}(#3,#4)}
+\newcommand{\mgu}[3][\bar{\alpha}]{\textit{unify}_{\tenv;#1}(#2,#3)}
+\newcommand{\mgun}[4][\tenv]{\textit{unify'}_{#2}(#3,#4)}
 
 This section presents in Figure~\ref{fig:algorithm} an algorithm that implements the
 deterministic resolution rules of Figure~\ref{fig:resolution2}.
@@ -1337,8 +1337,8 @@ the type variables $\bar{\alpha}$ have not been instantiated, the judgement
 keeps track of them in its first argument. The actual instantiation happens in
 the base case, Rule \mylabel{Alg-M-Simp}. This last rule performs the deferred
 instantiation of type variables $\bar{\alpha}$ by computing the \emph{most
-general unifier} $\theta = \mgun{\bar{\alpha}}{\type'}{\type}$. The unification
-algorithm, which we present below, computes the most general substitution
+general unifier} $\theta = \mgu{\type'}{\type}$. The unification
+algorithm, which we present below, computes a substitution
 $\theta$ that is valid (i.e., $\bar{\alpha}; \tenv \vdash \theta$) and
 that equates the two types (i.e., $\theta(\type) = \theta(\type')$).
 
@@ -1371,7 +1371,7 @@ and its algorithmic counterpart:
   \inferrule*[Right=\mylabel{Alg-M-TApp}]
     {\inferrule*[Right=\mylabel{Alg-M-IApp}]
        {\inferrule*[Right=\mylabel{Alg-M-Simp}]
-           {[\tyint/\alpha] = \mgun{\alpha}{\alpha}{\tyint}}
+           {[\tyint/\alpha] = \mgu[\alpha]{\alpha}{\tyint}}
            {\alpha; \tenv; [\alpha]~\gbox{\leadsto x\,\alpha\,y}; \alpha~\gbox{\leadsto y} \vdash \tyint ~\gbox{\leadsto x\,\tyint\,y}; \epsilon}
        }
        {\alpha; \tenv; [\alpha \iarrow \alpha]~\gbox{\leadsto x\,\alpha}; \epsilon \ivturns \tyint ~\gbox{\leadsto x\,\tyint\,y}; \tyint ~\gbox{\leadsto y}}
@@ -1391,8 +1391,7 @@ of the type variables $\bar{\alpha}$.
 
 We apply the same deferred-instantation technique as with the first difference: Instead,
 of applying a substitution first and then checking whether the rule matches the goal, we 
-defer the instantiation to the end where we can deterministically pick one (i.e., the most general
-) instantiation instad of considering all valid instantiations. 
+defer the instantiation to the end where we can deterministically pick one instantiation instad of considering all valid instantiations. 
 As a consequence of the similarity, 
 the definition of the judgement $\bar{\alpha};\tenv;\rulet \coh \type$ is a
 variation on that of $\bar{\alpha}; \tenv; \rulet~\gbox{\leadsto
@@ -1407,10 +1406,10 @@ query, rule \mylabel{Alg-L-RuleNoMatch} pre-populates the substitutable
 variables of the $\coh$ judgement with them. Contrast this with the matching
 judgement where only the rule's quantified variables are instantiated.
 
-%- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+%-------------------------------------------------------------------------------
 \subsection{Scope-Aware Unification}
 
-The unification algorithm $\theta= \mgun{\bar{\alpha}}{\rulet_1}{\rulet_2}$ is
+The unification algorithm $\theta= \mgu{\rulet_1}{\rulet_2}$ is
 a key component of the two algorithmic changes explained above.
 
 Figure~\ref{fig:mgu} provides its definition, which is an extension of standard
@@ -1419,28 +1418,31 @@ $\bar{\alpha}$ denotes which type variables are to be treated as unification
 variables; all other type variables are to be treated as constants. The returned
 substitution is 
 a unifier of $\rulet_1$ and $\rulet_2$, i.e., $\theta(\rulet_1) = \theta(\rulet_2)$.
-Moreover, it is a most general unifier, i.e., any other unifier can be written as
-a composition of $\theta$ with another substitution.
 
+%- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+\paragraph{Validity}
 The differences with standard first-order unification arise because the
 algorithm has to account for the scope of type variables. Indeed, as we have already
 explained in Section~\ref{subsec:det}, we expect that the returned substitution
 is valid, i.e., $\bar{\alpha};\tenv \vdash \theta$.
-For instance, using standard first-order unification for $\mgun{\beta}{\forall
+For instance, using standard first-order unification for $\mgu[\beta]{\forall
 \alpha. \alpha \to \beta}{\forall \alpha.\alpha \to \alpha}$ would yield the
 \emph{invalid}
 substitution $[\beta/\alpha]$. The substitution is invalid because
 $\alpha$ is not in scope in $\tenv$.
 
-A second scope-related issue is that the most general unifier may not be a
-valid substitution, while more specific unifiers may be valid.  Consider for
-instance unifying $\alpha$ with $\beta \arrow \beta$ where $\tenv = \alpha,
-\beta$ and both $\alpha$ and $\beta$ are unification variables. The most
-general unifier is obviously $[\beta \arrow \beta/\alpha]$. However this
-unifier is clearly not valid, as $\alpha$ apears before $\beta$ in the
-environment. In contrast, there are infinitely many more specific unifiers
-that are valid, all of the form $[\rulet\arrow\rulet/\alpha,\rulet/\beta]$ where
-$\rulet$ is a closed type.
+%- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+\paragraph{Most General Unifier}
+Secondly, traditional unification computes the most general unifier, i.e., any other
+unifier can be expressed as its composition with another substitution.
+Yet, the most general unifier may not be a valid substitution, while more
+specific unifiers may be valid.  Consider for instance unifying $\alpha$ with
+$\beta \arrow \beta$ where $\tenv = \alpha, \beta$ and both $\alpha$ and
+$\beta$ are unification variables. The most general unifier is obviously
+$[\beta \arrow \beta/\alpha]$. However this unifier is clearly not valid, as
+$\alpha$ apears before $\beta$ in the environment. In contrast, there are
+infinitely many more specific unifiers that are valid, all of the form
+$[\rulet\arrow\rulet/\alpha,\rulet/\beta]$ where $\rulet$ is a closed type.
 
 Fortunately, by a stroke of luck, the above is not a problem for either
 of our two use cases:
@@ -1448,7 +1450,7 @@ of our two use cases:
 \item
 The first use case is that in Rule~\mylabel{Alg-M-Simp} where this is not a
 problem because the scenario never arises. In
-$\mgu{\bar{\alpha}}{\type'}{\type}$ only $\type'$ contains unification
+$\mgu{\type'}{\type}$ only $\type'$ contains unification
 variables and hence the range of the substitution never contains any
 unification variables. As a consequence the above exampe and others like
 it cannot occur.
@@ -1462,21 +1464,32 @@ can always construct a more specific valid substitution by substituting the rema
 unification variables by closed types.
 \end{itemize}
 
-Rule \mylabel{U-InstL} implements the base case for scope-safe unification.
-It only creates a substitution $[\suty/\alpha]$ if $\alpha$ is one of the
-unification variables and if its instantiation does not refer to any type variables
-that have been introduced in the environment after $\alpha$. The latter
-relation is captured in the auxiliary judgement $\beta >_\tenv \alpha$.
-(We make an exception for unifiable type variables that have been introduced later:
-while the most general unifier itself may not yield a valid instantiation, it still 
-signifies the existence of an infinite number of more specific valid instantiations.)
-Rule \mylabel{U-InstR} is the symmetric form of \mylabel{U-InstL}.
+%- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+\paragraph{Definition}
 
-Rule \mylabel{U-Var} is the standard reflexivity rule. Rules \mylabel{U-Fun}
-and \mylabel{U-Rul} are standard congruence rules that combine the
-unifications derived for their subterms. Rule \mylabel{U-Univ} is a congruence
-rule too, but additionally extends the environment $\tenv$ in the recursive
-call with the new type variable $\beta$ that is in scope in the subterms.
+With the above issues in mind we can consider the actual definition in
+Figure~\ref{fig:algorithm}. The main unification judgement $\theta =
+\mgu{\rulet_1}{\rulet_2}$ is defined by Rule~\mylabel{U-Main}. This rule
+computes the unifier in terms of the auxiliary judgement $\theta =
+\mgun{\bar{\alpha}}{\rulet_1}{\rulet_2}$, which is essentially standard
+unification, and then checks the above vality concerns.  Indeed, for any type
+variable $\beta$ that appears in the image of a type variable $\alpha$, either
+$\beta$ must appear before $\alpha$ in the environment $\tenv$ (regular
+validity), or $\beta$ must itself be a unification variable (the exceptional
+case). The relative position of variables is checked with 
+the auxiliary judgement $\beta >_\tenv \alpha$ whose one rule verifies
+that $\beta$ appears before $\alpha$ in the environment $\tenv$.\footnote{If type variables
+are represented by de Bruijn indices, this can be implemented by the $>$-comparison on naturals.}
+
+The auxiliary judgement $\mgun{\bar{\alpha}}{\rulet_1}{\rulet_2}$ computes the
+actual unifier. 
+Rule \mylabel{U-Var} is the standard reflexivity rule for type variables. 
+Rules \mylabel{U-InstL} and \mylabel{U-InstR} are two
+symmetric base cases; they only create a substitution $[\suty/\alpha]$ if
+$\alpha$ is one of the unification variables.
+Rules \mylabel{U-Fun}
+\mylabel{U-Rul} and \mylabel{U-Univ} are standard congruence rules that combine the
+unifications derived for their subterms.
 
 % \paragraph{Ambiguity}
 % Some of the type variables $\bar{\alpha}$ may not be instantiated by the
@@ -1535,7 +1548,7 @@ call with the new type variable $\beta$ that is in scope in the subterms.
 
 \multicolumn{1}{c}{\myruleform{\bar{\alpha}; \tenv; \rulet~\gbox{\leadsto E}; \Sigma \alg \type~\gbox{\leadsto E'}; \Sigma'}} \\ \\
 
-\myrule{Alg-M-Simp}{\theta = \mgun{\bar{\alpha}}{\type}{\type'}
+\myrule{Alg-M-Simp}{\theta = \mgu{\type}{\type'}
         }
         {\bar{\alpha}; \tenv; \type'~\gbox{\leadsto E}; \Sigma \alg \type~\gbox{\leadsto ||\theta||(E)}; \theta(\Sigma)}  \\ \\
 
@@ -1551,7 +1564,7 @@ call with the new type variable $\beta$ that is in scope in the subterms.
 \quad\quad\quad
 \myrule{Coh-IApp}{\bar{\alpha};\tenv;\rulet_2 \coh \tau}
         {\bar{\alpha};\tenv;\rulet_1 \iarrow \rulet_2\coh \tau} \\ \\
-\myrule{Coh-Simp}{\theta = \mgun{\bar{\alpha}}{\tau}{\tau'}
+\myrule{Coh-Simp}{\theta = \mgu{\tau}{\tau'}
         }
         {\bar{\alpha};\tenv;\tau'\coh \tau}  
 \eda
@@ -1560,7 +1573,7 @@ call with the new type variable $\beta$ that is in scope in the subterms.
 \end{center}
 }
 
-\figtwocol{fig:mgu}{Most General Unifier}{
+\figtwocol{fig:mgu}{Unification Algorithm}{
 \begin{center}
 \framebox{\scriptsize
 \begin{minipage}{0.969\textwidth}
@@ -1601,13 +1614,13 @@ call with the new type variable $\beta$ that is in scope in the subterms.
 %         } 
 %         {\theta = \mathit{mgu}_{\bar{\alpha}}(\forall \beta.\rulet_{1},\forall \beta.\rulet_{2})}  \\ \\
 
-\myruleform{\theta = \mgun{\bar{\alpha}}{\rulet_1}{\rulet_2}} \\ \\
+\myruleform{\theta = \mgu{\rulet_1}{\rulet_2}} \\ \\
 
 \myrule{U-Main}{ 
            \theta = \mgun{\bar{\alpha}}{\rulet_1}{\rulet_2}\\
 	   \beta \in \bar{\alpha} \vee \beta >_\tenv \alpha \quad(\forall [\suty/\alpha] \in \theta, \forall \beta \in \mathit{ftv}(\suty))
         } 
-        { \theta = \mgun{\bar{\alpha}}{\rulet_1}{\rulet_2}}  \\ \\
+        { \theta = \mgu{\rulet_1}{\rulet_2}}  \\ \\
 
 \myruleform{\theta = \mgun{\bar{\alpha}}{\rulet_1}{\rulet_2}} \\ \\
 
