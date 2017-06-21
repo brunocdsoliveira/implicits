@@ -1673,6 +1673,10 @@ unifications derived for their subterms.
 %-------------------------------------------------------------------------------
 \subsection{Termination of Resolution}
 
+\newcommand{\term}[1]{\turns_\mathit{term} #1}
+\newcommand{\occ}[2]{\mathit{occ}_{#1}(#2)}
+\newcommand{\tnorm}[1][\cdot]{\||#1\||}
+
 If we are not careful about which rules are added to the implicit environment,
 then the resolution process may not terminate.  This section describes how to
 impose a set of modular syntactic restrictions that prevents non-termination. 
@@ -1687,18 +1691,86 @@ nature of resolution: a simple type can be resolved
 in terms of a rule type whose head it matches, but this requires further 
 resolution of the rule type's context. 
 
-\newcommand{\term}[1]{\turns_\mathit{term} #1}
-\newcommand{\occ}[2]{\mathit{occ}_{#1}(#2)}
-\newcommand{\tnorm}[1]{\||#1\||}
-
-%- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-\paragraph{Termination Condition}
 The problem of non-termination has been widely studied in the context of
 Haskell's type classes, and a set of modular syntactic restrictions
 has been imposed on type class instances to avoid non-termination~\cite{fdchr}. 
-Adapting these restrictions to our setting, we obtain the termination
-judgement $\term{\rulet}$ defined in Figure~\ref{fig:termination}.
+This paper adapts those restrictions to the setting of \name.
 
+%- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+\paragraph{Overall Approach}
+
+We show termination by characterising the resolution process as a (resolution)
+tree with goals in the nodes. The initial goal sits at the root of the tree. A
+multi-edge from a parent node to its children presents a rule from the
+environment that matches the parent node’s goal; the nodes children are the
+recursive goals. 
+
+Resolution terminates if the tree is finite.  Hence, if it does not terminate,
+there is an infinite path from the root in the tree, that denotes an infinite
+sequence of matching rule applications. To show that there cannot be such an
+infinite path, we use a norm $\tnorm$ (defined at the bottom of Figure~\ref{fig:termination})
+that maps the head of every goal $\rulet$ to a natural number, its size.
+
+If we can show that this size strictly decreases from any parent goal to its
+children, then we know that, because the order on the natural numbers is
+well-founded, on any path from the root there is evantually a goal that has no
+children.
+
+%- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+\paragraph{Termination Condition}
+It is trivial to show that the size strictly decreases, if we require that
+every rule in the environment makes it so. This requirement is formalised as
+ the termination condition $\term{\rulet}$ in Figure~\ref{fig:termination}.
+
+The judgement is defined by case analysis on the type $\rulet$. Rule~\mylabel{T-Simp} states that simple types trivially satisfy the
+condition. Next, Rule \mylabel{T-Forall} is the obvious congruence rule for
+universally quantified types. Finally, Rule~\mylabel{T-Rule} enforces
+the actual condition on rule types $\rulet_1 \iarrow \rulet_2$, which
+requires that the head $\type_1$ of $\rulet_1$ is strictly smaller than the
+head $\type_2$ $\rulet_2$.
+In addition, the rule ensures that this property is stable
+under type substitution. Consider for instance the type
+$\forall a. (a \arrow a) \iarrow (a \arrow \mathit{Int} \arrow \tyint)$. 
+The head's size 5 is strictly greater than the context
+constraint's size 3. Yet, if we instantiate $\alpha$ to
+$(\tyint \arrow \tyint \arrow \tyint)$, 
+then the
+head's size becomes 10 while the context constraint's size becomes 11.
+
+Declaratively, we
+can formulate stability as: \[\forall \theta. \mathit{dom}(\theta) \subseteq
+\mathit{ftv}({\constraint_1} \cup \fv{\constraint_2}: \enskip
+% \norm{\theta(\classConstraint_1)} < \norm{\theta(\classConstraint_2)}\]
+The rule uses instead
+ equivalent algorithmic formulation which states that the number of occurrences
+of any free type variable $a$ may not be larger in $\classConstraint_1$
+than in $\classConstraint_2$.
+
+% % ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+% %                            Variable Occurrences
+% % ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+% %% \begin{flushleft}
+% %% \namedRuleform{\occurrences{a}{\constraint} = \mathbb{N}}
+% %%               {Number of Variable Occurrences}
+% %% \end{flushleft}
+% \[
+% \begin{array}{l@{\hspace{2mm}}c@{\hspace{2mm}}l}
+%   \occurrences{a}{b}                           & = &
+%     \left\{
+%       \begin{array}{ll}
+%         1 & \text{, if } a =    b \\
+%         0 & \text{, if } a \neq b \\
+%       \end{array}
+%     \right. \\
+%   \occurrences{a}{\monotype_1 \to \monotype_2} & = & \occurrences{a}{\monotype_1} + \occurrences{a}{\monotype_2} \\
+% \end{array}
+% \]
+% Finally, as the constraints have a recursive structure whereby their
+% components are themselves used as axioms, the rules also enforce the
+% termination condition recursively on the components.
+
+%- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+\paragraph{Definition}
 This judgement recursively constrains rule types $\rulet_1 \iarrow \rulet_2$ to
 guarantee that the recursive resolution process is well-founded. In particular,
 it defines a size measure $\||\rulet\||$ for type terms $\rulet$ and makes sure that the size 
@@ -1737,7 +1809,7 @@ This can be done by making the condition part of the well-formedness relation fo
           {\term{\forall \alpha. \rulet}} 
 \\ \\
   \myrule{T-Rule}{\term{\rulet_1} \quad\quad \term{\rulet_2} \quad\quad
-           \tau_1 = \head{\rulet_1} \quad\quad \tau_2 = \head{\rulet_2} \\ \tnorm{\tau_1} < \tnorm{\tau_2} \\
+           \tau_1 = \head{\rulet_1} \quad\quad \tau_2 = \head{\rulet_2} \\ \tnorm[\tau_1] < \tnorm[\tau_2] \\
            \forall \alpha \in \ftv{\rulet_1} \cup \ftv{\rulet_2}: \; \occ{\alpha}{\tau_1} \leq \occ{\alpha}{\tau_2}}  
           {\term{\rulet_1 \iarrow \rulet_2}} 
   \\ \\
@@ -1761,10 +1833,10 @@ This can be done by making the condition part of the well-formedness relation fo
       \occ{\alpha}{\rulet_1 \arrow \rulet_2} & = & \occ{\alpha}{\rulet_1} + \occ{\alpha}{\rulet_2} &
       \occ{\alpha}{\rulet_1 \iarrow \rulet_2} & = & \occ{\alpha}{\rulet_1} + \occ{\alpha}{\rulet_2} 
       \\ \\
-      \tnorm{\alpha} & = & 1 &
-      \tnorm{\forall \alpha.\rulet} & = & \tnorm{\rulet} \\
-      \tnorm{\rulet_1 \arrow \rulet_2} & = & 1 + \tnorm{\rulet_1} + \tnorm{\rulet_2} &
-      \tnorm{\rulet_1 \iarrow \rulet_2} & = & 1 + \tnorm{\rulet_1} + \tnorm{\rulet_2} 
+      \tnorm[\alpha] & = & 1 &
+      \tnorm[\forall \alpha.\rulet] & = & \tnorm[\rulet] \\
+      \tnorm[\rulet_1 \arrow \rulet_2] & = & 1 + \tnorm[\rulet_1] + \tnorm[\rulet_2] &
+      \tnorm[\rulet_1 \iarrow \rulet_2] & = & 1 + \tnorm[\rulet_1] + \tnorm[\rulet_2] 
     \ea
 \end{equation*}
 \end{minipage}
