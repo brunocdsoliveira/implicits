@@ -1737,62 +1737,20 @@ $(\tyint \arrow \tyint \arrow \tyint)$,
 then the
 head's size becomes 10 while the context constraint's size becomes 11.
 
-Declaratively, we
-can formulate stability as: \[\forall \theta. \mathit{dom}(\theta) \subseteq
-\mathit{ftv}({\constraint_1} \cup \fv{\constraint_2}: \enskip
-% \norm{\theta(\classConstraint_1)} < \norm{\theta(\classConstraint_2)}\]
-The rule uses instead
- equivalent algorithmic formulation which states that the number of occurrences
-of any free type variable $a$ may not be larger in $\classConstraint_1$
-than in $\classConstraint_2$.
+Declaratively, we can formulate stability as: 
+\[\forall \theta.
+\mathit{dom}(\theta) \subseteq \mathit{ftv}(\rulet_1) \cup \mathit(ftv)(\rulet_2): 
+\enskip \tnorm[\theta(\rulet_1)] <
+\tnorm[\theta(\rulet_2)]\]
+Instead of enumerating all possible substitutions, Rule~\mylabel{T-Rule} uses instead an
+equivalent algorithmic formulation which states that the number of occurrences
+of any free type variable $\alpha$ may not be larger in $\rulet_1$ than in
+$\rulet_2$. The auxiliary function $\occ{\alpha}{\rulet}$ is used here to
+determine the number of occurrences of $\alpha$ in $\rulet$.
 
-% % ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-% %                            Variable Occurrences
-% % ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-% %% \begin{flushleft}
-% %% \namedRuleform{\occurrences{a}{\constraint} = \mathbb{N}}
-% %%               {Number of Variable Occurrences}
-% %% \end{flushleft}
-% \[
-% \begin{array}{l@{\hspace{2mm}}c@{\hspace{2mm}}l}
-%   \occurrences{a}{b}                           & = &
-%     \left\{
-%       \begin{array}{ll}
-%         1 & \text{, if } a =    b \\
-%         0 & \text{, if } a \neq b \\
-%       \end{array}
-%     \right. \\
-%   \occurrences{a}{\monotype_1 \to \monotype_2} & = & \occurrences{a}{\monotype_1} + \occurrences{a}{\monotype_2} \\
-% \end{array}
-% \]
-% Finally, as the constraints have a recursive structure whereby their
-% components are themselves used as axioms, the rules also enforce the
-% termination condition recursively on the components.
-
-%- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-\paragraph{Definition}
-This judgement recursively constrains rule types $\rulet_1 \iarrow \rulet_2$ to
-guarantee that the recursive resolution process is well-founded. In particular,
-it defines a size measure $\||\rulet\||$ for type terms $\rulet$ and makes sure that the size 
-of the resolved head type decreases steadily with each recursive resolution
-step. 
-
-The size measure does not take 
-universally quantified type variables into account. It assigns them size 1 but
-ignores the fact that the size may increase dramatically when the type variable
-is instantiated with a large type. The rule $\TermRule$ makes up for this 
-by requiring a size decrease for all possible instantiations of free type variables.
-However, rather than to specify this property non-constructively as 
-\[ \forall \bar{\rulet}: \quad \||[\bar{\alpha}\mapsto\bar{\rulet}]\tau_1\|| < \||[\bar{\alpha}\mapsto\bar{\rulet}]\tau_2\|| \]
-it provides a more practical means to verify this condition by way of free variable occurrences.
-The number of occurrences $\occ{\alpha}{\tau_1}$ of free variable $\alpha$ in type $\tau_1$ should be less than the number
-of occurrences 
-$\occ{\alpha}{\tau_2}$ in $\tau_2$. It is easy to see that the non-constructive property follows from this requirement.
-
-\paragraph{Integration in the Type System}
-There are various ways to integrate the termination condition in the type system. 
-The most generic approach is to require that all types satisfy the termination condition.
-This can be done by making the condition part of the well-formedness relation for types.
+Finally, as the types have a recursive structure whereby their components are
+themselves added to the environment, Rule~\mylabel{T-Rule} also enforces the
+termination condition recursively on the components.
 
 \figtwocol{fig:termination}{Termination Condition}{
 \begin{center}
