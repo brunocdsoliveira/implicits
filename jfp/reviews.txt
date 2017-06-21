@@ -320,7 +320,9 @@ FIXED
 > presentation of the PLDI'12 work and a coherent presentation that is
 > interesting. (I found the discussion of termination a bit rushed, on
 > the other hand, and its presentation could probably be improved.)
-> 
+
+REVISED DISCUSSION OF TERMINATION
+ 
 > I am not convinced that this delta, compared to the PLDI'12
 > contributions, is enough for a new conference submission. I would
 > rather recommend (weakly) to reject the paper and encourage the author
