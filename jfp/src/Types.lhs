@@ -1486,7 +1486,8 @@ actual unifier.
 Rule \mylabel{U-Var} is the standard reflexivity rule for type variables. 
 Rules \mylabel{U-InstL} and \mylabel{U-InstR} are two
 symmetric base cases; they only create a substitution $[\suty/\alpha]$ if
-$\alpha$ is one of the unification variables.
+$\alpha$ is one of the unification variables and if $\alpha$ does not occur in $\suty$, which is
+the well-known occurs-check.
 Rules \mylabel{U-Fun}
 \mylabel{U-Rul} and \mylabel{U-Univ} are standard congruence rules that combine the
 unifications derived for their subterms.
@@ -1630,12 +1631,12 @@ unifications derived for their subterms.
 
 
 \myrule{U-InstL}{ 
-	  \alpha \in \bar{\alpha}
+	  \alpha \in \bar{\alpha} \\ \alpha \not\in \mathit{ftv}(\suty)
         } 
         { [\suty/\alpha] = \mgun{\bar{\alpha}}{\alpha}{\suty}}  \qquad
 
 \myrule{U-InstR}{ 
-	  \alpha \in \bar{\alpha}
+	  \alpha \in \bar{\alpha} \\ \alpha \not\in \mathit{ftv}(\suty)
         } 
         { [\suty/\alpha] = \mgun{\bar{\alpha}}{\suty}{\alpha}} \\ \\
 
