@@ -68,23 +68,12 @@ type classes are supposed to support an even stronger property, the so-called \e
 Global uniqueness ensures that \emph{at any point in a
   program, and independently of the context} the type-directed
 resolution process always returns the same value for the same
-resolved type. This is a consequence of Haskell having the usual
-coherence property and a restriction of at most one
+resolved type. This is a consequence of Haskell having a restriction of at most one
 instance of a type class per type in a program.
 
 While both coherence and global uniqueness of instances are preserved in Haskell,
 this comes at a cost. Since the first implementations of type classes,
-Haskell imposes several restrictions to guarantee coherence. Advanced
-features of type classes, such as overlapping
-instances,\footnote{\url{https://downloads.haskell.org/~ghc/latest/docs/html/users\_guide/glasgow\_exts.html\#overlapping-instances}}
-pose severe problems for coherence. In purely functional programming,
-``\emph{substituting equals by equals}'' is expected to hold. That is,
-when given two equivalent expressions replacing one by the other in
-\emph{any context} always leads to two programs that yield the same
-result. Special care (via restrictions) is needed to preserve
-coherence and the ability of substituting equals for equals in the
-presence of overlapping instances.
-
+Haskell imposes several restrictions to guarantee coherence. 
 Various past work has pointed out limitations of type classes~\cite{named_instance,systemct,implicit_explicit,modular,Garcia:2007extended,implicits,chain,oliveira12implicit}. 
 In particular type classes allow at most one instance per type (or severely 
 restrict overlapping instances) to exist in a program. This means  
@@ -94,6 +83,18 @@ This form of global scoping goes against
 modularity. Other restrictions of type classes are 
 that they are second class interfaces and that the type-directed rules 
 cannot be higher-order~\cite{oliveira12implicit}. 
+Advanced
+features of type classes, such as overlapping
+instances,\footnote{\url{https://downloads.haskell.org/~ghc/latest/docs/html/users\_guide/glasgow\_exts.html\#overlapping-instances}}
+also pose severe problems for coherence. In purely functional programming,
+``\emph{substituting equals by equals}'' is expected to hold. That is,
+when given two equivalent expressions replacing one by the other in
+\emph{any context} always leads to two programs that yield the same
+result. Special care (via restrictions) is needed to preserve
+coherence and the ability of substituting equals for equals in the
+presence of overlapping instances.
+
+
 
 An alternative school of thought in the design of IP mechanisms favours \emph{flexibility}. For instance, 
 Scala implicits and Agda's instance arguments do not impose all of
