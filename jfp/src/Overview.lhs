@@ -391,9 +391,25 @@ the implicit calculus~\cite{oliveira12implicit}, which is an incoherent calculus
 designed to model the essence of Scala implicits. Like the implicit
 calculus it combines standard scoping mechanisms (abstractions and
 applications) and types \`a la System~F, with a
-logic-programming-style query language.
-We now present the key features of $\ourlang$ and how
-these features are used for IP.
+logic-programming-style query language. The key features that are modelled 
+in $\ourlang$, and a discussion of how they related to the mechanisms in Scala and Haskell, are presented next.
+
+\begin{comment}
+\begin{itemize}
+
+\item {\bf Queries:} $\ourlang$ models the concept of an \emph{implicit query}, which is 
+also used in Scala to trigger implicit resolution.
+
+\item {\bf Resolution:} Queries are resolved by a mechanism called \emph{resolution}. Resolution 
+uses a set of rules  
+
+\item {\bf Rules:} 
+
+\item {bf 
+
+\end{itemize}
+\end{comment}
+
 
 \paragraph{Fetching Values by Type} A central construct in
 $\ourlang$ is a query. Queries allow values to be fetched by type, not by name.  
@@ -402,7 +418,8 @@ $\ourlang$ is a query. Queries allow values to be fetched by type, not by name.
 < foo (query Int)
  
 the query |query Int| looks up a value of type |Int| in the implicit
-environment, to serve as an actual argument.
+environment, to serve as an actual argument. Note that queries in $\ourlang$
+play exactly the same role as the operator |?| in Scala. 
 
 
 %%Function \texttt{inc} is applied to an argument (we call ``implicit
@@ -449,7 +466,17 @@ combination is more compactly denoted as:
 
 < implicit 1 in ((query Int) + 1)
 
-\noindent Both expressions return |2|. 
+\noindent Both expressions return |2|.
+
+The analogous to rule abstractions in Scala are functions with arguments marked 
+with the |implicit| keyword. However, in older versions of Scala, 
+functions with implicit arguments were not first class and could not be abstracted 
+over. 
+In particular in older versions of Scala it was impossible 
+to express the type of a function with an implicit argument.
+Recent versions of Scala, partly inspired by the implicit calculus, 
+generalize the mechanism of implicits and make rule abstractions and types 
+first class too, by what they call \emph{implicit function types}~\cite{odersky17implicits}.
 
 \begin{comment}
 \paragraph{Rule Currying} 
@@ -627,6 +654,26 @@ returns $2$ and not $1$:
 \end{array}
 \]
 %endif
+
+\begin{comment}
+\paragraph{Encoding Type Classes in $\ourlang$} 
+To briefly illustrate how type classes are modelled in $\ourlang$, we show how
+to encode the |Ord| type class defined in Sections~\ref{} and \ref{}. 
+Our encoding follows closely the Scala encoding of type classes. 
+To help with readability we use a few standard languages constructs, but which  
+are not modelled in $\ourlang$. Firstly we use type synonyms to allow us 
+to give a short name to type. Secondly we use records. Using both of those 
+construct, the |Ord| type class can be declared as:
+
+< type Ord a = {le : a -> a -> Bool}
+
+Similarly to the Scala encoding we define a |cmp| function, 
+that signals that the |Ord a| argument  
+
+< let sort = /\a . \(ordD : Ord a) . \(l : [a]) . ... in
+
+Here |cmp| is a function of type |forall a. Ord a => a -> a -> Bool|. 
+\end{comment}
 
 \subsection{Overlapping Rules and Coherence in $\ourlang$}
 \label{sec:overview:incoherence}
@@ -908,3 +955,5 @@ n.n+1$ and the second $f$ must be $\lambda x.x$.
 % 
 % Our static type system will safely reject such programs that can have
 % the aforementioned runtime errors or coherence failures.
+
+\bruno{Do not forget to add a discussion about stability at the end!}
