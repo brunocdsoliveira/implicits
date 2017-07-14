@@ -392,7 +392,7 @@ designed to model the essence of Scala implicits. Like the implicit
 calculus it combines standard scoping mechanisms (abstractions and
 applications) and types \`a la System~F, with a
 logic-programming-style query language. The key features that are modelled 
-in $\ourlang$, and a discussion of how they related to the mechanisms in Scala and Haskell, are presented next.
+in $\ourlang$, and a discussion of how they relate to the mechanisms in Scala and Haskell, are presented next.
 
 \begin{comment}
 \begin{itemize}
