@@ -49,7 +49,7 @@ can be defined as follows:
 > instance Ord Char where
 >   x <= y  =  primCharLe x y
 > instance (Ord a, Ord b) => Ord (a, b) where
->   (x,x') <= (y,y') = x < y || (x == y && x' <= y')
+>   (x,x') <= (y,y') = x <= y || (x == y && x' <= y')
 
 \noindent The first two instances provide the implementation of ordering for integers
 and characters, in terms of primitive functions.
@@ -112,7 +112,7 @@ coherence. For example, the expression:
 
 \noindent is rejected in Haskell due to \emph{ambiguity} of 
 \emph{type class resolution}~\cite{qual}.  Functions |show| and
-|read| print and parse values of any type |a| that instantiates
+|read| print and parse values of any type |a| that implements 
 the classes |Show| and |Read|.  The program is rejected because
 there is more that one possible choice for |a|, for example
 it could be |Int|, |Float|, or |Char|. 
@@ -159,10 +159,11 @@ which allows the program to typecheck. But the use of incoherent instances is
 greatly discouraged.
 
 \paragraph{Global Uniqueness of Instances} A consequence 
-of having both coherence and at most one instance of a type class 
+of having at most one instance of a type class 
 per type in a program is \emph{global uniqueness} of instances~\cite{uniqueness}. That is, 
 at any point in the program type class resolution for a particular 
-type always resolves to the same value. 
+type always resolves to the same value. Global uniqueness is a simple way to guarantee coherence, but 
+it offers more than just coherence.
 The usefulness of this property is illustrated by a library that
 provides a datatype for sets that is polymorphic in the elements along with a
 |union| operation:
@@ -170,7 +171,7 @@ provides a datatype for sets that is polymorphic in the elements along with a
 < union :: Ord a => Set a -> Set a -> Set a
 
 \noindent For efficiency reasons the sets are represented by a
-data structure that orders the elements in a particular way. 
+datastructure that orders the elements in a particular way. 
 It is natural to rely on the |Ord| type class to deal with ordering for the particular type |a|.  To preserve the
 correct invariant, it is crucial that the ordering of elements in the
 set is always the same. The global uniqueness property guarantees this. If two
@@ -195,13 +196,87 @@ rules. Consequently Scala does not have the global uniqueness
 property, since different ``instances'' may exist for
 the same type in different scopes. Another interesting difference
 between implicits and type classes is that values of any type can be
-used as implicit parameters; there are no special constructs analogous
+used as implicit parameters, and there are no special constructs analogous
 to type class or instance declarations. Instead, implicits are modelled
 with ordinary types. They can be abstracted over and do not suffer
 from the second-class nature of type classes. Such features mean that 
-Scala implicits have a wider range of applications than type classes. 
-For example, they can be used to solve the problem of 
-\emph{implicit configurations}~\cite{Kiselyov04} naturally. The following 
+Scala implicits have a wider range of applications than type classes.
+Unlike Haskell type classes, Scala implicits do not preserve coherence. 
+
+\paragraph{Modelling Type Classes with Implicits}
+In Scala there is no special construct for defining the interface of 
+a type class. Instead we can use regular interfaces to model 
+type class interfaces. Scala models OO interfaces with traits~\cite{Scharli03traits}.
+The 3 interfaces presented in Section~\ref{subsec:tclasses} can 
+be modelled as:
+
+< trait Ord[T] {def le(x:T,y:T) : Boolean}
+< trait Show[T] {def show (x : T) : String}
+< trait Read[T] {def read (x : String) : T}
+
+\noindent Ofcourse, by declaring traits like this, the methods still require 
+an explicit object where the method can be called. To be able to use 
+methods in the same way as Haskell type classes, the object (or dictionary) 
+should be implicitly passed. This can be achieved in Scala by using the 
+implicits feature of Scala:
+
+< def cmp[A:Ord](x:A,y:A):Boolean = ?[Ord[A]].le(x,y)
+
+\noindent The definition |cmp| in Scala plays the same role as |<=| in
+Haskell.  The type of |cmp| states that |cmp| is parametrized by some
+type |A|, and takes two arguments of type |A|. The notation |A:Ord| is
+a \emph{context bound}: a syntactic sugar of Scala that enables us to
+declare a constraint on the type |A|. Namely, the type |A| should be
+an "instance" of |Ord[A]|.  Using |cmp| only requires two explicit
+arguments: the implementation of |Ord[A]| is implicit. In the body of |cmp| an additional mechanism, called an
+implicit \emph{query} is now necessary to query the environment for a
+value of type |Ord[A]|. Such query mechanism in Scala is nothing more 
+than a simple function taking an implicit argument. The (slightly simplified)
+definition of the query operator is: 
+
+< def ?[T] (implicit w:T):T = w // called implicitly in Scala    
+
+\noindent Here |?| is just the name of the function (Scala allows symbolic names). 
+|?| takes a single \emph{implicit} argument of type |T| and returns that value. 
+Operationally it is just the identity function. But the key point is that, when used, 
+the implicit argument is filled automatically by the compiler. In the definition 
+of |cmp|, the expression |?[Ord[A]]| triggers the compiler to look for a value 
+of type |Ord[A]|. Such values are computed from the compiler by using the \emph{implicit 
+environment}. The implicit environment collects values that are declared to be implicit, 
+and usable for automatic implicit resolution. 
+
+Implicit values or rules, which correspond to type class instances in Haskell, 
+are declared by using the |implicit| keyword. The following three examples illustrating 
+the "instances" for |Ord|:  
+  
+< implicit val OrdInt = new Ord[Int] {
+<    def le(x : Int, y: Int) = primIntLe(x,y)
+< }
+<
+< implicit val OrdChar = new Ord[Char] {
+<   def le(x : Char, y: Char) = primCharLe(x,y)
+< }
+< 
+< implicit def OrdPair[A : Ord, B : Ord] = new Ord[(A,B)] {
+<   def le(x : (A,B), y : (A,B)) = 
+<      cmp(fst(x),fst(y)) || (fst(x).equals(fst(y)) && cmp(snd(x),snd(y))) 
+< }
+
+With those definitions it is now possible to declare functions, such 
+as |sort|, that require |Ord| instances:
+ 
+< def sort[A : Ord](x : List[A]) = ...
+
+\noindent Now the |sort| function can be used in a similar way to the Haskell function. 
+For example the call |sort (List((3, 5), (2, 4), (3, 4)))| is valid and does not 
+require an explicit argument of type |Ord[(Int,Int)]|. Instead such argument is computed 
+from the implicit definitions for |Ord|.
+
+\paragraph{Wider Range of Applications for Implicits} Scala implicits do allow for 
+a wider range of applications when compared to type classes.
+One example where implicits naturally address a problem that type classes 
+do not address well is the problem of 
+\emph{implicit configurations}~\cite{Kiselyov04}. The following 
 example, adapted from Kiselyov and Shan, illustrates this:
 
 \begin{code}
@@ -222,7 +297,7 @@ In Scala |%| is modulo division. Both \emph{add}ition and \emph{mul}tiplication
 include a third (implicit) parameter, which is the modulus 
 of the division. Although the modulus could be passed explicitly 
 this would be extremely cumbersome. Instead it is desirable that 
-the modulus be passed implicitly. Scala implicits allow this, by simply marking 
+the modulus is passed implicitly. Scala implicits allow this, by simply marking 
 the |modulus| parameter in |add| and |mul| with the |implicit| keyword. 
 The third line shows how to set up an implicit value for the modulus. 
 Adding |implicit| before |val| signals that the value being defined 
@@ -231,6 +306,14 @@ Finally, |test| illustrates how expressions doing modular arithmetic
 can be defined using the implicit modulus. Because Scala also 
 has local scoping, different modulus values can be used under 
 different scopes.
+
+Several other examples of applications that can be covered by
+implicits, but are harder to achieve with type classes are found in
+the existing literature~\cite{implicits,oliveira12implicit,odersky17implicits}. In
+particular, in a recent paper Odersky et al. introduce \emph{implicit
+function types}~\cite{odersky17implicits}, which are a generalization
+of the original Scala implicits~\cite{implicits}, and demonstrate
+several such interesting use cases for implicits.
 
 \paragraph{Incoherence in Scala}
 Although Scala allows \emph{nested} local scoping and overlapping rules,
@@ -283,9 +366,17 @@ this definition is an equally nasty impediment to equational
 reasoning, since performing simple equational reasoning would lead to
 a different result. However unlike in Haskell, it is the intended
 behaviour: it is enabled by default and cannot be disabled.
-Interestingly the expression in line~(6), which is accepted in Haskell, is actually rejected in Scala.\footnote{We have observed this behavior for Scala 2.11; for lack of a specification, it is not clear to us whether this behavior is intended.}
+Interestingly the expression in line~(6), which is accepted in Haskell, is actually rejected in Scala.
 Here the Scala compiler does detect two possible instances for |Int => Int|,
-but does not select the most specific one. 
+but does not select the most specific one. In this case the call in line~(6) is considered 
+ambiguous because Scala accounts for other factors, when deciding where there is ambiguity 
+or not~\cite{oliveira12implicit,odersky17implicits}.
+%%The reason for this is that 
+%%Scala uses a tie-breaker rule for disambiguating instances. Scala attributes
+%%1 point to a rule in the following situations: a) a rule is in a deeper scope than the other rule; 
+%%b) a rule has a more specific type than another rule~\footnote{There are other rules, 
+%%but they can be ignored for this example}. In this case there's a draw, since the 
+%%definition of |trans| gets one point from being in a de, and the rule |trans|  
 Rejecting line~(6) has another unfortunate consequence: not only is the
 semantics not preserved under unfolding, but typing is not preserved either!
 Clearly preserving desirable properties such as coherence and type preservation is 
@@ -323,8 +414,8 @@ environment, to serve as an actual argument.
 %%omitted thanks to type inference. Our calculus makes implicit queries
 %%always manifest in text. 
 
-\paragraph{Constructing Values with Type-Directed Rules} $\ourlang$ constructs values with 
-type-directed rules (similar to functions) defined by the programmer. A rule (or rule
+\paragraph{Constructing Values with Type-Directed Rules} $\ourlang$ constructs values, using
+programmer-defined, type-directed rules (similar to functions). A rule (or rule
 abstraction) defines how to compute, from implicit arguments, a value of a
 particular type. For example, here is a rule that given an implicit |Int| value, 
 adds one to that value:
@@ -455,15 +546,14 @@ rule. The following expression returns
 
 %endif
 
-> implicit 3 in implicit True in implicit (biglam a (rule a (((query a),(query a))))) in
->   (query (Pair Int Int), query (Pair Bool Bool))
+> implicit 3 in implicit True in implicit (biglam a (rule a (((query a),(query a))))) in (query (Pair Int Int), query (Pair Bool Bool))
 
 \paragraph{Combining Higher-Order and Polymorphic Rules} 
-We can build a pair of integer pairs with the 
-rule | rule Int (rule ((forall a . a => Pair a a)) (((query (Pair (Pair Int Int) (Pair Int Int))))))|.
-It proceeds by applying the rule of type
+The rule | rule Int (rule ((forall a . a => Pair a a)) (((query (Pair (Pair Int Int) (Pair Int Int))))))|
+prescribes how to build a pair of integer pairs, inductively from an
+integer value, by consecutively applying the rule of type
 |forall a . a => Pair a a| 
-twice in a row: first to an integer, and again to the result (an
+twice: first to an integer, and again to the result (an
 integer pair). For example, the following expression returns $((3,3),(3,3))$:
 
 %if False
