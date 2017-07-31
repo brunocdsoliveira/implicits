@@ -4,7 +4,7 @@ Examples of IP mechanisms include Haskell's type classes, Scala's
 implicits, Agda's instance arguments, Coq's type classes, and Rust's
 traits.  The design of IP mechanisms has led to heated debate:
 proponents of one school argue for the desirability of coherence, ensuring
-each implicit has a unique resolution; while proponents of another
+that each implicit value has a unique resolution; while proponents of another
 school argue for the power and flexibility of local scoping or
 overlapping instances.  The current state-of-affairs seems to indicate
 the two goals are at odds with one another, and cannot easily be
@@ -12,7 +12,7 @@ reconciled.
 
 This paper presents \name, the Calculus Of CoHerent ImplicitS,
 an improved variant of the implicit calculus that offers flexibility
-while preserving coherence and avoiding ambiguity.  \name supports local scoping,
+while preserving coherence and avoiding ambiguity. \name supports local scoping,
 overlapping instances, first-class instances, and higher-order
 rules, while remaining type safe and coherent.
 
