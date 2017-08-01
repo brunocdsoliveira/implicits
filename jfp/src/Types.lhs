@@ -237,7 +237,7 @@ Intuitively, $\tenv\vturns \rulet$ holds if $\tenv$ entails $\rulet$, where the 
 $\rulet$ are read as propositions.
 Following the ``Propositions as Types'' correspondence~\cite{propsastypes}, we read
 $\alpha$ as a propositional variable and $\forall \alpha.\rulet$ as universal quantification.
-Yet, unlike in the traditional interpretation of types as propositions, we have two forms of arrow,
+Yet, unlike in the traditional interpretation of types as propositions, we have two forms of arrows,
 functions $\rulet_1 \arrow \rulet_2$ and rules $\rulet_1 \iarrow \rulet_2$,
 and the important twist is that we choose to treat
 only rules as implications, leaving functions as uninterpreted predicates.
@@ -292,7 +292,8 @@ We next address these two issues one by one.
 \subsection{Type-Directed Resolution with Focusing}
 
 To obtain a type-directed formulation of resolution, we adopt a solution from
-proof search known as \emph{focusing}~\cite{Focusing}. This solution makes sure
+proof search known as \emph{focusing}~\cite{Focusing}\bruno{there are two entries
+"focusing" in the bib. We need to fix this error and refer to the correct entry here.}. This solution makes sure
 that only one inference rule applies at any given point and thereby rules out
 trivial forms of nondeterminism.
 
@@ -464,7 +465,7 @@ type substitution.
 
 %- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 \paragraph{Predicative Instantiation}
-
+\bruno{In the examples, do we want to use the AR-rules or the FR-rules? The later, right?}
 To see why the impredicative instantation in Rule~\mylabel{FM-TApp} causes
 nondeterminism, consider two ways resolving $\tenv_1 \vdash \tyint \iarrow \tyint$
 against the environment $\tenv_1 = \forall \alpha.\alpha \iarrow \alpha$:\footnote{
