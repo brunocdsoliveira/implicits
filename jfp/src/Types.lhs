@@ -292,8 +292,7 @@ We next address these two issues one by one.
 \subsection{Type-Directed Resolution with Focusing}
 
 To obtain a type-directed formulation of resolution, we adopt a solution from
-proof search known as \emph{focusing}~\cite{Focusing}\bruno{there are two entries
-"focusing" in the bib. We need to fix this error and refer to the correct entry here.}. This solution makes sure
+proof search known as \emph{focusing}~\cite{focusing}. This solution makes sure
 that only one inference rule applies at any given point and thereby rules out
 trivial forms of nondeterminism.
 
@@ -465,7 +464,7 @@ type substitution.
 
 %- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 \paragraph{Predicative Instantiation}
-\bruno{In the examples, do we want to use the AR-rules or the FR-rules? The later, right?}
+\bruno{In the examples, do we want to use the AR-rules or the FR-rules? The later, right?}\tom{Have you seen the footnote right before the example?}
 To see why the impredicative instantation in Rule~\mylabel{FM-TApp} causes
 nondeterminism, consider two ways resolving $\tenv_1 \vdash \tyint \iarrow \tyint$
 against the environment $\tenv_1 = \forall \alpha.\alpha \iarrow \alpha$:\footnote{
