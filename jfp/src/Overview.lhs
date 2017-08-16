@@ -675,13 +675,13 @@ that signals that the |Ord a| argument
 Here |cmp| is a function of type |forall a. Ord a => a -> a -> Bool|. 
 \end{comment}
 
-\subsection{Overlapping Rules and Coherence in $\ourlang$}
+\subsection{Overlapping Rules and Stability in $\ourlang$}
 \label{sec:overview:incoherence}
 
 As the previous example shows, the lexical scope imposes a natural precedence
-on rules. This precedence means that the lexically nearest rule is used to
-resolve a query, and not necessarily the most specific rule.
-For instance, the following $\ourlang$ variation on the running |trans|
+on rules that ensures coherence. This precedence means that the lexically
+nearest rule is used to resolve a query, and not necessarily the most specific
+rule.  For instance, the following $\ourlang$ variation on the running |trans|
 example from Section~\ref{sec:overview-coherence}
 
 > implicit (fun (n) (n + 1) : Int -> Int)  in 
@@ -689,36 +689,36 @@ example from Section~\ref{sec:overview-coherence}
 >       query (Int -> Int) 3
 
 yields the result |3| as the inner identity rule has precedence over the
-more specific incrementation rule in the outer scope. Yet, this lexical
-precedence alone is insufficient to guarantee coherence.
-Consider the program
+more specific incrementation rule in the outer scope. Yet, it is not always
+possible to statically select the nearest matching rule.
+Consider the program fragment
 
 > let bad : forall b.b -> b =
 >   implicit (fun (x) (x) : forall a. a -> a) in
 >      implicit (fun (n) (n + 1) : Int -> Int) in 
 >       query (b -> b)
-> in bad Int 3
 
-While the query |query (b -> b)| always matches |forall a. a -> a|, that is not
-always the lexically nearest match. Indeed, if |b| is instantiated to
-|Int| the rule |Int -> Int| is a nearer match. However, if |b| is
-instantiated to any other type, |Int -> Int| is not a valid match. In summary,
-we cannot always statically determine the lexically nearest match. 
+Here we cannot statically decide whether |Int -> Int| matches |b -> b|; it
+depends on whether |b| is instantiated to |Int| or not.
 
-One might consider to resolve the incoherence by picking the lexically nearest
-rule that matches all possible instantiations of the query, e.g., |forall
-a. a -> a| in the example. While this poses no threat to type soundness, this
-form of incoherence is nevertheless undesirable for two reasons.
+One might consider to force the matter by picking the lexically
+nearest rule that matches all possible instantiations of the query, e.g.,
+|forall a. a -> a| in the example. While this poses no threat to type
+soundness, this approach is nevertheless undesirable for two reasons.
+
 Firstly, it makes the behaviour of programs harder to predict, and, secondly,
-the behaviour of programs is not stable under inlining. Indeed, if we inline the
-function definition of |bad| at the call site and substitute the arguments, we obtain the specialised program
+the behaviour of programs is not stable under inlining. Consider
+the call |bad Int 3|, which would yield the result |3|. If instead we inline
+the function definition of |bad| at the call site and
+substitute the type argument, we obtain the specialised program
 
 > implicit (fun (x) (x) : forall a. a -> a) in
 >    implicit (fun (n) (n + 1) : Int -> Int) in 
 >     query (Int -> Int) 3
 
-This program yields the result |4| while the original incoherent version would yield |3|.
-To avoid this unpredictable behaviour, $\ourlang$ rejects incoherent programs.
+Now |Int -> Int| is the nearest lexical match and the program yields the result
+|4|. To avoid this unpredictable behaviour, $\ourlang$ rejects such unstable
+matchings.
 
 %if False
 
@@ -955,5 +955,3 @@ n.n+1$ and the second $f$ must be $\lambda x.x$.
 % 
 % Our static type system will safely reject such programs that can have
 % the aforementioned runtime errors or coherence failures.
-
-\bruno{Do not forget to add a discussion about stability at the end!}

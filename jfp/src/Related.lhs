@@ -245,3 +245,31 @@ with a phase that is syntax directed on a given formula (our third auxiliary
 judgement). This is as far as the correspondence goes though, as the choice
 of given formula to focus on is typically not deterministic in focused proof
 search.
+
+\subsection{New Stuff}
+
+\paragraph{Implicit Function Types}
+
+Recently, following the implicit calculus and a preliminary version of
+$\ourlang$, Odersky et al.~\shortcite{odersky17implicits} presented the SI
+calculus as a new basis for the Scala language's treatment of implicits.
+Prominently, SI features implicit function types $T_1 ?\!\!\!\to T_2$, which
+are akin to $\ourlang$ $T_1 \iarrow T_2$ in $\ourlang$, and implicit queries
+$?$, which are akin to $?_T$ in $\ourlang$. There are two prominent differences
+with $\ourlang$. Firstly, like the Hindley-Milner calculus SI is aimed at type
+inference and, e.g., does not feature explicit abstraction over imlicits
+$\lambda_?T.e$ or type application $e\,T$ at the term level. In contrast,
+$\ourlang$ is more similar to System F in this sense, making all abstractions
+and applications explicit.
+
+Secondly, while $\ourlang$ aims to formalise and investigate the meta-theory of
+resolution, the priority of Odersky et al. is not so much the SI calculus
+itself as the derived implementation of the Scala compiler. As a consequence,
+SI features a simplified type system that is incoherent and a resolution
+algorithm that supports only monomorphic types, while the compiler's much more
+complex enforcement of coherence and support for polymorphism are only
+discussed informally. 
+
+\paragraph{Quantified Class Constraints}
+
+TODO
