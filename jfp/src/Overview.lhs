@@ -384,6 +384,7 @@ a subtle matter in the presence of implicits and deserves careful study.
 
 \subsection{An Overview of $\ourlang$}\label{sec:overview:ourlang}
 
+\begin{comment}
 Like Haskell $\ourlang$ requires coherence and
 like Scala it permits nested declarations, and does not guarantee global uniqueness.
 $\ourlang$ improves upon 
@@ -393,6 +394,29 @@ calculus it combines standard scoping mechanisms (abstractions and
 applications) and types \`a la System~F, with a
 logic-programming-style query language. The key features that are modelled 
 in $\ourlang$, and a discussion of how they relate to the mechanisms in Scala and Haskell, are presented next.
+\end{comment}
+
+Like Haskell $\ourlang$ guarantees coherence and like Scala it permits
+nested/overlapping declarations, and does not guarantee global
+uniqueness. $\ourlang$ improves upon the implicit
+calculus~\cite{oliveira12implicit} by having coherence and a better,
+more expressive design for resolution. Like the implicit calculus the
+primary goal of $\ourlang$ is to model \emph{implicit resolution} and
+the \emph{scoping} of implicit values used by resolution. 
+Next we iterate 
+over the key constructs and features of $\ourlang$.
+
+\begin{comment}
+An important remark is that $\ourlang$, like the implicit calculus, is
+designed as a \emph{core calculus}, and therefore provides no
+type-inference. As a result programs written in Cochis still require
+many type annotations. The primary goal of $\ourlang$ is to model
+\emph{implicit resolution} as well as the scoping of implicit values.
+Some work on type-inference can be found in implicit calculus
+paper~\cite{}, and also in a recent paper by Odersky et al.~\cite{}.
+A full approach to type-inference that allows designing 
+source languages with implicit polymorphism is left for future work.
+\end{comment}
 
 \begin{comment}
 \begin{itemize}
@@ -524,8 +548,8 @@ The following expression returns $(3, 4)$:
 
 < implicit 3 in implicit (rule Int (((query Int), (query Int) + 1))) in query (Pair Int Int)
 
-Note that higher-order rules are a feature introduced by the implicit calculus and 
-are neither supported in Haskell nor Scala.
+%%Note that higher-order rules are a feature introduced by the implicit calculus and 
+%%are neither supported in Haskell nor Scala.
 
 \paragraph{Recursive Resolution} 
 Note that resolving the  query |(query (Pair Int Int))| above
@@ -655,25 +679,63 @@ returns $2$ and not $1$:
 \]
 %endif
 
-\begin{comment}
-\paragraph{Encoding Type Classes in $\ourlang$} 
-To briefly illustrate how type classes are modelled in $\ourlang$, we show how
-to encode the |Ord| type class defined in Sections~\ref{} and \ref{}. 
-Our encoding follows closely the Scala encoding of type classes. 
-To help with readability we use a few standard languages constructs, but which  
+
+
+\subsubsection{Encoding Type Classes in $\ourlang$} 
+Type classes can be encoded in $\ourlang$ similarly to how type classes 
+can be encoded in Scala. Next we show how the encoding works, but 
+we assume some convenience source language features not available in
+$\ourlang$. $\ourlang$ is not
+designed to be a source language and as such it lacks certain features
+that make writing programs in it conveniently. In particular
+$\ourlang$ has no type-inference and, as such, requires explicit rule
+applications and queries.  The design of source languages that support
+more type-inference, implicit rule applications, implicit
+polymorphism and can be translated into a $\ourlang$-like calculus was
+already explored in the implicit calculus~\cite{oliveira12implicit}.
+To better illustrate some of our examples here we will assume such
+source language features.  
+ 
+To illustrate how type classes are modelled in $\ourlang$, we show how
+to encode the type classes and instances defined in Section~\ref{}.  
+To help with readability we also use a few standard languages constructs, which  
 are not modelled in $\ourlang$. Firstly we use type synonyms to allow us 
 to give a short name to type. Secondly we use records. Using both of those 
-construct, the |Ord| type class can be declared as:
+constructs, the three type classes can be declared as:
 
 < type Ord a = {le : a -> a -> Bool}
+< type Show a = {show : a -> String}
+< type Read a = {read : String -> a}
 
 Similarly to the Scala encoding we define a |cmp| function, 
-that signals that the |Ord a| argument  
+that makes the argument of type |Ord a| implicit: 
 
-< let sort = /\a . \(ordD : Ord a) . \(l : [a]) . ... in
+< let cmp : forall a . Ord a => a -> a -> Bool = le (?(Ord a)) in
 
-Here |cmp| is a function of type |forall a. Ord a => a -> a -> Bool|. 
-\end{comment}
+The "instances" of |Ord| can be defined as record values or 
+rule types returning an |Ord| record.
+
+< let ordInt : Ord Int = {le = \x . \y . primIntLe x y} in
+< let ordChar : Ord Char = {le = \x . \y . primCharLe x y} in
+< let ordPair : forall a b. Ord a => Ord b => Ord (a,b) = {le = \x . \y . 
+<    cmp (fst x) (fst y) && (eq (fst x) (fst y) && cmp (snd x) (snd y))} in
+
+\noindent Here the first two values denote instances for the base types 
+|Int| and |Char|. The instance for pairs (|ordPair|) has two constraints (|Ord a| 
+and |Ord b|), and those constraints are implicitly used by |cmp|. 
+
+Given a |sort| function: 
+
+< let sort : forall a . Ord a => List a -> List a = ... 
+
+\noindent it would now be possible to use |implicit| to introduce 
+the "instances" into the implicit scope and have the |Ord (List Int)|
+argument of the call |sort [1,2,3]| automatically inferred:
+
+< implicit ordInt in 
+<   implicit ordChar in
+<      implicit ordPair in
+<        sort [1,2,3]
 
 \subsection{Overlapping Rules and Stability in $\ourlang$}
 \label{sec:overview:incoherence}
