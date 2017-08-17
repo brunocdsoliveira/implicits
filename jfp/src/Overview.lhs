@@ -220,7 +220,12 @@ methods in the same way as Haskell type classes, the object (or dictionary)
 should be implicitly passed. This can be achieved in Scala by using the 
 implicits feature of Scala:
 
+%{
+%format . = "."
+
 < def cmp[A:Ord](x:A,y:A):Boolean = ?[Ord[A]].le(x,y)
+
+%}
 
 \noindent The definition |cmp| in Scala plays the same role as |<=| in
 Haskell.  The type of |cmp| states that |cmp| is parametrized by some
@@ -248,6 +253,9 @@ and usable for automatic implicit resolution.
 Implicit values or rules, which correspond to type class instances in Haskell, 
 are declared by using the |implicit| keyword. The following three examples illustrating 
 the "instances" for |Ord|:  
+
+%{
+%format . = "."
   
 < implicit val OrdInt = new Ord[Int] {
 <    def le(x : Int, y: Int) = primIntLe(x,y)
@@ -261,6 +269,8 @@ the "instances" for |Ord|:
 <   def le(x : (A,B), y : (A,B)) = 
 <      cmp(fst(x),fst(y)) || (fst(x).equals(fst(y)) && cmp(snd(x),snd(y))) 
 < }
+
+%}
 
 With those definitions it is now possible to declare functions, such 
 as |sort|, that require |Ord| instances:
@@ -697,10 +707,10 @@ To better illustrate some of our examples here we will assume such
 source language features.  
  
 To illustrate how type classes are modelled in $\ourlang$, we show how
-to encode the type classes and instances defined in Section~\ref{}.  
+to encode the type classes and instances defined in Section~\ref{subsec:tclasses}.  
 To help with readability we also use a few standard languages constructs, which  
 are not modelled in $\ourlang$. Firstly we use type synonyms to allow us 
-to give a short name to type. Secondly we use records. Using both of those 
+to give a short name to a type. Secondly we use records. Using both of those 
 constructs, the three type classes can be declared as:
 
 < type Ord a = {le : a -> a -> Bool}
@@ -715,10 +725,15 @@ that makes the argument of type |Ord a| implicit:
 The "instances" of |Ord| can be defined as record values or 
 rule types returning an |Ord| record.
 
+%{
+%format . = ".~"
+
 < let ordInt : Ord Int = {le = \x . \y . primIntLe x y} in
 < let ordChar : Ord Char = {le = \x . \y . primCharLe x y} in
 < let ordPair : forall a b. Ord a => Ord b => Ord (a,b) = {le = \x . \y . 
 <    cmp (fst x) (fst y) && (eq (fst x) (fst y) && cmp (snd x) (snd y))} in
+
+%}
 
 \noindent Here the first two values denote instances for the base types 
 |Int| and |Char|. The instance for pairs (|ordPair|) has two constraints (|Ord a| 
@@ -740,7 +755,7 @@ argument of the call |sort [1,2,3]| automatically inferred:
 \subsection{Overlapping Rules and Stability in $\ourlang$}
 \label{sec:overview:incoherence}
 
-As the previous example shows, the lexical scope imposes a natural precedence
+As previously shown, the lexical scope imposes a natural precedence
 on rules that ensures coherence. This precedence means that the lexically
 nearest rule is used to resolve a query, and not necessarily the most specific
 rule.  For instance, the following $\ourlang$ variation on the running |trans|
@@ -760,14 +775,13 @@ Consider the program fragment
 >      implicit (fun (n) (n + 1) : Int -> Int) in 
 >       query (b -> b)
 
-Here we cannot statically decide whether |Int -> Int| matches |b -> b|; it
+Here we cannot statically decide whether |Int -> Int| matches |b -> b|: it
 depends on whether |b| is instantiated to |Int| or not.
 
 One might consider to force the matter by picking the lexically
 nearest rule that matches all possible instantiations of the query, e.g.,
 |forall a. a -> a| in the example. While this poses no threat to type
 soundness, this approach is nevertheless undesirable for two reasons.
-
 Firstly, it makes the behaviour of programs harder to predict, and, secondly,
 the behaviour of programs is not stable under inlining. Consider
 the call |bad Int 3|, which would yield the result |3|. If instead we inline
