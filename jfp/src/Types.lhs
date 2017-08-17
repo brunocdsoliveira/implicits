@@ -255,8 +255,7 @@ is non-obvious.
 % \item
 Secondly and more importantly, the definition is \emph{ambiguous}: a derivation
 can be shown by multiple different derivations. For instance, 
-consider again the resolution in the last example of Section~\ref{sec:overview:ourlang}:
-in the environment
+consider resolution under the environment
 \[
 \Gamma_0 = \tyint,\tybool,(\tybool\iarrow\tyint)
 \]
@@ -464,7 +463,6 @@ type substitution.
 
 %- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 \paragraph{Predicative Instantiation}
-\bruno{In the examples, do we want to use the AR-rules or the FR-rules? The later, right?}\tom{Have you seen the footnote right before the example?}
 To see why the impredicative instantation in Rule~\mylabel{FM-TApp} causes
 nondeterminism, consider two ways resolving $\tenv_1 \vdash \tyint \iarrow \tyint$
 against the environment $\tenv_1 = \forall \alpha.\alpha \iarrow \alpha$:\footnote{
@@ -722,7 +720,7 @@ where a first stab at a formalisation of the stability condition is:
           {\mathit{stable}(\tenv,\rulet~\gbox{\leadsto x},\type)}
 \eda
 
-The above formulation of the condition is a bit too lax; we to be more precise
+The above formulation of the condition is a bit too lax; we to\bruno{to $\to$ could?} be more precise
 about the domain and range of the substitution $\theta$.  Indeed, substitution
 does not make sense for every type variable in the environment.  Consider for
 example resolving the type $\forall \beta. \beta \arrow \beta$ against the
