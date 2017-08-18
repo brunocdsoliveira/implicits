@@ -49,7 +49,7 @@ can be defined as follows:
 > instance Ord Char where
 >   x <= y  =  primCharLe x y
 > instance (Ord a, Ord b) => Ord (a, b) where
->   (x,x') <= (y,y') = x <= y || (x == y && x' <= y')
+>   (x,x') <= (y,y') = x <= y && (not (y <= x) || x' <= y')
 
 \noindent The first two instances provide the implementation of ordering for integers
 and characters, in terms of primitive functions.
@@ -253,7 +253,7 @@ and usable for automatic implicit resolution.
 Implicit values or rules, which correspond to type class instances in Haskell, 
 are declared by using the |implicit| keyword. The following three examples illustrating 
 the "instances" for |Ord|:  
-
+\bruno{fix the code!}
 %{
 %format . = "."
   
