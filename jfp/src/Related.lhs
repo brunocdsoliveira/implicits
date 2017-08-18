@@ -129,6 +129,17 @@ class'' interfaces.  \emph{Functional dependencies}~\cite{fundeps},
 of work is orthogonal to our own.
 \end{comment}
 
+Inspired by the focusing approach of $\ourlang$ Bottu et
+al.~\shortcite{haskell2017b} have extended Haskell's type class inference with
+\textit{quantified class constraints}.  This generalizes the syntax of
+Haskell's type class constraints to feature arbitrarily nested uses of
+universal quantificiation and impliciation. Their work differs from $\ourlang$
+in that it does not support local instances. Moverover, they achieve coherence
+through requiring non-overlapping instances. Their algorithm performs a
+backtracking search among these instances as well as any local assumtions
+(which themselves can ultimately only be satisfied by combinations of global
+instances), rather than a linear committed-choice traversal of the environment. 
+
 \subsection{Implicit Programming without Coherence}
 
 \paragraph{Implicits} The implicit calculus~\cite{oliveira12implicit} is the main 
@@ -147,20 +158,46 @@ the query:
 \begin{equation*}
   \tychar \To \tybool,
   \tybool \To \tyint \vturns \tychar \To \tyint
-\end{equation*}
-
-\noindent does not resolve under the deterministic resolution rules of
+\end{equation*} does not resolve under the deterministic resolution rules of
 the implicit calculus, but it resolves in $\ourlang$. Essentially
 resolving such query requires adding the rule type's context to the
 implicit environment in the course of the resolution process. But in
 the implicit calculus the implicit environment never changes during
 resolution, which significantly weakens the power of resolution.
+
+Rouvoet~\shortcite{Rouvoet} presents $\lambda_\Rightarrow^S$, which is a
+variation on the implicit calculus. The key feature of his calculus is the
+focusing resolution of Figure~\ref{fig:resolutionf}, although Rouvoet does not
+make the connection with focusing in proof search. As we have already explained
+in Section~\ref{subsec:det} this approach is incoherent.
+
 \emph{Scala implicits}~\cite{implicits,scala} were themselves the
 inspiration for the implicit calculus and, therefore, share various
 similarities with $\ourlang$.  In Scala implicit arguments can be of
 any type, and local scoping (including overlapping rules) is
 supported. However Scala implicits are incoherent and they do not
 allow higher-order rules either.
+
+Recently, following the implicit calculus and a preliminary version of
+$\ourlang$, Odersky et al.~\shortcite{odersky17implicits} presented the SI
+calculus as a new basis for the Scala language's treatment of implicits.
+Prominently, SI features implicit function types $T_1 ?\!\!\!\to T_2$, which
+are akin to $\ourlang$ $T_1 \iarrow T_2$ in $\ourlang$, and implicit queries
+$?$, which are akin to $?_T$ in $\ourlang$. There are two prominent differences
+with $\ourlang$. Firstly, like the Hindley-Milner calculus SI is aimed at type
+inference and, e.g., does not feature explicit abstraction over imlicits
+$\lambda_?T.e$ or type application $e\,T$ at the term level. In contrast,
+$\ourlang$ is more similar to System F in this sense, making all abstractions
+and applications explicit.
+
+Secondly, while $\ourlang$ aims to formalise and investigate the meta-theory of
+resolution, the priority of Odersky et al. is not so much the SI calculus
+itself as the derived implementation of the Scala compiler. As a consequence,
+SI features a simplified type system that is incoherent and a resolution
+algorithm that supports only monomorphic types, while the compiler's much more
+complex enforcement of coherence and support for polymorphism are only
+discussed informally. 
+
 
 \paragraph{IP Mechanisms in Dependently Typed Programming}
 A number of dependently typed languages also have IP mechanisms
@@ -246,30 +283,3 @@ judgement). This is as far as the correspondence goes though, as the choice
 of given formula to focus on is typically not deterministic in focused proof
 search.
 
-\subsection{New Stuff}
-
-\paragraph{Implicit Function Types}
-
-Recently, following the implicit calculus and a preliminary version of
-$\ourlang$, Odersky et al.~\shortcite{odersky17implicits} presented the SI
-calculus as a new basis for the Scala language's treatment of implicits.
-Prominently, SI features implicit function types $T_1 ?\!\!\!\to T_2$, which
-are akin to $\ourlang$ $T_1 \iarrow T_2$ in $\ourlang$, and implicit queries
-$?$, which are akin to $?_T$ in $\ourlang$. There are two prominent differences
-with $\ourlang$. Firstly, like the Hindley-Milner calculus SI is aimed at type
-inference and, e.g., does not feature explicit abstraction over imlicits
-$\lambda_?T.e$ or type application $e\,T$ at the term level. In contrast,
-$\ourlang$ is more similar to System F in this sense, making all abstractions
-and applications explicit.
-
-Secondly, while $\ourlang$ aims to formalise and investigate the meta-theory of
-resolution, the priority of Odersky et al. is not so much the SI calculus
-itself as the derived implementation of the Scala compiler. As a consequence,
-SI features a simplified type system that is incoherent and a resolution
-algorithm that supports only monomorphic types, while the compiler's much more
-complex enforcement of coherence and support for polymorphism are only
-discussed informally. 
-
-\paragraph{Quantified Class Constraints}
-
-TODO
