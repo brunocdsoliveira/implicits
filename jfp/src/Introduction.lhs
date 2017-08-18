@@ -83,18 +83,29 @@ This form of global scoping goes against
 modularity. Other restrictions of type classes are 
 that they are second class interfaces and that the type-directed rules 
 cannot be higher-order~\cite{oliveira12implicit}. 
+
 Advanced
 features of type classes, such as overlapping
 instances,\footnote{\url{https://downloads.haskell.org/~ghc/latest/docs/html/users\_guide/glasgow\_exts.html\#overlapping-instances}}
 also pose severe problems for coherence. In purely functional programming,
 ``\emph{substituting equals by equals}'' is expected to hold. That is,
 when given two equivalent expressions replacing one by the other in
-\emph{any context} always leads to two programs that yield the same
-result. Special care (via restrictions) is needed to preserve
+always leads to two programs that yield the same
+result. 
+Special care (via restrictions) is needed to preserve
 coherence and the ability of substituting equals for equals in the
-presence of overlapping instances.
-
-
+presence of overlapping instances. In particular, an important
+property that is broken in the presence of overlapping instances 
+(if special care is not taken) is the so-called \emph{stability} of
+substitutions. The issue is that ``\emph{when more specific overlapping
+instances are added, the proofs of some predicates will change to use
+the new instances}''~\cite{chain}. Therefore, if care is not taken, 
+the behaviour of resolution for an expression |e| can change if |e| 
+gets a more specific type, leading to a different evaluation result. 
+Because of this problem, the design of Haskell type classes
+signicantly restricts the set of valid overlapping instances to ensure 
+that stability holds, and the meaning of an expression does not change 
+simply due to a more specific type. 
 
 An alternative school of thought in the design of IP mechanisms favours \emph{flexibility}. For instance, 
 Scala implicits and Agda's instance arguments do not impose all of
@@ -116,7 +127,7 @@ The
 implicit calculus has been shown to be type-safe.
 Unfortunately, both the implicit calculus and the various existing
 language mechanisms that embody flexibility do not preserve
-coherence and the ability to substitute equals for equals. 
+coherence, stability and the ability to substitute equals for equals. 
 
 The design of IP mechanisms has led to heated
 debate~\cite{show-stopping,uniqueness,kmett} about the
@@ -137,7 +148,7 @@ other features, such as first-class and higher-order rules.
 This paper presents \name\footnote{Cochise, 1804--1874, was chief of the Chokonen band of
       the Chiricahua Apache.}: the Calculus Of CoHerent ImplicitS. \name
 is an improved variant of the implicit calculus that preserves
-\emph{coherence}. \name supports local scoping, overlapping instances,
+\emph{coherence} and \emph{stability}. \name supports local scoping, overlapping instances,
 first-class instances and higher-order rules. Yet, in contrast to most
 previous work that supports such features, the calculus is not only
 type-safe, but also coherent. Naturally, the unrestricted calculus
@@ -151,7 +162,10 @@ allowed.
 %If a single global scope exists in a
 %program then the determinism and coherence of \name imply that 
 
-Ensuring coherence in \name is challenging.  The overlapping and
+\bruno{Tom: Can you improve the following paragraph to also talk 
+about stability? I've already mentioned stability before (double-check
+that please).}
+Ensuring coherence and stability in \name is challenging.  The overlapping and
 higher-order nature of rules poses significant challenges for the
 coherence and determinism of \name's resolution. 
 We introduce a logical formulation of how to resolve implicits, which
@@ -171,7 +185,7 @@ In summary, our contributions are as follows:
 
 \begin{itemize}
 \item We present \name,
-  a \emph{coherent} (and type-safe) minimal formal model for
+  a \emph{coherent}, \emph{stable} and \emph{type-safe} minimal formal model for
   implicit programming that supports local scoping, overlapping rules,
   first-class instances and higher-order rules.
 

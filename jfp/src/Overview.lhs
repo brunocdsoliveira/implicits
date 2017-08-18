@@ -720,8 +720,9 @@ constructs, the three type classes can be declared as:
 Similarly to the Scala encoding we define a |cmp| function, 
 that makes the argument of type |Ord a| implicit: 
 
-< let cmp : forall a . Ord a => a -> a -> Bool = le (?(Ord a)) in
+< let cmp : forall a . Ord a => a -> a -> Bool = (? : Ord a).le in
 
+Here we assume a type annotation to  
 The "instances" of |Ord| can be defined as record values or 
 rule types returning an |Ord| record.
 
@@ -731,7 +732,7 @@ rule types returning an |Ord| record.
 < let ordInt : Ord Int = {le = \x . \y . primIntLe x y} in
 < let ordChar : Ord Char = {le = \x . \y . primCharLe x y} in
 < let ordPair : forall a b. Ord a => Ord b => Ord (a,b) = {le = \x . \y . 
-<    cmp (fst x) (fst y) && (eq (fst x) (fst y) && cmp (snd x) (snd y))} in
+<    cmp (fst x) (fst y) || (eq (fst x) (fst y) && cmp (snd x) (snd y))} in
 
 %}
 
