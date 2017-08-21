@@ -54,7 +54,7 @@ can be defined as follows:
 \noindent The first two instances provide the implementation of ordering for integers
 and characters, in terms of primitive functions.
 The third instance is more interesting, and provides the
-implementation of ordering for pairs. In this case, the ordering
+implementation of lexicographic ordering for pairs. In this case, the ordering
 instance itself \emph{requires} an ordering instance for both
 components of the pair. These requirements are resolved 
 by the compiler using the existing set of instances in a process called 
@@ -183,10 +183,9 @@ descending order), and then break the ordering invariant by
 
 Although global uniqueness is, in principle, a property that should hold in
 Haskell programs, Haskell implementations actually violate this property in
-various circumstances~
-\footnote{\url{http://stackoverflow.com/questions/12735274/breaking-data-set-integrity-without-generalizednewtypederiving}}.
+various circumstances.\footnote{\url{http://stackoverflow.com/questions/12735274/breaking-data-set-integrity-without-generalizednewtypederiving}}
 In fact it is acknowledged that providing a global uniqueness check is quite 
-challenging for Haskell implementations~\footnote{\url{https://mail.haskell.org/pipermail/haskell-cafe/2012-October/103887.html}}.
+challenging for Haskell implementations.\footnote{\url{https://mail.haskell.org/pipermail/haskell-cafe/2012-October/103887.html}}
 
 \subsection{Scala Implicits and Incoherence}
 
@@ -214,8 +213,8 @@ be modelled as:
 < trait Show[T] {def show (x : T) : String}
 < trait Read[T] {def read (x : String) : T}
 
-\noindent Ofcourse, by declaring traits like this, the methods still require 
-an explicit object where the method can be called. To be able to use 
+\noindent Of course, by declaring traits like this, the methods still require 
+an explicit object to call the method on. To be able to use 
 methods in the same way as Haskell type classes, the object (or dictionary) 
 should be implicitly passed. This can be achieved in Scala by using the 
 implicits feature of Scala:
@@ -232,27 +231,27 @@ Haskell.  The type of |cmp| states that |cmp| is parametrized by some
 type |A|, and takes two arguments of type |A|. The notation |A:Ord| is
 a \emph{context bound}: a syntactic sugar of Scala that enables us to
 declare a constraint on the type |A|. Namely, the type |A| should be
-an "instance" of |Ord[A]|.  Using |cmp| only requires two explicit
+an ``instance'' of |Ord[A]|.  Using |cmp| only requires two explicit
 arguments: the implementation of |Ord[A]| is implicit. In the body of |cmp| an additional mechanism, called an
 implicit \emph{query} is now necessary to query the environment for a
-value of type |Ord[A]|. Such query mechanism in Scala is nothing more 
+value of type |Ord[A]|. This query mechanism in Scala is nothing more 
 than a simple function taking an implicit argument. The (slightly simplified)
-definition of the query operator is: 
+definition of the query operator is:\footnote{In Scala the operator is known by the longer name \texttt{implicitly}.}
 
-< def ?[T] (implicit w:T):T = w // called implicitly in Scala    
+< def ?[T] (implicit w:T):T = w    
 
-\noindent Here |?| is just the name of the function (Scala allows symbolic names). 
-|?| takes a single \emph{implicit} argument of type |T| and returns that value. 
-Operationally it is just the identity function. But the key point is that, when used, 
-the implicit argument is filled automatically by the compiler. In the definition 
+\noindent 
+The operator |?| takes a single \emph{implicit} argument of type |T| and returns that value. 
+Hence operationally it is just the identity function. The key point is that, when used, 
+the implicit argument is filled in automatically by the compiler. In the definition 
 of |cmp|, the expression |?[Ord[A]]| triggers the compiler to look for a value 
-of type |Ord[A]|. Such values are computed from the compiler by using the \emph{implicit 
+of type |Ord[A]| in the \emph{implicit 
 environment}. The implicit environment collects values that are declared to be implicit, 
 and usable for automatic implicit resolution. 
 
 Implicit values or rules, which correspond to type class instances in Haskell, 
-are declared by using the |implicit| keyword. The following three examples illustrating 
-the "instances" for |Ord|:  
+are declared by using the |implicit| keyword. The following three examples capture
+the ``instances'' for |Ord|:  
 %{
 %format . = "."
   
@@ -276,21 +275,21 @@ as |sort|, that require |Ord| instances:
  
 < def sort[A : Ord](x : List[A]) = ...
 
-\noindent Now the |sort| function can be used in a similar way to the Haskell function. 
+\noindent This Scala |sort| function can be used in a similar way to the corresponding Haskell function. 
 For example the call |sort (List((3,'a'), (2,'c'), (3,'b')))| is valid and does not 
-require an explicit argument of type |Ord[(Int,Char)]|. Instead such argument is computed 
+require an explicit argument of type |Ord[(Int,Char)]|. Instead this argument is computed 
 from the implicit definitions for |Ord|.
 
 \paragraph{Wider Range of Applications for Implicits} Scala implicits do allow for 
-a wider range of applications when compared to type classes.
+a wider range of applications than type classes.
 One example where implicits naturally address a problem that type classes 
 do not address well is the problem of 
 \emph{implicit configurations}~\cite{Kiselyov04}. The following 
 example, adapted from Kiselyov and Shan, illustrates this:
 
 \begin{code}
-def add(a : Int, b : Int)(implicit modulus : Int) = (a + b) % modulus  
-def mul(a : Int, b : Int)(implicit modulus : Int) = (a * b) % modulus  
+def add(x : Int, y : Int)(implicit modulus : Int) = (x + y) % modulus  
+def mul(x : Int, y : Int)(implicit modulus : Int) = (x * y) % modulus  
 implicit val defMod : Int = 4       
 def test = add(mul(3,3), mul(5,5)) // returns 2
 \end{code}
@@ -313,16 +312,16 @@ Adding |implicit| before |val| signals that the value being defined
 is available for synthesising values of type |Int|. 
 Finally, |test| illustrates how expressions doing modular arithmetic 
 can be defined using the implicit modulus. Because Scala also 
-has local scoping, different modulus values can be used under 
+has local scoping, different modulus values can be used in
 different scopes.
 
 Several other examples of applications that can be covered by
 implicits, but are harder to achieve with type classes are found in
 the existing literature~\cite{implicits,oliveira12implicit,odersky17implicits}. In
-particular, in a recent paper Odersky et al. introduce \emph{implicit
-function types}~\cite{odersky17implicits}, which are a generalization
+particular, in a recent paper Odersky et al. \shortcite{odersky17implicits} introduce \emph{implicit
+function types}, which are a generalization
 of the original Scala implicits~\cite{implicits}, and demonstrate
-several such interesting use cases for implicits.
+several interesting use cases for implicits.
 
 \paragraph{Incoherence in Scala}
 Although Scala allows \emph{nested} local scoping and overlapping rules,
@@ -694,24 +693,21 @@ returns $2$ and not $1$:
 
 
 \subsubsection{Encoding Type Classes in $\ourlang$} 
-Type classes can be encoded in $\ourlang$ similarly to how type classes 
-can be encoded in Scala. Next we show how the encoding works, but 
-we assume some convenience source language features not available in
-$\ourlang$ (which is designed as a core language). In particular
-$\ourlang$ has no type-inference and, as such, requires explicit rule
-applications and queries. The design of source languages that support
-more type-inference, implicit rule applications, implicit
-polymorphism and can be translated into a $\ourlang$-like calculus was
-already explored in the implicit calculus~\cite{oliveira12implicit}.
-To better illustrate some of our examples here we will assume such
-source language features.  
+Type classes can be encoded in $\ourlang$ similarly to how type classes can be
+encoded in Scala. Next we illustrate how the encoding works on the examples
+from  Section~\ref{subsec:tclasses}.  To help with readability we assume a few
+convenient source language features not available in $\ourlang$ (which is
+designed as a formal core calculus rather than a full-fledged source language). 
+In particular $\ourlang$ has no type-inference and, as such, requires explicit
+rule applications and queries. The design of source languages that support more
+type-inference, implicit rule applications, implicit polymorphism and can be
+translated into a $\ourlang$-like calculus was already explored in the implicit
+calculus~\cite{oliveira12implicit}. To better illustrate some of our examples
+here we will assume such source language features.  
  
-To illustrate how type classes are modelled in $\ourlang$, we show how
-to encode the type classes and instances defined in Section~\ref{subsec:tclasses}.  
-To help with readability we also use a few standard languages constructs, which  
-are not modelled in $\ourlang$. Firstly we use type synonyms to allow us 
-to give a short name to a type. Secondly we use records. Using both of those 
-constructs, the three type classes can be declared as:
+Firstly we use type synonyms to allow us to give a short name to a type.
+Secondly we use records. Using both of those constructs, the three type classes
+can be declared as:
 
 < type Ord a = {le : a -> a -> Bool}
 < type Show a = {show : a -> String}
@@ -728,11 +724,11 @@ that makes the argument of type |Ord a| implicit:
 
 %}
 
-Here the query is annotated with a type |Ord a| trigering the 
+Here the query is annotated with a type |Ord a| triggering the 
 resolution of a value of that type. Once that value is computed, the 
 field |le| can be extracted from it. 
    
-The "instances" of |Ord| can be defined as record values or 
+The ``instances'' of |Ord| can be defined as record values or 
 rule types returning an |Ord| record.
 
 %{
@@ -753,8 +749,8 @@ Given a |sort| function:
 
 < let sort : forall a . Ord a => List a -> List a = ... 
 
-\noindent it would now be possible to use |implicit| to introduce 
-the "instances" into the implicit scope and have the |Ord (List Int)|
+\noindent it now is possible to use |implicit| to introduce 
+the ``instances'' into the implicit scope and have the |Ord (List Int)|
 argument of the call |sort [(3,'a'), (2,'c'), (3,'b')]| automatically inferred:
 
 < implicit ordInt in 
@@ -803,8 +799,8 @@ substitute the type argument, we obtain the specialised program
 >     query (Int -> Int) 3
 
 Now |Int -> Int| is the nearest lexical match and the program yields the result
-|4|. Consequentely, accepting such programs would imply that substituting equals-by-equals 
-would not work in the general case.
+|4|. Consequently, accepting such programs would imply that substituting equals for equals 
+does not work in general.
 To avoid this unpredictable behaviour, $\ourlang$ rejects such unstable
 matchings. Technically speaking the key property that $\ourlang$ guarantees 
 is \emph{stability of resolution} (see also Section~\ref{sec:trans}).
@@ -818,11 +814,11 @@ Resolution is stable under substitution.
 \end{lemma}
 \end{comment}
 Essentially this property ensures that instantiation does not affect the 
-resolution of queries. That is, any query that is more instantiated will be resolved using 
-the same rules than a more polymorphic query. If it cannot be statically guaranteed 
-that resolution behaves in the same way for \emph{any} more specialized query, then 
+resolution of queries. That is, after instantiation any polymorphic query will be resolved using 
+the same rules as before. If it cannot be statically guaranteed 
+that resolution behaves in the same way for \emph{every} instantiation, then 
 the program is rejected. The benefit of rejecting such potentially unstable programs 
-is that the principle of substituting equals-by-equals is not affected by the interaction 
+is that the principle of substituting equals for equals is not affected by the interaction 
 between resolution and instantiation. This makes reasoning about programs and code 
 refactoring more predictable.
 

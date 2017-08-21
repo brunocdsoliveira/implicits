@@ -720,7 +720,7 @@ where a first stab at a formalisation of the stability condition is:
           {\mathit{stable}(\tenv,\rulet~\gbox{\leadsto x},\type)}
 \eda
 
-The above formulation of the condition is a bit too lax; we to\bruno{to $\to$ could?} be more precise
+The above formulation of the condition is a bit too lax; we have to be more precise
 about the domain and range of the substitution $\theta$.  Indeed, substitution
 does not make sense for every type variable in the environment.  Consider for
 example resolving the type $\forall \beta. \beta \arrow \beta$ against the

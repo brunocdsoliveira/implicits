@@ -86,10 +86,10 @@ cannot be higher-order~\cite{oliveira12implicit}.
 
 Advanced
 features of type classes, such as overlapping
-instances,\footnote{\url{https://downloads.haskell.org/~ghc/latest/docs/html/users\_guide/glasgow\_exts.html\#overlapping-instances}}
+instances,\footnote{\url{https://downloads.haskell.org/~ghc/latest/docs/html/users_guide/glasgow_exts.html\#overlapping-instances}}
 also pose severe problems for coherence. In purely functional programming,
-``\emph{substituting equals by equals}'' is expected to hold. That is,
-when given two equivalent expressions replacing one by the other in
+``\emph{substituting equals for equals}'' is expected to hold. That is,
+when given two equivalent expressions, replacing one by the other in a larger program
 always leads to two programs that yield the same
 result. 
 Special care (via restrictions) is needed to preserve
@@ -103,7 +103,7 @@ the new instances}''~\cite{chain}. Therefore, if care is not taken,
 the behaviour of resolution for an expression |e| can change if |e| 
 gets a more specific type, leading to a different evaluation result. 
 Because of this problem, the design of Haskell type classes
-signicantly restricts the set of valid overlapping instances to ensure 
+significantly restricts the set of valid overlapping instances to ensure 
 that stability holds, and the meaning of an expression does not change 
 simply due to a more specific type. 
 
@@ -147,7 +147,7 @@ other features, such as first-class and higher-order rules.
 
 This paper presents \name\footnote{Cochise, 1804--1874, was chief of the Chokonen band of
       the Chiricahua Apache.}: the Calculus Of CoHerent ImplicitS. \name
-is an improved variant of the implicit calculus that preserves
+is an improved variant of the implicit calculus that guarantees 
 \emph{coherence} and \emph{stability}. \name supports local scoping, overlapping instances,
 first-class instances and higher-order rules. Yet, in contrast to most
 previous work that supports such features, the calculus is not only
@@ -162,12 +162,8 @@ allowed.
 %If a single global scope exists in a
 %program then the determinism and coherence of \name imply that 
 
-\bruno{Tom: Can you improve the following paragraph to also talk 
-about stability? I've already mentioned stability before (double-check
-that please).}
-Ensuring coherence and stability in \name is challenging.  The overlapping and
-higher-order nature of rules poses significant challenges for the
-coherence and determinism of \name's resolution. 
+Ensuring coherence and stability in the presence of \name's overlapping and
+higher-order rules are is particularly challenging.
 We introduce a logical formulation of how to resolve implicits, which
 is simple but ambiguous and incoherent, and a second formulation,
 which is less simple but unambiguous and coherent.  Every resolution
@@ -179,7 +175,8 @@ focused proof search, which is still essentially non-deterministic,
 \name's resolution employs additional techniques to be entirely
 deterministic and coherent.  In particular, unlike focused proof
 search, our resolution uses a stack discipline to prioritize rules,
-and removes any recursive resolutions from matching decisions.
+and removes any recursive resolutions from matching decisions. Moreover,
+further restrictions are needed to obtain stability.
 
 In summary, our contributions are as follows:
 
