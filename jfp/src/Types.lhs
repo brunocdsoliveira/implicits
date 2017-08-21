@@ -1476,8 +1476,9 @@ $\beta$ must appear before $\alpha$ in the environment $\tenv$ (regular
 validity), or $\beta$ must itself be a unification variable (the exceptional
 case). The relative position of variables is checked with 
 the auxiliary judgement $\beta >_\tenv \alpha$ whose one rule verifies
-that $\beta$ appears before $\alpha$ in the environment $\tenv$.\footnote{If type variables
-are represented by de Bruijn indices, this can be implemented by the $>$-comparison on naturals.}
+that $\beta$ appears before $\alpha$ in the environment $\tenv$.\footnote{If
+type variables are represented by de Bruijn indices, this can be done by
+checking whether one index is greater than the other.}
 
 The auxiliary judgement $\mgun{\bar{\alpha}}{\rulet_1}{\rulet_2}$ computes the
 actual unifier. 
