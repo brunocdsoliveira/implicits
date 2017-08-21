@@ -698,11 +698,9 @@ returns $2$ and not $1$:
 Type classes can be encoded in $\ourlang$ similarly to how type classes 
 can be encoded in Scala. Next we show how the encoding works, but 
 we assume some convenience source language features not available in
-$\ourlang$. $\ourlang$ is not
-designed to be a source language and as such it lacks certain features
-that make writing programs in it conveniently. In particular
+$\ourlang$ (which is designed as a core language). In particular
 $\ourlang$ has no type-inference and, as such, requires explicit rule
-applications and queries.  The design of source languages that support
+applications and queries. The design of source languages that support
 more type-inference, implicit rule applications, implicit
 polymorphism and can be translated into a $\ourlang$-like calculus was
 already explored in the implicit calculus~\cite{oliveira12implicit}.
@@ -744,7 +742,7 @@ rule types returning an |Ord| record.
 < let ordInt : Ord Int = {le = \x . \y . primIntLe x y} in
 < let ordChar : Ord Char = {le = \x . \y . primCharLe x y} in
 < let ordPair : forall a b. Ord a => Ord b => Ord (a,b) = {le = \x . \y . 
-<    cmp (fst x) (fst y) && ((not (smp (fst y) (fst x))) || cmp (snd x) (snd y))} in
+<    cmp (fst x) (fst y) && ((not (cmp (fst y) (fst x))) || cmp (snd x) (snd y))} in
 
 %}
 
@@ -796,7 +794,7 @@ nearest rule that matches all possible instantiations of the query, e.g.,
 |forall a. a -> a| in the example. While this poses no threat to type
 soundness, this approach is nevertheless undesirable for two reasons.
 Firstly, it makes the behaviour of programs harder to predict, and, secondly,
-the behaviour of programs is not stable under inlining. Consider
+the behaviour of programs is not \emph{stable under inlining}. Consider
 the call |bad Int 3|, which would yield the result |3|. If instead we inline
 the function definition of |bad| at the call site and
 substitute the type argument, we obtain the specialised program
@@ -806,8 +804,29 @@ substitute the type argument, we obtain the specialised program
 >     query (Int -> Int) 3
 
 Now |Int -> Int| is the nearest lexical match and the program yields the result
-|4|. To avoid this unpredictable behaviour, $\ourlang$ rejects such unstable
-matchings.
+|4|. Consequentely, accepting such programs would imply that substituting equals-by-equals 
+would not work in the general case.
+To avoid this unpredictable behaviour, $\ourlang$ rejects such unstable
+matchings. Technically speaking the key property that $\ourlang$ guarantees 
+is \emph{stability of resolution} (see also Section~\ref{sec:trans}).
+\begin{comment}
+\begin{lemma}[Stability]
+Resolution is stable under substitution.
+\[
+\tenv,\alpha,\tenv' \ivturns \rulet \leadsto E \enskip\wedge\enskip \tenv \vdash \sigma
+\enskip\Rightarrow\enskip 
+\tenv,\tenv'[\sigma/\alpha] \ivturns \rulet[\sigma/\alpha] \leadsto E[|\sigma|/\alpha] \]
+\end{lemma}
+\end{comment}
+Essentially this property ensures that instantiation does not affect the 
+resolution of queries. That is, any query that is more instantiated will be resolved using 
+the same rules than a more polymorphic query. If it cannot be statically guaranteed 
+that resolution behaves in the same way for \emph{any} more specialized query, then 
+the program is rejected. The benefit of rejecting such potentially unstable programs 
+is that the principle of substituting equals-by-equals is not affected by the interaction 
+between resolution and instantiation. This makes reasoning about programs and code 
+refactoring more predictable.
+
 
 %if False
 
