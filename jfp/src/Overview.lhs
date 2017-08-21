@@ -267,7 +267,7 @@ the "instances" for |Ord|:
 < 
 < implicit def OrdPair[A : Ord, B : Ord] = new Ord[(A,B)] {
 <   def le(x : (A,B), y : (A,B)) = 
-<      cmp(fst(x),fst(y)) || (fst(x).equals(fst(y)) && cmp(snd(x),snd(y))) 
+<      cmp(fst(x),fst(y)) && (!(cmp(fst(y),fst(x))) || cmp(snd(x),snd(y)))
 < }
 
 %}
@@ -278,8 +278,8 @@ as |sort|, that require |Ord| instances:
 < def sort[A : Ord](x : List[A]) = ...
 
 \noindent Now the |sort| function can be used in a similar way to the Haskell function. 
-For example the call |sort (List((3, 5), (2, 4), (3, 4)))| is valid and does not 
-require an explicit argument of type |Ord[(Int,Int)]|. Instead such argument is computed 
+For example the call |sort (List((3,'a'), (2,'c'), (3,'b')))| is valid and does not 
+require an explicit argument of type |Ord[(Int,Char)]|. Instead such argument is computed 
 from the implicit definitions for |Ord|.
 
 \paragraph{Wider Range of Applications for Implicits} Scala implicits do allow for 
@@ -610,7 +610,10 @@ rule. The following expression returns
 > implicit 3 in implicit True in implicit (biglam a (rule a (((query a),(query a))))) in (query (Pair Int Int), query (Pair Bool Bool))
 
 \paragraph{Combining Higher-Order and Polymorphic Rules} 
-The rule | rule Int (rule ((forall a . a => Pair a a)) (((query (Pair (Pair Int Int) (Pair Int Int))))))|
+The rule: 
+
+< rule Int (rule ((forall a . a => Pair a a)) (((query (Pair (Pair Int Int) (Pair Int Int))))))
+
 prescribes how to build a pair of integer pairs, inductively from an
 integer value, by consecutively applying the rule of type
 |forall a . a => Pair a a| 
@@ -720,9 +723,18 @@ constructs, the three type classes can be declared as:
 Similarly to the Scala encoding we define a |cmp| function, 
 that makes the argument of type |Ord a| implicit: 
 
+%{
+
+%format . = "."
+
 < let cmp : forall a . Ord a => a -> a -> Bool = (? : Ord a).le in
 
-Here we assume a type annotation to  
+%}
+
+Here the query is annotated with a type |Ord a| trigering the 
+resolution of a value of that type. Once that value is computed, the 
+field |le| can be extracted from it. 
+   
 The "instances" of |Ord| can be defined as record values or 
 rule types returning an |Ord| record.
 
@@ -732,7 +744,7 @@ rule types returning an |Ord| record.
 < let ordInt : Ord Int = {le = \x . \y . primIntLe x y} in
 < let ordChar : Ord Char = {le = \x . \y . primCharLe x y} in
 < let ordPair : forall a b. Ord a => Ord b => Ord (a,b) = {le = \x . \y . 
-<    cmp (fst x) (fst y) || (eq (fst x) (fst y) && cmp (snd x) (snd y))} in
+<    cmp (fst x) (fst y) && ((not (smp (fst y) (fst x))) || cmp (snd x) (snd y))} in
 
 %}
 
@@ -746,12 +758,12 @@ Given a |sort| function:
 
 \noindent it would now be possible to use |implicit| to introduce 
 the "instances" into the implicit scope and have the |Ord (List Int)|
-argument of the call |sort [1,2,3]| automatically inferred:
+argument of the call |sort [(3,'a'), (2,'c'), (3,'b')]| automatically inferred:
 
 < implicit ordInt in 
 <   implicit ordChar in
 <      implicit ordPair in
-<        sort [1,2,3]
+<        sort [(3,'a'), (2,'c'), (3,'b')]
 
 \subsection{Overlapping Rules and Stability in $\ourlang$}
 \label{sec:overview:incoherence}
