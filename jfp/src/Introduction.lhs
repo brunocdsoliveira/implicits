@@ -163,7 +163,7 @@ allowed.
 %program then the determinism and coherence of \name imply that 
 
 Ensuring coherence and stability in the presence of \name's overlapping and
-higher-order rules are is particularly challenging.
+higher-order rules is particularly challenging.
 We introduce a logical formulation of how to resolve implicits, which
 is simple but ambiguous and incoherent, and a second formulation,
 which is less simple but unambiguous and coherent.  Every resolution
