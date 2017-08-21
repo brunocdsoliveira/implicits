@@ -253,7 +253,6 @@ and usable for automatic implicit resolution.
 Implicit values or rules, which correspond to type class instances in Haskell, 
 are declared by using the |implicit| keyword. The following three examples illustrating 
 the "instances" for |Ord|:  
-\bruno{fix the code!}
 %{
 %format . = "."
   
