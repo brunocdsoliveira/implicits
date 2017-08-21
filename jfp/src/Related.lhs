@@ -134,9 +134,9 @@ al.~\shortcite{haskell2017b} have extended Haskell's type class inference with
 \textit{quantified class constraints}.  This generalizes the syntax of
 Haskell's type class constraints to feature arbitrarily nested uses of
 universal quantificiation and impliciation. Their work differs from $\ourlang$
-in that it does not support local instances. Moverover, they achieve coherence
+in that it does not support local instances. Moreover, they achieve coherence
 through requiring non-overlapping instances. Their algorithm performs a
-backtracking search among these instances as well as any local assumtions
+backtracking search among these instances as well as any local assumptions
 (which themselves can ultimately only be satisfied by combinations of global
 instances), rather than a linear committed-choice traversal of the environment. 
 
@@ -183,9 +183,9 @@ $\ourlang$, Odersky et al.~\shortcite{odersky17implicits} presented the SI
 calculus as a new basis for the Scala language's treatment of implicits.
 Prominently, SI features implicit function types $T_1 ?\!\!\!\to T_2$, which
 are akin to $\ourlang$ $T_1 \iarrow T_2$ in $\ourlang$, and implicit queries
-$?$, which are akin to $?_T$ in $\ourlang$. There are two prominent differences
+$?$, which are akin to $?_T$ in $\ourlang$. There are two main differences
 with $\ourlang$. Firstly, like the Hindley-Milner calculus SI is aimed at type
-inference and, e.g., does not feature explicit abstraction over imlicits
+inference and, e.g., does not feature explicit abstraction over implicits
 $\lambda_?T.e$ or type application $e\,T$ at the term level. In contrast,
 $\ourlang$ is more similar to System F in this sense, making all abstractions
 and applications explicit.
