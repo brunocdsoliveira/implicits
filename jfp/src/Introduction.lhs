@@ -199,7 +199,7 @@ In summary, our contributions are as follows:
 
 \item We provide a semantics in the form of a translation from \name
    to System F. We prove our translation to be type-safe, and
-   coherent. The full proofs are available in the appendix of this paper. 
+   coherent. The mechanized Coq proofs are available at \tom{TODO}. 
 
 \end{itemize}
 
