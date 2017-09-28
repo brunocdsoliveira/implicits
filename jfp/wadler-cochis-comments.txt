@@ -1,0 +1,312 @@
+% I'm concerned about the name Cochis. So far as I know, none of us has
+% connections with native americans, and some folk take a dim view of
+% cultural appropriation.
+% 
+% How about this as a name for the paper: "Keeping the locals coherenent".
+% The calculus could be CCI (Calculus of Coherent Implicits) or
+% $\lambda$I (Implicit Calculus) or $\lambda$LC to tie to the title.
+% 
+% p1
+% 
+% #Abstract
+% 
+% Abstract reads very well.
+% 
+% "a type-directed resolution process" --> "type-directed resolution"
+
+FIXED
+ 
+% "one another, and cannot"--> "one another and cannot"
+
+FIXED
+ 
+% #Introduction
+% 
+% "Very often" --> "Often"
+
+FIXED
+ 
+% p2
+% 
+% List on top of page two: not sure why items appear in this order. How
+% about ordering by date on the citation?
+
+FIXED
+ 
+% "not ambiguous/non-deterministic" --> "not ambiguous" (Haskell programs
+% are not ambiguous, but can be non-deterministic.)
+
+FIXED
+ 
+% "second class interfaces" --> "second-class interfaces" No citation
+% is given, and some readers may be unsure what this means, so consider
+% deleting the phrase or expanding upon it.
+
+TODO: citation?
+ 
+% The first mention of overlapping instances should be accompanied by a
+% citation to the URL rather than a footnote.
+ 
+FIXED
+
+% "In purely functional programming, “substituting equals for equals” is
+% expected to hold. That is, when given two equivalent expressions,
+% replacing one by the other in a larger program always leads to two
+% programs that yield the same result." Arguably, this is a tautology,
+% if you define equivalence by contextual equivalence---and how else
+% would you define it? The language gets abstract around here. Possibly
+% better to give a concrete example? Or just skip to the Morris and
+% Jones quote, which is clear.
+
+TODO
+ 
+% p3
+% 
+% "For instance, Scala ..." --> "For example, Scala ..." (so as not to
+% clash with use of "instance" later in the sentence).
+ 
+FIXED
+
+% "For example, Scala ..." --> "Scala ..." (to avoid duplication).
+
+FIXED
+ 
+% "which can be used to allow distinct "instances"" -->
+% "which allows distinct instances"
+
+FIXED
+ 
+% "Nevertheless, if retaining global uniqueness is desired, it is
+% possible to model source languages on top of COCHIS that support
+% global scoping only." -->
+% "If retaining global uniqueness is desired, that can be modeled by the
+% subset of COCHIS without local declarations." (Omit next sentence.)
+
+FIXED
+ 
+% p4
+% 
+% Delay mention on class Show and class Read until they are used at
+% start of Section 2.2.
+
+TODO
+ 
+% "how Haskell assigns a meaning to overlapping instances" -->
+% "how Haskell assigns a meaning to overlapping instances when they
+% are permitted"
+
+FIXED
+ 
+% p8
+% 
+% "def cmp [A:Ord] (x :A;y :A) : Boolean = ?[Ord [A]]:le (x;y)"
+% As a non-Scala user, I find this confusing. How does A:Ord relate
+% to Ord[A]?
+
+TODO
+ 
+% "the implementation of Ord [A] is implicit"
+% Even more confusing, because we are talking here about the [A:Ord]
+% argument to cmp, not the Ord[A] argument to ?.
+
+TODO
+ 
+% After reading the section, I am still confused. The definition
+% of cmp does not have an implicit parameter in its declaration, and
+% yet it must be passed an instance of Ord[A].
+
+TODO
+ 
+% Does Scala not permit pattern matching against (xa,xb) in the
+% definition of the Ord instance for pairs?
+
+TODO
+ 
+% "For example 2 + 3 = 1 (mod 4) because
+% 2 + 3 and 1 differ by a multiple of 4." -->
+% "For example 3 \times 3 = 1 (mod 4) because
+% 9 and 1 differ by a multiple of 4."
+
+FIXED
+ 
+% "... modular arithmetic. In Scala ..." -->
+% "... modular arithmetic, where in Scala ..."
+
+FIXED
+ 
+% "Both \emph{add}ition ..." --> "Both addition ..."
+% (This is the second use, not the first, and it was
+% perfectly clear in the first use without the italics)
+
+FIXED
+ 
+% p10
+% 
+% "?Int" What's going on with the typesetting? The "?"
+% appears too close to the "Int".
+
+TODO: better?
+ 
+% p11
+% 
+% "The analogous to rule abstractions" -->
+% "The analog to rule abstractions"
+
+FIXED
+ 
+% "\lambda?Int:\lambda?(Int)IntInt):?(Int,Int)"
+% This example is vaguely disturbing, as it feels as though the rule
+%   implicit \Lambda\alpha.\Lambda\beta.\lambda_?\alpha.\lambda_?\beta.(?\alpha,?\beta) in ...
+% should be provided automatically.
+
+TODO
+ 
+% "implicit 3 in implicit (\lambda_? Int:(?Int;?Int+1)) in ?(Int,Int)" -->
+% it would be better to see an example that explicitly has the
+% previous expression
+% "\lambda?Int:\lambda?(Int)IntInt):?(Int,Int)"
+% as a subexpression.
+
+TODO
+ 
+% p12
+% 
+% "The design of source languages that support more type-inference,
+% implicit rule applications, implicit polymorphism and can be translated into a COCHIS-like
+% calculus was already explored in the implicit calculus (Oliveira et al., 2012)."  -->
+% "The design of a source language that supports type-inference,
+% implicit rule applications, implicit polymorphism and that translates into a COCHIS-like
+% calculus was already explored in our previous work on the implicit calculus (Oliveira et al., 2012)."
+
+FIXED
+ 
+% p16
+% 
+% --> "Figure 3 provides a first, ambiguous definition ..."
+% Omit the footnote.
+
+FIXED
+ 
+% (after "read as propositions")
+% --> ", where $r$ stands for resolution and $a$ for ambigous"
+
+FIXED
+ 
+% p17
+% 
+% In $\Gamma \vdash^a_r a$, the first $a$ is a fixed symbol while the second $a$ is a variable.
+% This is bound to confuse readers. A common approach would be to typeset $\vdash^a_r$ with
+% a and r in roman font.
+
+TODO
+ 
+% Section 3.4. You've flipped to writing rule names after the rule rather than before.
+% Better to be consistent throughout.
+
+TODO
+ 
+% Wrote AR-IVar without parentheses.
+
+TODO
+ 
+% $\Gamma' = \Gamma, a ~> y$. The proof would be clearer with $\Gamma'$ expanded in place.
+
+TODO
+ 
+% Why are we considering an example with trivial non-determinism when we've just seen
+% an example with nontrivial non-determinism? I have no idea why this example is here.
+% Further, the reference to the elaboration is confusing, since elaboration has not been
+% explained yet.
+
+TODO
+ 
+% p18
+% 
+% End of second line of text on page: missing \tau in auxiliary judgement.
+
+TODO
+ 
+% Better to give the grammar of \rho before showing judgements with \rho, as it is
+% preferable to have definition precede use.
+
+TODO
+ 
+% "for the example above there is only one proof"
+% What about for the proof of \Gamma_0 \vdash Int? That would be a more convincing
+% benefit of focussing.
+
+TODO
+ 
+% p19
+% 
+% "To see why the impredicative instantiation ..."  'Impredicative' is a scary
+% word to many people. Better at least define it first!
+
+TODO
+ 
+% "predicative generalisation from Int to \alpha." I don't know what "predicative generalisation"
+% means. More importantly, don't you mean "instantiation from \alpha to Int"?
+
+TODO
+ 
+% p20
+% 
+% "We only allow generalisation over monotypes" I read rules from top to bottom, so I think
+% that here you are talking about instantiation!
+
+TODO
+ 
+% "We only allow instantiation ..." Here it is still ok to use instantiation (even though the
+% \forall now appears when reading top to bottom) because the \forall is to the left of the
+% turnstyle rather than the right as previously.
+
+TODO
+ 
+% "This type encodes the well-known ambiguous Haskell type"
+% No, it doesn't encode the Haskell type, and the Haskell type is not ambiguous. It is the
+% Haskell *expression* that is ambiguous. Please reword! Also, please refer back to the
+% earlier discussion of ambiguity on p6, where you wrote (show (read "3")) rather than
+% (read . show).
+
+TODO
+ 
+% Please turn footnote 8 into a parenthetic note in the text. Indeed, please do the
+% same with all footnotes! Footnotes impedes the reader, whose eye must move down to
+% the bottom of the page and then back to relocate the old position.
+
+TODO
+ 
+% p21
+% 
+% Suddenly we have some complicated type rules in the middle of the text!
+% Ouch. Possibly it would be better to gather these in a figure. Or at least
+% tell the reader that these are still intermediate rules, and promise that
+% the final set of rules will be gathered into a figure.
+
+TODO
+ 
+% p22
+% 
+% "substitute the type variable \alpha for Int"
+% Don't you mean substitute Int for the type variable \alpha?
+
+TODO
+ 
+% "Consider for example" You need to make clear what that we want
+% \forall \beta. \beta \to \beta to resolve against
+% \forall \gamma. \gamma \to \gamma, and that having stability
+% rule out this match would be problematic.
+
+TODO
+ 
+% p23
+% 
+% "well-scoped in prefix" --> "well-scoped in the prefix"
+
+TODO
+ 
+% Overall:
+% 
+% I think the gradual development makes clear some things which were
+% hard to follow previously. Good job! Unfortunately, we still have a rather
+% complex system and it is quite tough going towards the end.

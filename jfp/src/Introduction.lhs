@@ -34,7 +34,7 @@ Many programming languages aim at providing powerful,
 flexible language constructs that allow programmers to achieve reuse, 
 and develop programs rapidly and concisely. Other programming languages aim 
 at easy reasoning about programs, as well as at avoiding programming
-pitfalls. Very often the two goals are at odds with each other, since 
+pitfalls. Often the two goals are at odds with each other, since 
 highly flexible programming mechanisms make reasoning harder. 
 Arguably the art of programming language design is to reconcile
 both goals. 
@@ -43,10 +43,10 @@ A concrete case where this issue manifests itself is in the design of
 \emph{Implicit Programming} (IP) mechanisms.
 Implicit programming denotes a class of language mechanisms,
 which infer values by using type information. Examples of IP
-mechanisms include Haskell's type classes~\cite{adhoc}, Scala's
-implicits~\cite{scala}, JavaGI's generalized interfaces~\cite{javagi}, C++'s
-concepts~\cite{concepts}, Agda's \emph{instance arguments}~\cite{instanceargs}, Coq's type
-classes~\cite{coqclasses} and Rust's \emph{traits}~\cite{rust}. IP can also be viewed as a form of
+mechanisms include Haskell's type classes~\cite{adhoc}, C++'s
+concepts~\cite{concepts}, JavaGI's generalized interfaces~\cite{javagi}, Coq's type
+classes~\cite{coqclasses}, Scala's
+implicits~\cite{scala}, Agda's \emph{instance arguments}~\cite{instanceargs}, and Rust's \emph{traits}~\cite{rust}. IP can also be viewed as a form of
 (type-directed) program synthesis~\cite{Manna:1980:DAP:357084.357090}. The programming is said to
 be \emph{implicit} because expressions (e.g., those for function
 parameters) can be omitted by the programmer. Instead the necessary values are
@@ -61,7 +61,7 @@ the first school of thought, which is guided by the \emph{ease of
 \emph{predictability} of programs. To ensure these goals the semantics
 of the language should be \emph{coherent}~\cite{Reynolds91coherence,qual}. Coherence
 means that any valid program must have exactly one meaning (that is,
-the semantics is not ambiguous/non-deterministic). In fact Haskell
+the semantics is not ambiguous). In fact Haskell
 type classes are supposed to support an even stronger property, the so-called \emph{global
   uniqueness} of
   instances~\cite{uniqueness}.
@@ -81,12 +81,12 @@ that all instances must be visible globally, and local scoping of
 instances is not allowed. 
 This form of global scoping goes against 
 modularity. Other restrictions of type classes are 
-that they are second class interfaces and that the type-directed rules 
+that they are second-class interfaces and that the type-directed rules 
 cannot be higher-order~\cite{oliveira12implicit}. 
 
 Advanced
 features of type classes, such as overlapping
-instances,\footnote{\url{https://downloads.haskell.org/~ghc/latest/docs/html/users_guide/glasgow_exts.html\#overlapping-instances}}
+instances~\cite{overlapping_instances},
 also pose severe problems for coherence. In purely functional programming,
 ``\emph{substituting equals for equals}'' is expected to hold. That is,
 when given two equivalent expressions, replacing one by the other in a larger program
@@ -107,11 +107,11 @@ significantly restricts the set of valid overlapping instances to ensure
 that stability holds, and the meaning of an expression does not change 
 simply due to a more specific type. 
 
-An alternative school of thought in the design of IP mechanisms favours \emph{flexibility}. For instance, 
+An alternative school of thought in the design of IP mechanisms favours \emph{flexibility}. For example, 
 Scala implicits and Agda's instance arguments do not impose all of
-the type class restrictions. For example, Scala supports local scoping of
-instances, which can be used to allow distinct 
-``instances'' to exist for the same type in different scopes in the same
+the type class restrictions. Scala supports local scoping of
+instances, which allows distinct 
+instances to exist for the same type in different scopes in the same
 program. Scala also allows a powerful form of overlapping 
 implicits~\cite{implicits}. The essence of this style of implicit
 programming is modelled by the \emph{implicit
@@ -154,11 +154,8 @@ previous work that supports such features, the calculus is not only
 type-safe, but also coherent. Naturally, the unrestricted calculus
 does not support global uniqueness of instances, since this property depends on the
 global scoping restriction. Nevertheless, if retaining global
-uniqueness is desired, it is possible to model source languages on top
-of \name that support global scoping only.  Global scoping can be
-viewed as a particular case of local scoping where a single, global,
-implicit environment is assumed, and no local scoping constructs are
-allowed.
+uniqueness is desired, that can be modeled by the subset of
+\name without local declarations.
 %If a single global scope exists in a
 %program then the determinism and coherence of \name imply that 
 

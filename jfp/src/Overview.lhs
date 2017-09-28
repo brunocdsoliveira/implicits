@@ -139,7 +139,7 @@ since it is unclear whether |trans 3| should return
 |3| using the first instance, or |4| using the second instance.
 Because the second instance is more specific, one 
 might expect that it supersedes the first one; and that is indeed how
-Haskell assigns a meaning to overlapping instances.
+Haskell assigns a meaning to overlapping instances when they are permitted.
 
 But now consider the following declaration.
 
@@ -298,10 +298,10 @@ def test = add(mul(3,3), mul(5,5)) // returns 2
 where numbers
 that differ by multiples of a 
 given modulus are treated as identical.
-For example 2 + 3 = 1 (mod 4) because 2 + 3 and 1 differ 
+For example 3 * 3 = 1 (mod 4) because 9 and 1 differ 
 by a multiple of 4. The code shows the definition of 
-addition and multiplication in modular arithmetic. 
-In Scala |%| is modulo division. Both \emph{add}ition and \emph{mul}tiplication 
+addition and multiplication in modular arithmetic, where
+in Scala |%| is modulo division. Both addition and multiplication 
 include a third (implicit) parameter, which is the modulus 
 of the division. Although the modulus could be passed explicitly 
 this would be extremely cumbersome. Instead it is desirable that 
@@ -500,7 +500,7 @@ combination is more compactly denoted as:
 
 \noindent Both expressions return |2|.
 
-The analogous to rule abstractions in Scala are functions with arguments marked 
+The analog to rule abstractions in Scala are functions with arguments marked 
 with the |implicit| keyword. However, in older versions of Scala, 
 functions with implicit arguments were not first class and could not be abstracted 
 over. 
@@ -699,9 +699,9 @@ from  Section~\ref{subsec:tclasses}.  To help with readability we assume a few
 convenient source language features not available in $\ourlang$ (which is
 designed as a formal core calculus rather than a full-fledged source language). 
 In particular $\ourlang$ has no type-inference and, as such, requires explicit
-rule applications and queries. The design of source languages that support more
-type-inference, implicit rule applications, implicit polymorphism and can be
-translated into a $\ourlang$-like calculus was already explored in the implicit
+rule applications and queries. The design of a source language that supports
+type-inference, implicit rule applications, implicit polymorphism and that 
+translates into a $\ourlang$-like calculus was already explored in our previous work on the implicit
 calculus~\cite{oliveira12implicit}. To better illustrate some of our examples
 here we will assume such source language features.  
  

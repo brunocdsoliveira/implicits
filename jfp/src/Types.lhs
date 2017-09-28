@@ -230,11 +230,11 @@ is explained next.
 \end{center}
 }
 
-Figure~\ref{fig:resolution1} provides a first (ambiguous\footnote{Hence the subscript $a$ for ambiguous in the judgement form $\tenv \vturns \rulet$.}) definition of the
+Figure~\ref{fig:resolution1} provides a first, ambiguous definition of the
 resolution judgement. Its underlying principle is
 resolution in logic. 
 Intuitively, $\tenv\vturns \rulet$ holds if $\tenv$ entails $\rulet$, where the types in $\tenv$ and
-$\rulet$ are read as propositions.
+$\rulet$ are read as propositions, where $r$ stands for resolution and $a$ for ambiguous.
 Following the ``Propositions as Types'' correspondence~\cite{propsastypes}, we read
 $\alpha$ as a propositional variable and $\forall \alpha.\rulet$ as universal quantification.
 Yet, unlike in the traditional interpretation of types as propositions, we have two forms of arrows,

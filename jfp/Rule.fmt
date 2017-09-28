@@ -1,5 +1,6 @@
 %format rule (p) (e) = "\ruleabs{" p "}{" e"}" 
-%format (query q) = "?\!" q
+%%format (query q) = "?\!" q
+%format (query q) = "?" q
 %format with = "{\bf with}"
 %format implicit = "{\bf implicit}"
 %format record = "{\bf record}"
