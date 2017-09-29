@@ -198,20 +198,20 @@ FIXED
 % This is bound to confuse readers. A common approach would be to typeset $\vdash^a_r$ with
 % a and r in roman font.
 
-TODO
+FIXED
  
 % Section 3.4. You've flipped to writing rule names after the rule rather than before.
 % Better to be consistent throughout.
 
-TODO
+FIXED
  
 % Wrote AR-IVar without parentheses.
 
-TODO
+FIXED
  
 % $\Gamma' = \Gamma, a ~> y$. The proof would be clearer with $\Gamma'$ expanded in place.
 
-TODO
+FIXED
  
 % Why are we considering an example with trivial non-determinism when we've just seen
 % an example with nontrivial non-determinism? I have no idea why this example is here.
@@ -224,8 +224,8 @@ TODO
 % 
 % End of second line of text on page: missing \tau in auxiliary judgement.
 
-TODO
- 
+FIXED 
+
 % Better to give the grammar of \rho before showing judgements with \rho, as it is
 % preferable to have definition precede use.
 
@@ -274,7 +274,7 @@ TODO
 % same with all footnotes! Footnotes impedes the reader, whose eye must move down to
 % the bottom of the page and then back to relocate the old position.
 
-TODO
+FIXED
  
 % p21
 % 
@@ -290,7 +290,7 @@ TODO
 % "substitute the type variable \alpha for Int"
 % Don't you mean substitute Int for the type variable \alpha?
 
-TODO
+FIXED
  
 % "Consider for example" You need to make clear what that we want
 % \forall \beta. \beta \to \beta to resolve against
@@ -303,7 +303,7 @@ TODO
 % 
 % "well-scoped in prefix" --> "well-scoped in the prefix"
 
-TODO
+FIXED
  
 % Overall:
 % 

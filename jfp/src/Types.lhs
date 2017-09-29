@@ -300,7 +300,7 @@ the following two ways of resolving $a$ given
 $\tenv = a~\gbox{\leadsto x}$:
 \begin{equation*}
 \begin{array}{c}
-\inferrule*[right=(AR-IVar)]
+\inferrule*[left=(AR-IVar)]
    {a~\gbox{\leadsto x} \in \tenv}
    {\tenv \vturns a~\gbox{\leadsto x}}
 \end{array}
@@ -312,23 +312,23 @@ $\tenv = a~\gbox{\leadsto x}$:
 versus
 \begin{equation*}
 \begin{array}{c}
-\inferrule*[right=(AR-IApp)]
+\inferrule*[left=(AR-IApp)]
    {
-      \inferrule*[right=(AR-IAbs)]
+      \inferrule*[left=(AR-IAbs)]
          {
-            \inferrule*[right=AR-IVar]
-               { a~\gbox{\leadsto y} \in \tenv'}
-               { \tenv' \vturns a ~\gbox{\leadsto y} }
+            \inferrule*[left=(AR-IVar)]
+               { a~\gbox{\leadsto y} \in \tenv, a~\gbox{\leadsto y}}
+               { \tenv, a~\gbox{\leadsto y} \vturns a ~\gbox{\leadsto y} }
          }
          {\tenv \vturns a \iarrow a ~\gbox{\leadsto \lambda y. y}} \\
-      \inferrule*[Right=(AR-IVar)]
+      \inferrule*[left=(AR-IVar)]
          {a ~\gbox{\leadsto x} \in \tenv}
          {\tenv \vturns a ~\gbox{\leadsto x}}
    }
    {\tenv \vturns a~\gbox{\leadsto (\lambda y.y)\,x}}
 \end{array}
 \end{equation*}
-where $\tenv' = \tenv,a~\gbox{\leadsto y}$. While these are two different
+While these are two different
 proofs, they do not lead to different behavior -- the elaborated terms in grey
 are $\beta$-equivalent. 
 We will see that focusing provides a straightjacket that allows only the first
@@ -386,7 +386,7 @@ $\beta$-reduced and $\eta$-expanded form.
 Figure~\ref{fig:resolutionf} presents our definition of resolution with
 focusing. The main judgment $\tenv \fturns [\rulet]~\gbox{\leadsto E}$ is
 defined with the help of the auxiliary judgement $\tenv;
-[\rulet]~\gbox{\leadsto E} \fturns ~\gbox{\leadsto E'}; \Sigma$. Both definitions are
+[\rulet]~\gbox{\leadsto E} \fturns \type~\gbox{\leadsto E'}; \Sigma$. Both definitions are
 by induction on the type $\rulet$ enclosed in square brackets.
 The focusing approach refines the grammar of types to distinguish a special
 class of \emph{simple} types as the base case of the induction:
@@ -434,9 +434,9 @@ For instance, for the
 example above there is only one proof:
 \begin{equation*}
 \begin{array}{c}
-   \inferrule*[right=\mylabel{FR-Simp}]
+   \inferrule*[left=\mylabel{FR-Simp}]
      { a \in \tenv \\
-       \inferrule*[right=\mylabel{FM-Simp}]
+       \inferrule*[left=\mylabel{FM-Simp}]
          {}
          {\tenv; [a] ~\gbox{\leadsto x} \fturns a~\gbox{\leadsto x}; \epsilon }
      }
@@ -543,10 +543,10 @@ in completely different ways.
 
 In order to avoid any problems, we conservatively forbid all ambiguous context
 types in the implicit environment with the $\unamb \rulet_1$
-side-condition in rule \mylabel{Ty-IAbs} of Figure~\ref{fig:type}.\footnote{An
+side-condition in rule \mylabel{Ty-IAbs} of Figure~\ref{fig:type}. (An
 alternative design to avoid such ambiguity would instantiate unused type
 variables to a dummy type, like GHC's \texttt{GHC.Prim.Any}, which is only used
-for this purpose.} This judgement is defined in Figure~\ref{fig:unamb}
+for this purpose.) This judgement is defined in Figure~\ref{fig:unamb}
 in terms of the auxiliary judgement $\bar{\alpha} \unamb \rulet$ which
 takes an additional sequence of type variables $\alpha$ that is initially
 empty.
@@ -693,8 +693,8 @@ However, this resolution is not stable. Consider what happens when we apply a
 seemingly innocuous refactoring to the expression $e$ by $\beta$-reducing the
 type application. This yields the new, and supposedly equivalent, expression
 $e' = \ilambda \tyint. \ilambda \tyint. \query \tyint$.  The direct impact of
-this refactoring on the resolution problem is to substitute the type variable
-$\alpha$ for $\tyint$. As a consequence the resolution commits now to the first
+this refactoring on the resolution problem is to substitute $\tyint$ for the type variable
+$\alpha$. As a consequence the resolution commits now to the first
 entry and elaborates to $y$ instead of $x$. Hence, more generally, the above
 definition of resolution is not stable under type substitution. This is problematic
 because it defies the common expectation that simple refactorings like the one
@@ -758,7 +758,7 @@ them make sense. Essentially, there are two groups of substitutions:
 
 \item The substitution $\theta' = [\beta/\alpha]$ also generates a match. However, this 
       substitution does not make sense either because code inlining can only result in substitutions 
-      of $\alpha$ by types that are well-scoped in prefix of the environment before $\alpha$.
+      of $\alpha$ by types that are well-scoped in the prefix of the environment before $\alpha$.
       In the case of the example this means that we can only considering substitutions
       $[\rulet/\alpha]$ where $\forall \gamma. \gamma \arrow \gamma~\gbox{\leadsto x} \vdash \rulet$. In
       other words, $\rulet$ cannot have any free type variables. Obviously there is no such
