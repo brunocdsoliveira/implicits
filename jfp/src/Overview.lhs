@@ -16,19 +16,14 @@ Scala implicits, and finally we introduce the coherence approach taken in $\ourl
 
 \subsection{Type Classes and Implicit Programming}\label{subsec:tclasses}
 
-Type classes enable the declaration of overloaded functions like comparison,
-pretty printing, or parsing.
+Type classes enable the declaration of overloaded functions like comparison.
 
 > class Ord a where
 >   (<=) :: a -> a -> Bool
-> class Show a where
->   show :: a -> String
-> class Read a where
->   read :: String -> a
 
-A type class declaration consists of: a class name, such as |Ord|, |Show|
-or |Read|; a type parameter, such as |a|; and a set of method declarations,
-such as those for |(<=)|, |show|, and |read|. Each of
+A type class declaration consists of: a class name, such as |Ord|; a type
+parameter, such as |a|; and a set of method declarations,
+such as |(<=)|. Each of
 the methods in the type class declaration should have at least one
 occurrence of the type parameter |a| in their signature.
 % (either as an argument or as a return type).
@@ -106,14 +101,21 @@ An IP design is \emph{coherent} if
 any valid program has exactly one meaning (that is,
 the semantics is not ambiguous). 
 Haskell imposes restrictions to guarantee
-coherence. For example, the expression:
+coherence. For example, Haskell rejects the expression:
 
 > show (read "3") == "3" 
 
-\noindent is rejected in Haskell due to \emph{ambiguity} of 
+\noindent due to \emph{ambiguity} of 
 \emph{type class resolution}~\cite{qual}.  Functions |show| and
 |read| print and parse values of any type |a| that implements 
-the classes |Show| and |Read|.  The program is rejected because
+the classes |Show| and |Read|:  
+
+> class Show a where
+>   show :: a -> String
+> class Read a where
+>   read :: String -> a
+
+The program is rejected because
 there is more that one possible choice for |a|, for example
 it could be |Int|, |Float|, or |Char|. 
 Choosing |a=Float| leads to |False|,

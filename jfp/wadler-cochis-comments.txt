@@ -89,7 +89,7 @@ FIXED
 % Delay mention on class Show and class Read until they are used at
 % start of Section 2.2.
 
-TODO
+FIXED
  
 % "how Haskell assigns a meaning to overlapping instances" -->
 % "how Haskell assigns a meaning to overlapping instances when they
