@@ -801,8 +801,10 @@ substitute the type argument, we obtain the specialised program
 >     query (Int -> Int) 3
 
 Now |Int -> Int| is the nearest lexical match and the program yields the result
-|4|. Consequently, accepting such programs would imply that substituting equals for equals 
-does not work in general.
+|4|. 
+%Consequently, accepting such programs would imply that substituting equals for equals 
+%does not work in general.
+Consequently, inlining definitions changes their behavior.
 To avoid this unpredictable behaviour, $\ourlang$ rejects such unstable
 matchings. Technically speaking the key property that $\ourlang$ guarantees 
 is \emph{stability of resolution} (see also Section~\ref{sec:trans}).

@@ -42,7 +42,7 @@ FIXED
 % is given, and some readers may be unsure what this means, so consider
 % deleting the phrase or expanding upon it.
 
-TODO: citation?
+FIXED: reformulated to "not first-class values"
  
 % The first mention of overlapping instances should be accompanied by a
 % citation to the URL rather than a footnote.
@@ -58,7 +58,9 @@ FIXED
 % better to give a concrete example? Or just skip to the Morris and
 % Jones quote, which is clear.
 
-TODO
+FIXED
+I have changed this to be about "inlining" rather than substituting equals
+equals.
  
 % p3
 % 
@@ -145,7 +147,7 @@ FIXED
 % "?Int" What's going on with the typesetting? The "?"
 % appears too close to the "Int".
 
-TODO: better?
+FIXED: better now?
  
 % p11
 % 

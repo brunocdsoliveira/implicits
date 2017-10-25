@@ -81,7 +81,7 @@ that all instances must be visible globally, and local scoping of
 instances is not allowed. 
 This form of global scoping goes against 
 modularity. Other restrictions of type classes are 
-that they are second-class interfaces and that the type-directed rules 
+that they are not first-class values and that the type-directed rules 
 cannot be higher-order~\cite{oliveira12implicit}. 
 
 Advanced
