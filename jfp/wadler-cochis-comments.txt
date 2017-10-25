@@ -299,7 +299,7 @@ FIXED
 % \forall \gamma. \gamma \to \gamma, and that having stability
 % rule out this match would be problematic.
 
-TODO
+FIXED
  
 % p23
 % 
