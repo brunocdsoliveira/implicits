@@ -256,13 +256,13 @@ TODO
 % "We only allow generalisation over monotypes" I read rules from top to bottom, so I think
 % that here you are talking about instantiation!
 
-TODO
+FIXED
  
 % "We only allow instantiation ..." Here it is still ok to use instantiation (even though the
 % \forall now appears when reading top to bottom) because the \forall is to the left of the
 % turnstyle rather than the right as previously.
 
-TODO
+FIXED
  
 % "This type encodes the well-known ambiguous Haskell type"
 % No, it doesn't encode the Haskell type, and the Haskell type is not ambiguous. It is the
@@ -270,7 +270,7 @@ TODO
 % earlier discussion of ambiguity on p6, where you wrote (show (read "3")) rather than
 % (read . show).
 
-TODO
+FIXED
  
 % Please turn footnote 8 into a parenthetic note in the text. Indeed, please do the
 % same with all footnotes! Footnotes impedes the reader, whose eye must move down to
@@ -285,7 +285,7 @@ FIXED
 % tell the reader that these are still intermediate rules, and promise that
 % the final set of rules will be gathered into a figure.
 
-TODO
+FIXED
  
 % p22
 % 

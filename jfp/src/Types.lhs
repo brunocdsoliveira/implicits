@@ -505,13 +505,13 @@ For this reason we introduce the syntactic sort of monotypes:
 {\bda{llrl}
     \text{Monotypes}     & \suty                            & ::=  & \alpha \mid \suty \arrow \suty
   \eda }
-We only allow generalisation over monotypes $\suty$:
+We only allow instantiation with monotypes $\suty$:
 \bda{c}
   \myrule {AR-TApp'}
           {\tenv \vturns \forall \alpha. \rulet~\gbox{\leadsto E} \quad\quad \Gamma \turns \rulet'}
           {\tenv \vturns \rulet[\suty/\alpha]~\gbox{\leadsto E~||\suty||}}
 \eda
-In the focusing-based formulation, this constraint is formulated dually:
+In the focusing-based formulation, this constraint is also enforced:
 we only allow instantiation with monotypes $\suty$:
 \bda{c}
   \myrule {FM-TApp'}
@@ -531,7 +531,9 @@ non-determinism. However, in many cases the choice is not free at all, but is
 instead determined fully by the simple type $\type$ that we want to match.
 However, the choice is not always forced by the matching. Take for instance the context type $\forall \alpha. (\alpha \arrow \tystr)
 \iarrow (\tystr \arrow \alpha) \iarrow (\tystr \arrow \tystr)$. This 
-type encodes the well-known ambiguous Haskell type |forall a. (Show a, Read a) => String -> String| of the expression |read . show|. The
+type encodes the Haskell type |forall a. (Show a, Read a) => String -> String| of the ambiguous expression |read . show|
+discussed in Section~\ref{sec:overview-coherence}. 
+The
 choice of $\alpha$ is ambiguous when matching against the simple type $\tystr
 \arrow \tystr$. Yet, the choice is critical for two reasons. Firstly, if we
 guess the wrong instantiation $\suty$ for $\alpha$, then it may not be possible
@@ -632,7 +634,7 @@ $\tenv' = \tenv$.
           }
           {\tenv \fturns [\type]~\gbox{\leadsto E}}
 \eda
-The judgement itelf is defined in a syntax-direct manner, by structural induction on the
+The (still preliminary) definition of the judgement itself proceeds by structural induction on the
 environment $\tenv'$:
 \bda{c}
 \myruleform{\tenv;[\tenv'] \ivturns \type~\gbox{\leadsto E}}\\ \\
