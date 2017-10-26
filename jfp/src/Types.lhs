@@ -390,18 +390,20 @@ and allows only the first and more direct of these two proofs.
 \end{center}
 }
 
-Figure~\ref{fig:resolutionf} presents our definition of resolution with
-focusing. The main judgment $\tenv \fturns [\rulet]~\gbox{\leadsto E}$ is
-defined with the help of the auxiliary judgement $\tenv;
-[\rulet]~\gbox{\leadsto E} \fturns \type~\gbox{\leadsto E'}; \Sigma$. Both definitions are
-by induction on the type $\rulet$ enclosed in square brackets.
 The focusing approach refines the grammar of types to distinguish a special
-class of \emph{simple} types as the base case of the induction:
+class of \emph{simple} types:
 {\bda{llrl}
     \text{Context Types} & \rulet \hide{\in 2^\meta{RType}} & ::= & 
     \forall \alpha. \rulet \mid \rulet_1 \iarrow \rulet_2 \mid \type \\
     \text{Simple Types}  & \type                            & ::=  & \alpha \mid \rulet_1 \arrow \rulet_2 \\
   \eda }
+The definition of resolution with focusing that uses this refined grammar
+is given in 
+Figure~\ref{fig:resolutionf}. The main judgment $\tenv \fturns [\rulet]~\gbox{\leadsto E}$ is
+defined with the help of the auxiliary judgement $\tenv;
+[\rulet]~\gbox{\leadsto E} \fturns \type~\gbox{\leadsto E'}; \Sigma$. Both definitions are
+by induction on the type $\rulet$ enclosed in square brackets, with simple
+types $\type$ as the base case.
 
 The main judgement $\tenv \fturns [\rulet]~\gbox{\leadsto E}$ focuses on the
 type $\rulet$ that is to be resolved -- we call this type the ``goal''. There

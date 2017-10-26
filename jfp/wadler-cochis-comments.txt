@@ -231,13 +231,14 @@ FIXED
 % Better to give the grammar of \rho before showing judgements with \rho, as it is
 % preferable to have definition precede use.
 
-TODO
+FIXED
  
 % "for the example above there is only one proof"
 % What about for the proof of \Gamma_0 \vdash Int? That would be a more convincing
 % benefit of focussing.
 
-TODO
+IGNORE 
+Focusing does not help with that example.
  
 % p19
 % 
