@@ -293,9 +293,9 @@ We next address these two issues one by one.
 To obtain a type-directed formulation of resolution, we adopt a solution from
 proof search known as \emph{focusing}~\cite{focusing}. This solution makes sure
 that only one inference rule applies at any given point and thereby rules out
-trivial forms of nondeterminism.
+gratuitous forms of nondeterminism. 
 
-As an example of such trivial nondeterminism consider
+As an example of such gratuitous nondeterminism consider
 the following two ways of resolving $a$ given 
 $\tenv = a~\gbox{\leadsto x}$:
 \begin{equation*}
@@ -328,13 +328,20 @@ versus
    {\tenv \vturns a~\gbox{\leadsto (\lambda y.y)\,x}}
 \end{array}
 \end{equation*}
-While these are two different
-proofs, they do not lead to different behavior -- the elaborated terms in grey
-are $\beta$-equivalent. 
-We will see that focusing provides a straightjacket that allows only the first
-and more direct of these two proofs. More generally, without loss of
-expressivity focusing only allows proofs whose elaboration is in
-$\beta$-reduced and $\eta$-expanded form.
+While these are two different proofs, they use the information in the context
+$\tenv$ in essentially the same way. Hence, unlike the nondeterminism in the
+previous example at the end of Section~\ref{s:resolution} where the context provides two
+ways of resolving the query, this form of nondeterminism
+serves no purpose.
+We will see that focusing provides a straightjacket that eliminates the gratuitous nondeterminism
+and allows only the first and more direct of these two proofs. 
+
+% More generally, without loss of
+% expressivity focusing only allows proofs whose elaboration is in
+% $\beta$-reduced and $\eta$-expanded form.
+% 
+% they do not lead to different behavior -- the elaborated terms in grey
+% are $\beta$-equivalent. 
 
 \figtwocol{fig:resolutionf}{Focusing Resolution}{
 \begin{center}
@@ -463,7 +470,9 @@ type substitution.
 
 %- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 \paragraph{Predicative Instantiation}
-To see why the impredicative instantation in Rule~\mylabel{FM-TApp} causes
+To see why the impredicative instantation, i.e., the instantiation with types
+that contain universal quantifiers, in
+Rule~\mylabel{FM-TApp} causes
 nondeterminism, consider two ways resolving $\tenv_1 \vdash \tyint \iarrow \tyint$
 against the environment $\tenv_1 = \forall \alpha.\alpha \iarrow \alpha$:\footnote{
 For the sake of compactness the example uses the original ambiguous definition of resolution.
@@ -496,9 +505,9 @@ and
   }
   {\tenv_1 \vturns \tyint \iarrow \tyint}
 \end{equation*}
-The first proof only involves the predicative generalisation from
-$\tyint$ to $\alpha$. Yet, the second proof contains an impredicative
-generalisation from $\forall \beta. \beta \iarrow \beta$ to $\alpha$.
+The first proof only involves the instantiation of 
+$\alpha$ with $\tyint$. Yet, the second proof contains an impredicative
+instantiation of $\alpha$ with $\forall \beta. \beta \iarrow \beta$.
 Impredicativity is a well-known source of such problems in other settings, such
 as in type inference for the polymorphic $\lambda$-calculus~\cite{boehm85,pfenning93}. The established solution also works here: restrict to predicativity. 
 For this reason we introduce the syntactic sort of monotypes:

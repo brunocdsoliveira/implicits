@@ -220,7 +220,7 @@ FIXED
 % Further, the reference to the elaboration is confusing, since elaboration has not been
 % explained yet.
 
-TODO
+FIXED
  
 % p18
 % 
@@ -244,12 +244,12 @@ TODO
 % "To see why the impredicative instantiation ..."  'Impredicative' is a scary
 % word to many people. Better at least define it first!
 
-TODO
+FIXED
  
 % "predicative generalisation from Int to \alpha." I don't know what "predicative generalisation"
 % means. More importantly, don't you mean "instantiation from \alpha to Int"?
 
-TODO
+FIXED
  
 % p20
 % 
