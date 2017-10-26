@@ -196,7 +196,7 @@ In summary, our contributions are as follows:
 
 \item We provide a semantics in the form of a translation from \name
    to System F. We prove our translation to be type-safe, and
-   coherent. The mechanized Coq proofs are available at \tom{TODO}. 
+   coherent. The proofs, partly mechanized in Coq, are available at \url{https://bitbucket.org/KlaraMar/cochiscoq}. 
 
 \end{itemize}
 
