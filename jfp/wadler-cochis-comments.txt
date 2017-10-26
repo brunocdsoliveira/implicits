@@ -161,7 +161,9 @@ FIXED
 %   implicit \Lambda\alpha.\Lambda\beta.\lambda_?\alpha.\lambda_?\beta.(?\alpha,?\beta) in ...
 % should be provided automatically.
 
-TODO
+IGNORE
+Nothing is provided automatically. The programmer
+has to provide all implicit rules explicitly.
  
 % "implicit 3 in implicit (\lambda_? Int:(?Int;?Int+1)) in ?(Int,Int)" -->
 % it would be better to see an example that explicitly has the
@@ -169,7 +171,7 @@ TODO
 % "\lambda?Int:\lambda?(Int)IntInt):?(Int,Int)"
 % as a subexpression.
 
-TODO
+FIXED
  
 % p12
 % 

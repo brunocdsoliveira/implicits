@@ -556,7 +556,11 @@ The following expression returns $(3, 4)$:
 %%     {\qask{(\tyInt\times\tyInt)}}.
 %%\]
 
-< implicit 3 in implicit (rule Int (((query Int), (query Int) + 1))) in query (Pair Int Int)
+% < implicit 3 in implicit (rule Int (((query Int), (query Int) + 1))) in query (Pair Int Int)
+
+> (rule Int (rule ((Int => Pair Int Int)) (query (Pair Int Int)))) 
+>    with 3 
+>    with (rule Int (((query Int), (query Int) + 1)))
 
 %%Note that higher-order rules are a feature introduced by the implicit calculus and 
 %%are neither supported in Haskell nor Scala.
