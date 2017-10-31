@@ -2,6 +2,8 @@
 %include polycode.fmt
 %include forall.fmt
 %include Rule.fmt
+%%include Scala.fmt
+%format new = "\bf{new}"
 
 %format === = "\cong"
 
@@ -208,18 +210,18 @@ Unlike Haskell type classes, Scala implicits do not preserve coherence.
 In Scala there is no special construct for defining the interface of 
 a type class. Instead we can use regular interfaces to model 
 type class interfaces. Scala models OO interfaces with traits~\cite{Scharli03traits}.
-The 3 interfaces presented in Section~\ref{subsec:tclasses} can 
+For example, the 3 interfaces presented in Section~\ref{subsec:tclasses} can 
 be modelled as:
 
 < trait Ord[T] {def le(x:T,y:T) : Boolean}
 < trait Show[T] {def show (x : T) : String}
 < trait Read[T] {def read (x : String) : T}
 
-\noindent Of course, by declaring traits like this, the methods still require 
-an explicit object to call the method on. To be able to use 
+\noindent Of course, by declaring traits like this, we still require 
+explicit objects to call the methods on. To be able to use 
 methods in the same way as Haskell type classes, the object (or dictionary) 
-should be implicitly passed. This can be achieved in Scala by using the 
-implicits feature of Scala:
+should be passed implicitly. This can be achieved by using Scala's
+implicits feature:
 
 %{
 %format . = "."
@@ -228,12 +230,12 @@ implicits feature of Scala:
 
 %}
 
-\noindent The definition |cmp| in Scala plays the same role as |<=| in
-Haskell. The type of |cmp| states that |cmp| is parametrized by some
-type |A|, takes two (explicit) arguments of type |A|, and one final 
-implicit parameter (|ordD|). Note that this is similar to a Haskell 
+\noindent The Scala definition of |cmp| plays the same role as |<=| in
+Haskell. The type of |cmp| states that |cmp| is parametrized in a
+type |A|, takes two (explicit) arguments of type |A|, and one 
+implicit parameter (|ordD|). This is similar to a Haskell 
 signature |Ord a => a -> a -> Bool|, except that the implicit argument 
-comes last. Additionally, unlike Haskell, at call sites it is also 
+comes last. Additionally, unlike Haskell, at call sites it is 
 possible to pass the implicit argument explicitly, if desired. 
 
 \paragraph{Context Bounds and Queries} For the purposes of this paper we will, 
@@ -277,6 +279,8 @@ are declared by using the |implicit| keyword. The following three examples captu
 the ``instances'' for |Ord|:  
 %{
 %format . = "."
+
+
   
 < implicit val OrdInt = new Ord[Int] {
 <    def le(x : Int, y: Int) = primIntLe(x,y)
