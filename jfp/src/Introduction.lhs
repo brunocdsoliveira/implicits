@@ -87,14 +87,16 @@ cannot be higher-order~\cite{oliveira12implicit}.
 Advanced
 features of type classes, such as overlapping
 instances~\cite{overlapping_instances},
-also pose severe problems for coherence. In purely functional programming,
-``\emph{substituting equals for equals}'' is expected to hold. That is,
-when given two equivalent expressions, replacing one by the other in a larger program
-always leads to two programs that yield the same
-result. 
-Special care (via restrictions) is needed to preserve
-coherence and the ability of substituting equals for equals in the
-presence of overlapping instances. In particular, an important
+also pose severe problems for coherence. 
+% In purely functional programming,
+% ``\emph{substituting equals for equals}'' is expected to hold. That is,
+% when given two equivalent expressions, replacing one by the other in a larger program
+% always leads to two programs that yield the same
+% result. 
+% Special care (via restrictions) is needed to preserve
+% coherence and the ability of substituting equals for equals in the
+% presence of overlapping instances. 
+In particular, an important
 property that is broken in the presence of overlapping instances 
 (if special care is not taken) is the so-called \emph{stability} of
 substitutions. The issue is that ``\emph{when more specific overlapping
