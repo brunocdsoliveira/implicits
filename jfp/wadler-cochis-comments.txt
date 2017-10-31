@@ -5,7 +5,10 @@
 % How about this as a name for the paper: "Keeping the locals coherenent".
 % The calculus could be CCI (Calculus of Coherent Implicits) or
 % $\lambda$I (Implicit Calculus) or $\lambda$LC to tie to the title.
-% 
+
+Bruno: Shall we do something about this?
+We could, perhaps, simply drop the footnote?
+
 % p1
 % 
 % #Abstract
@@ -105,24 +108,25 @@ FIXED
 % As a non-Scala user, I find this confusing. How does A:Ord relate
 % to Ord[A]?
 
-TODO
+FIXED: (Bruno) Added a footnote. See whether it helps.
  
 % "the implementation of Ord [A] is implicit"
 % Even more confusing, because we are talking here about the [A:Ord]
 % argument to cmp, not the Ord[A] argument to ?.
 
-TODO
+FIXED: (Bruno) Made the text more precise. 
  
 % After reading the section, I am still confused. The definition
 % of cmp does not have an implicit parameter in its declaration, and
 % yet it must be passed an instance of Ord[A].
 
-TODO
+See whether it is better now.
  
 % Does Scala not permit pattern matching against (xa,xb) in the
 % definition of the Ord instance for pairs?
 
-TODO
+Bruno: Not directly. I can try to rewrite it slightly to use pattern
+matching, but then it will differ a bit from other definitions.
  
 % "For example 2 + 3 = 1 (mod 4) because
 % 2 + 3 and 1 differ by a multiple of 4." -->

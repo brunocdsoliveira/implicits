@@ -234,7 +234,19 @@ type |A|, and takes two arguments of type |A|. The notation |A:Ord| is
 a \emph{context bound}: a syntactic sugar of Scala that enables us to
 declare a constraint on the type |A|. Namely, the type |A| should be
 an ``instance'' of |Ord[A]|.  Using |cmp| only requires two explicit
-arguments: the implementation of |Ord[A]| is implicit. In the body of |cmp| an additional mechanism, called an
+arguments: the implementation of an implicit value of type |Ord[A]| is implicit\footnote{Note that the Scala notation for contexts bounds may look a bit
+counter-intuitive, since the signature does not appear to declare an extra implicit 
+argument. 
+An alternative way to write |cmp|, that makes the implicit parameter clear, uses implicit parameters:
+
+%{
+%format . = "."
+
+< def cmp[A](x:A,y:A)(implicit ordD : Ord[A]:Boolean = ordD.le(x,y)
+
+%}
+}.
+In the body of |cmp| an additional mechanism, called an
 implicit \emph{query} is now necessary to query the environment for a
 value of type |Ord[A]|. This query mechanism in Scala is nothing more 
 than a simple function taking an implicit argument. The (slightly simplified)
