@@ -144,9 +144,10 @@ other features, such as first-class and higher-order rules.
 %%The current
 %%state-of-affairs seems to indicate that both goals are at odds with
 %%each other, and cannot be easily reconciled.
+%% \footnote{Cochise, 1804--1874, was chief of the Chokonen band of
+%%      the Chiricahua Apache.}
 
-This paper presents \name\footnote{Cochise, 1804--1874, was chief of the Chokonen band of
-      the Chiricahua Apache.}: the Calculus Of CoHerent ImplicitS. \name
+This paper presents \name: the Calculus Of CoHerent ImplicitS. \name
 is an improved variant of the implicit calculus that guarantees 
 \emph{coherence} and \emph{stability}. \name supports local scoping, overlapping instances,
 first-class instances and higher-order rules. Yet, in contrast to most

@@ -224,28 +224,37 @@ implicits feature of Scala:
 %{
 %format . = "."
 
-< def cmp[A:Ord](x:A,y:A):Boolean = ?[Ord[A]].le(x,y)
+< def cmp[A](x:A,y:A)(implicit ordD : Ord[A]):Boolean = ordD.le(x,y)
 
 %}
 
 \noindent The definition |cmp| in Scala plays the same role as |<=| in
-Haskell.  The type of |cmp| states that |cmp| is parametrized by some
-type |A|, and takes two arguments of type |A|. The notation |A:Ord| is
-a \emph{context bound}: a syntactic sugar of Scala that enables us to
-declare a constraint on the type |A|. Namely, the type |A| should be
-an ``instance'' of |Ord[A]|.  Using |cmp| only requires two explicit
-arguments: the implementation of an implicit value of type |Ord[A]| is implicit\footnote{Note that the Scala notation for contexts bounds may look a bit
-counter-intuitive, since the signature does not appear to declare an extra implicit 
-argument. 
-An alternative way to write |cmp|, that makes the implicit parameter clear, uses implicit parameters:
+Haskell. The type of |cmp| states that |cmp| is parametrized by some
+type |A|, takes two (explicit) arguments of type |A|, and one final 
+implicit parameter (|ordD|). Note that this is similar to a Haskell 
+signature |Ord a => a -> a -> Bool|, except that the implicit argument 
+comes last. Additionally, unlike Haskell, at call sites it is also 
+possible to pass the implicit argument explicitly, if desired. 
+
+\paragraph{Context Bounds and Queries} For the purposes of this paper we will, 
+however, present |cmp| using \emph{context bounds}: 
+an alternative way to declare functions with constraints (or implicit arguments), supported in Scala. Context bounds are a simple syntactic sugar built 
+on top of implicit parameters.
+Using context bounds, the |cmp| definition can be rewriten 
+into:
 
 %{
 %format . = "."
 
-< def cmp[A](x:A,y:A)(implicit ordD : Ord[A]:Boolean = ordD.le(x,y)
+< def cmp[A:Ord](x:A,y:A):Boolean = ?[Ord[A]].le(x,y)
 
 %}
-}.
+
+\noindent The notation |A:Ord| is the so-called context bound. 
+This notation enables us to
+declare a constraint on the type |A|. Namely, the type |A| should be
+an ``instance'' of |Ord[A]|. In the background the Scala compiler rewrites 
+definitions with context bounds into definitions with implicit arguments. 
 In the body of |cmp| an additional mechanism, called an
 implicit \emph{query} is now necessary to query the environment for a
 value of type |Ord[A]|. This query mechanism in Scala is nothing more 
