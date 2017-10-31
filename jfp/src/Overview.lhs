@@ -256,7 +256,7 @@ declare a constraint on the type |A|. Namely, the type |A| should be
 an ``instance'' of |Ord[A]|. In the background the Scala compiler rewrites 
 definitions with context bounds into definitions with implicit arguments. 
 In the body of |cmp| an additional mechanism, called an
-implicit \emph{query} is now necessary to query the environment for a
+implicit \emph{query}, is now necessary to query the environment for a
 value of type |Ord[A]|. This query mechanism in Scala is nothing more 
 than a simple function taking an implicit argument. The (slightly simplified)
 definition of the query operator is:\footnote{In Scala the operator is known by the longer name \texttt{implicitly}.}
