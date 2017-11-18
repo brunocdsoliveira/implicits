@@ -1,24 +1,25 @@
-\figtwocol{fig:ftype}{System F Type System}{
+%\stopcontents
+\figtwocol{fig:ftype1}{System F Type System}{
 \begin{center}
 \framebox{\scriptsize
 \begin{minipage}{0.969\textwidth}
 \bda{c}
-\multicolumn{1}{c}{\myruleform{\Gamma \turns T}} \\ \\
-\myrule{F-WF-VarTy}{
-           \alpha \in \Gamma
- }{
-            \Gamma \turns \alpha
-} \\ \\
-\myrule{F-WF-FunTy}{
-            \Gamma \turns T_1 \quad\quad \Gamma \turns T_2
- }{
-            \Gamma \turns T_1 \arrow T_2
-} \\ \\
-\myrule{F-WF-UnivTy}{
-            \Gamma, \alpha \turns T
- }{
-            \Gamma \turns \forall \alpha.T
-} \\ \\
+%\multicolumn{1}{c}{\myruleform{\Gamma \turns T}} \\ \\
+%\myrule{F-WF-VarTy}{
+%           \alpha \in \Gamma
+% }{
+%            \Gamma \turns \alpha
+%} \\ \\
+%\myrule{F-WF-FunTy}{
+%            \Gamma \turns T_1 \quad\quad \Gamma \turns T_2
+% }{
+%            \Gamma \turns T_1 \arrow T_2
+%} \\ \\
+%\myrule{F-WF-UnivTy}{
+%            \Gamma, \alpha \turns T
+% }{
+%            \Gamma \turns \forall \alpha.T
+%} \\ \\
 \multicolumn{1}{c}{\myruleform{\Gamma \turns E : T}} \\ \\
 \myrule{F-Var}{
            (x : T) \in \Gamma
@@ -27,7 +28,7 @@
 } \\ \\
 
 \myrule{F-Abs}{
-           \Gamma, x : T_1 \turns E : T_2 \quad\quad \Gamma \turns T_1
+           \Gamma, x : T_1 \turns E : T_2 %\quad\quad \Gamma \turns T_1
  }{
            \Gamma \turns \lambda x:T_1.E : T_1 \rightarrow T_2
 } \\ \\
@@ -40,7 +41,7 @@
 } \\ \\
 
 \myrule{F-TApp}{
-  \Gamma \turns E : \forall \alpha. T_2 \quad\quad \Gamma \turns T_1
+  \Gamma \turns E : \forall \alpha. T_2 %\quad\quad \Gamma \turns T_1
            }{
             \Gamma \turns E \, T_1 : T_2[T_1/\alpha]
 } \\ \\
@@ -59,93 +60,18 @@
 %###############################################################################
 \section{Proofs}
 
+This appendix summarizes the proofs for the theorems presented in the article
+as well as those of the auxiliary lemmas that feature in those proofs.
+Several of the proofs have been mechanized in Coq; they are available from
+\url{https://bitbucket.org/KlaraMar/cochiscoq} and this appendix refers to 
+them where appropriate.
+
 Throughout the proofs we refer to the type system rules of System F listed
-in Figure~\ref{fig:ftype}.
+in Figure~\ref{fig:ftype1}, also formalized in file systemF.v (inductive
+definition \texttt{Typing}).
 
 %-------------------------------------------------------------------------------
 \subsection{Type Preservation}\label{proof:preservation}
-
-Lemma~\ref{lemma:tp:0} states that the translation preserves the well-formedness of types. 
-
-{\centering
-\fbox{
-\begin{minipage}{0.95\columnwidth}
-\begin{lemma}\label{lemma:tp:0}
-  If 
-\begin{equation*}
-    \tenv \turns \rulet
-\end{equation*}
-  then
-\begin{equation*}
-    |\tenv| \turns |\rulet|
-\end{equation*}
-\end{lemma}
-\end{minipage}
-}}
-
-\begin{proof}
-By structural induction on the expression and corresponding inference rule.
-\begin{description}
-\renewcommand{\itemsep}{10mm}
-%===============================================================================
-\item[\fbox{\texttt{(WF-VarTy)}}\quad$\tenv \turns \alpha$] \ \\
-%===============================================================================
-  It follows from the rule that $\alpha \in \tenv$. Hence, obviously $\alpha
-  \in |\tenv|$. Finally, by means of rule \mylabel{F-WF-VarTy}, and taking into account
-  that $|\alpha| = \alpha$, we conclude
-\begin{equation*}
-  |\tenv| \turns \alpha
-\end{equation*}
-
-%===============================================================================
-\item[\fbox{\texttt{(WF-FunTy)}}\quad$\tenv \turns \rulet_1 \arrow \rulet_2$] \ \\
-%===============================================================================
-  It follows from the induction hypotheses and the hypotheses of the rule that
-\begin{equation*}
-  |\tenv| \turns |\rulet_1| \quad \wedge \quad |\tenv| \turns |\rulet_2|
-\end{equation*}
-
-  Hence, by rule \mylabel{F-WF-FunTy}, and taking into account that
-  $|\rulet_1| \arrow |\rulet_2| = |\rulet_1 \arrow \rulet_2|$, we conclude that
-\begin{equation*}
-  |\tenv| \turns |\rulet_1 \arrow \rulet_2|
-\end{equation*}
-
-%===============================================================================
-\item[\fbox{\texttt{(WF-RulTy)}}\quad$\tenv \turns \rulet_1 \iarrow \rulet_2$] \ \\
-%===============================================================================
-  It follows from the induction hypotheses and the hypotheses of the rule that
-\begin{equation*}
-  |\tenv| \turns |\rulet_1| \quad \wedge \quad |\tenv| \turns |\rulet_2|
-\end{equation*}
-
-  Hence, by rule \mylabel{F-WF-FunTy}, and taking into account that
-  $|\rulet_1| \arrow |\rulet_2| = |\rulet_1 \iarrow \rulet_2|$, we conclude that
-\begin{equation*}
-  |\tenv| \turns |\rulet_1 \iarrow \rulet_2|
-\end{equation*}
-
-%===============================================================================
-\item[\fbox{\texttt{(WF-UnivTy)}}\quad$\tenv \turns \forall\alpha.\rulet$] \ \\
-%===============================================================================
-  It follows from the induction hypothesis and the hypothesis of the rule that
-\begin{equation*}
-  |\tenv,\alpha| \turns |\rulet|
-\end{equation*}
-  As $|\tenv,\alpha| = |\tenv|,\alpha$, we can simplify this to
-\begin{equation*}
-  |\tenv|,\alpha \turns |\rulet|
-\end{equation*}
-
-  Hence, by rule \mylabel{F-WF-UnivTy}, and taking into account that
-  $\forall\alpha.|\rulet| = |\forall\alpha.\rulet|$, we conclude that
-\begin{equation*}
-  |\tenv| \turns |\forall\alpha.\rulet|
-\end{equation*}
-
-\end{description}
-\end{proof}
-
 
 Lemma~\ref{lemma:tp:1} states that the translation of expressions to System F preserves
 types. Its proof relies on Lemma~\ref{lemma:tp:2}, which states that the translation
@@ -166,177 +92,8 @@ of resolution preserves types.
 \end{lemma}
 \end{minipage}
 }}
-
 \begin{proof}
-By structural induction on the expression and corresponding inference rule.
-\begin{description}
-\renewcommand{\itemsep}{10mm}
-%===============================================================================
-\item[\fbox{\texttt{(Ty-Var)}}\quad$\tenv \turns x : \rulet \leadsto x$] \ \\
-%===============================================================================
-
- It follows from \mylabel{Ty-Var} that 
-\begin{equation*} 
-    (x : \rulet) \in \tenv
-\end{equation*} 
-
-Based on the definition of $|\cdot|$  it follows 
-\begin{equation*} 
-   (x : |\rulet|) \in |\tenv| 
-\end{equation*} 
-
-Thus we have by (\texttt{F-Var}) that
-\begin{equation*} 
-   |\tenv| \turns x : |\rulet|
-\end{equation*} 
-
-%===============================================================================
-\item[\fbox{\texttt{(Ty-Abs)}}\quad$\tenv \turns \lambda x:\rho_1.e : \rho_1 \rightarrow \rho_2 \leadsto \lambda x:|\rho_1|.E$] \ \\
-%===============================================================================
-
-  The first hypothesis of (\texttt{Ty-Abs}) is that
-\begin{equation*} 
-    \tenv, x : \rho_1 \turns e : \rho_2 \leadsto E
-\end{equation*} 
-  and thus by the induction hypothesis we have that
-\begin{equation*} 
-    |\tenv|, x : |\rho_1| \turns E : |\rho_2|
-\end{equation*} 
-
-  The second hypothesis of (\texttt{Ty-Abs}) is that
-\begin{equation*} 
-    \tenv \turns |\rho_1|
-\end{equation*} 
-  and thus by Lemma~\ref{lemma:tp:0} we have that
-\begin{equation*} 
-    |\tenv| \turns |\rho_1|
-\end{equation*} 
-
-  Hence, by \mylabel{F-Abs} we conclude 
-\begin{equation*} 
-    |\tenv| \turns \lambda x:|\rho_1|.E : |\rho_1 \rightarrow \rho_2|
-\end{equation*} 
-
-%===============================================================================
-\item[\fbox{\texttt{(Ty-App)}}\quad$\tenv \turns e_1\,e_2 : \rulet_1 \leadsto E_1\,E_2$] \ \\
-%===============================================================================
-
-  By the induction hypothesis, we have:
-\begin{equation*} 
-   |\tenv| \turns E_1 : |\rulet_2 \rightarrow \rulet_1| \quad\wedge\quad |\tenv| \turns E_2 : |\rulet_2|
-\end{equation*} 
-  and, because $|\rulet_2 \arrow \rulet_1| = |\rulet_2| \arrow |\rulet_1|$, we can write the former as
-\begin{equation*} 
-   |\tenv| \turns E_1 : |\rulet_2| \arrow |\rulet_1|
-\end{equation*} 
-
-  Then it follows by (\texttt{F-App}) that
-\begin{equation*} 
-   |\tenv| \turns E_1\, E_2 : |\rulet_1|
-\end{equation*} 
-
-%===============================================================================
-\item[\fbox{\texttt{(Ty-TAbs)}}\quad$\tenv \turns \Lambda \alpha.e : \forall \alpha. \rulet \leadsto \Lambda \alpha.E$]\ \\
-%===============================================================================
-
-  Based on (\texttt{Ty-TAbs}) and the induction hypothesis, we have
-\begin{equation*} 
-    |\tenv, \alpha| \turns E : |\rulet|
-\end{equation*}
-
-  Thus, based on (\texttt{F-TAbs}) and because $|\tenv,\alpha| = |\tenv|,\alpha$, we have
-\begin{equation*} 
-    |\tenv| \turns \Lambda \alpha. E : \forall \alpha.|\rulet|
-\end{equation*}
-  or, because $|\forall\alpha.\rulet|=\forall\alpha.|\rulet|$, we conclude
-\begin{equation*} 
-    |\tenv| \turns \Lambda \alpha. E : |\forall \alpha.\rulet|
-\end{equation*}
-
-%===============================================================================
-\item[\fbox{\texttt{(Ty-TApp)}}]\quad$\tenv \turns e\,\rulet_1 : \rulet_2[\rulet_1/\alpha] \leadsto E\,|\rulet_1|$\ \\
-%===============================================================================
- 
-  By the first hypothesis of the rule and the induction hypothesis of the
-  lemma, it follows that
-\begin{equation*} 
-    |\tenv| \turns E : |\forall \alpha.\rulet_2|
-\end{equation*} 
-  From this we have by definition of $|\cdot|$
-\begin{equation*} 
-    |\tenv| \turns E : \forall{\alpha}.|\rulet_2|
-\end{equation*} 
-
-  By the second hypothesis of the rule and Lemma~\ref{lemma:tp:0} we also have
-\begin{equation*} 
-    |\tenv| \turns |\rulet_1|
-\end{equation*} 
-
-  It then follows from (\texttt{F-TApp}) that
-\begin{equation*} 
-    |\tenv| \turns E\,|\rulet_1| : |\rulet_2|[|\rulet_1|/\alpha]
-\end{equation*} 
-  This is easily seen to be equivalent to 
-\begin{equation*} 
-    |\tenv| \turns E\,|\rulet_1| : |\rulet_2[\rulet_1/\alpha]|
-\end{equation*} 
-
-%===============================================================================
-\item[\fbox{\texttt{(Ty-IAbs)}}\quad$\tenv \turns \ilambda \rulet_1.e : \rulet_1 \iarrow \rulet_2 \leadsto \lambda x:|\rulet_1|.E$]\ \\
-%===============================================================================
-
-  Based on the first hypothesis of the rule and the induction hypothesis, we have
-\begin{equation*} 
-    |\tenv, \rulet_1 \leadsto x| \turns E : |\rulet_2|
-\end{equation*}
-  or, using the definition of $|\cdot|$,
-\begin{equation*} 
-    |\tenv|, x : |\rulet_1| \turns E : |\rulet_2|
-\end{equation*}
-
-  Based on the second hypothesis of the rule and Lemma~\ref{lemma:tp:0} we have
-\begin{equation*} 
-    |\tenv| \turns |\rulet_1|
-\end{equation*}
-
-  Thus, based on (\texttt{F-Abs}) we have
-\begin{equation*} 
-    |\tenv| \turns \lambda x : |\rulet_1|.E : |\rulet_1| \arrow |\rulet_2|
-\end{equation*}
-  or, using the definition of $|\cdot|$ again,
-\begin{equation*} 
-    |\tenv| \turns \lambda x : |\rulet_1|.E : |\rulet_1 \iarrow \rulet_2|
-\end{equation*}
- 
-%===============================================================================
-\item[\fbox{\texttt{(Ty-IApp)}}\quad$\tenv \turns e_1 \with e_2 : \rulet_1 \leadsto E_1\,E_2$] \ \\
-%===============================================================================
-
-  From the hypotheses of the rule and the induction hypothesis we have:
-\begin{equation*}
-    |\tenv| \turns E_1 : |\rulet_2 \iarrow \rulet_1| \quad\wedge\quad |\tenv| \turns E_2 : |\rulet_2|
-\end{equation*}
-
-  Based on the definition of $|\cdot|$, the first of these means 
-\begin{equation*}
-    |\tenv| \turns E_1 : |\rulet_2| \arrow |\rulet_1|
-\end{equation*}
-
-  Finally, based on (\texttt{F-App}), we know
-\begin{equation*}
-    |\tenv| \turns E_1\,E_2 : |\rulet_1|
-\end{equation*}
-
-%===============================================================================
-\item[\fbox{\texttt{(Ty-Query)}}\quad$\tenv \turns ?\rulet : \rulet \leadsto E$] \ \\
-%===============================================================================
-
-  Based on the first hypothesis of the rule and Lemma~\ref{lemma:resolution} we know
-\begin{equation*} 
-    |\tenv| \turns E : |\rulet|
-\end{equation*} 
-
-\end{description}
+	See file Cochis.v, Lemma \texttt{Typing\_TypePreservation}.
 \end{proof}
 
 %###############################################################################
@@ -348,10 +105,10 @@ Thus we have by (\texttt{F-Var}) that
 \begin{equation*}
     \tenv \vturns \rulet \leadsto E
 \end{equation*}
-  and
-\begin{equation*}
-    \tenv \turns \rulet 
-\end{equation*}
+%  and
+%\begin{equation*}
+%    \tenv \turns \rulet 
+%\end{equation*}
   then
 \begin{equation*}
     |\tenv| \turns E : |\rulet|
@@ -359,120 +116,9 @@ Thus we have by (\texttt{F-Var}) that
 \end{lemma}
 \end{minipage}
 }}
-
 \begin{proof}
-
-  By induction on the derivation.
-\begin{description}
-%===============================================================================
-\item[\fbox{\texttt{(AR-TAbs)}}\quad$\tenv \vturns \forall \alpha.\rulet \leadsto \Lambda \alpha.E$] \ \\
-%===============================================================================
-
-  From the hypothesis of the rule and the induction hypothesis, we have
-\begin{equation*}
-  |\tenv, \alpha| \vdash E : |\rulet|
-\end{equation*}
-  or alternatively, based on the definition of $|\cdot|$,
-\begin{equation*}
-  |\tenv|, \alpha \vdash E : |\rulet|
-\end{equation*}
- 
-  Then, rule \mylabel{F-TAbs} allows us to conclude
-\begin{equation*}
-  |\tenv| \vdash \Lambda \alpha. E : \forall \alpha.|\rulet|
-\end{equation*}
-  or, again based on the definition of $|\cdot|$,
-\begin{equation*}
-  |\tenv| \vdash \Lambda \alpha. E : |\forall \alpha.\rulet|
-\end{equation*}
-
-%===============================================================================
-\item[\fbox{\texttt{(AR-TApp)}}]\quad$\tenv \vturns \rulet [\suty/\alpha] \leadsto E\,|\suty|$ \ \\
-%===============================================================================
-
-  From the first hypothesis of the rule and the induction hypothesis, we have
-\begin{equation*}
-  |\tenv| \vdash E : |\forall \alpha. \rulet|
-\end{equation*}
-  or alternatively, based on the definition of $|\cdot|$,
-\begin{equation*}
-  |\tenv| \vdash E : \forall \alpha. |\rulet|
-\end{equation*}
-
-  From the second hypothesis of the rule and Lemma~\ref{lemma:tp:0}, we have
-\begin{equation*}
-  |\tenv| \vdash |\suty|
-\end{equation*}
-
-  Then, rule \mylabel{F-TApp} allows us to conclude
-\begin{equation*}
-  |\tenv| \vdash E\,|\suty| : |\rulet|[|\suty|/\alpha]
-\end{equation*}
-  or, again based on the definition of $|\cdot|$,
-\begin{equation*}
-  |\tenv| \vdash E\,|\suty| : |\rulet[\suty/\alpha]|
-\end{equation*}
-
-%===============================================================================
-\item[\fbox{\texttt{(AR-IVar)}}]\quad$\tenv \vturns \rulet \leadsto x$ \ \\
-%===============================================================================
-
-  From the hypothesis of the rule and the definition of $|\cdot|$, we have
-\begin{equation*}
-  (x : |\rulet|) \in |\tenv|
-\end{equation*}
-
-  Thus, using rule \mylabel{F-Var}, we can conclude
-\begin{equation*}
-  |\tenv| \vdash x : |\rulet|
-\end{equation*}
-
-%===============================================================================
-\item[\fbox{\texttt{(AR-IAbs)}}]\quad$\tenv \vturns \rulet_1 \iarrow \rulet_2 \leadsto \lambda x:|\rulet_1|.E$ \ \\
-%===============================================================================
-
-  From the first hypothesis of the rule and the induction hypothesis, we have
-\begin{equation*}
-  |\tenv, \rulet_1 \leadsto x| \vdash E : |\rulet_2|
-\end{equation*}
-  or alternatively, based on the definition of $|\cdot|$,
-\begin{equation*}
-  |\tenv|, x : |\rulet_1| \vdash E : |\rulet_2|
-\end{equation*}
-
-  Then, rule \mylabel{F-Abs} allows us to conclude
-\begin{equation*}
-  |\tenv| \vdash \lambda x:|\rulet_1|.E : |\rulet_1| \arrow |\rulet_2|
-\end{equation*}
-
-  or, again based on the definition of $|\cdot|$,
-\begin{equation*}
-  |\tenv| \vdash \lambda x:|\rulet_1|.E : |\rulet_1 \iarrow \rulet_2|
-\end{equation*}
-
-%===============================================================================
-\item[\fbox{\texttt{(AR-IApp)}}]\quad$\tenv \vturns \rulet_2 \leadsto E_2\,E_1$ \ \\
-%===============================================================================
-
-  From the hypotheses of the rule and the induction hypothesis, we have
-\begin{equation*}
-  |\tenv| \vdash E_1 : |\rulet_1| \quad\wedge\quad
-  |\tenv| \vdash E_2 : |\rulet_1 \iarrow \rulet_2|
-\end{equation*}
-
-  The second conjunct can be reformulated, based on the definition of $|\cdot|$, to
-\begin{equation*}
-  |\tenv| \vdash E_2 : |\rulet_1| \arrow |\rulet_2|
-\end{equation*}
-
-  Then, rule \mylabel{F-App} allows us to conclude
-\begin{equation*}
-  |\tenv| \vdash E_2\,E_1 : |\rulet_2|
-\end{equation*}
-
-\end{description}
+	See file Cochis.v, Lemma \texttt{amb\_res\_TypePreservation}.
 \end{proof}
-
 
 %-------------------------------------------------------------------------------
 \subsection{Auxiliary Lemmas About Non-Determistic Resolution}
@@ -480,7 +126,7 @@ Thus we have by (\texttt{F-Var}) that
 The non-deterministic resolution judgement enjoys a number of
 typical binder-related properties.
 
-The first lemma is the weakening lemma: that states that an extended context
+The first lemma is the weakening lemma: it states that an extended context
 preserves all the derivations of the original context.
 
 %###############################################################################
@@ -499,11 +145,9 @@ preserves all the derivations of the original context.
 \end{lemma}
 \end{minipage}
 }}
-
 \begin{proof}
-The proof proceeds by straightfoward induction on the derivation of the hypothesis.
+See file Cochis.v, Lemma \texttt{amb\_res\_weaken}.
 \end{proof}
-
 The second lemma is the substitution lemma which states that
 we can drop an axiom from the context if it is already implied
 by the remainder of the context.
@@ -528,27 +172,8 @@ by the remainder of the context.
 \end{lemma}
 \end{minipage}
 }}
-
 \begin{proof}
-The proof proceeds by straightfoward induction on the derivation of the first
-hypothesis.
-
-The key case is the one for rule \mylabel{AR-IVar} where $\rulet' = \rulet$ and
-$E' = x$. In this case the second hypothesis gives us 
-\begin{equation*}
-\tenv \vturns \rulet \leadsto E
-\end{equation*}
-As $E = x[E/x]$, this also means
-\begin{equation*}
-\tenv \vturns \rulet \leadsto x[E/x]
-\end{equation*}
-Finally, we can apply the Weakening Lemma~\ref{lemma:weakening} to obtain the
-desired result.
-\begin{equation*}
-\tenv, \tenv' \vturns \rulet \leadsto x[E/x]
-\end{equation*}
-
-All other cases are straightforward.
+	See file Cochis.v, Lemma \texttt{sub\_eimpl\_amb\_res}.
 \end{proof}
 
 %-------------------------------------------------------------------------------
@@ -573,11 +198,11 @@ sound with respect to non-deterministic resolution.
 \end{lemma}
 \end{minipage}
 }}
-
 \begin{proof}
-The lemma immediately follows from Lemma~\ref{lemma:s23:3}.
-\end{proof}
+See file CochisDet.v, Lemma \texttt{DRes\_Soundness}.
 
+The lemma immediately follows from Lemma~\ref{lemma:s23:3}.
+\end{proof} 
 %###############################################################################
 {\centering
 \fbox{
@@ -594,55 +219,14 @@ The lemma immediately follows from Lemma~\ref{lemma:s23:3}.
 \end{lemma}
 \end{minipage}
 }}
-
 \begin{proof}
-The proof proceeds by induction on the derivation.
-\begin{description}
-\setlength{\itemsep}{1em}
-%===============================================================================
-\item[\fbox{\texttt{(R-IAbs)}}]\quad$\bar{\alpha};\tenv \ivturns \rulet_1 \iarrow \rulet_2 \leadsto \lambda x:|\rulet_1|.E$ \ \\
-%===============================================================================
-  From the first assumption of rule \mylabel{R-IAbs} and the induction hypothesis, we have
-\begin{equation*}
-  \tenv, x : \rulet_1 \vturns \rulet_2 \leadsto E
-\end{equation*}
+See file CochisDet.v, Lemma \texttt{DRes\_focus\_Soundness}.
 
-  Hence, from rule \mylabel{AR-IAbs} and the freshness condition on $x$ in
-rule \mylabel{R-IAbs} it follows that
-\begin{equation*}
-  \tenv \vturns \rulet_1 \iarrow \rulet_2 \leadsto \lambda x:|\rulet_1|.E
-\end{equation*}
-
-%===============================================================================
-\item[\fbox{\texttt{(R-TAbs)}}]\quad$\bar{\alpha};\tenv \ivturns \forall \alpha.\rulet \leadsto \Lambda \alpha.E$ \ \\
-%===============================================================================
-  From the precondition of rule \mylabel{R-TAbs} and the induction hypothesis, we have
-\begin{equation*}
-  \tenv,\alpha \vturns \rulet \leadsto E
-\end{equation*}
-
-  Hence, from rule \mylabel{AR-TAbs} it follows that
-\begin{equation*}
-  \tenv \vturns \forall \alpha.\rulet \leadsto \Lambda \alpha.E
-\end{equation*}
-
-%===============================================================================
-\item[\fbox{\texttt{(R-Simp)}}]\quad$\bar{\alpha};\tenv \ivturns \tau \leadsto E$ \ \\
-%===============================================================================
-
-  From the precondition of the rule, Lemma~\ref{lemma:s23:2} and the simple fact that
-  $\tenv \subseteq \tenv$, it follows that
-\begin{equation*}
-  \tenv \vturns \tau \leadsto E
-\end{equation*}
-\end{description}
+This lemma is proved together with Lemma~\ref{lemma:s23:2} by mutual induction on the derivation of the first hypothesis of both lemmas.
 \end{proof}
-
-
-The above proof relies on the following auxiliary lemma for the 
-resolution of simple types. The proof of this auxiliary lemma proceeds
-by mutual induction with the proof of the main lemma.
-
+%The above proof relies on the following auxiliary lemma for the 
+%resolution of simple types. The proof of this auxiliary lemma proceeds
+%by mutual induction with the proof of the main lemma.
 %###############################################################################
 {\centering
 \fbox{
@@ -652,56 +236,24 @@ by mutual induction with the proof of the main lemma.
 \begin{equation*}
    \bar{\alpha}; \tenv; \tenv' \ivturns \tau \leadsto E
 \end{equation*}
-  and
-\begin{equation*}
-  \tenv' \subseteq \tenv 
-\end{equation*}
+%  and
+%\begin{equation*}
+%  \tenv' \subseteq \tenv 
+%\end{equation*}
   then
 \begin{equation*}
-  \tenv \vturns \tau \leadsto E
+  \tenv' \vturns \tau \leadsto E
 \end{equation*}
 \end{lemma}
 \end{minipage}
 }}
-
 \begin{proof}
+See file CochisDet.v, Lemma \texttt{DRes\_lookup\_Soundness}.
+
 The proof proceeds by induction on the derivation, mutually 
 with the previous proof.
-\begin{description}
-\setlength{\itemsep}{1em}
-%===============================================================================
-\item[\fbox{\texttt{(L-RuleMatch)}}]\quad$\bar{\alpha}; \tenv; \tenv', \rulet \leadsto x \ivturns \type \leadsto E[\bar{E}/\bar{x}]$ \ \\
-%===============================================================================
-  The first assumption of the rule is
-\begin{equation*}
-  \tenv; \rulet \leadsto x \ivturns \type \leadsto E; \bar{E} \leadsto \bar{x}
-\end{equation*}
-
-  From the lemma's assumption $(\tenv', \rulet \leadsto x) \subseteq \tenv$ we conclude
-  $(\rulet \leadsto x) \in \tenv$. Hence, by rule \mylabel{AR-Simp} we have
-\begin{equation*}
-  \tenv \vturns \rulet \leadsto x
-\end{equation*}
-
-  From the second precondition of the rule and the (mutual) induction hypothesis, we also have
-\begin{equation*}
-  \tenv \vturns \bar{\rulet} \leadsto \bar{E}
-\end{equation*}
-
-  The above three observations allow us to invoke the auxiliary Lemma~\ref{lemma:s23:1}
-  and conclude
-\begin{equation*}
-  \tenv \vturns \tau \leadsto E[\bar{E}/\bar{x}]
-\end{equation*}
-
-%===============================================================================
-\item[\fbox{\texttt{(L-Var), (L-TyVar), (L-RuleNoMatch)}}] \ \\
-%===============================================================================
-  Trivially by applying the induction hypothesis on the precondition of the rule.
-\end{description}
 \end{proof}
-
-The above proof relies on the following auxiliary lemma.
+The above proof relies on the following lemma.
 
 %###############################################################################
 {\centering
@@ -727,86 +279,44 @@ The above proof relies on the following auxiliary lemma.
 \end{lemma}
 \end{minipage}
 }}
+\begin{proof}
+See file CochisDet.v, Lemma \texttt{DRes\_match\_Soundness}.
+
+The proof proceeds by induction on the derivation of the first assumption and relies on Lemmas~\ref{lemma:substitution} (Substitution) and~\ref{lemma:s23:5}.
+\end{proof}
+In order to deal with the de Bruijn variable representation in our mechanization,
+judgement
+\begin{equation*}
+\tenv; \rulet \leadsto E \ivturns \type \leadsto E'; \bar{\rulet} \leadsto \bar{x}
+\end{equation*}
+differs from the corresponding mechanized definition (\texttt{DRes\_match} in file CochisDet.v) in the first argument, $\tenv$. In our mechanization, $\tenv$ is expressed by means of two environments, $\Delta_m$ and $\tenv_m$, so that $\tenv = \tenv_m,\Delta_m$.
+
+%###############################################################################
+{\centering
+\fbox{
+\begin{minipage}{0.95\columnwidth}
+\begin{lemma}\label{lemma:s23:5}
+If 
+\begin{equation*}
+  \tenv; \rulet \leadsto E \ivturns \type \leadsto E'; \bar{\rulet} \leadsto \bar{x}
+\end{equation*}
+and
+\begin{equation*}
+  \tenv \vturns \rulet \leadsto E
+\end{equation*}
+then
+\begin{equation*}
+  \tenv, \bar{\rulet} \leadsto \bar{x} \vturns \tau \leadsto E'
+\end{equation*}
+\end{lemma}
+\end{minipage}
+}}
 
 \begin{proof}
-The proof proceeds by induction on the derivation of the first assumption.
-\begin{description}
-\setlength{\itemsep}{1em}
-%===============================================================================
-\item[\fbox{\texttt{(M-Simp)}}]\quad$\tenv;\type\leadsto E \ivturns \type \leadsto E; \epsilon$ \ \\
-%===============================================================================
-  The first assumption of the lemma is the desired conclusion
-\begin{equation*}
-  \tenv \vturns \type \leadsto E
-\end{equation*}
-
-%===============================================================================
-\item[\fbox{\texttt{(M-IApp)}}]\quad$\tenv; \rulet_1 \iarrow \rulet_2 \leadsto E \ivturns \type \leadsto E'; \bar{\rulet} \leadsto \bar{x}, \rulet_1 \leadsto x$ \ \\
-%===============================================================================
-  The third hypothesis of the lemma then is
-\begin{equation*}
-  \tenv \vturns \bar{\rulet} \leadsto \bar{E} \quad\wedge\quad \tenv \vturns \rulet_1 \leadsto E_1
-\end{equation*}
-  The Weakening Lemma~\ref{lemma:weakening} turns the first conjunct into
-\begin{equation*}
-  \tenv, \rulet_1 \leadsto x \vturns \bar{\rulet} \leadsto \bar{E}
-\end{equation*}
-
-  The second hypothesis of the lemma then is
-\begin{equation*}
-  \tenv \vturns \rulet_1 \iarrow \rulet_2 \leadsto E
-\end{equation*}
-  By applying the Weakening Lemma~\ref{lemma:weakening} we get
-\begin{equation*}
-  \tenv, \rulet_1 \leadsto x \vturns \rulet_1 \iarrow \rulet_2 \leadsto E
-\end{equation*}
-  From rule \mylabel{AR-IVar} we can also conclude
-\begin{equation*}
-  \tenv, \rulet_1 \leadsto x \vturns \rulet_1 \leadsto x
-\end{equation*}
-  These two facts allow us to derive from rule \mylabel{AR-IApp}
-\begin{equation*}
-  \tenv, \rulet_1 \leadsto x \vturns \rulet_2 \leadsto E\,x 
-\end{equation*}
-
-  We now have the necessary ingredients to invoke the induction hypothesis
-  on the hypothesis of the rule and obtain
-\begin{equation*}
-  \tenv, \rulet_1 \leadsto x \vturns \type \leadsto E'[\bar{E}/\bar{x}]
-\end{equation*}
-
-  Finally, we use the second conjunct of the third hypothesis to invoke
-  the Substitution Lemma~\ref{lemma:substitution} on the above and
-  reach our desired conclusion
-\begin{equation*}
-  \tenv \vturns \type \leadsto E'[\bar{E}/\bar{x}][E_1/x]
-\end{equation*}
-
-%===============================================================================
-\item[\fbox{\texttt{(M-TApp)}}]\quad$\tenv; \forall\alpha.\rulet \leadsto E \ivturns \type \leadsto E'; \bar{\rulet} \leadsto \bar{x}$ \ \\
-%===============================================================================
-  Then the second hypothesis of the lemma is
-\begin{equation*}
-  \tenv \vturns \forall\alpha.\rulet \leadsto E
-\end{equation*}
-  This allows us to conclude by rule \mylabel{AR-TApp} that
-\begin{equation*}
-  \tenv \vturns \rulet[\suty/\alpha] \leadsto E\,|\suty|
-\end{equation*}
-
-  The third hypothesis of the lemma is
-\begin{equation*}
-  \tenv \vturns \bar{\rulet} \leadsto \bar{E}
-\end{equation*}
-
-  We now have the necessary ingredients to invoke the induction hypothesis
-  on the hypothesis of the rule and obtain the desired conclusion
-\begin{equation*}
-  \tenv \vturns \type \leadsto E'[\bar{E}/\bar{x}]
-\end{equation*}
-
-\end{description}
+See file CochisDet.v, Lemma \texttt{DRes\_match\_impl\_vars}.
 \end{proof}
+
+
 
 % %-------------------------------------------------------------------------------
 % \subsection{Correctness of the Resolution Algorithm}
@@ -2067,8 +1577,8 @@ R(\tenv;\alpha;\tenv';\tenv'',\beta;\tenv,(\tenv_1',\beta)[\suty/\alpha];\suty)
 \subsection{Soundness of the Algorithm wrt Deterministic Resolution}
 
 %###############################################################################
-{\centering
-\fbox{
+
+\fbox{ \centering
 \begin{minipage}{0.95\columnwidth}
 \begin{lemma}\label{lemma:asoundness:0}
   If 
@@ -2081,7 +1591,7 @@ R(\tenv;\alpha;\tenv';\tenv'',\beta;\tenv,(\tenv_1',\beta)[\suty/\alpha];\suty)
 \end{equation*}
 \end{lemma}
 \end{minipage}
-}}
+}
 
 \begin{proof}
   From the hypothesis it follows that 
@@ -2095,8 +1605,8 @@ R(\tenv;\alpha;\tenv';\tenv'',\beta;\tenv,(\tenv_1',\beta)[\suty/\alpha];\suty)
 \end{proof}
 
 %###############################################################################
-{\centering
-\fbox{
+
+\fbox{ \centering
 \begin{minipage}{0.95\columnwidth}
 \begin{lemma}\label{lemma:asoundness:1}
   If 
@@ -2109,7 +1619,7 @@ R(\tenv;\alpha;\tenv';\tenv'',\beta;\tenv,(\tenv_1',\beta)[\suty/\alpha];\suty)
 \end{equation*}
 \end{lemma}
 \end{minipage}
-}}
+}
 
 \begin{proof}
 The lemma follows from the isomorphism between the 
