@@ -359,40 +359,43 @@ and allows only the first and more direct of these two proofs.
 \begin{minipage}{.969\textwidth}
 \bda{c}
 \Sigma ::= \epsilon \mid \Sigma, \rulet~\gbox{\leadsto x} \\ \\
-\myruleform{\tenv \fturns [\rulet]~\gbox{\leadsto E}}
+\myruleform{\frres{\tenv}{\rulet}{E}}
 \\ \\
   \myrule {FR-TAbs}
-          {\tenv, \alpha \fturns [\rulet]~\gbox{\leadsto E}}
-          {\tenv \fturns [\forall \alpha. \rulet]~\gbox{\leadsto \Lambda\alpha.E}} 
+          {\frres{\tenv, \alpha}{\rulet}{E}}
+          {\frres{\tenv}{\forall \alpha. \rulet}{\Lambda\alpha.E}} 
 \quad
   \myrule {FR-IAbs}
-          {\tenv, \rulet_1~\gbox{\leadsto x} \fturns [\rulet_2]~\gbox{\leadsto E} \quad\quad \gbox{x~\mathit{fresh}}}
-          {\tenv \fturns [\rulet_1 \iarrow \rulet_2]~\gbox{\leadsto
+          {\frres{\tenv, \rulet_1~\gbox{\leadsto x}}{\rulet_2}{E} 
+           \quad\quad 
+           \gbox{x~\mathit{fresh}}
+          }
+          {\frres{\tenv}{\rulet_1 \iarrow \rulet_2}{
             \lambda\relation{x}{||\rulet_1||}.E}} 
 \\ \\
   \myrule {FR-Simp}
           {\rulet~\gbox{\leadsto x} \in \tenv \\ 
-           \tenv; [\rulet]~\gbox{\leadsto x} \fturns \type~\gbox{\leadsto E};\bar{\rulet}' ~\gbox{\leadsto \bar{x}'}  \\
-           \tenv \fturns [\rulet']~\gbox{\leadsto E'} \enskip (\forall \rulet' \in \bar{\rulet}')
+           \fmres{\tenv}{\rulet}{x}{\type}{E}{\bar{\rulet}' ~\gbox{\leadsto \bar{x}'}}  \\
+           \frres{\tenv}{\rulet'}{E'} \enskip (\forall \rulet' \in \bar{\rulet}')
           }
-          {\tenv \fturns [\type]~\gbox{\leadsto E[\bar{E}'/\bar{x}']}}
+          {\frres{\tenv}{\type}{\leadsto E[\bar{E}'/\bar{x}']}}
 \\ \\
-\myruleform{\tenv; [\rulet]~\gbox{\leadsto E} \fturns \type~\gbox{\leadsto E'}; \Sigma}
+\myruleform{\fmres{\tenv}{\rulet}{E}{\type}{E'}{\Sigma}}
 \\ \\
   \myrule {FM-TApp}
-          {\tenv \vdash \rulet' \\\\
-           \tenv; [[\rulet'/\alpha]\rulet]~\gbox{\leadsto E\,||\rulet'||} \fturns \type~\gbox{\leadsto E'}; \Sigma
+          {\wfty{\tenv}{\rulet'} \\\\
+           \fmres{\tenv}{[\rulet'/\alpha]\rulet}{E\,||\rulet'||}{\type}{E'}{\Sigma}
           }
-          {\tenv; [\forall \alpha.\rulet]~\gbox{\leadsto E} \fturns \type~\gbox{\leadsto E'}; \Sigma}
+          {\fmres{\tenv}{\forall \alpha.\rulet}{E}{\type}{E'}{\Sigma}}
 \\ \\
   \myrule {FM-IApp}
           {\gbox{x~\text{fresh}} \\\\
-           \tenv; [\rulet_2]~\gbox{\leadsto E\,x} \fturns \type~\gbox{\leadsto E'}; \Sigma}
-          {\tenv; [\rulet_1 \iarrow \rulet_2]~\gbox{\leadsto E} \fturns \type~\gbox{\leadsto E'}; \Sigma, \rulet_1~\gbox{\leadsto x}}
+           \fmres{\tenv}{\rulet_2}{E\,x}{\type}{E'}{\Sigma}}
+          {\fmres{\tenv}{\rulet_1 \iarrow \rulet_2}{E}{\type}{E'}{\Sigma, \rulet_1~\gbox{\leadsto x}}}
 \\ \\
   \myrule {FM-Simp}
           {}
-          {\tenv; [\type]~\gbox{\leadsto E} \fturns \type~\gbox{\leadsto E}; \epsilon}
+          {\fmres{\tenv}{\type}{E}{\type}{E}{\epsilon}}
 
 \eda
 \end{minipage}
@@ -409,13 +412,13 @@ class of \emph{simple} types:
   \eda }
 The definition of resolution with focusing that uses this refined grammar
 is given in 
-Figure~\ref{fig:resolutionf}. The main judgment $\tenv \fturns [\rulet]~\gbox{\leadsto E}$ is
-defined with the help of the auxiliary judgement $\tenv;
-[\rulet]~\gbox{\leadsto E} \fturns \type~\gbox{\leadsto E'}; \Sigma$. Both definitions are
+Figure~\ref{fig:resolutionf}. The main judgment $\frres{\tenv}{\rulet}{E}$ is
+defined with the help of the auxiliary judgement $\fmres{\tenv}
+{\rulet}{E}{\type}{E'}{\Sigma}$. Both definitions are
 by induction on the type $\rulet$ enclosed in square brackets, with simple
 types $\type$ as the base case.
 
-The main judgement $\tenv \fturns [\rulet]~\gbox{\leadsto E}$ focuses on the
+The main judgement $\frres{\tenv}{\rulet}{E}$ focuses on the
 type $\rulet$ that is to be resolved -- we call this type the ``goal''. There
 are three rules, for the three possible syntactic forms of $\rulet$.
 %
@@ -429,7 +432,7 @@ gives rise to a sequence $\Sigma$ of new (and hopefully simpler) goals
 that are resolved recursively.
 
 The auxiliary judgment
-$\tenv ; [\rulet]~\gbox{\leadsto E} \fturns \type~\gbox{\leadsto E'};\Sigma$ focuses on
+$\fmres{\tenv}{\rulet}{E}{\type}{E'}{\Sigma}$ focuses on
 the rule $\rulet$ and checks whether it matches the simple goal
 $\type$. Again, there are three rules for the three possible forms
 the rule can take.
@@ -442,24 +445,23 @@ Rule~\rref{FM-IApp} handles an implication rule $\rulet_1
 matches the goal. At the same time it yields a new goal $\rulet_1$ which
 needs to be resolved in order for the rule to apply.
 %
-Finally, Rule~\rref{FM-Simp} 
+Finally, rule~\rref{FM-Simp} 
 expresses the base case
 where the axiom is identical to the goal and there are no new goals.
 
 It is not difficult to see that this type-directed formulation of entailment
 greatly reduces the number of proofs for given goal.
 %\footnote{Without loss of expressive power. See for example~\cite{FrankFocusing}.} 
-For instance, for the
-example above there is only one proof:
+For instance, for the example above there is only one proof:
 \begin{equation*}
 \begin{array}{c}
-   \inferrule*[left=\mylabel{FR-Simp}]
+   \myexrule{FR-Simp}
      { a \in \tenv \\
-       \inferrule*[left=\mylabel{FM-Simp}]
+       \myexrule{FM-Simp}
          {}
-         {\tenv; [a] ~\gbox{\leadsto x} \fturns a~\gbox{\leadsto x}; \epsilon }
+         {\fmres{\tenv}{a}{x}{a}{x}{\epsilon} }
      }
-     {\tenv \fturns [a] ~\gbox{\leadsto x}}
+     {\frres{\tenv}{a}{x}}
 \end{array}
 \end{equation*}
 
@@ -470,11 +472,11 @@ While focusing provides a syntax-directed definition of resolution, it does not
 make resolution entirely deterministic. There are still three sources of
 non-determinism: 
 1) the \emph{impredicative} instantiation of type variable $\alpha$
-with a rule type $\rulet'$ in Rule~\rref{FM-TApp}, 
+with a rule type $\rulet'$ in rule~\rref{FM-TApp}, 
 2) the \emph{ambiguous} instantiation of type variable $\alpha$
-with a rule type $\rulet'$ in Rule~\rref{FM-TApp},
+with a rule type $\rulet'$ in rule~\rref{FM-TApp},
 and 3) nondeterministic selection of a rule type $\rulet$ from the type environment
-$\tenv$ in Rule~\rref{FR-Simp}. This section eradicates those three remaining
+$\tenv$ in rule~\rref{FR-Simp}. This section eradicates those three remaining
 sources of nondeterminism to obtain an entirely deterministic formulation
 of resolution. On top of that, it imposes an additional \emph{stability} condition
 to make resolution ``super''-deterministic: resolution is preserved under
@@ -484,38 +486,38 @@ type substitution.
 \paragraph{Predicative Instantiation}
 To see why the impredicative instantation, i.e., the instantiation with types
 that contain universal quantifiers, in
-Rule~\rref{FM-TApp} causes
-nondeterminism, consider two ways resolving $\tenv_1 \vdash \tyint \iarrow \tyint$
+rule~\rref{FM-TApp} causes
+nondeterminism, consider two ways resolving $\aresp{\tenv_1}{\tyint \iarrow \tyint}$
 against the environment $\tenv_1 = \forall \alpha.\alpha \iarrow \alpha$:\footnote{
 For the sake of compactness the example uses the original ambiguous definition of resolution.
  Similarly problematic examples can be created for the focusing-based definition.}
 \begin{equation*}
-\inferrule*[Left=\mylabel{AR-TApp}]
-  {\inferrule*[Left=\mylabel{AR-IVar}] 
+\myexruleL{AR-TApp}
+  {\myexruleL{AR-IVar}
     {(\forall \alpha.\alpha \iarrow \alpha) \in \tenv_1}
-    {\tenv_1 \vturns \forall \alpha. \alpha \iarrow \alpha    }
+    {\aresp{\tenv_1}{\forall \alpha. \alpha \iarrow \alpha}}
   }
-  {\tenv_1 \vturns \tyint \iarrow \tyint}
+  {\aresp{\tenv_1}{\tyint \iarrow \tyint}}
 \end{equation*}
 and
 \begin{equation*}
-\inferrule*[left=\mylabel{AR-TApp}]
-  {\inferrule*[Left=\mylabel{AR-IApp}] 
-    { \inferrule*[Left=\mylabel{AR-TApp}]
-        { \inferrule*[Left=\mylabel{AR-IVar}]
+\myexruleL{AR-TApp}
+  {\myexruleL{AR-IApp} 
+    { \myexruleL{AR-TApp}
+        { \myexruleL{AR-IVar}
             {(\forall \alpha. \alpha \iarrow \alpha) \in \tenv_1}
-            {\tenv_1 \vturns (\forall \alpha. \alpha \iarrow \alpha)}
+            {\aresp{\tenv_1}{\forall \alpha. \alpha \iarrow \alpha}}
         }
-        {\tenv_1 \vturns (\forall \beta. \beta \iarrow \beta) \iarrow (\forall \beta. \beta \iarrow \beta)}
+        {\aresp{\tenv_1}{(\forall \beta. \beta \iarrow \beta) \iarrow (\forall \beta. \beta \iarrow \beta)}}
         \quad\quad\quad
     \\
-      \inferrule*[Left=\mylabel{AR-IVar}]
+      \myexruleL{AR-IVar}
         {(\forall \beta. \beta \iarrow \beta) \in \tenv_1}
-        {\tenv_1 \vturns (\forall \beta. \beta \iarrow \beta)}
+        {\aresp{\tenv_1}{\forall \beta. \beta \iarrow \beta}}
     }
-    {\tenv_1 \vturns \forall \beta. \beta \iarrow \beta}
+    {\aresp{\tenv_1}{\forall \beta. \beta \iarrow \beta}}
   }
-  {\tenv_1 \vturns \tyint \iarrow \tyint}
+  {\aresp{\tenv_1}{\tyint \iarrow \tyint}}
 \end{equation*}
 The first proof only involves the instantiation of 
 $\alpha$ with $\tyint$. Yet, the second proof contains an impredicative
@@ -529,17 +531,17 @@ For this reason we introduce the syntactic sort of monotypes:
 We only allow instantiation with monotypes $\suty$:
 \bda{c}
   \myrule {AR-TApp'}
-          {\tenv \vturns \forall \alpha. \rulet~\gbox{\leadsto E} \quad\quad \Gamma \turns \rulet'}
-          {\tenv \vturns \rulet[\suty/\alpha]~\gbox{\leadsto E~||\suty||}}
+          {\ares{\tenv}{\forall \alpha. \rulet}{E} \quad\quad \wfty{\tenv}{\rulet'}}
+          {\ares{\tenv}{\rulet[\suty/\alpha]}{E~||\suty||}}
 \eda
 In the focusing-based formulation, this constraint is also enforced:
 we only allow instantiation with monotypes $\suty$:
 \bda{c}
   \myrule {FM-TApp'}
-          {\tenv \vdash \rulet' \\\\
-           \tenv; [[\suty/\alpha]\rulet]~\gbox{\leadsto E\,||\suty||} \fturns \type~\gbox{\leadsto E'}; \Sigma
+          {\wfty{\tenv}{\rulet'} \\\\
+           \fmres{\tenv}{[\suty/\alpha]\rulet}{E\,||\suty||}{\type}{E'}{\Sigma}
           }
-          {\tenv; [\forall \alpha.\rulet]~\gbox{\leadsto E} \fturns \type~\gbox{\leadsto E'}; \Sigma}
+          {\fmres{\tenv}{\forall \alpha.\rulet}{E}{\type}{E'}{\Sigma}}
 \eda
 
 %- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
@@ -565,12 +567,12 @@ Secondly, for different choices of $\suty$ the types $(\tystr \arrow
 in completely different ways.
 
 In order to avoid any problems, we conservatively forbid all ambiguous context
-types in the implicit environment with the $\unamb \rulet_1$
+types in the implicit environment with the $\unambig{}{\rulet_1}$
 side-condition in rule \rref{Ty-IAbs} of Figure~\ref{fig:type}. (An
 alternative design to avoid such ambiguity would instantiate unused type
 variables to a dummy type, like GHC's \texttt{GHC.Prim.Any}, which is only used
 for this purpose.) This judgement is defined in Figure~\ref{fig:unamb}
-in terms of the auxiliary judgement $\bar{\alpha} \unamb \rulet$ which
+in terms of the auxiliary judgement $\unambig{\bar{\alpha}}{\rulet}$ which
 takes an additional sequence of type variables $\alpha$ that is initially
 empty.
 \figtwocol{fig:unamb}{Unambiguous Context Types}{
@@ -578,25 +580,25 @@ empty.
 \framebox{
 \begin{minipage}{0.969\textwidth}
 \bda{c}
-\myruleform{\unamb \rulet} 
+\myruleform{\unambig{}{\rulet}} 
 \quad\quad\quad
 \myrule{UA-Main}
-       {\epsilon \unamb \rulet}
-       {\unamb \rulet}
+       {\unambig{\epsilon}{\rulet}}
+       {\unambig{}{\rulet}}
 \\ \\
-\myruleform{\bar{\alpha} \unamb \rulet} 
+\myruleform{\unambig{\bar{\alpha}}{\rulet}} 
 \quad\quad\quad
 \myrule{UA-Simp}
        {\bar{\alpha} \subseteq \mathit{ftv}(\type)}
-       {\bar{\alpha} \unamb \type}
+       {\unambig{\bar{\alpha}}{\type}}
 \\ \\
 \myrule{UA-TAbs}
-       {\bar{\alpha},\alpha \unamb \rulet}
-       {\bar{\alpha} \unamb \forall \alpha.\rulet} 
+       {\unambig{\bar{\alpha},\alpha}{\rulet}}
+       {\unambig{\bar{\alpha}}{\forall \alpha.\rulet}} 
 \quad\quad\quad
 \myrule{UA-IAbs}
-       {\unamb \rulet_1 \quad\quad \bar{\alpha} \unamb \rulet_2}
-       {\bar{\alpha} \unamb \rulet_1 \iarrow \rulet_2} \\ \\
+       {\unambig{}{\rulet_1} \quad\quad \unambig{\bar{\alpha}}{\rulet_2}}
+       {\unambig{\bar{\alpha}}{\rulet_1 \iarrow \rulet_2}} \\ \\
 \eda
 \end{minipage}
 }
@@ -629,18 +631,18 @@ ambiguity.
 %- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 \paragraph{Committed Choice}
 The other remaining source of nondeterminism is the nondeterministic choice
-$\rulet \in \tenv$ that appears in Rule~\rref{FR-Simp}. Consider the trivial
+$\rulet \in \tenv$ that appears in rule~\rref{FR-Simp}. Consider the trivial
 example of resolving the goal $\tyint$ against the environment $\tenv = \tyint~\gbox{\leadsto
 x}, \tyint~\gbox{\leadsto y}$. Both rules in the environment match the goal and yield
 different, i.e., incoherent, elaborations.
 
 Our solution is to replace the nondeterministic relation $\rulet \in \tenv$ by
 a deterministic one that selects the first matching rule in the environment and
-commits to it. In fact, we replace all three hypotheses of Rule~\rref{FR-Simp}
+commits to it. In fact, we replace all three hypotheses of rule~\rref{FR-Simp}
 by a new judgement $\tenv;[\tenv'] \ivturns \type~\gbox{\leadsto E}$ which resolves
 $\type$ with the first matching rule in the environment $\tenv'$ and performs
 any recursive resolutions against the environment $\tenv$. Of course, the modified
-Rule~\rref{FR-Simp} invokes this judgement with two copies of the same environment, i.e.,
+rule~\rref{FR-Simp} invokes this judgement with two copies of the same environment, i.e.,
 $\tenv' = \tenv$.
 \bda{c}
   \myrule {FR-Simp'}
@@ -676,7 +678,7 @@ environment $\tenv'$:
 
 Rule~\rref{DL-RuleMatch} concerns the case where the first entry in the 
 environment matches the goal. Its behavior is the same as in the
-original definition of Rule~\rref{FR-Simp}.
+original definition of rule~\rref{FR-Simp}.
 
 Rule~\rref{DL-RuleNoMatch} is mutually exclusive with the above rule: it
 skips the first entry in the environment only iff it does not match to look for
@@ -684,7 +686,7 @@ a matching rule deeper in the environment. This implements the committed choice
 semantics: the first matching rule is committed to and further rules are not
 considered.
 
-Finally, Rules~\rref{DL-Var} and \rref{DL-TyVar} skip the irrelevant
+Finally, rules~\rref{DL-Var} and \rref{DL-TyVar} skip the irrelevant
 non-rule entries in the type environment.
 
 It is not difficult to see that with the above definition there is only one way
@@ -717,7 +719,7 @@ because it defies the common expectation that simple refactorings like the one
 above do not change a program's behavior.
 
 To avoid this problem and obtain stability under type substitution, we tighten
-the requirement of Rule~\rref{DL-RuleNoMatch}: a
+the requirement of rule~\rref{DL-RuleNoMatch}: a
 rule in the environment can only be skipped iff that rule does not match under any possible
 substitution of type variables. With this tightened requirement the scenario
 above simply does not resolve: unstable resolutions are invalid.
@@ -750,7 +752,7 @@ spanner in the works. Consider what happens:
 Using
 Rule~\rref{FR-TAbs}, we would recursively resolve $\beta \arrow \beta$
 against the extended environment $\tenv_1 = \tenv_0, \beta$. Next we get stuck
-as neither Rule~\rref{DL-RuleMatch} nor Rule~\rref{DL-RuleNoMatch'}
+as neither rule~\rref{DL-RuleMatch} nor rule~\rref{DL-RuleNoMatch'}
 applies. The former does not apply because $\alpha \arrow \alpha$ does not
 match $\beta \arrow \beta$.  Also the latter does not apply because there are
 two substitutions such that $\theta(\alpha \arrow \alpha)$ matches
@@ -1351,11 +1353,11 @@ actually identical.
 The first difference is situated in the third
 auxiliary judgement $\bar{\alpha};\tenv;\rulet;\Sigma \alg \type ; \Sigma'$.
 While its declarative counterpart immediately instantiates the quantified type
-variable in Rule~\mylabel{M-TApp}, this algorithmic formulation defers the
+variable in rule~\mylabel{M-TApp}, this algorithmic formulation defers the
 instantiation to the point where a deterministic choice can be made. As long as
 the type variables $\bar{\alpha}$ have not been instantiated, the judgement
 keeps track of them in its first argument. The actual instantiation happens in
-the base case, Rule \mylabel{Alg-M-Simp}. This last rule performs the deferred
+the base case, rule \mylabel{Alg-M-Simp}. This last rule performs the deferred
 instantiation of type variables $\bar{\alpha}$ by computing the \emph{most
 general unifier} $\theta = \mgu{\type'}{\type}$. The unification
 algorithm, which we present below, computes a substitution
@@ -1402,7 +1404,7 @@ and its algorithmic counterpart:
 %- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 \subsection{Algorithmic Stability Check}
 
-The second difference can be found in the second judgement's Rule \mylabel{Alg-L-RuleNoMatch}. Instead of
+The second difference can be found in the second judgement's rule \mylabel{Alg-L-RuleNoMatch}. Instead of
 using the $\mathit{stable}(\bar{\alpha},\tenv,\rulet~\gbox{\leadsto x},\type)$ judgement, which quantifies over all valid 
 substitutions, this rule uses the algorithmic judgement
 $\bar{\alpha};\tenv;\rulet\coh\type$. This auxiliary judgement checks algorithmically
@@ -1468,14 +1470,14 @@ Fortunately, by a stroke of luck, the above is not a problem for either
 of our two use cases:
 \begin{itemize}
 \item
-The first use case is that in Rule~\mylabel{Alg-M-Simp} where this is not a
+The first use case is that in rule~\mylabel{Alg-M-Simp} where this is not a
 problem because the scenario never arises. In
 $\mgu{\type'}{\type}$ only $\type'$ contains unification
 variables and hence the range of the substitution never contains any
 unification variables. As a consequence the above exampe and others like
 it cannot occur.
 \item
-The second use case, in Rule~\mylabel{Coh-Simp}, is
+The second use case, in rule~\mylabel{Coh-Simp}, is
 only interested in the existence of a valid substitution. We neither care
 which one it is nor whether it is the most general one. Moreover, as
 illustrated above, whenever there is a most general substitution that is invalid
@@ -1489,7 +1491,7 @@ unification variables by closed types.
 
 With the above issues in mind we can consider the actual definition in
 Figure~\ref{fig:algorithm}. The main unification judgement $\theta =
-\mgu{\rulet_1}{\rulet_2}$ is defined by Rule~\mylabel{U-Main}. This rule
+\mgu{\rulet_1}{\rulet_2}$ is defined by rule~\mylabel{U-Main}. This rule
 computes the unifier in terms of the auxiliary judgement $\theta =
 \mgun{\bar{\alpha}}{\rulet_1}{\rulet_2}$, which is essentially standard
 unification, and then checks the above vality concerns.  Indeed, for any type
@@ -1745,8 +1747,8 @@ every rule in the environment makes it so. This requirement is formalised as
  the termination condition $\term{\rulet}$ in Figure~\ref{fig:termination}.
 
 The judgement is defined by case analysis on the type $\rulet$. Rule~\mylabel{T-Simp} states that simple types trivially satisfy the
-condition. Next, Rule \mylabel{T-Forall} is the obvious congruence rule for
-universally quantified types. Finally, Rule~\mylabel{T-Rule} enforces
+condition. Next, rule \mylabel{T-Forall} is the obvious congruence rule for
+universally quantified types. Finally, rule~\mylabel{T-Rule} enforces
 the actual condition on rule types $\rulet_1 \iarrow \rulet_2$, which
 requires that the head $\type_1$ of $\rulet_1$ is strictly smaller than the
 head $\type_2$ of $\rulet_2$.
@@ -1764,14 +1766,14 @@ Declaratively, we can formulate stability as:
 \mathit{dom}(\theta) \subseteq \mathit{ftv}(\rulet_1) \cup \mathit(ftv)(\rulet_2): 
 \enskip \tnorm[\theta(\rulet_1)] <
 \tnorm[\theta(\rulet_2)]\]
-Instead of enumerating all possible substitutions, Rule~\mylabel{T-Rule} uses instead an
+Instead of enumerating all possible substitutions, rule~\mylabel{T-Rule} uses instead an
 equivalent algorithmic formulation which states that the number of occurrences
 of any free type variable $\alpha$ may not be larger in $\rulet_1$ than in
 $\rulet_2$. The auxiliary function $\occ{\alpha}{\rulet}$ is used here to
 determine the number of occurrences of $\alpha$ in $\rulet$.
 
 Finally, as the types have a recursive structure whereby their components are
-themselves added to the environment, Rule~\mylabel{T-Rule} also enforces the
+themselves added to the environment, rule~\mylabel{T-Rule} also enforces the
 termination condition recursively on the components.
 
 \figtwocol{fig:termination}{Termination Condition}{
