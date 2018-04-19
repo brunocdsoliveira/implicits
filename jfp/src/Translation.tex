@@ -70,7 +70,7 @@ in the body of the rule abstraction to construct System F terms of type $|\rulet
 %- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 \paragraph{Resolution}
 The more interesting part of the translation happens when resolving queries.
-Queries are translated by rule $\TyQuery$ using the auxiliary resolution
+Queries are translated by rule $\rref{Ty-Query}$ using the auxiliary resolution
 judgment $\ivturns$:
 \begin{equation*}
 \tenv \ivturns \rulet~\gbox{\leadsto E}
@@ -79,18 +79,18 @@ which is shown, in deterministic form, in Figure~\ref{fig:resolution2}.  The
 translation builds a System F term as evidence for the resolution.  
 
 The mechanism that builds evidence dualizes the process of peeling off
-abstractions and universal quantifiers: Rule \mylabel{R-IAbs}~wraps a lambda
+abstractions and universal quantifiers: Rule \rref{R-IAbs}~wraps a lambda
 binder with a fresh variable $x$ around a System F expression $E$, which is
 generated from the resolution for the head of the rule ($\rulet_2$). Similarly,
-rule \mylabel{R-TAbs}~wraps a type lambda binder around the System F expression
+rule \rref{R-TAbs}~wraps a type lambda binder around the System F expression
 resulting from the resolution of $\rulet$.
 
-For simple types $\type$ rule \mylabel{R-Simp} delegates the work of
+For simple types $\type$ rule \rref{R-Simp} delegates the work of
 building evidence, when a matching rule $\rulet$ type is found in the
-environment, to rule \mylabel{L-RuleMatch}. The evidence consists of two parts:
+environment, to rule \rref{L-RuleMatch}. The evidence consists of two parts:
 $E$ is the evidence of matching $\type$ against $\rulet$. This match contains
 placeholders $\bar{x}$ for the contexts whose resolution is postponed by rule
-\mylabel{M-IAbs}. It falls to rule \mylabel{L-RuleMatch} to perform these
+\rref{M-IAbs}. It falls to rule \rref{L-RuleMatch} to perform these
 postponed resolutions, obtain their evidence $\bar{E}$ and fill in the
 placeholders.
 
@@ -135,7 +135,7 @@ The generated evidence of resolution is uniquely determined.
 Thirdly, on top of the immediate coherence of deterministic resolution, 
 an additional coherence property holds.  
 \begin{lemma}[Stability]
-Resolution is stable under substitution.
+Resolution is stable under type substitution.
 \[\forall \tenv,\alpha,\tenv',\sigma,\rulet, E: \enskip\
 \tenv,\alpha,\tenv' \ivturns \rulet \leadsto E \enskip\wedge\enskip \tenv \vdash \sigma
 \enskip\Rightarrow\enskip 
@@ -165,10 +165,10 @@ With the evidence we can state the correctness of the algorithm.
 % $\bar{\alpha}$ and the recursive resolution of $\bar{\rulet}$ have been
 % postponed. We use the $\bar{\alpha}$ themselves as convenient placeholders for
 % the instantiating types, and we use the synthetic $\bar{\omega}$ as placeholders for
-% the evidence of the $\bar{\rulet}$. The rules \mylabel{MTC-Abs} and \mylabel{MTC-Abs} 
+% the evidence of the $\bar{\rulet}$. The rules \rref{MTC-Abs} and \rref{MTC-Abs} 
 % introduce these two kinds of placeholders in the evidence. The former kind, $\bar{\alpha}$,
-% are substituted in rule \mylabel{MTC-Simp} where the actual type instantiatons $\bar{\theta}$
-% are computed. The latter kind, $\bar{\omega}$, are substituted later in rule \mylabel{Alg-Simp} where
+% are substituted in rule \rref{MTC-Simp} where the actual type instantiatons $\bar{\theta}$
+% are computed. The latter kind, $\bar{\omega}$, are substituted later in rule \rref{Alg-Simp} where
 % the recursive resolutions take place.
 
 \begin{theorem}[Partial Correctness]

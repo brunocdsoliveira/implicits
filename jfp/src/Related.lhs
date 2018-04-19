@@ -214,8 +214,8 @@ instances of such records implicitly, but they still follow Haskell's
 global scoping approach. Nevertheless highly overlapping instances, which 
 can be incoherent, are allowed. Like implicits, the design of
 Idris type classes allows for any type of value to be implicit. Thus
-type classes in Idris are first-class, can be manipulated as any other 
-value, an also allow multiple (incoherent) instances of the same type.
+type classes in Idris are first-class, can be manipulated like any other 
+values, and also allow multiple (incoherent) instances of the same type.
 \emph{Instance arguments}~\cite{instanceargs} are an Agda extension
 that is closely related to implicits. Like $\ourlang$, 
 instance arguments use a special arrow for introducing implicit 
@@ -245,7 +245,7 @@ consistently. $\ourlang$ is a core calculus, meant to enable the
 design of source languages that utilize its power. It should be easy
 enough to design source languages on top of $\ourlang$ that forbid
 local scoping constructs and, instead, make all declared rules visible
-in a single global environment. This would retain several of
+in a single global environment. This would retain several of the
 benefits of $\ourlang$ (such as first-class, higher-order rules, and
 coherent overlapping rules), while providing a form of global
 uniqueness. However this design would still be essentially

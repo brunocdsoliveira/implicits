@@ -16,14 +16,21 @@
 \usepackage{stmaryrd}
 \usepackage{mathpartir}
 \usepackage{wasysym}
-\usepackage[hyphens]{url}
+%\usepackage[hyphens]{url}
+\usepackage{hyperref}
+%hyperref needs some setup, especially after pdfscreen
+\hypersetup{%
+  colorlinks=True,%
+  pdfmenubar=True,%
+  pdfcenterwindow=False,% 
+  pdffitwindow=False}%
 \usepackage{algorithm, algpseudocode}
 \usepackage{fancyvrb}
 %\usepackage[[style=1]{mdframed}
 \usepackage{comment}
 \usepackage{soul}
 
-\definecolor{light}{gray}{.75}
+\definecolor{light}{gray}{.95}
 
 \newtheorem{lemma}{Lemma}[section]
 \newtheorem{example}{Example}[section]
@@ -32,7 +39,10 @@
 \newtheorem{corollary}{Corollary}[section]
 
 \newcommand{\gbox}[1]{\colorbox{light}{$\!\!#1\!\!$}}
+\newcommand{\hello}[1]{{\color{blue} #1}}
 \newcommand{\plw}[1]{[{\color{blue}\text{PLW:}} #1]}
+
+
 
 % for comments
 \input{macro-comments}

@@ -47,7 +47,10 @@
 \newcommand{\figtwocol}[3]
 {\begin{figure} #3 \caption{#2}\label{#1}\end{figure}}
 
-\newcommand{\myrule}[3]{\inferrule*[left={\scriptsize\mylabel{#1}}]{#2}{#3}}
+\newcommand{\rref}[1]{\hyperlink{rule:#1}{\mylabel{#1}}}
+\newcommand{\myrule}[3]{\inferrule*[left={\hypertarget{rule:#1}{\scriptsize\mylabel{#1}}}]{#2}{#3}\label{rule:#1}}
+\newcommand{\myexrule}[3]{\inferrule*[left={\hyperlink{rule:#1}{\scriptsize\mylabel{#1}}}]{#2}{#3}\label{rule:#1}}
+\newcommand{\myexruleL}[3]{\inferrule*[Left={\hyperlink{rule:#1}{\scriptsize\mylabel{#1}}}]{#2}{#3}\label{rule:#1}}
 \newcommand{\myirule}[2]{\inferrule*{#1}{#2}}
 %\newcommand{\myirule}[2]{{\renewcommand{\arraystretch}{1.2}\ba{c} #1
 %                      \\ \hline #2 \ea}}
@@ -140,15 +143,6 @@
 \newcommand{\OpInst}{\tlabel{\facerule{OpInst}}}
 \newcommand{\OpRApp}{\tlabel{\facerule{OpRApp}}}
 \newcommand{\OpRClos}{\tlabel{\facerule{OpRClos}}}
-
-\newcommand{\TyQuery}{\tlabel{\facerule{Ty-Query}}}
-\newcommand{\TyRule}{\tlabel{\facerule{TyRule}}}
-\newcommand{\TyInst}{\tlabel{\facerule{TyInst}}}
-\newcommand{\TyRApp}{\tlabel{\facerule{TyRApp}}}
-
-\newcommand{\TyRClos}{\tlabel{\facerule{TyRClos}}}
-\newcommand{\TyREnv}{\tlabel{\facerule{TyREnv}}}
-\newcommand{\TyRPgm}{\tlabel{\facerule{TyRPgm}}}
 
 \newcommand{\RTAbs}{\tlabel{\facerule{RTAbs}}}
 \newcommand{\RIAbs}{\tlabel{\facerule{RIAbs}}}
@@ -280,6 +274,24 @@
 \newcommand{\TyAnn}{\tlabel{\facerule{TyAnn}}}
 
 \newcommand{\eqv}{\Longleftrightarrow}
+
+
+% Judgement Forms
+% ~~~~~~~~~~~~~~~
+
+% well-formed types
+\newcommand{\wfty}[2]{\hello{#1 \turns #2}}
+
+% well-typed expressions
+\newcommand{\wte}[4]{\hello{#1 \turns \relation{#2}{#3}~\gbox{\leadsto #4}}}
+\newcommand{\wtep}[3]{\hello{#1 \turns \relation{#2}{#3}}}
+
+% ambiguous resolution
+\newcommand{\ares}[3]{\hello{#1 \vturns #2~\gbox{\leadsto #3}}}
+\newcommand{\aresp}[2]{\hello{#1 \vturns #2}}
+
+% unambiguity condition
+\newcommand{\unambig}[2]{\hello{#1 \unamb #2}}
 
 %%% Local Variables: 
 %%% mode: latex

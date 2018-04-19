@@ -277,7 +277,7 @@
 >  - why is the well-formedness judgment $\Gamma |- \rho$ necessary?
 > Formalizations of System F usually get by without such a judgment (see
 > e.g. TAPL, ch. 23).
-> 
+
 > p. 17: a minor typographic comment: the paragraphs immediately
 > following typing rules in the main text (such as those on this page
 > starting with "and", "While this may...", and "While these are...")
@@ -525,7 +525,9 @@
 > 
 > p. 36: "This would retain several of benefits" --> "several of the
 > benefits".
-> 
+
+FIXED
+ 
 > p. 37: "(our first auxiliary judgement), ... (our third auxiliary
 > judgement)".  I do not remember which judgments this refers to.
 > Please consider using human-readable names.
@@ -981,15 +983,24 @@ TODO: add definition of well-formedness for environments
 >   while this is supposed to be something that the reader does not have to
 >   look at in a first reading. I suggest just using (the right amount of)
 >   gray for the foreground color and leaving the background color in white.
+
+We have opted for a much lighter gray background, which we hope is much 
+less distracting.
+
 > - (Optional) You use the "=" sign for definitional equality.  I would prefer
 >   the use of a special notation (e.g. "=^def=" or "=^\delta=") for
 > definitional
 >   equality.
 > - It would help if the PDF contained more hyper-references so as to ease the
->   navigation in the digital version of the document: hyper-references for rule
->   names, figures, urls, citations, etc. It would also help for the paper
+>   navigation in the digital version of the document: 
+>   hyper-references for rule names, figures, urls, citations, etc. 
+>   It would also help for the paper
 >   version to have a page or figure reference next to rule names when those
 >   have not been introduced in the current subsection.
+
+We have added hyper references for figures, urls and citations.
+TODO: add hyperrefs for rule names
+
 > - Several lines are overfull.
 > - There seems to be a problem with some of your display math environments,
 >   as many displayed math formulars are followed by an extra blank space on
@@ -1104,11 +1115,23 @@ TODO: add definition of well-formedness for environments
 >   Replace "unifications" by "unification problems"
 > - Page 30, line -4: "is ev[a<-e]ntually a goal"
 > - Page 31, line 5: " head \tau_2 [<-of] \rho_2"
+
+FIXED
+
 > - Page 33, above Lemma 5.3: "a strong form of coherence"
 >   I would not say this is a strong form of coherence, since here coherence
 >   is obtained the easy by just avoiding multiple paths...
+
+TODO: reformulate
+
 > - Page 33, Lemma 5.4: "Stable under [<-type] substitution"
+
+FIXED
+
 > - Page 36, 6.3, line -9: "other values, an[<-d] also allow"
+
+FIXED
+
 > ---------------
 > [1]  Modular implicits
 >       Leo White, FrÃ©dÃ©ric Bour, Jeremy Yallop
