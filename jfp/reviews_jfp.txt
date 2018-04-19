@@ -283,7 +283,10 @@
 > starting with "and", "While this may...", and "While these are...")
 > are slightly indented, but not as much as other paragraphs.  Maybe
 > some spurious white space is added after typing rules by a TeX macro?
-> 
+
+This is fixed now in Section 3.
+TODO: Fix in other sections
+ 
 > p. 18:
 > 
 >  - "to distinguish a special class of simple types": it would be
@@ -375,7 +378,9 @@
 > defined inductively.  I therefore assume that the authors mean to say
 > that the lookup judgment is syntax directed w.r.t. the type
 > environment $\Gamma'$. Is this correct?
-> 
+
+That is correct. We have modified the formulation accordingly. 
+ 
 > p. 24:
 > 
 >  - in Fig. 6: minor typographic comment: consider replacing
@@ -1103,6 +1108,16 @@ TODO: add hyperrefs for rule names
 > - Page 21, Rule DL-RuleNoMatch: "\not \exists E, \Sigma:"
 >   This is an undefined and non-standard notation.
 >   The standard notation would be a comma and a space instead of ":".
+
+It is actually quite common to use colons instead of commas after
+quantifiers. In fact, many styles are used: no separator, a space,
+a comma, a period, and a colon. The other two reviewers do not seem
+to have a problem with this notation.
+
+The reason we use colon here is to create a stronger visual separation between
+the quantifier and the judgement form than the comma would do. We have now
+added a bit of extra space to amply the effect.
+
 > - Page 22, line -1 "we would like [to<-] this"
 > - Page 23, line -9-16: "we can only  consider[ing<-] substitutions"
 > - Page 23, line -9: "substitution [is<-] \epsilon is trivially"
