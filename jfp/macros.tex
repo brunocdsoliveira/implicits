@@ -11,8 +11,6 @@
 \newcommand{\suty}{\sigma}
 \newcommand{\name}{\textsc{Cochis}\xspace}
 
-\newcommand{\tyvars}[1]{\mathit{tyvars}(#1)}
-
 \newcommand{\mca}{\mathcal{A}}
 \newcommand{\mcb}{\mathcal{B}}
 \newcommand{\mcc}{\mathcal{C}}
@@ -221,7 +219,6 @@
 \newcommand{\overlap}{{\sf overlap}}
 \newcommand{\nonoverlap}{{\sf nonoverlap}}
 \newcommand{\wellformed}{{\sf wellformed}}
-\newcommand{\stable}{{\sf stable}}
 \newcommand{\coherent}{{\sf coherent}}
 \newcommand{\distinct}{{\sf distinct}}
 \newcommand{\unrelated}{{\sf unrelated}}
@@ -293,6 +290,25 @@
 % focusing resolution
 \newcommand{\frres}[3]{\hello{#1 \fturns [#2]~\gbox{\leadsto #3}}}
 \newcommand{\fmres}[6]{\hello{#1; [#2]~\gbox{\leadsto #3} \fturns #4~\gbox{\leadsto #5}; #6}}
+
+% lookup
+\newcommand{\lres}[4]{\hello{#1;[#2] \ivturns #3~\gbox{\leadsto #4}}}
+
+% deterministic resolution
+\newcommand{\dres}[3]{\hello{#1 \ivturns #2~\gbox{\leadsto #3}}}
+\newcommand{\drres}[4]{\hello{#1; #2 \fturns [#3]~\gbox{\leadsto #4}}}
+\newcommand{\dlres}[5]{\hello{#1; #2; [#3] \ivturns #4~\gbox{\leadsto #5}}}
+\newcommand{\dmres}[6]{\hello{#1; [#2]~\gbox{\leadsto #3} \ivturns #4~\gbox{\leadsto #5}; #6}}
+
+% type variables
+\newcommand{\tyvars}[1]{\hello{\mathsf{tyvars}(#1)}}
+
+% valid substitutions
+\newcommand{\validsubst}[3]{\hello{#1; #2 \vdash #3}}
+
+% stability
+\newcommand{\stable}[4]{\hello{{\sf stable}(#1;#2~\gbox{\leadsto #3};#4)}}
+\newcommand{\dstable}[5]{\hello{{\sf stable}(#1;#2;#3~\gbox{\leadsto #4};#5)}}
 
 % unambiguity condition
 \newcommand{\unambig}[2]{\hello{#1 \unamb #2}}
