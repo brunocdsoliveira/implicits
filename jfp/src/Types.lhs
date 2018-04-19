@@ -820,9 +820,9 @@ variables $\bar{\alpha},\bar{\alpha}'$ and the type environment after substituti
   {\validsubst{\bar{\alpha}}{\tenv}{\epsilon}} \\ \\ 
 \myrule {S-Cons} 
   { \wfty{\tenv}{\rulet} \\ 
-    \validsubst{\bar{\alpha},\bar{\alpha'}}{\tenv, \theta(\tenv')}{\theta}
+    \validsubst{\bar{\alpha},\bar{\alpha}'}{\tenv, \theta(\tenv')}{\theta}
   }
-  {\validsubst{\bar{\alpha},\alpha,\bar{\alpha'}}{\tenv, \alpha, \tenv'}
+  {\validsubst{\bar{\alpha},\alpha,\bar{\alpha}'}{\tenv, \alpha, \tenv'}
    {[\rulet/\alpha] \cdot \theta}
   } 
 \eda 

@@ -386,7 +386,9 @@ That is correct. We have modified the formulation accordingly.
 >  - in Fig. 6: minor typographic comment: consider replacing
 > $\bar{\alpha'}$ by $\bar{\alpha}'$ for readability (as in the main
 > text at the bottom of p. 23).
-> 
+
+Fixed.
+ 
 >  - "in the main and first auxiliary judgement", I'm not sure
 > which judgments are meant here.  Which is the main auxiliary judgment?
 > Resolution?  Lookup?  Please consider using human-readable names...
