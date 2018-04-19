@@ -275,7 +275,7 @@ $\aresp{\Gamma_0}{\tyint}$:
    {\tyint \in \Gamma_0}
    {\aresp{\Gamma_0}{\tyint}}
 \end{array}
-\end{equation*}
+\end{equation*}%%
 and
 \begin{equation*}
 \begin{array}{c}
@@ -289,7 +289,7 @@ and
    }
    {\aresp{\Gamma_0}{\tyint}}
 \end{array}
-\end{equation*}
+\end{equation*}%%
 While this may seem harmless at the type-level, at the value-level each
 derivation corresponds to a (possibly) different value. Hence, ambiguous
 resolution renders the meaning of a program ambiguous.
@@ -314,7 +314,7 @@ $\tenv = a~\gbox{\leadsto x}$:
    {a~\gbox{\leadsto x} \in \tenv}
    {\ares{\tenv}{a}{x}}
 \end{array}
-\end{equation*}
+\end{equation*}%
 % ==========
 % TC a |= a
 
@@ -337,7 +337,7 @@ versus
    }
    {\ares{\tenv}{a}{(\lambda y.y)\,x}}
 \end{array}
-\end{equation*}
+\end{equation*}%
 While these are two different proofs, they use the information in the context
 $\tenv$ in essentially the same way. Hence, unlike the nondeterminism in the
 previous example at the end of Section~\ref{s:resolution} where the context provides two
@@ -409,7 +409,7 @@ class of \emph{simple} types:
     \text{Context Types} & \rulet \hide{\in 2^\meta{RType}} & ::= & 
     \forall \alpha. \rulet \mid \rulet_1 \iarrow \rulet_2 \mid \type \\
     \text{Simple Types}  & \type                            & ::=  & \alpha \mid \rulet_1 \arrow \rulet_2 \\
-  \eda }
+  \eda }%
 The definition of resolution with focusing that uses this refined grammar
 is given in 
 Figure~\ref{fig:resolutionf}. The main judgment $\frres{\tenv}{\rulet}{E}$ is
@@ -463,7 +463,7 @@ For instance, for the example above there is only one proof:
      }
      {\frres{\tenv}{a}{x}}
 \end{array}
-\end{equation*}
+\end{equation*}%
 
 %-------------------------------------------------------------------------------
 \subsection{Deterministic and Stable Resolution}\label{subsec:det}
@@ -498,7 +498,7 @@ For the sake of compactness the example uses the original ambiguous definition o
     {\aresp{\tenv_1}{\forall \alpha. \alpha \iarrow \alpha}}
   }
   {\aresp{\tenv_1}{\tyint \iarrow \tyint}}
-\end{equation*}
+\end{equation*}%
 and
 \begin{equation*}
 \myexruleL{AR-TApp}
@@ -518,7 +518,7 @@ and
     {\aresp{\tenv_1}{\forall \beta. \beta \iarrow \beta}}
   }
   {\aresp{\tenv_1}{\tyint \iarrow \tyint}}
-\end{equation*}
+\end{equation*}%
 The first proof only involves the instantiation of 
 $\alpha$ with $\tyint$. Yet, the second proof contains an impredicative
 instantiation of $\alpha$ with $\forall \beta. \beta \iarrow \beta$.
@@ -639,41 +639,41 @@ different, i.e., incoherent, elaborations.
 Our solution is to replace the nondeterministic relation $\rulet \in \tenv$ by
 a deterministic one that selects the first matching rule in the environment and
 commits to it. In fact, we replace all three hypotheses of rule~\rref{FR-Simp}
-by a new judgement $\tenv;[\tenv'] \ivturns \type~\gbox{\leadsto E}$ which resolves
+by a new judgement $\lres{\tenv}{\tenv'}{\type}{E}$ which resolves
 $\type$ with the first matching rule in the environment $\tenv'$ and performs
 any recursive resolutions against the environment $\tenv$. Of course, the modified
 rule~\rref{FR-Simp} invokes this judgement with two copies of the same environment, i.e.,
 $\tenv' = \tenv$.
 \bda{c}
   \myrule {FR-Simp'}
-          {\tenv; [\tenv] \ivturns \type~\gbox{\leadsto E}
+          {\lres{\tenv}{\tenv}{\type}{E}
           }
-          {\tenv \fturns [\type]~\gbox{\leadsto E}}
+          {\frres{\tenv}{\type}{E}}
 \eda
-The (still preliminary) definition of the judgement itself proceeds by structural induction on the
-environment $\tenv'$:
+The (still preliminary) definition of the judgement itself is syntax-directed with respect to the
+type environment $\tenv'$:
 \bda{c}
-\myruleform{\tenv;[\tenv'] \ivturns \type~\gbox{\leadsto E}}\\ \\
+\myruleform{\lres{\tenv}{\tenv'}{\type}{E}}\\ \\
 
   \myrule{DL-RuleMatch}
-          {\tenv; [\rulet]~\gbox{\leadsto x} \ivturns \tau~\gbox{\leadsto E}; \overline{\rulet'~\gbox{\leadsto x}} \\
-            \tenv \ivturns [\rulet']~\gbox{\leadsto E'} \quad (\forall \rulet' \in \overline{\rulet}')
+          {\fmres{\tenv}{\rulet}{x}{\tau}{E}{\overline{\rulet'~\gbox{\leadsto x}}} \\
+            \frres{\tenv}{\rulet'}{E'} \quad (\forall \rulet' \in \overline{\rulet}')
           }
-          {\tenv;[\tenv',\rulet~\gbox{\leadsto x}] \ivturns \type~\gbox{\leadsto E[\bar{E}'/\bar{x}]}} \\ \\
+          {\lres{\tenv}{\tenv',\rulet~\gbox{\leadsto x}}{\type}{E[\bar{E}'/\bar{x}]}} \\ \\
   \myrule{DL-RuleNoMatch}{
-           \not\exists E, \Sigma: \tenv; [\rulet]~\gbox{\leadsto x} \ivturns \type~\gbox{\leadsto E}; \Sigma \\
-           \tenv;[\tenv'] \ivturns \type~\gbox{\leadsto E'}
+           \not\exists E, \Sigma:\enskip \fmres{\tenv}{\rulet}{x}{\type}{E}{\Sigma} \\
+           \lres{\tenv}{\tenv'}{\type}{E'}
           }
-          {\tenv;[\tenv',\rulet~\gbox{\leadsto x}] \ivturns \type~\gbox{\leadsto E'}} \\ \\
+          {\lres{\tenv}{\tenv',\rulet~\gbox{\leadsto x}}{\type}{E'}} \\ \\
   \myrule{DL-Var}
-         {\tenv;[\tenv'] \ivturns \type~\gbox{\leadsto E}
+         {\lres{\tenv}{\tenv'}{\type}{E}
          }
-         {\tenv;[\tenv',x:\rulet] \ivturns \type~\gbox{\leadsto E}} 
+         {\lres{\tenv}{\tenv',x:\rulet}{\type}{E}} 
 \quad\quad\quad
   \myrule{DL-TyVar}
-         {\tenv;[\tenv'] \ivturns \type~\gbox{\leadsto E}
+         {\lres{\tenv}{\tenv'}{\type}{E}
          }
-         {\tenv;[\tenv',\alpha] \ivturns \type~\gbox{\leadsto E}} 
+         {\lres{\tenv}{\tenv',\alpha}{\type}{E}} 
 \eda
 
 Rule~\rref{DL-RuleMatch} concerns the case where the first entry in the 
@@ -1009,7 +1009,7 @@ unambiguous, deterministic and stable definition of resolution.
 %     {\tenv_1 \vturns \forall \alpha. \alpha \iarrow \alpha    }
 %   }
 %   {\tenv_1 \vturns \tyint \iarrow \tyint}
-% \end{equation*}
+% \end{equation*}%
 % and
 % \begin{equation*}
 % \inferrule*[left=\mylabel{AR-TApp}]
@@ -1029,7 +1029,7 @@ unambiguous, deterministic and stable definition of resolution.
 %     {\tenv_1 \vturns \forall \beta. \beta \iarrow \beta}
 %   }
 %   {\tenv_1 \vturns \tyint \iarrow \tyint}
-% \end{equation*}
+% \end{equation*}%
 % 
 % The first proof only involves the predicative generalisation from
 % $\tyint$ to $\alpha$. Yet, the second proof contains an impredicative
@@ -1151,7 +1151,7 @@ unambiguous, deterministic and stable definition of resolution.
 % \tyvars{\tenv,x : \rulet} & = & \tyvars{\tenv} &
 % \tyvars{\tenv,\rulet~\gbox{\leadsto x}} & = & \tyvars{\tenv} 
 % \end{array}
-% \end{equation*}
+% \end{equation*}%
 % While the auxiliary judgement $\bar{\alpha};\tenv \ivturns \rulet$ extends the
 % type environment $\tenv$, it does not update the type variables $\bar{\alpha}$.
 % This judgement is syntax-directed on the query type $\rulet$.  Its job is to
@@ -1708,7 +1708,7 @@ As an example of non-termination consider
 \begin{equation*}
   \tychar \To \tyint,
   \tyint \To \tychar \vturns \tyint
-\end{equation*}
+\end{equation*}%
 which loops, using alternatively the first and second rule in the
 environment. The source of this non-termination is the recursive 
 nature of resolution: a simple type can be resolved
@@ -1796,7 +1796,7 @@ termination condition recursively on the components.
           {\term{\rulet_1 \iarrow \rulet_2}} 
   \\ \\
 \ea
-\end{equation*}
+\end{equation*}%
 \begin{equation*}
     \ba{rcl@@{\hspace{7mm}}rcl@@{\hspace{7mm}}rcl}
       \head{\type} & = & \type &
@@ -1804,7 +1804,7 @@ termination condition recursively on the components.
       \head{\rulet_1 \iarrow \rulet_2} & = & \head{\rulet_2}
       \\ \\
     \ea
-\end{equation*}
+\end{equation*}%
 \begin{equation*}
     \ba{rcl@@{\hspace{7mm}}rcl}
       \occ{\alpha}{\beta} & = & \left\{ \begin{array}{ll} 
@@ -1820,7 +1820,7 @@ termination condition recursively on the components.
       \tnorm[\rulet_1 \arrow \rulet_2] & = & 1 + \tnorm[\rulet_1] + \tnorm[\rulet_2] &
       \tnorm[\rulet_1 \iarrow \rulet_2] & = & 1 + \tnorm[\rulet_1] + \tnorm[\rulet_2] 
     \ea
-\end{equation*}
+\end{equation*}%
 \end{minipage}
 }
 \end{center}
