@@ -836,11 +836,13 @@ variables $\bar{\alpha},\bar{\alpha}'$ and the type environment after substituti
 
 \figtwocol{fig:resolution2}{Deterministic Resolution and Translation to System F}{
 \begin{center}
-\framebox{\scriptsize
+\framebox{%\scriptsize
 \begin{minipage}{0.969\textwidth}
 \bda{c}
 \Sigma ::= \epsilon \mid \Sigma, \rulet~\gbox{\leadsto x} \\ \\
+%---------------------------------------------------------------------%
 \myruleform{\dres{\tenv}{\rulet}{E}} \\ \\
+%---------------------------------------------------------------------%
   \myrule {R-Main}
           {\drres{\tyvars{\tenv}}{\tenv}{\rulet}{E}}
           {\dres{\tenv}{\rulet}{E}} \\ \\
@@ -852,7 +854,9 @@ variables $\bar{\alpha},\bar{\alpha}'$ and the type environment after substituti
 \tyvars{\tenv,\rulet~\gbox{\leadsto x}} & = & \tyvars{\tenv} 
 \end{array}
 \right. \\ \\
+%---------------------------------------------------------------------%
 \multicolumn{1}{c}{\myruleform{\drres{\bar{\alpha}}{\tenv}{\rulet}{E}}} \\ \\
+%---------------------------------------------------------------------%
 %%\quad\quad\quad
   \myrule{R-IAbs}
          {\drres{\bar{\alpha}}{\tenv, \rulet_1~\gbox{\leadsto x}}{\rulet_2}{E} \quad\quad \gbox{x~\mathit{fresh}}}
@@ -867,48 +871,54 @@ variables $\bar{\alpha},\bar{\alpha}'$ and the type environment after substituti
         {\dlres{\bar{\alpha}}{\tenv}{\tenv}{\type}{E}}
         {\drres{\bar{\alpha}}{\tenv}{\type}{E}} 
 \\ \\ \\
-\myruleform{\bar{\alpha};\tenv;[\tenv'] \ivturns \type~\gbox{\leadsto E}}\\ \\
-
+%---------------------------------------------------------------------%
+\myruleform{\dlres{\bar{\alpha}}{\tenv}{\tenv'}{\type}{E}}\\ \\
+%---------------------------------------------------------------------%
   \myrule{L-RuleMatch}
-          {\tenv; [\rulet]~\gbox{\leadsto x} \ivturns \tau~\gbox{\leadsto E}; \overline{\rulet'~\gbox{\leadsto x}} \\
-            \bar{\alpha};\tenv \ivturns [\rulet']~\gbox{\leadsto E'} \quad (\forall \rulet' \in \overline{\rulet}')
+          {\dmres{\tenv}{\rulet}{x}{\tau}{E}{\overline{\rulet'~\gbox{\leadsto x}}} \\
+            \drres{\bar{\alpha}}{\tenv}{\rulet'}{E'} \quad (\forall \rulet' \in \overline{\rulet}')
           }
-          {\bar{\alpha};\tenv;[\tenv',\rulet~\gbox{\leadsto x}] \ivturns \type~\gbox{\leadsto E[\bar{E}'/\bar{x}]}} \\
+          {\dlres{\bar{\alpha}}{\tenv}{\tenv',\rulet~\gbox{\leadsto x}}{\type}{E[\bar{E}'/\bar{x}]}} \\
   \myrule{L-RuleNoMatch}{
-	\mathit{stable}(\bar{\alpha},\tenv,\rulet~\gbox{\leadsto x},\type) \\
-%   \not\exists \theta, E, \Sigma, \mathit{dom}(\theta) \subseteq \bar{\alpha}: \theta(\tenv); \theta(\rulet)~\gbox{\leadsto x} \ivturns \theta(\tau)~\gbox{\leadsto E}; \Sigma \\
-           \bar{\alpha};\tenv;[\tenv'] \ivturns \type~\gbox{\leadsto E'}
+	   \dstable{\bar{\alpha}}{\tenv}{\rulet}{x}{\type} \\
+           \dlres{\bar{\alpha}}{\tenv}{\tenv'}{\type}{E'}
           }
-          {\bar{\alpha};\tenv;[\tenv',\rulet~\gbox{\leadsto x}] \ivturns \type~\gbox{\leadsto E'}} \\ \\
+          {\dlres{\bar{\alpha}}{\tenv}{\tenv',\rulet~\gbox{\leadsto x}}{\type}{E'}} \\ \\
   \myrule{L-Var}
-         {\bar{\alpha};\tenv;[\tenv'] \ivturns \type~\gbox{\leadsto E}
+         {\dlres{\bar{\alpha}}{\tenv}{\tenv'}{\type}{E}
          }
-         {\bar{\alpha};\tenv;[\tenv',x:\rulet] \ivturns \type~\gbox{\leadsto E}} 
+         {\dlres{\bar{\alpha}}{\tenv}{\tenv',x:\rulet}{\type}{E}} 
 \quad\quad\quad
   \myrule{L-TyVar}
-         {\bar{\alpha};\tenv;[\tenv'] \ivturns \type~\gbox{\leadsto E}
+         {\dlres{\bar{\alpha}}{\tenv}{\tenv'}{\type}{E}
          }
-         {\bar{\alpha};\tenv;[\tenv',\alpha] \ivturns \type~\gbox{\leadsto E}} 
+         {\dlres{\bar{\alpha}}{\tenv}{\tenv',\alpha}{\type}{E}} 
 \\ \\ \\
-\myruleform{\tenv; [\rulet]~\gbox{\leadsto E} \ivturns \type~\gbox{\leadsto E'}; \Sigma}\\ \\
+%---------------------------------------------------------------------%
+\myruleform{\dmres{\tenv}{\rulet}{E}{\type}{E'}{\Sigma}}\\ \\
+%---------------------------------------------------------------------%
   \myrule{M-Simp}
          {}
-         {\tenv; [\type]~\gbox{\leadsto E} \ivturns \type~\gbox{\leadsto E}; \epsilon} \\ \\
+         {\dmres{\tenv}{\type}{E}{\type}{E}{\epsilon}} \\ \\
   \myrule{M-IApp}
-         {\tenv, \rulet_1 \gbox{\leadsto x}; [\rulet_2] ~\gbox{\leadsto E\,x} \ivturns \type~\gbox{\leadsto E'}; \Sigma 
+         {\dmres{\tenv, \rulet_1 \gbox{\leadsto x}}{\rulet_2}{E\,x}{\type}{E'}{\Sigma}
           \quad\quad\quad \gbox{x~\mathit{fresh}}
          }
-         {\tenv; [\rulet_1 \iarrow \rulet_2] ~\gbox{\leadsto E} \ivturns \type~\gbox{\leadsto E'}; \Sigma, \rulet_1~\gbox{\leadsto x}} \\ \\ 
+         {\dmres{\tenv}{\rulet_1 \iarrow \rulet_2}{E}{\type}{E'}{\Sigma, \rulet_1~\gbox{\leadsto x}}} \\ \\ 
   \myrule{M-TApp}
-         {\tenv; [\rulet[\suty/\alpha]] ~\gbox{\leadsto E\,||\suty||} \ivturns \type~\gbox{\leadsto E'}; \Sigma
+         {\dmres{\tenv}{\rulet[\suty/\alpha]}{E\,||\suty||}{\type}{E'}{\Sigma}
           \quad\quad\quad
-          \tenv \turns \suty
+          \wfty{\tenv}{\suty}
          }
-         {\tenv; [\forall \alpha. \rulet] ~\gbox{\leadsto E} \ivturns \type~\gbox{\leadsto E'}; \Sigma} \\ \\ \\
-\myruleform{\mathit{stable}(\bar{\alpha},\tenv,\rulet~\gbox{\leadsto x},\type)} \\ \\
-  \myrule{Stable}{\not\exists \theta, E, \Sigma: \enskip \bar{\alpha},\tenv \vdash \theta
-           \quad \theta(\tenv); [\theta(\rulet)]~\gbox{\leadsto x} \ivturns \theta(\tau)~\gbox{\leadsto E}; \Sigma}
-          {\mathit{stable}(\bar{\alpha},\tenv,\rulet~\gbox{\leadsto x},\type)}
+         {\dmres{\tenv}{\forall \alpha. \rulet}{E}{\type}{E'}{\Sigma}} \\ \\ \\
+%---------------------------------------------------------------------%
+\myruleform{\dstable{\bar{\alpha}}{\tenv}{\rulet}{x}{\type}} \\ \\
+%---------------------------------------------------------------------%
+  \myrule{Stable}{\not\exists \theta, E, \Sigma: \enskip 
+           \validsubst{\bar{\alpha}}{\tenv}{\theta}
+           \quad 
+           \dmres{\theta(\tenv)}{\theta(\rulet)}{x}{\theta(\tau)}{E}{\Sigma}}
+          {\dstable{\bar{\alpha}}{\tenv}{\rulet}{x}{\type}}
 \eda
 \end{minipage}
 }
