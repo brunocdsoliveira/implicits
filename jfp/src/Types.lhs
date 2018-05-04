@@ -1352,19 +1352,15 @@ unambiguous, deterministic and stable definition of resolution.
 %===============================================================================
 \section{Resolution Algorithm}
 
-\newcommand{\alg}{\turns_{\mathit{alg}}}
-\newcommand{\coh}{\turns_{\mathit{coh}}}
-\newcommand{\mgu}[3][\bar{\alpha}]{\textit{unify}_{\tenv;#1}(#2,#3)}
-\newcommand{\mgun}[4][\tenv]{\textit{unify'}_{#2}(#3,#4)}
 
 This section presents in Figure~\ref{fig:algorithm} an algorithm that implements the
 deterministic resolution rules of Figure~\ref{fig:resolution2}.
 It differs from the latter in two important ways: 
 firstly, it computes rather than guesses type substitutions in rule
-\mylabel{M-TApp}; 
+\rref{M-TApp}; 
 and secondly,
 it replaces explicit quantification over all substitutions $\theta$ in rule
-\mylabel{Stable} with a tractable approach to coherence checking.
+\rref{Stable} with a tractable approach to coherence checking.
 
 The definition of the algorithm is structured in the same way
 as the declarative specification: with one main judgement and three
@@ -1375,17 +1371,17 @@ actually identical.
 %- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 \subsection{Deferred Variable Instantiation}
 The first difference is situated in the third
-auxiliary judgement $\bar{\alpha};\tenv;\rulet;\Sigma \alg \type ; \Sigma'$.
+auxiliary judgement $\admres{\bar{\alpha}}{\tenv}{\rulet}{E}{\Sigma}{\type}{E'}{\Sigma'}$.
 While its declarative counterpart immediately instantiates the quantified type
-variable in rule~\mylabel{M-TApp}, this algorithmic formulation defers the
+variable in rule~\rref{M-TApp}, this algorithmic formulation defers the
 instantiation to the point where a deterministic choice can be made. As long as
 the type variables $\bar{\alpha}$ have not been instantiated, the judgement
 keeps track of them in its first argument. The actual instantiation happens in
-the base case, rule \mylabel{Alg-M-Simp}. This last rule performs the deferred
+the base case, rule \rref{Alg-M-Simp}. This last rule performs the deferred
 instantiation of type variables $\bar{\alpha}$ by computing the \emph{most
 general unifier} $\theta = \mgu{\type'}{\type}$. The unification
 algorithm, which we present below, computes a substitution
-$\theta$ that is valid (i.e., $\bar{\alpha}; \tenv \vdash \theta$) and
+$\theta$ that is valid (i.e., $\validsubst{\bar{\alpha}}{\tenv}{\theta}$) and
 that equates the two types (i.e., $\theta(\type) = \theta(\type')$).
 
 In order to subject the recursive goals to this
@@ -1395,43 +1391,43 @@ represents all the goals collected so far in which type variables
 have not been substituted yet. In contrast, $\Sigma'$ denotes all obligations
 with type variables already substituted.
 
-Finally, observe that rule \mylabel{Alg-L-RuleMatch} invokes the algorithmic
+Finally, observe that rule \rref{Alg-L-RuleMatch} invokes the algorithmic
 judgement with an empty set of not-yet-instantiated type variables and an empty
 accumulator $\Sigma$.
 
 The following example illustrates the differences between the declarative
 judgement:
 \bda{c}
-  \inferrule*[Right=\mylabel{M-TApp}]
-    {\inferrule*[Right=\mylabel{M-IApp}]
-       {\inferrule*[Right=\mylabel{M-Simp}]
+  \inferrule*[Right=\rref{M-TApp}]
+    {\inferrule*[Right=\rref{M-IApp}]
+       {\inferrule*[Right=\rref{M-Simp}]
            {}
-           {\tenv; [\tyint]~\gbox{\leadsto x\,\tyint\,y} \vdash \tyint ~\gbox{\leadsto x\,\tyint\,y}; \epsilon}
+           {\dmres{\tenv}{\tyint}{x\,\tyint\,y}{\tyint}{x\,\tyint\,y}{\epsilon}}
        }
-       {\tenv; [\tyint \iarrow \tyint]~\gbox{\leadsto x\,\tyint} \ivturns \tyint ~\gbox{\leadsto x\,\tyint\,y}; \tyint ~\gbox{\leadsto y}}
+       {\dmres{\tenv}{\tyint \iarrow \tyint}{x\,\tyint}{\tyint}{x\,\tyint\,y}{\tyint ~\gbox{\leadsto y}}}
     }
-    {\tenv; [\forall \alpha. \alpha \iarrow \alpha]~\gbox{\leadsto x} \ivturns \tyint ~\gbox{\leadsto x\,\tyint\,y}; \tyint ~\gbox{\leadsto y}}
+    {\dmres{\tenv}{\forall \alpha. \alpha \iarrow \alpha}{x}{\tyint}{x\,\tyint\,y}{\tyint ~\gbox{\leadsto y}}}
 \eda
 and its algorithmic counterpart:
 \bda{c}
-  \inferrule*[Right=\mylabel{Alg-M-TApp}]
-    {\inferrule*[Right=\mylabel{Alg-M-IApp}]
-       {\inferrule*[Right=\mylabel{Alg-M-Simp}]
+  \inferrule*[Right=\rref{Alg-M-TApp}]
+    {\inferrule*[Right=\rref{Alg-M-IApp}]
+       {\inferrule*[Right=\rref{Alg-M-Simp}]
            {[\tyint/\alpha] = \mgu[\alpha]{\alpha}{\tyint}}
-           {\alpha; \tenv; [\alpha]~\gbox{\leadsto x\,\alpha\,y}; \alpha~\gbox{\leadsto y} \vdash \tyint ~\gbox{\leadsto x\,\tyint\,y}; \epsilon}
+           {\admres{\alpha}{\tenv}{\alpha}{x\,\alpha\,y}{\alpha~\gbox{\leadsto y}}{\tyint}{x\,\tyint\,y}{\epsilon}}
        }
-       {\alpha; \tenv; [\alpha \iarrow \alpha]~\gbox{\leadsto x\,\alpha}; \epsilon \ivturns \tyint ~\gbox{\leadsto x\,\tyint\,y}; \tyint ~\gbox{\leadsto y}}
+       {\admres{\alpha}{\tenv}{\alpha \iarrow \alpha}{x\,\alpha}{\epsilon}{\tyint}{x\,\tyint\,y}{\tyint ~\gbox{\leadsto y}}}
     }
-    {\epsilon; \tenv; [\forall \alpha. \alpha \iarrow \alpha]~\gbox{\leadsto x}; \epsilon \ivturns \tyint ~\gbox{\leadsto x\,\tyint\,y}; \tyint ~\gbox{\leadsto y}}
+    {\admres{\epsilon}{\tenv}{\forall \alpha. \alpha \iarrow \alpha}{x}{\epsilon}{\tyint}{x\,\tyint\,y}{\tyint ~\gbox{\leadsto y}}}
 \eda
 
 %- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 \subsection{Algorithmic Stability Check}
 
-The second difference can be found in the second judgement's rule \mylabel{Alg-L-RuleNoMatch}. Instead of
-using the $\mathit{stable}(\bar{\alpha},\tenv,\rulet~\gbox{\leadsto x},\type)$ judgement, which quantifies over all valid 
+The second difference can be found in the second judgement's rule \rref{Alg-L-RuleNoMatch}. Instead of
+using the $\dstable{\bar{\alpha}}{\tenv}{\rulet}{x}{\type}$ judgement, which quantifies over all valid 
 substitutions, this rule uses the algorithmic judgement
-$\bar{\alpha};\tenv;\rulet\coh\type$. This auxiliary judgement checks algorithmically
+$\coherent{\bar{\alpha}}{\tenv}{\rulet}{\type}$. This auxiliary judgement checks algorithmically
 whether the context type $\rulet$ matches $\type$ under any possible instantiation
 of the type variables $\bar{\alpha}$.
 
@@ -1439,16 +1435,16 @@ We apply the same deferred-instantation technique as with the first difference: 
 of applying a substitution first and then checking whether the rule matches the goal, we 
 defer the instantiation to the end where we can deterministically pick one instantiation instad of considering all valid instantiations. 
 As a consequence of the similarity, 
-the definition of the judgement $\bar{\alpha};\tenv;\rulet \coh \type$ is a
-variation on that of $\bar{\alpha}; \tenv; \rulet~\gbox{\leadsto
-E}; \Sigma \alg \type~\gbox{\leadsto E'}; \Sigma'$.
+the definition of the judgement $\coherent{\bar{\alpha}}{\tenv}{\rulet}{\type}$ is a
+variation on that of $\admres{\bar{\alpha}}{\tenv}{\rulet}{
+E}{\Sigma}{\type}{E'}{\Sigma'}$.
 
 There are two differences. Firstly, since the judgement is only concerned with
 matchability, no recursive resolvents $\Sigma$ are collected nor are any
 elaborations tracked.
 Secondly, since the coherence check considers the substitution of the type
 variables $\bar{\alpha}$ that occur in the environment at the point of the
-query, rule \mylabel{Alg-L-RuleNoMatch} pre-populates the substitutable
+query, rule \rref{Alg-L-RuleNoMatch} pre-populates the substitutable
 variables of the $\coh$ judgement with them. Contrast this with the matching
 judgement where only the rule's quantified variables are instantiated.
 
@@ -1470,7 +1466,7 @@ a unifier of $\rulet_1$ and $\rulet_2$, i.e., $\theta(\rulet_1) = \theta(\rulet_
 The differences with standard first-order unification arise because the
 algorithm has to account for the scope of type variables. Indeed, as we have already
 explained in Section~\ref{subsec:det}, we expect that the returned substitution
-is valid, i.e., $\bar{\alpha};\tenv \vdash \theta$.
+is valid, i.e., $\validsubst{\bar{\alpha}}{\tenv}{\theta}$.
 For instance, using standard first-order unification for $\mgu[\beta]{\forall
 \alpha. \alpha \to \beta}{\forall \alpha.\alpha \to \alpha}$ would yield the
 \emph{invalid}
@@ -1494,14 +1490,14 @@ Fortunately, by a stroke of luck, the above is not a problem for either
 of our two use cases:
 \begin{itemize}
 \item
-The first use case is that in rule~\mylabel{Alg-M-Simp} where this is not a
+The first use case is that in rule~\rref{Alg-M-Simp} where this is not a
 problem because the scenario never arises. In
 $\mgu{\type'}{\type}$ only $\type'$ contains unification
 variables and hence the range of the substitution never contains any
 unification variables. As a consequence the above exampe and others like
 it cannot occur.
 \item
-The second use case, in rule~\mylabel{Coh-Simp}, is
+The second use case, in rule~\rref{Coh-Simp}, is
 only interested in the existence of a valid substitution. We neither care
 which one it is nor whether it is the most general one. Moreover, as
 illustrated above, whenever there is a most general substitution that is invalid
@@ -1515,35 +1511,35 @@ unification variables by closed types.
 
 With the above issues in mind we can consider the actual definition in
 Figure~\ref{fig:algorithm}. The main unification judgement $\theta =
-\mgu{\rulet_1}{\rulet_2}$ is defined by rule~\mylabel{U-Main}. This rule
+\mgu{\rulet_1}{\rulet_2}$ is defined by rule~\rref{U-Main}. This rule
 computes the unifier in terms of the auxiliary judgement $\theta =
-\mgun{\bar{\alpha}}{\rulet_1}{\rulet_2}$, which is essentially standard
+\mgun{\bar{\alpha}}{\rulet_1}{\rulet_}$, which is essentially standard
 unification, and then checks the above vality concerns.  Indeed, for any type
 variable $\beta$ that appears in the image of a type variable $\alpha$, either
 $\beta$ must appear before $\alpha$ in the environment $\tenv$ (regular
 validity), or $\beta$ must itself be a unification variable (the exceptional
 case). The relative position of variables is checked with 
-the auxiliary judgement $\beta >_\tenv \alpha$ whose one rule verifies
+the auxiliary judgement $\before{\beta}{\alpha}$ whose one rule verifies
 that $\beta$ appears before $\alpha$ in the environment $\tenv$.\footnote{If
 type variables are represented by de Bruijn indices, this can be done by
 checking whether one index is greater than the other.}
 
 The auxiliary judgement $\mgun{\bar{\alpha}}{\rulet_1}{\rulet_2}$ computes the
 actual unifier. 
-Rule \mylabel{U-Var} is the standard reflexivity rule for type variables. 
-Rules \mylabel{U-InstL} and \mylabel{U-InstR} are two
+Rule \rref{U-Var} is the standard reflexivity rule for type variables. 
+Rules \rref{U-InstL} and \rref{U-InstR} are two
 symmetric base cases; they only create a substitution $[\suty/\alpha]$ if
 $\alpha$ is one of the unification variables and if $\alpha$ does not occur in $\suty$, which is
 the well-known occurs-check.
-Rules \mylabel{U-Fun}
-\mylabel{U-Rul} and \mylabel{U-Univ} are standard congruence rules that combine the
+Rules \rref{U-Fun}
+\rref{U-Rul} and \rref{U-Univ} are standard congruence rules that combine the
 unifications derived for their subterms.
 
 % \paragraph{Ambiguity}
 % Some of the type variables $\bar{\alpha}$ may not be instantiated by the
 % matching unifier $\theta$ because they do not appear in $\tau'$. This situation
 % arises for types like $\forall \alpha.\tyint$.  In order not to introduce any
-% unbound type variables, \mylabel{MTC-Simp} rejects this situation by requiring
+% unbound type variables, \rref{MTC-Simp} rejects this situation by requiring
 % that the domain of $\theta$ exactly coincides with $\bar{\alpha}$.
 % 
 % An alternative design would be to instantiate the unbound type variables to a
@@ -1571,11 +1567,11 @@ unifications derived for their subterms.
         {\bar{\alpha};\tenv \alg \tau ~\gbox{\leadsto E} }  \\ \\
 
 
-% \mylabel{Alg-Simp}\quad
+% \rref{Alg-Simp}\quad
 % \myirule{\bar{\alpha};\tenv \turns_{\mathit{match1st}} \tau \hookrightarrow \bar{\rulet}\gbox{; \bar{\omega}; E} \quad\quad \bar{\alpha};\tenv \alg \rulet_i~\gbox{\leadsto E_i} \quad (\forall \rulet_i \in \bar{\rulet})}
 %         {\bar{\alpha};\tenv \alg \tau ~\gbox{\leadsto E[\bar{\omega}/\bar{E}]} }  \\ \\
 
-\multicolumn{1}{c}{\myruleform{\bar{\alpha};\tenv;\tenv' \alg \type~\gbox{\leadsto E} }} \\ \\
+\multicolumn{1}{c}{\myruleform{\adlres{\bar{\alpha}}{\tenv}{\tenv'}{\type}{E} }} \\ \\
 
 \myrule{Alg-L-RuleMatch}{\epsilon; \tenv; \rulet~\gbox{\leadsto x}; \epsilon \alg \type~\gbox{\leadsto E}; \bar{\rulet}'~\gbox{\leadsto \bar{x}'} \quad\quad
          \bar{\alpha};\tenv \alg \rulet'~\gbox{\leadsto E'} \quad (\forall \rulet' \in \bar{\rulet}')
@@ -1594,27 +1590,29 @@ unifications derived for their subterms.
           {\bar{\alpha};\tenv;\tenv',\alpha \alg \type~\gbox{\leadsto E}} 
 \\ \\
 
-\multicolumn{1}{c}{\myruleform{\bar{\alpha}; \tenv; \rulet~\gbox{\leadsto E}; \Sigma \alg \type~\gbox{\leadsto E'}; \Sigma'}} \\ \\
+\multicolumn{1}{c}{\myruleform{\admres{\bar{\alpha}}{\tenv}{\rulet}{E}{\Sigma}{\type}{E'}{\Sigma'}}} \\ \\
 
 \myrule{Alg-M-Simp}{\theta = \mgu{\type}{\type'}
         }
-        {\bar{\alpha}; \tenv; \type'~\gbox{\leadsto E}; \Sigma \alg \type~\gbox{\leadsto ||\theta||(E)}; \theta(\Sigma)}  \\ \\
+        {\admres{\bar{\alpha}}{\tenv}{\type'}{E}{\Sigma}{\type}{||\theta||(E)}{\theta(\Sigma)}}  \\ \\
 
-\myrule{Alg-M-IApp}{\bar{\alpha}; \tenv, \rulet_1~\gbox{\leadsto x}; \rulet_2~\gbox{\leadsto E\,x}; \rulet_1~\gbox{\leadsto x}, \Sigma \alg \type~\gbox{\leadsto E'}; \Sigma'\quad\quad \gbox{x~\mathit{fresh}}}
-        {\bar{\alpha}; \tenv; \rulet_1 \iarrow \rulet_2~\gbox{\leadsto E}; \Sigma \alg \type~\gbox{\leadsto E'}; \Sigma'}  \\ \\
+\myrule{Alg-M-IApp}
+        {\admres{\bar{\alpha}}{\tenv, \rulet_1~\gbox{\leadsto x}}{\rulet_2}{E\,x}{\rulet_1~\gbox{\leadsto x}, \Sigma}{\type}{E'}{\Sigma'}\quad\quad \gbox{x~\mathit{fresh}}}
+        {\admres{\bar{\alpha}}{\tenv}{\rulet_1 \iarrow \rulet_2}{E}{\Sigma}{\type}{E'}{\Sigma'}}  \\ \\
 
-\myrule{Alg-M-TApp}{\bar{\alpha},\alpha; \tenv,\alpha; \rulet~\gbox{\leadsto E\,\alpha}; \Sigma \alg \type~\gbox{\leadsto E'}; \Sigma'}
-        {\bar{\alpha}; \tenv; \forall \alpha. \rulet~\gbox{\leadsto E}; \Sigma \alg \type~\gbox{\leadsto E'}; \Sigma'} 
+\myrule{Alg-M-TApp}
+        {\admres{\bar{\alpha},\alpha}{\tenv,\alpha}{\rulet}{E\,\alpha}{\Sigma}{\type}{E'}{\Sigma'}}
+        {\admres{\bar{\alpha}}{\tenv}{\forall \alpha. \rulet}{E}{\Sigma}{\type}{E'}{\Sigma'}} 
 \\ \\
-\myruleform{\bar{\alpha};\tenv;\rulet\coh \tau} \\ \\
-\myrule{Coh-TApp}{\bar{\alpha},\alpha;\tenv,\alpha;\rulet \coh \tau}
-        {\bar{\alpha};\tenv;\forall \alpha. \rulet\coh \tau}  
+\myruleform{\coherent{\bar{\alpha}}{\tenv}{\rulet}{\type}} \\ \\
+\myrule{Coh-TApp}{\coherent{\bar{\alpha},\alpha}{\tenv,\alpha}{\rulet}{\type}}
+        {\coherent{\bar{\alpha}}{\tenv}{\forall \alpha. \rulet}{\type}}  
 \quad\quad\quad
-\myrule{Coh-IApp}{\bar{\alpha};\tenv;\rulet_2 \coh \tau}
-        {\bar{\alpha};\tenv;\rulet_1 \iarrow \rulet_2\coh \tau} \\ \\
-\myrule{Coh-Simp}{\theta = \mgu{\tau}{\tau'}
+\myrule{Coh-IApp}{\coherent{\bar{\alpha}}{\tenv}{\rulet_2}{\type}}
+        {\coherent{\bar{\alpha}}{\tenv}{\rulet_1 \iarrow \rulet_2}{\type}} \\ \\
+\myrule{Coh-Simp}{\theta = \mgu{\type}{\type'}
         }
-        {\bar{\alpha};\tenv;\tau'\coh \tau}  
+        {\coherent{\bar{\alpha}}{\tenv}{\type'}{\type}}  
 \eda
 \end{minipage}
 }
@@ -1627,20 +1625,20 @@ unifications derived for their subterms.
 \begin{minipage}{0.969\textwidth}
 \bda{c}
 % \multicolumn{1}{c}{\myruleform{\theta = \mathit{mgu}_{\bar{\alpha}}(\rulet_1,\rulet_2)}} \\ \\
-% \mylabel{U-InstL}\quad\myirule{ \alpha \in \bar{\alpha}
+% \rref{U-InstL}\quad\myirule{ \alpha \in \bar{\alpha}
 %         } 
 %         { [\suty/\alpha] = \mathit{mgu}_{\bar{\alpha}}(\alpha,\suty)} \hspace{1cm} 
 % 
-% \mylabel{U-InstR}\quad\myirule{ \alpha \in \bar{\alpha}
+% \rref{U-InstR}\quad\myirule{ \alpha \in \bar{\alpha}
 %         } 
 %         { [\suty/\alpha] = \mathit{mgu}_{\bar{\alpha}}(\suty,\alpha)} \\ \\
 % 
-% \mylabel{U-Var}\quad
+% \rref{U-Var}\quad
 % \myirule{
 %         } 
 %         { \epsilon = \mathit{mgu}_{\bar{\alpha}}(\beta,\beta)}  \\ \\
 % 
-% \mylabel{U-Fun}\quad
+% \rref{U-Fun}\quad
 % \myirule{\theta_1 = \mathit{mgu}_{\bar{\alpha}}(\rulet_{1,1},\rulet_{2,1})
 %          \quad\quad
 %          \theta_2 = \mathit{mgu}_{\bar{\alpha}}(\theta_1(\rulet_{1,2}),\theta_1(\rulet_{2,2}))
@@ -1648,14 +1646,14 @@ unifications derived for their subterms.
 %         {\theta_2 \cdot \theta_1 = \mathit{mgu}_{\bar{\alpha}}(\rulet_{1,1} \arrow \rulet_{1,2},\rulet_{2,1} \arrow \rulet_{2,2})}  \\ \\
 % 
 % 
-% \mylabel{U-Rul}\quad
+% \rref{U-Rul}\quad
 % \myirule{\theta_1 = \mathit{mgu}_{\bar{\alpha}}(\rulet_{1,1},\rulet_{2,1})
 %          \quad\quad
 %          \theta_2 = \mathit{mgu}_{\bar{\alpha}}(\theta_1(\rulet_{1,2}),\theta_1(\rulet_{2,2}))
 %         } 
 %         {\theta_2 \cdot \theta_1 = \mathit{mgu}_{\bar{\alpha}}(\rulet_{1,1} \iarrow \rulet_{1,2},\rulet_{2,1} \iarrow \rulet_{2,2})}  \\ \\
 % 
-% \mylabel{U-Univ}\quad
+% \rref{U-Univ}\quad
 % \myirule{\theta = \mathit{mgu}_{\bar{\alpha}}(\rulet_{1},\rulet_{2})
 %           \quad\quad
 %           \beta \not\in \mathit{ftv}(\theta)
@@ -1666,7 +1664,7 @@ unifications derived for their subterms.
 
 \myrule{U-Main}{ 
            \theta = \mgun{\bar{\alpha}}{\rulet_1}{\rulet_2}\\
-	   \beta \in \bar{\alpha} \vee \beta >_\tenv \alpha \quad(\forall [\suty/\alpha] \in \theta, \forall \beta \in \mathit{ftv}(\suty))
+	   \beta \in \bar{\alpha}~\vee~\before{\beta}{\alpha} \quad(\forall [\suty/\alpha] \in \theta, \forall \beta \in \mathit{ftv}(\suty))
         } 
         { \theta = \mgu{\rulet_1}{\rulet_2}}  \\ \\
 
@@ -1704,11 +1702,11 @@ unifications derived for their subterms.
         } 
         {\theta = \mgun{\bar{\alpha}}{\forall \beta.\rulet_{1}}{\forall \beta.\rulet_{2}}}  \\ \\
 
-\myruleform{\beta >_\tenv \alpha}
+\myruleform{\before{\beta}{\alpha}}
 \hspace{1cm}
 \myirule{
 }
-{ \beta >_{\tenv_1,\beta,\tenv_2,\alpha,\tenv_3} \alpha }
+{ \before[\tenv_1,\beta,\tenv_2,\alpha,\tenv_3]{\beta}{\alpha}}
 
 \eda
 \end{minipage}
@@ -1770,9 +1768,9 @@ It is trivial to show that the size strictly decreases, if we require that
 every rule in the environment makes it so. This requirement is formalised as
  the termination condition $\term{\rulet}$ in Figure~\ref{fig:termination}.
 
-The judgement is defined by case analysis on the type $\rulet$. Rule~\mylabel{T-Simp} states that simple types trivially satisfy the
-condition. Next, rule \mylabel{T-Forall} is the obvious congruence rule for
-universally quantified types. Finally, rule~\mylabel{T-Rule} enforces
+The judgement is defined by case analysis on the type $\rulet$. Rule~\rref{T-Simp} states that simple types trivially satisfy the
+condition. Next, rule \rref{T-Forall} is the obvious congruence rule for
+universally quantified types. Finally, rule~\rref{T-Rule} enforces
 the actual condition on rule types $\rulet_1 \iarrow \rulet_2$, which
 requires that the head $\type_1$ of $\rulet_1$ is strictly smaller than the
 head $\type_2$ of $\rulet_2$.
@@ -1790,14 +1788,14 @@ Declaratively, we can formulate stability as:
 \mathit{dom}(\theta) \subseteq \mathit{ftv}(\rulet_1) \cup \mathit(ftv)(\rulet_2): 
 \enskip \tnorm[\theta(\rulet_1)] <
 \tnorm[\theta(\rulet_2)]\]
-Instead of enumerating all possible substitutions, rule~\mylabel{T-Rule} uses instead an
+Instead of enumerating all possible substitutions, rule~\rref{T-Rule} uses instead an
 equivalent algorithmic formulation which states that the number of occurrences
 of any free type variable $\alpha$ may not be larger in $\rulet_1$ than in
 $\rulet_2$. The auxiliary function $\occ{\alpha}{\rulet}$ is used here to
 determine the number of occurrences of $\alpha$ in $\rulet$.
 
 Finally, as the types have a recursive structure whereby their components are
-themselves added to the environment, rule~\mylabel{T-Rule} also enforces the
+themselves added to the environment, rule~\rref{T-Rule} also enforces the
 termination condition recursively on the components.
 
 \figtwocol{fig:termination}{Termination Condition}{
