@@ -1085,7 +1085,7 @@ The proof proceeds by induction on the derivation of the first hypothesis.
 \begin{description}
 \setlength{\itemsep}{1em}
 %===============================================================================
-\item[\fbox{\rref{UA-Simp}}]\quad$\unambig{\bar{\alpha}}{\type'}$
+\item[\fbox{\rref{UA-Simp}}]\quad$\unambig{\bar{\alpha}}{\type'}$ \\
 %$\bar{\alpha} \unamb \type'$ \ \\
 %===============================================================================
 
@@ -1113,7 +1113,6 @@ The proof proceeds by induction on the derivation of the first hypothesis.
 \begin{equation*}
   \unambig{}{\epsilon}
 \end{equation*}
-
 %===============================================================================
 \item[\fbox{\rref{UA-IAbs}}]\quad$\unambig{\bar{\alpha}}{\rulet_1 \To \rulet_2}$ \\
 %$\bar{\alpha} \unamb \rulet_1 \iarrow \rulet_2$ \ \\
@@ -1138,10 +1137,8 @@ The proof proceeds by induction on the derivation of the first hypothesis.
 \begin{equation*}
   \unambig{}{\Sigma_1,\ie{\rulet_1}{x}}
 \end{equation*}
-
 %===============================================================================
-
-\item[\fbox{\rref{UA-TAbs}}]\quad$\unambig{\bar{\alpha}}{\forall \alpha.\rulet}$
+\item[\fbox{\rref{UA-TAbs}}]\quad$\unambig{\bar{\alpha}}{\forall \alpha.\rulet}$\\
 %$\bar{\alpha} \unamb \forall \alpha.\rulet$ \ \\
 %===============================================================================
 
@@ -1185,36 +1182,41 @@ Deterministic resolution is stable under substitution.
 \begin{lemma}\label{lemma:coherence:0}
   If 
 \begin{equation*}
-   \tenv,\alpha,\tenv' \ivturns \rulet\leadsto E
+  \dres{\tenv,\alpha,\tenv'}{\rulet}{E}
+%   \tenv,\alpha,\tenv' \ivturns \rulet\leadsto E
 \end{equation*}
   and
 \begin{equation*}
-  \tenv \turns \suty
+  \wfty{\tenv}{\suty}
+%  \tenv \turns \suty
 \end{equation*}
   then
 \begin{equation*}
-  \tenv,\tenv'[\suty/\alpha] \ivturns \rulet[\suty/\alpha] \leadsto E[|\suty|/\alpha]
+  \dres{\tenv,\tenv'[\suty/\alpha]}{\rulet[\suty/\alpha]}{E[|\suty|/\alpha]}
+%  \tenv,\tenv'[\suty/\alpha] \ivturns \rulet[\suty/\alpha] \leadsto E[|\suty|/\alpha]
 \end{equation*}
 \end{lemma}
 \end{minipage}
 }}
 
 \begin{proof}
-  The hypothesis of rule \label{R-Main} then is
+  The hypothesis of rule \rref{R-Main} then is
 \begin{equation*}
-  \mathit{ftv}(\tenv),\alpha,\mathit{ftv}(\tenv'); \tenv,\alpha,\tenv' \ivturns \rulet \leadsto E
+  \dres{\ftv{\tenv},\alpha,\ftv{\tenv'}}{\rulet}{E}
+%  \mathit{ftv}(\tenv),\alpha,\mathit{ftv}(\tenv'); \tenv,\alpha,\tenv' \ivturns \rulet \leadsto E
 \end{equation*}
 
   From Lemma~\ref{lemma:coherence:1} it follows that
 \begin{equation*}
-  \mathit{ftv}(\tenv),\mathit{ftv}(\tenv'); \tenv,\tenv'[\suty/\alpha] \ivturns \rulet[\suty/\alpha] \leadsto E[|\suty|/\alpha]
+  \drres{\ftv{\tenv},\ftv{\tenv'}}{\tenv,\tenv'[\suty/\alpha]}{\rulet[\suty/\alpha]}{E[|\suty|/\alpha]}
+%  \mathit{ftv}(\tenv),\mathit{ftv}(\tenv'); \tenv,\tenv'[\suty/\alpha] \ivturns \rulet[\suty/\alpha] \leadsto E[|\suty|/\alpha]
 \end{equation*}
 
-  As $\mathit{ftv}(\tenv') = \mathit{ftv}(\tenv'[\suty/\alpha])$, the desired result
-  follows from
-  rule \mylabel{R-Main}
+  As $\ftv{\tenv'} = \ftv{\tenv'[\suty/\alpha]}$, the desired result follows from rule
+  \rref{R-Main}
 \begin{equation*}
-  \tenv,\tenv'[\suty/\alpha] \ivturns \rulet[\suty/\alpha] \leadsto E[|\suty|/\alpha]
+ \dres{\tenv,\tenv'[\suty/\alpha]}{\rulet[\suty/\alpha]}{E[|\suty|/\alpha]}
+%  \tenv,\tenv'[\suty/\alpha] \ivturns \rulet[\suty/\alpha] \leadsto E[|\suty|/\alpha]
 \end{equation*}
 \end{proof}
 
