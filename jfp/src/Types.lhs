@@ -285,7 +285,7 @@ and
                 {\aresp{\Gamma_0}{\tybool \iarrow \tyint}} \\
     \myexrule{AR-IVar} 
                 {\tybool \in \Gamma_0}
-                {\aresp{Gamma_0}{\tybool}}
+                {\aresp{\Gamma_0}{\tybool}}
    }
    {\aresp{\Gamma_0}{\tyint}}
 \end{array}
@@ -531,7 +531,7 @@ For this reason we introduce the syntactic sort of monotypes:
 We only allow instantiation with monotypes $\suty$:
 \bda{c}
   \myrule {AR-TApp'}
-          {\ares{\tenv}{\forall \alpha. \rulet}{E} \quad\quad \wfty{\tenv}{\rulet'}}
+          {\ares{\tenv}{\forall \alpha. \rulet}{E} \quad\quad \wfty{\tenv}{\suty}}
           {\ares{\tenv}{\rulet[\suty/\alpha]}{E~||\suty||}}
 \eda
 In the focusing-based formulation, this constraint is also enforced:
@@ -1533,7 +1533,7 @@ $\alpha$ is one of the unification variables and if $\alpha$ does not occur in $
 the well-known occurs-check.
 Rules \rref{U-Fun}
 \rref{U-Rul} and \rref{U-Univ} are standard congruence rules that combine the
-unifications derived for their subterms.
+unification problems derived for their subterms.
 
 % \paragraph{Ambiguity}
 % Some of the type variables $\bar{\alpha}$ may not be instantiated by the
@@ -1573,7 +1573,7 @@ unifications derived for their subterms.
 
 \multicolumn{1}{c}{\myruleform{\adlres{\bar{\alpha}}{\tenv}{\tenv'}{\type}{E} }} \\ \\
 
-\myrule{Alg-L-RuleMatch}{\epsilon; \tenv; \rulet~\gbox{\leadsto x}; \epsilon \alg \type~\gbox{\leadsto E}; \bar{\rulet}'~\gbox{\leadsto \bar{x}'} \quad\quad
+\myrule{Alg-L-RuleMatch}{\admres{\epsilon}{\tenv}{\rulet}{x}{\epsilon}{\type}{E}{\bar{\rulet}'~\gbox{\leadsto \bar{x}'}} \quad\quad
          \bar{\alpha};\tenv \alg \rulet'~\gbox{\leadsto E'} \quad (\forall \rulet' \in \bar{\rulet}')
         }
         {\bar{\alpha};\tenv; \tenv', \rulet~\gbox{\leadsto x} \alg \type~\gbox{\leadsto E[\bar{E}'/\bar{x}'] }}  \\ \\
@@ -1759,7 +1759,7 @@ that maps the head of every goal $\rulet$ to a natural number, its size.
 
 If we can show that this size strictly decreases from any parent goal to its
 children, then we know that, because the order on the natural numbers is
-well-founded, on any path from the root there is evantually a goal that has no
+well-founded, on any path from the root there is eventually a goal that has no
 children.
 
 %- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
