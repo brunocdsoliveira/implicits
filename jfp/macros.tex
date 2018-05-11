@@ -62,9 +62,11 @@
 \newcommand{\relation}[2]{#1:#2}
 \newcommand{\myrelation}[2]{#1\!:\!#2}
 \newcommand{\To}{\Rightarrow}
+\newcommand{\ie}[2]{#1~\gbox{\leadsto #2}}
 
 \newcommand{\Abs}[2]{\Lambda #1. #2}
 \newcommand{\abs}[2]{\lambda #1. #2}
+\newcommand{\tall}[2]{\forall #1. #2}
 %\newcommand{\ruleabs}[2]{\langle\!|  #2  :  #1 |\!\rangle}
 %\newcommand{\ruleabs}[2]{(\!|  #2  :  #1 |\!)}
 \newcommand{\ruleabs}[2]{\lambda_? #1. #2}
@@ -109,6 +111,7 @@
 
 \newcommand{\FV}     {\meta{fv}}
 \newcommand{\FTV}    {\meta{FTV}}
+\newcommand{\ftv}[1] {\meta{ftv}(#1)}
 \newcommand{\BV}     {\meta{bv}}
 \newcommand{\BTV}    {\meta{BTV}}
 \newcommand{\dom}    {\meta{dom}}
@@ -324,6 +327,9 @@
 
 % unambiguity condition
 \newcommand{\unambig}[2]{\hello{#1 \unamb #2}}
+
+% annotated dmres
+\newcommand{\dmresa}[7]{\hello{#1; #2; [#3]~\gbox{\leadsto #4} \ivturns #5~\gbox{\leadsto #6}; #7}}
 
 %%% Local Variables: 
 %%% mode: latex

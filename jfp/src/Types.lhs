@@ -6,7 +6,7 @@
 \newcommand{\rhs}[1]{\mathit{rhs}(#1)}
 \newcommand{\lhs}[1]{\mathit{lhs}(#1)}
 \newcommand{\qtv}[1]{\mathit{qtv}(#1)}
-\newcommand{\ftv}[1]{\mathit{ftv}(#1)}
+%\newcommand{\ftv}[1]{\mathit{ftv}(#1)}
 
 \section{The $\name$ Calculus}
 \label{sec:ourlang}

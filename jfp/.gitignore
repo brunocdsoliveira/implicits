@@ -1,0 +1,7 @@
+# Tex related
+*.out
+*.pdf
+*.log
+*.ptb
+*.blg
+*.aux

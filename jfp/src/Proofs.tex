@@ -83,7 +83,8 @@ of resolution preserves types.
 \begin{lemma}\label{lemma:tp:1}
   If 
 \begin{equation*}
-    \tenv \turns e : \rho \leadsto E
+     \wte{\tenv}{e}{\rulet}{E}
+%    \tenv \turns e : \rho \leadsto E
 \end{equation*}
   then
 \begin{equation*}
@@ -103,12 +104,9 @@ of resolution preserves types.
 \begin{lemma}\label{lemma:resolution}\label{lemma:tp:2}
   If 
 \begin{equation*}
-    \tenv \vturns \rulet \leadsto E
+%    \tenv \vturns \rulet \leadsto E
+     \ares{\tenv}{\rulet}{e}
 \end{equation*}
-%  and
-%\begin{equation*}
-%    \tenv \turns \rulet 
-%\end{equation*}
   then
 \begin{equation*}
     |\tenv| \turns E : |\rulet|
@@ -136,11 +134,13 @@ preserves all the derivations of the original context.
 \begin{lemma}[Weakening]\label{lemma:weakening}
   If 
 \begin{equation*}
-  \tenv, \tenv' \vturns \rulet \leadsto E 
+  \ares{\tenv, \tenv'}{\rulet}{E}
+%  \tenv, \tenv' \vturns \rulet \leadsto E 
 \end{equation*}
   then
 \begin{equation*}
-    \tenv, \tenv'', \tenv' \vturns \rulet \leadsto E
+  \ares{\tenv, \tenv'', \tenv'}{\rulet}{E}
+%    \tenv, \tenv'', \tenv' \vturns \rulet \leadsto E
 \end{equation*}
 \end{lemma}
 \end{minipage}
@@ -159,15 +159,18 @@ by the remainder of the context.
 \begin{lemma}[Substitution]\label{lemma:substitution}
   If 
 \begin{equation*}
-  \tenv, \rulet \leadsto x, \tenv' \vturns \rulet' \leadsto E'
+  \ares{\tenv, \ie{\rulet}{x}, \tenv'}{\rulet'}{E'}
+%  \tenv, \rulet \leadsto x, \tenv' \vturns \rulet' \leadsto E'
 \end{equation*}
   and
 \begin{equation*}
-  \tenv \vturns \rulet \leadsto E 
+  \ares{\tenv}{\rulet}{E}
+%  \tenv \vturns \rulet \leadsto E 
 \end{equation*}
   then
 \begin{equation*}
-    \tenv, \tenv' \vturns \rulet' \leadsto E'[E/x]
+  \ares{\tenv, \tenv'}{\rulet'}{E'[E/x]}
+%    \tenv, \tenv' \vturns \rulet' \leadsto E'[E/x]
 \end{equation*}
 \end{lemma}
 \end{minipage}
@@ -189,11 +192,13 @@ sound with respect to non-deterministic resolution.
 \begin{lemma}\label{lemma:s23:4}
   If 
 \begin{equation*}
-  \tenv \ivturns \rulet \leadsto E 
+  \dres{\tenv}{\rulet}{E}
+%  \tenv \ivturns \rulet \leadsto E 
 \end{equation*}
   then
 \begin{equation*}
-    \tenv \vturns \rulet \leadsto E
+   \ares{\tenv}{\rulet}{E}
+%    \tenv \vturns \rulet \leadsto E
 \end{equation*}
 \end{lemma}
 \end{minipage}
@@ -210,11 +215,13 @@ The lemma immediately follows from Lemma~\ref{lemma:s23:3}.
 \begin{lemma}\label{lemma:s23:3}
   If 
 \begin{equation*}
-  \bar{\alpha}; \tenv \ivturns \rulet \leadsto E 
+  \drres{\bar{\alpha}}{\tenv}{\rulet}{E}
+%  \bar{\alpha}; \tenv \ivturns \rulet \leadsto E 
 \end{equation*}
   then
 \begin{equation*}
-    \tenv \vturns \rulet \leadsto E
+  \ares{\tenv}{\rulet}{E}
+%    \tenv \vturns \rulet \leadsto E
 \end{equation*}
 \end{lemma}
 \end{minipage}
@@ -234,15 +241,13 @@ This lemma is proved together with Lemma~\ref{lemma:s23:2} by mutual induction o
 \begin{lemma}\label{lemma:s23:2}
   If 
 \begin{equation*}
-   \bar{\alpha}; \tenv; \tenv' \ivturns \tau \leadsto E
+  \dlres{\bar{\alpha}}{\tenv}{\tenv'}{\type}{E}
+%   \bar{\alpha}; \tenv; \tenv' \ivturns \type \leadsto E
 \end{equation*}
-%  and
-%\begin{equation*}
-%  \tenv' \subseteq \tenv 
-%\end{equation*}
   then
 \begin{equation*}
-  \tenv' \vturns \tau \leadsto E
+  \ares{\tenv'}{\type}{E}
+%  \tenv' \vturns \type \leadsto E
 \end{equation*}
 \end{lemma}
 \end{minipage}
@@ -262,32 +267,37 @@ The above proof relies on the following lemma.
 \begin{lemma}\label{lemma:s23:1}
   If 
 \begin{equation*}
-   \tenv; \rulet \leadsto E \ivturns \type \leadsto E'; \bar{\rulet} \leadsto \bar{x}
+  \dmres{\tenv}{\rulet}{E}{\type}{E'}{\bar{\rulet} \leadsto \bar{x}}
+%   \tenv; \rulet \leadsto E \ivturns \type \leadsto E'; \bar{\rulet} \leadsto \bar{x}
 \end{equation*}
   and
 \begin{equation*}
-  \tenv \vturns \rulet \leadsto E
+  \ares{\tenv}{\rulet}{E}
+%  \tenv \vturns \rulet \leadsto E
 \end{equation*}
   and
 \begin{equation*}
-  \tenv \vturns \bar{\rulet} \leadsto \bar{E}
+  \ares{\tenv}{\bar{\rulet}}{\bar{E}}
+%  \tenv \vturns \bar{\rulet} \leadsto \bar{E}
 \end{equation*}
   then
 \begin{equation*}
-  \tenv \vturns \tau \leadsto E'[\bar{E}/\bar{x}]
+  \ares{\tenv}{\type}{E'[\bar{E}/\bar{x}]}
+%  \tenv \vturns \tau \leadsto E'[\bar{E}/\bar{x}]
 \end{equation*}
 \end{lemma}
 \end{minipage}
 }}
 \begin{proof}
-See file CochisDet.v, Lemma \texttt{DRes\_match\_Soundness}.
+See file CochisDet.v, Lemma \tt{DRes\_match\_Soundness}.
 
 The proof proceeds by induction on the derivation of the first assumption and relies on Lemmas~\ref{lemma:substitution} (Substitution) and~\ref{lemma:s23:5}.
 \end{proof}
 In order to deal with the de Bruijn variable representation in our mechanization,
 judgement
 \begin{equation*}
-\tenv; \rulet \leadsto E \ivturns \type \leadsto E'; \bar{\rulet} \leadsto \bar{x}
+  \dmres{\tenv}{\rulet}{E}{\type}{E'}{\bar{\rulet} \leadsto \bar{x}}
+%\tenv; \rulet \leadsto E \ivturns \type \leadsto E'; \bar{\rulet} \leadsto \bar{x}
 \end{equation*}
 differs from the corresponding mechanized definition (\texttt{DRes\_match} in file CochisDet.v) in the first argument, $\tenv$. In our mechanization, $\tenv$ is expressed by means of two environments, $\Delta_m$ and $\tenv_m$, so that $\tenv = \tenv_m,\Delta_m$.
 
@@ -298,22 +308,25 @@ differs from the corresponding mechanized definition (\texttt{DRes\_match} in fi
 \begin{lemma}\label{lemma:s23:5}
 If 
 \begin{equation*}
-  \tenv; \rulet \leadsto E \ivturns \type \leadsto E'; \bar{\rulet} \leadsto \bar{x}
+  \dmres{\tenv}{\rulet}{E}{\type}{E'}{\bar{\rulet} \leadsto \bar{x}}
+%  \tenv; \rulet \leadsto E \ivturns \type \leadsto E'; \bar{\rulet} \leadsto \bar{x}
 \end{equation*}
 and
 \begin{equation*}
-  \tenv \vturns \rulet \leadsto E
+  \ares{\tenv}{\rulet}{E}
+%  \tenv \vturns \rulet \leadsto E
 \end{equation*}
 then
 \begin{equation*}
-  \tenv, \bar{\rulet} \leadsto \bar{x} \vturns \tau \leadsto E'
+  \ares{\tenv, \ie{\bar{\rulet}}{\bar{x}}}{\type}{E'}
+%  \tenv, \bar{\rulet} \leadsto \bar{x} \vturns \tau \leadsto E'
 \end{equation*}
 \end{lemma}
 \end{minipage}
 }}
 
 \begin{proof}
-See file CochisDet.v, Lemma \texttt{DRes\_match\_impl\_vars}.
+See file CochisDet.v, Lemma \tt{DRes\_match\_impl\_vars}.
 \end{proof}
 
 
@@ -746,19 +759,23 @@ See file CochisDet.v, Lemma \texttt{DRes\_match\_impl\_vars}.
 \begin{lemma}\label{lemma:determinism:0}
   If 
 \begin{equation*}
-  \unamb \tenv
+  \unambig{}{\tenv}
+%  \unamb \tenv
 \end{equation*}
   and
 \begin{equation*}
-  \unamb \rulet
+  \unambig{}{\rulet}
+%  \unamb \rulet
 \end{equation*}
   and
 \begin{equation*}
-  \tenv \ivturns \rulet \leadsto E_1
+  \dres{\tenv}{\rulet}{E_1}
+%  \tenv \ivturns \rulet \leadsto E_1
 \end{equation*}
 and
 \begin{equation*}
-  \tenv \ivturns \rulet \leadsto E_2
+  \dres{\tenv}{\rulet}{E_2}
+%  \tenv \ivturns \rulet \leadsto E_2
 \end{equation*}
 then
 \begin{equation*}
@@ -784,19 +801,23 @@ result follows
 \begin{lemma}\label{lemma:determinism:1}
   If 
 \begin{equation*}
-  \unamb \tenv
+  \unambig{}{\tenv}
+%  \unamb \tenv
 \end{equation*}
   and
 \begin{equation*}
-  \unamb \rulet
+  \unambig{}{\rulet}
+%  \unamb \rulet
 \end{equation*}
   and
 \begin{equation*}
-  \bar{\alpha};\tenv \ivturns \rulet \leadsto E_1
+  \drres{\bar{\alpha}}{\tenv}{\rulet}{E_1}
+%  \bar{\alpha};\tenv \ivturns \rulet \leadsto E_1
 \end{equation*}
 and
 \begin{equation*}
-  \bar{\alpha};\tenv \ivturns \rulet \leadsto E_2
+  \drres{\bar{\alpha}}{\tenv}{\rulet}{E_2}
+%  \bar{\alpha};\tenv \ivturns \rulet \leadsto E_2
 \end{equation*}
 then
 \begin{equation*}
@@ -811,17 +832,21 @@ The proof proceeds by induction on the derivation of the third hypothesis.
 \begin{description}
 \setlength{\itemsep}{1em}
 %===============================================================================
-\item[\fbox{\texttt{(R-IAbs)}}]\quad$\bar{\alpha};\tenv \ivturns \rulet_1 \iarrow \rulet_2 \leadsto \lambda\relation{x}{||\rulet_1||}.E_1$ \ \\
+\item[\fbox{\rref{R-IAbs}}]
+\quad$\drres{\bar{\alpha}}{\tenv}{\rulet_1 \iarrow \rulet_2}{\abs{\relation{x}{|\rulet_1|}}{E_1}}$ \\
+%$\bar{\alpha};\tenv \ivturns \rulet_1 \iarrow \rulet_2 \leadsto \lambda\relation{x}{||\rulet_1||}.E_1$ \ \\
 %===============================================================================
 
 It follows that the lemma's fourth hypothesis is also derived by rule
 \mylabel{R-IAbs}. It follows from the lemma's second hypothesis that 
 \begin{equation*}
-  \unamb \rulet_1 \quad\wedge\quad \unamb \rulet_2
+  \unambig{}{\rulet_1}\quad\wedge\quad \unambig{}{\rulet_2}
+  %\unamb \rulet_1 \quad\wedge\quad \unamb \rulet_2
 \end{equation*}
 From this and lemma's first hypothesis, it follows that
 \begin{equation*}
-  \unamb \tenv,\rulet_1 \leadsto x
+  \unambig{}{\tenv,\ie{\rulet_1}{x}}
+%  \unamb \tenv,\rulet_1 \leadsto x
 \end{equation*}
 From the rule's hypothesis and the induction hypothesis, it follows that
 \begin{equation*}
@@ -829,21 +854,25 @@ From the rule's hypothesis and the induction hypothesis, it follows that
 \end{equation*}
 Hence, we may conclude
 \begin{equation*}
-  \lambda x:|\rulet_1|.E_1 = \lambda x:|\rulet_1|.E_2
+  \abs{\relation{x}{|\rulet_1|}}{E_1} =  \abs{\relation{x}{|\rulet_1|}}{E_2}
+%  \lambda x:|\rulet_1|.E_1 = \lambda x:|\rulet_1|.E_2
 \end{equation*}
 
 %===============================================================================
-\item[\fbox{\texttt{(R-TAbs)}}]\quad$\bar{\alpha};\tenv \ivturns \forall \alpha. \rho \leadsto \Lambda\alpha.E_1$ \ \\
+\item[\fbox{\rref{R-TAbs}}]\quad$\drres{\bar{\alpha}}{\tenv}{\tall{\alpha}{\rulet}}{\Abs{\alpha}{E_1}}$ \\
+%$\bar{\alpha};\tenv \ivturns \forall \alpha. \rho \leadsto \Lambda\alpha.E_1$ \ \\
 %===============================================================================
 
 It follows that the lemma's fourth hypothesis is also derived by rule
-\mylabel{R-TAbs}. It follows from the lemma's second hypothesis that 
+\rref{R-TAbs}. It follows from the lemma's second hypothesis that 
 \begin{equation*}
-  \unamb \rulet
+  \unambig{}{\rulet}
+%  \unamb \rulet
 \end{equation*}
 From the lemma's first hypothesis, it follows that
 \begin{equation*}
-  \unamb \tenv, \alpha
+  \unambig{}{\tenv, \alpha}
+%  \unamb \tenv, \alpha
 \end{equation*}
 From the rule's hypothesis and the induction hypothesis, it follows that
 \begin{equation*}
@@ -851,20 +880,21 @@ From the rule's hypothesis and the induction hypothesis, it follows that
 \end{equation*}
 Hence, we may conclude
 \begin{equation*}
-  \Lambda \alpha.E_1 = \Lambda \alpha.E_2
+  \Abs{\alpha}{E_1} = \Abs{\alpha}{E_2}
+%  \Lambda \alpha.E_1 = \Lambda \alpha.E_2
 \end{equation*}
 
 %===============================================================================
-\item[\fbox{\texttt{(R-Simp)}}]\quad$\bar{\alpha};\tenv \ivturns \type \leadsto E_1$ \ \\
+\item[\fbox{\rref{R-Simp}}]\quad$\drres{\bar{\alpha}}{\tenv}{\type}{E_1}$ \\
+%$\bar{\alpha};\tenv \ivturns \type \leadsto E_1$ \ \\
 %===============================================================================
 
 It follows that the lemma's fourth hypothesis is also derived by rule
-\mylabel{R-Simp}. We obtain the desired result from Lemma~\ref{lemma:determinism:2}
+\rref{R-Simp}. We obtain the desired result from Lemma~\ref{lemma:determinism:2}
 \begin{equation*}
   E_1 = E_2
 \end{equation*}
 
-   
 \end{description}
 \end{proof}
 
@@ -875,19 +905,23 @@ It follows that the lemma's fourth hypothesis is also derived by rule
 \begin{lemma}\label{lemma:determinism:2}
   If 
 \begin{equation*}
-  \unamb \tenv
+  \unambig{}{\tenv}
+%  \unamb \tenv
 \end{equation*}
   and
 \begin{equation*}
-  \unamb \tenv'
+  \unambig{}{\tenv'}
+%  \unamb \tenv'
 \end{equation*}
   and
 \begin{equation*}
-  \bar{\alpha};\tenv;\tenv' \ivturns \type \leadsto E_1
+  \dlres{\bar{\alpha}}{\tenv}{\tenv'}{\type}{E_1}
+%  \bar{\alpha};\tenv;\tenv' \ivturns \type \leadsto E_1
 \end{equation*}
 and
 \begin{equation*}
-  \bar{\alpha};\tenv;\tenv' \ivturns \type \leadsto E_2
+  \dlres{\bar{\alpha}}{\tenv}{\tenv'}{\type}{E_2}
+%  \bar{\alpha};\tenv;\tenv' \ivturns \type \leadsto E_2
 \end{equation*}
 then
 \begin{equation*}
@@ -902,12 +936,14 @@ The proof proceeds by induction on the derivation of the third hypothesis.
 \begin{description}
 \setlength{\itemsep}{1em}
 %===============================================================================
-\item[\fbox{\texttt{(L-RuleMatch)}}]\quad$\bar{\alpha};\tenv;\tenv',\rulet \leadsto x \ivturns \type \leadsto E_1[\bar{E}_1/\bar{x}]$ \ \\
+\item[\fbox{\rref{L-RuleMatch}}]\quad$\dlres{\bar{\alpha}}{\tenv}{\tenv',\ie{\rulet}{x}}{\type}{E_1[\bar{E}_1/\bar{x}]}$\\
+%$\bar{\alpha};\tenv;\tenv',\rulet \leadsto x \ivturns \type \leadsto E_1[\bar{E}_1/\bar{x}]$ \ \\
 %===============================================================================
-  Then the fourth hypothesis was either derived from rule \mylabel{L-RuleMatch},
-  or from rule \mylabel{L-RuleNoMatch}. However, the hypothesis of the latter is
+
+  Then the fourth hypothesis was either derived from rule \rref{L-RuleMatch},
+  or from rule \rref{L-RuleNoMatch}. However, the hypothesis of the latter is
   not satisfied: $\epsilon;E_1;\Sigma_1$ forms a counter-example. Hence, the fourth
-  hypothesis is also construted with rule \mylabel{L-RuleMatch}.
+  hypothesis is also construted with rule \rref{L-RuleMatch}.
 
   Then it follows from the first hypothesis of the rule and Lemma~\ref{lemma:determinism:3} that
 \begin{equation*}
@@ -924,15 +960,17 @@ The proof proceeds by induction on the derivation of the third hypothesis.
 
 
 %===============================================================================
-\item[\fbox{\texttt{(L-RuleNoMatch)}}]\quad$\bar{\alpha};\tenv;\tenv',\rulet \leadsto x \ivturns \type \leadsto E_1'$ \ \\
+\item[\fbox{\rref{L-RuleNoMatch}}]\quad$\dlres{\bar{\alpha}}{\tenv}{\tenv',\ie{\rulet}{x}}{\type}{E_1'}$\\
+%$\bar{\alpha};\tenv;\tenv',\rulet \leadsto x \ivturns \type \leadsto E_1'$ \ \\
 %===============================================================================
-  Then the fourth hypothesis was either derived from rule \mylabel{L-RuleMatch},
-  or from rule \mylabel{L-RuleNoMatch}. However, the hypothesis of the former is
+
+  Then the fourth hypothesis was either derived from rule \rref{L-RuleMatch},
+  or from rule \rref{L-RuleNoMatch}. However, the hypothesis of the former is
   not satisfied, as it would be a counter-example for the first hypothesis of
   the assumed rule of the third hypothesis. Hence, the fourth hypothesis is also
-  formed by rule \mylabel{L-RuleNoMatch}.
+  formed by rule \rref{L-RuleNoMatch}.
 
-  From the second hypothesis of the lemma we derive $\unamb \tenv'$.
+  From the second hypothesis of the lemma we derive $\unambig{}{\tenv'}$.
   Then from the second hypothesis of the rule and the induction hypothesis we conclude
   the desired result
 \begin{equation*}
@@ -940,20 +978,23 @@ The proof proceeds by induction on the derivation of the third hypothesis.
 \end{equation*}
 
 %===============================================================================
-\item[\fbox{\texttt{(L-Var)}}]\quad$\bar{\alpha};\tenv;\tenv',x:\rulet \ivturns \type \leadsto E_1$ \ \\
+\item[\fbox{\rref{L-Var}}]\quad$\dlres{\bar{\alpha}}{\tenv}{\tenv',x:\rulet}{\type}{E_1}$\\
+%$\bar{\alpha};\tenv;\tenv',x:\rulet \ivturns \type \leadsto E_1$ \ \\
 %===============================================================================
-  Clearly the fourth hypothesis is also derived by rule \mylabel{L-Var}.
-  Moreover, from the second hypothesis it follows that $\unamb \tenv'$.
+
+  Clearly the fourth hypothesis is also derived by rule \rref{L-Var}.
+  Moreover, from the second hypothesis it follows that $\unambig{}{\tenv'}$.
   Hence, from the induction hypothesis we conclude that
 \begin{equation*}
   E_1 = E_2
 \end{equation*}
 
 %===============================================================================
-\item[\fbox{\texttt{(L-TyVar)}}]\quad$\bar{\alpha};\tenv;\tenv',\alpha \ivturns \type \leadsto E_1$ \ \\
+\item[\fbox{\rref{(L-TyVar)}}]\quad$\dlres{\bar{\alpha}}{\tenv}{\tenv',\alpha}{\type}{E_1}$\\
+%$\bar{\alpha};\tenv;\tenv',\alpha \ivturns \type \leadsto E_1$ \ \\
 %===============================================================================
-  Clearly the fourth hypothesis is also derived by rule \mylabel{L-TyVar}.
-  Moreover, from the second hypothesis it follows that $\unamb \tenv'$.
+  Clearly the fourth hypothesis is also derived by rule \ref{L-TyVar}.
+  Moreover, from the second hypothesis it follows that $\unambig{}{\tenv'}$.
   Hence, from the induction hypothesis we conclude that
 \begin{equation*}
   E_1 = E_2
@@ -969,31 +1010,36 @@ used to instantiate the universal quantifiers.
 \begin{minipage}{0.95\columnwidth}
 \begin{center}
 $\ba{c}
-\myruleform{\bar{\suty};\tenv; \rulet~\gbox{\leadsto E} \ivturns \type~\gbox{\leadsto E'}; \Sigma}\\ \\
-\mylabel{M-Simp} \quad
-          {\epsilon;\tenv; \type~\gbox{\leadsto E} \ivturns \type~\gbox{\leadsto E}; \epsilon} \\ \\
-\mylabel{M-IApp} \quad
-  \myirule{\bar{\suty};\tenv, \rulet_1 \gbox{\leadsto x}; \rulet_2 ~\gbox{\leadsto E\,x} \ivturns \type~\gbox{\leadsto E'}; \Sigma 
-           \quad\quad\quad \gbox{x~\mathit{fresh}}
-          }
-          {\bar{\suty};\tenv; \rulet_1 \iarrow \rulet_2 ~\gbox{\leadsto E} \ivturns \type~\gbox{\leadsto E'}; \Sigma, \rulet_1~\gbox{\leadsto x}} \\ \\ 
-\mylabel{M-TApp} \quad
-  \myirule{\bar{\suty};\tenv; \rulet[\suty/\alpha] ~\gbox{\leadsto E\,|\suty|} \ivturns \type~\gbox{\leadsto E'; \Sigma}
-           \quad\quad\quad
-           \tenv \turns \suty
-          }
-          {\bar{\suty},\suty;\tenv; \forall \alpha. \rulet ~\gbox{\leadsto E} \ivturns \type~\gbox{\leadsto E'}; \Sigma} \\
+\myruleform{\dmresa{\bar{\suty}}{\tenv}{\rulet}{E}{\type}{E'}{\Sigma}} \\ \\
+
+\myrule{M-Simp}{}{\dmresa{\epsilon}{\tenv}{\type}{E}{\type}{E}{\epsilon}} \\ \\
+
+\myrule{M-IApp}
+       {\dmresa{\bar{\suty}}{\tenv,\ie{\rulet_1}{x}}{\rulet_2}{E\,x}{\type}{E'}{\Sigma} \\
+        \gbox{x~\mathit{fresh}}}
+       {\dmresa{\bar{\suty}}{\tenv}{\rulet_1 \To \rulet_2}{E}{\type}{E'}{\Sigma,\ie{\rulet_1}{x}}}\\\\
+\myrule{M-TApp}
+       {\dmresa{\bar{\suty}}{\tenv}{\rulet[\suty/\alpha]}{E\,|\suty|}{\type}{E'}{\Sigma} \\
+        \wfty{\tenv}{\suty}}
+       {\dmresa{\bar{\suty},\suty}{\tenv}{\forall \alpha. \rulet}{E}{\type}{E'}{\Sigma}}\\
+
+%\mylabel{M-TApp} \quad
+%  \myirule{\bar{\suty};\tenv; \rulet[\suty/\alpha] ~\gbox{\leadsto E\,|\suty|} \ivturns \type~\gbox{\leadsto E'; \Sigma}
+%           \quad\quad\quad
+%           \tenv \turns \suty
+%          }
+%          {\bar{\suty},\suty;\tenv; \forall \alpha. \rulet ~\gbox{\leadsto E} \ivturns \type~\gbox{\leadsto E'}; \Sigma} \\
 \ea
 $
 \end{center}
 \end{minipage}
-}}
+}}\\
 
 It is not difficult to see that any derivation of the annotated judgement
 is in one to one correspondence with a derivation of the unannotated 
 judgement.
 
-The judgement is deterministic.
+The judgement is deterministic.\\
 
 %###############################################################################
 {\centering
@@ -1002,15 +1048,18 @@ The judgement is deterministic.
 \begin{lemma}\label{lemma:determinism:3}
   If 
 \begin{equation*}
-  \bar{\alpha} \unamb \rulet
+  \unambig{\bar{\alpha}}{\rulet}
+%  \bar{\alpha} \unamb \rulet
 \end{equation*}
   and
 \begin{equation*}
-  \bar{\suty}_1 ; \tenv; \rulet[\bar{\suty}_2/\bar{\alpha}]\leadsto E[|\bar{\suty}_2|/\bar{\alpha}] \ivturns \type \leadsto E_1; \Sigma_1
+  \dmresa{\bar{\suty}_1}{\tenv}{\rulet[\bar{\suty}_2/\bar{\alpha}]}{E[|\bar{\suty}_2|/\bar{\alpha}]}{\type}{E_1}{\Sigma_1}
+%  \bar{\suty}_1 ; \tenv; \rulet[\bar{\suty}_2/\bar{\alpha}]\leadsto E[|\bar{\suty}_2|/\bar{\alpha}] \ivturns \type \leadsto E_1; \Sigma_1
 \end{equation*}
 and
 \begin{equation*}
-  \bar{\suty}_1' ; \tenv; \rulet[\bar{\suty}_2'/\bar{\alpha}]\leadsto E[|\bar{\suty}_2'|/\bar{\alpha}] \ivturns \type \leadsto E_2; \Sigma_2
+  \dmresa{\bar{\suty}_1'}{\tenv}{\rulet[\bar{\suty}_2'/\bar{\alpha}]}{E[|\bar{\suty}_2'|/\bar{\alpha}]}{\type}{E_2}{\Sigma_2}
+%  \bar{\suty}_1' ; \tenv; \rulet[\bar{\suty}_2'/\bar{\alpha}]\leadsto E[|\bar{\suty}_2'|/\bar{\alpha}] \ivturns \type \leadsto E_2; \Sigma_2
 \end{equation*}
 then
 \begin{equation*}
@@ -1036,8 +1085,10 @@ The proof proceeds by induction on the derivation of the first hypothesis.
 \begin{description}
 \setlength{\itemsep}{1em}
 %===============================================================================
-\item[\fbox{\texttt{(UA-Simp)}}]\quad$\bar{\alpha} \unamb \type'$ \ \\
+\item[\fbox{\rref{UA-Simp}}]\quad$\unambig{\bar{\alpha}}{\type'}$ \\
+%$\bar{\alpha} \unamb \type'$ \ \\
 %===============================================================================
+
   Then the second and third hypothesis of the lemma must have been formed by rule \mylabel{M-Simp}
   and hence 
 \begin{equation*}
@@ -1054,19 +1105,20 @@ The proof proceeds by induction on the derivation of the first hypothesis.
   E_1 = E[|\bar{\sigma}_2|/\bar{\alpha}] = E[|\bar{\sigma}_2'|/\bar{\alpha}] = E_2
 \end{equation*}
 
-  Finally, it also follows from rule \mylabel{M-Simp} that
+  Finally, it also follows from rule \rref{M-Simp} that
 \begin{equation*}
   \Sigma_1 = \epsilon = \Sigma_2
 \end{equation*}
   and trivially
 \begin{equation*}
-  \unamb \epsilon
+  \unambig{}{\epsilon}
 \end{equation*}
+%===============================================================================
+\item[\fbox{\rref{UA-IAbs}}]\quad$\unambig{\bar{\alpha}}{\rulet_1 \To \rulet_2}$ \\
+%$\bar{\alpha} \unamb \rulet_1 \iarrow \rulet_2$ \ \\
+%===============================================================================
 
-%===============================================================================
-\item[\fbox{\texttt{(UA-IAbs)}}]\quad$\bar{\alpha} \unamb \rulet_1 \iarrow \rulet_2$ \ \\
-%===============================================================================
-  Then the second and third hypothesis of the lemma must have been formed by rule \mylabel{M-IApp}.
+  Then the second and third hypothesis of the lemma must have been formed by rule \rref{M-IApp}.
   From their two hypotheses and from the hypothesis of the rule and the induction hypothesis, we obtain
   the desired results
 \begin{equation*}
@@ -1074,23 +1126,23 @@ The proof proceeds by induction on the derivation of the first hypothesis.
   \quad\wedge\quad 
   E_1 = E_2
   \quad\wedge\quad
-  \Sigma_1, \rulet_1[|\bar{\sigma}_2|/\bar{\alpha}]\leadsto x
+  \Sigma_1,\ie{\rulet_1[|\bar{\sigma}_2|/\bar{\alpha}]}{x}
   = 
-  \Sigma_2, \rulet_1[|\bar{\sigma}_2'|/\bar{\alpha}]\leadsto x
+  \Sigma_2,\ie{\rulet_1[|\bar{\sigma}_2'|/\bar{\alpha}]}{x}
 \end{equation*}
 
-  We also derive from the induction hypothesis that $\unamb \Sigma_1$. 
-  Since $\bar{\alpha} \unamb \rulet_1 \iarrow \rulet_2$, we also have $\unamb \rulet_1$.
+  We also derive from the induction hypothesis that $\unambig{}{\Sigma_1}$. 
+  Since $\unambig{\bar{\alpha}}{\rulet_1 \To \rulet_2}$, we also have $\unambig{}{\rulet_1}$.
   Hence we also conclude
 \begin{equation*}
-  \unamb \Sigma_1, \rulet_1 \leadsto x
+  \unambig{}{\Sigma_1,\ie{\rulet_1}{x}}
 \end{equation*}
-
+%===============================================================================
+\item[\fbox{\rref{UA-TAbs}}]\quad$\unambig{\bar{\alpha}}{\forall \alpha.\rulet}$\\
+%$\bar{\alpha} \unamb \forall \alpha.\rulet$ \ \\
 %===============================================================================
 
-\item[\fbox{\texttt{(UA-TAbs)}}]\quad$\bar{\alpha} \unamb \forall \alpha.\rulet$ \ \\
-%===============================================================================
-  Then the second and third hypothesis of the lemma must have been formed by rule \mylabel{M-TApp},
+Then the second and third hypothesis of the lemma must have been formed by rule \rref{M-TApp},
   with $\bar{\suty}_1 = \bar{\suty}_{1,1},\suty_{1,2}$ and $\bar{\suty}_1' = \bar{\suty}_{1,1}',\suty_{2,2}'$.
   From their two hypotheses and from the hypothesis of the rule and the induction hypothesis, we obtain
 \begin{equation*}
@@ -1115,7 +1167,6 @@ The proof proceeds by induction on the derivation of the first hypothesis.
   \quad\wedge\quad 
   \unamb \Sigma_1
 \end{equation*}
-   
 \end{description}
 \end{proof}
 
@@ -1131,36 +1182,41 @@ Deterministic resolution is stable under substitution.
 \begin{lemma}\label{lemma:coherence:0}
   If 
 \begin{equation*}
-   \tenv,\alpha,\tenv' \ivturns \rulet\leadsto E
+  \dres{\tenv,\alpha,\tenv'}{\rulet}{E}
+%   \tenv,\alpha,\tenv' \ivturns \rulet\leadsto E
 \end{equation*}
   and
 \begin{equation*}
-  \tenv \turns \suty
+  \wfty{\tenv}{\suty}
+%  \tenv \turns \suty
 \end{equation*}
   then
 \begin{equation*}
-  \tenv,\tenv'[\suty/\alpha] \ivturns \rulet[\suty/\alpha] \leadsto E[|\suty|/\alpha]
+  \dres{\tenv,\tenv'[\suty/\alpha]}{\rulet[\suty/\alpha]}{E[|\suty|/\alpha]}
+%  \tenv,\tenv'[\suty/\alpha] \ivturns \rulet[\suty/\alpha] \leadsto E[|\suty|/\alpha]
 \end{equation*}
 \end{lemma}
 \end{minipage}
 }}
 
 \begin{proof}
-  The hypothesis of rule \label{R-Main} then is
+  The hypothesis of rule \rref{R-Main} then is
 \begin{equation*}
-  \mathit{ftv}(\tenv),\alpha,\mathit{ftv}(\tenv'); \tenv,\alpha,\tenv' \ivturns \rulet \leadsto E
+  \dres{\ftv{\tenv},\alpha,\ftv{\tenv'}}{\rulet}{E}
+%  \mathit{ftv}(\tenv),\alpha,\mathit{ftv}(\tenv'); \tenv,\alpha,\tenv' \ivturns \rulet \leadsto E
 \end{equation*}
 
   From Lemma~\ref{lemma:coherence:1} it follows that
 \begin{equation*}
-  \mathit{ftv}(\tenv),\mathit{ftv}(\tenv'); \tenv,\tenv'[\suty/\alpha] \ivturns \rulet[\suty/\alpha] \leadsto E[|\suty|/\alpha]
+  \drres{\ftv{\tenv},\ftv{\tenv'}}{\tenv,\tenv'[\suty/\alpha]}{\rulet[\suty/\alpha]}{E[|\suty|/\alpha]}
+%  \mathit{ftv}(\tenv),\mathit{ftv}(\tenv'); \tenv,\tenv'[\suty/\alpha] \ivturns \rulet[\suty/\alpha] \leadsto E[|\suty|/\alpha]
 \end{equation*}
 
-  As $\mathit{ftv}(\tenv') = \mathit{ftv}(\tenv'[\suty/\alpha])$, the desired result
-  follows from
-  rule \mylabel{R-Main}
+  As $\ftv{\tenv'} = \ftv{\tenv'[\suty/\alpha]}$, the desired result follows from rule
+  \rref{R-Main}
 \begin{equation*}
-  \tenv,\tenv'[\suty/\alpha] \ivturns \rulet[\suty/\alpha] \leadsto E[|\suty|/\alpha]
+ \dres{\tenv,\tenv'[\suty/\alpha]}{\rulet[\suty/\alpha]}{E[|\suty|/\alpha]}
+%  \tenv,\tenv'[\suty/\alpha] \ivturns \rulet[\suty/\alpha] \leadsto E[|\suty|/\alpha]
 \end{equation*}
 \end{proof}
 
