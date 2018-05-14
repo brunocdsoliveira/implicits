@@ -305,6 +305,8 @@
 
 % algorithm
 \newcommand{\alg}{\turns_{\mathit{alg}}}
+\newcommand{\adres}[3]{\hello{#1 \alg #2 ~\gbox{\leadsto #3}}}
+\newcommand{\adrres}[4]{\hello{#1; #2 \alg #3 ~\gbox{\leadsto #4}}}
 \newcommand{\adlres}[5]{\hello{#1; #2; [#3] \alg #4~\gbox{\leadsto #5}}}
 \newcommand{\admres}[8]{\hello{#1; #2; [#3] ~\gbox{\leadsto #4}; #5 \alg #6 ~\gbox{\leadsto #7}; #8}}
 \newcommand{\mgu}[3][\bar{\alpha}]{\hello{\textit{unify}_{\tenv;#1}(#2,#3)}}
@@ -324,6 +326,7 @@
 % coherent
 \newcommand{\coh}{\turns_{\mathit{coh}}}
 \newcommand{\coherent}[4]{\hello{#1; #2; #3 \coh #4}}
+\newcommand{\incoherent}[4]{\hello{#1; #2; #3 \not\coh #4}}
 
 % unambiguity condition
 \newcommand{\unambig}[2]{\hello{#1 \unamb #2}}

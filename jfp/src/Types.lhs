@@ -1550,45 +1550,46 @@ unification problems derived for their subterms.
 \framebox{\scriptsize
 \begin{minipage}{0.969\textwidth}
 \bda{c}
-\myruleform{\tenv \alg \rulet~\gbox{\leadsto E}} \\ \\
+\myruleform{\adres{\tenv}{\rulet}{E}} \\ \\
 
-\myrule{Alg-R-Main}{\mathit{tyvars}(\tenv);\tenv \alg \rulet~\gbox{\leadsto E}}
-        {\tenv \alg \rulet~\gbox{\leadsto E}}  \\ \\
+\myrule{Alg-R-Main}{\adrres{\tyvars{\tenv}}{\tenv}{\rulet}{E}}
+        {\adres{\tenv}{\rulet}{E}}  \\ \\
 
-\myruleform{\bar{\alpha};\tenv \alg \rulet~\gbox{\leadsto E}}  \\ \\
+\myruleform{\adrres{\bar{\alpha}}{\tenv}{\rulet}{E}}  \\ \\
 
-\myrule{Alg-R-IAbs}{\bar{\alpha};\tenv, \rulet_1~\gbox{\leadsto x} \alg \rulet_2~\gbox{\leadsto E} \quad\quad \gbox{x~\mathit{fresh}}}
-        {\bar{\alpha};\tenv \alg \rulet_1 \iarrow \rulet_2 ~\gbox{\leadsto \lambda(x : ||\rulet_1||). E}} \quad\enskip
+\myrule{Alg-R-IAbs}{\adrres{\bar{\alpha}}{\tenv, \rulet_1~\gbox{\leadsto x}}{\rulet_2}{E} \quad\quad \gbox{x~\mathit{fresh}}}
+        {\adrres{\bar{\alpha}}{\tenv}{\rulet_1 \iarrow \rulet_2}{\lambda(x : ||\rulet_1||). E}} \quad\enskip
 
-\myrule{Alg-R-TAbs}{\bar{\alpha};\tenv,\alpha \alg \rulet ~\gbox{\leadsto E}}
-        {\bar{\alpha};\tenv \alg \forall \alpha. \rulet ~\gbox{\leadsto \Lambda \alpha. E}}  \\ \\
+\myrule{Alg-R-TAbs}
+        {\adrres{\bar{\alpha}}{\tenv,\alpha}{\rulet}{E}}
+        {\adrres{\bar{\alpha}}{\tenv}{\forall \alpha. \rulet}{\Lambda \alpha. E}}  \\ \\
 
-\myrule{Alg-R-Simp}{\bar{\alpha};\tenv;\tenv \alg \tau~\gbox{\leadsto E}}
-        {\bar{\alpha};\tenv \alg \tau ~\gbox{\leadsto E} }  \\ \\
+\myrule{Alg-R-Simp}
+        {\adlres{\bar{\alpha}}{\tenv}{\tenv}{\type}{E}}
+        {\adrres{\bar{\alpha}}{\tenv}{\type}{E} }  \\ \\
 
-
-% \rref{Alg-Simp}\quad
-% \myirule{\bar{\alpha};\tenv \turns_{\mathit{match1st}} \tau \hookrightarrow \bar{\rulet}\gbox{; \bar{\omega}; E} \quad\quad \bar{\alpha};\tenv \alg \rulet_i~\gbox{\leadsto E_i} \quad (\forall \rulet_i \in \bar{\rulet})}
-%         {\bar{\alpha};\tenv \alg \tau ~\gbox{\leadsto E[\bar{\omega}/\bar{E}]} }  \\ \\
 
 \multicolumn{1}{c}{\myruleform{\adlres{\bar{\alpha}}{\tenv}{\tenv'}{\type}{E} }} \\ \\
 
-\myrule{Alg-L-RuleMatch}{\admres{\epsilon}{\tenv}{\rulet}{x}{\epsilon}{\type}{E}{\bar{\rulet}'~\gbox{\leadsto \bar{x}'}} \quad\quad
-         \bar{\alpha};\tenv \alg \rulet'~\gbox{\leadsto E'} \quad (\forall \rulet' \in \bar{\rulet}')
-        }
-        {\bar{\alpha};\tenv; \tenv', \rulet~\gbox{\leadsto x} \alg \type~\gbox{\leadsto E[\bar{E}'/\bar{x}'] }}  \\ \\
-
-\myrule{Alg-L-RuleNoMatch}{\bar{\alpha};\tenv;\rulet \not\coh \type \quad\quad
-         \bar{\alpha};\tenv;\tenv' \alg \type~\gbox{\leadsto E'}}
-        {\bar{\alpha};\tenv;\tenv', \rulet~\gbox{\leadsto x}\alg \type~\gbox{\leadsto E'}}  \\ \\
-  \myrule{Alg-L-Var}{\bar{\alpha};\tenv;\tenv' \alg \type~\gbox{\leadsto E}
-          }
-          {\bar{\alpha};\tenv;\tenv',x:\rulet \alg \type~\gbox{\leadsto E}} 
-\quad\quad\quad
-  \myrule{Alg-L-TyVar}{\bar{\alpha};\tenv;\tenv' \alg \type~\gbox{\leadsto E}
-          }
-          {\bar{\alpha};\tenv;\tenv',\alpha \alg \type~\gbox{\leadsto E}} 
-\\ \\
+ \myrule{Alg-L-RuleMatch}{\admres{\epsilon}{\tenv}{\rulet}{x}{\epsilon}{\type}{E}{\bar{\rulet}'~\gbox{\leadsto \bar{x}'}} \quad\quad
+          \adrres{\bar{\alpha}}{\tenv}{\rulet'}{E'} \quad (\forall \rulet' \in \bar{\rulet}')
+         }
+         {\adlres{\bar{\alpha}}{\tenv}{ \tenv', \rulet~\gbox{\leadsto x}}{\type}{E[\bar{E}'/\bar{x}'] }}  \\ \\
+ 
+ \myrule{Alg-L-RuleNoMatch}
+         {\incoherent{\bar{\alpha}}{\tenv}{\rulet}{\type} \quad\quad
+          \adlres{\bar{\alpha}}{\tenv}{\tenv'}{\type}{E'}}
+         {\adlres{\bar{\alpha}}{\tenv}{\tenv', \rulet~\gbox{\leadsto x}}{\type}{E'}}  \\ \\
+    \myrule{Alg-L-Var}
+            {\adlres{\bar{\alpha}}{\tenv}{\tenv'}{\type}{E}
+            }
+            {\adlres{\bar{\alpha}}{\tenv}{\tenv',x:\rulet}{\type}{E}} 
+  \quad\quad\quad
+    \myrule{Alg-L-TyVar}
+            {\adlres{\bar{\alpha}}{\tenv}{\tenv'}{\type}{E}
+            }
+            {\adlres{\bar{\alpha}}{\tenv}{\tenv',\alpha}{\type}{E}} 
+ \\ \\
 
 \multicolumn{1}{c}{\myruleform{\admres{\bar{\alpha}}{\tenv}{\rulet}{E}{\Sigma}{\type}{E'}{\Sigma'}}} \\ \\
 
