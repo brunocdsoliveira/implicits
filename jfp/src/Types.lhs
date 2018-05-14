@@ -1720,17 +1720,13 @@ unification problems derived for their subterms.
 %-------------------------------------------------------------------------------
 \subsection{Termination of Resolution}
 
-\newcommand{\term}[1]{\turns_\mathit{term} #1}
-\newcommand{\occ}[2]{\mathit{occ}_{#1}(#2)}
-\newcommand{\tnorm}[1][\cdot]{\||#1\||}
 
 If we are not careful about which rules are added to the implicit environment,
 then the resolution process may not terminate.  This section describes how to
 impose a set of modular syntactic restrictions that prevents non-termination. 
 As an example of non-termination consider 
 \begin{equation*}
-  \tychar \To \tyint,
-  \tyint \To \tychar \vturns \tyint
+  \aresp{\tychar \To \tyint, \tyint \To \tychar}{\tyint}
 \end{equation*}%
 which loops, using alternatively the first and second rule in the
 environment. The source of this non-termination is the recursive 

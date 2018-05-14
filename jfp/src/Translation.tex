@@ -37,14 +37,14 @@ term variable $x$.
 %- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 \paragraph{Translation of Types}
 
-The function $|\cdot|$ takes 
+The function $\ttrans$ takes 
 $\name$ types $\rulet$ to System F types T: 
 \begin{equation*}
 \begin{array}{rcl@{\hspace{1cm}}rcl}
-|\alpha| & = & \alpha &
-|\forall \alpha. \rulet| & = & \forall \alpha. |\rulet| \\
-|\rulet_1 \arrow \rulet_2| & = & |\rulet_1| \arrow |\rulet_2| &
-|\rulet_1 \iarrow \rulet_2| & = & |\rulet_1| \arrow |\rulet_2| %\\
+\ttrans[\alpha] & = & \alpha &
+\ttrans[\forall \alpha. \rulet] & = & \forall \alpha. \ttrans[\rulet] \\
+\ttrans[\rulet_1 \arrow \rulet_2] & = & \ttrans[\rulet_1] \arrow \ttrans[\rulet_2] &
+\ttrans[\rulet_1 \iarrow \rulet_2] & = & \ttrans[\rulet_1] \arrow \ttrans[\rulet_2] %\\
 \end{array}
 \end{equation*}
 Its reveals that implicit $\name$ arrows are translated to explicit System F function arrows.
@@ -54,7 +54,7 @@ Its reveals that implicit $\name$ arrows are translated to explicit System F fun
 
 The type-directed translation judgment, which extends the typing judgment, is 
 \begin{center}
-  $\tenv \turns \relation{e}{\rulet}~\gbox{\leadsto E}$
+  $\wte{\tenv}{e}{\rulet}{E}$
 \end{center}
 This judgment states that the translation of $\name$ expression $e$ with
 type $\rulet$ is System~F expression $E$, with respect to type environment
@@ -62,10 +62,10 @@ $\tenv$.
 
 Variables, lambda abstractions and applications
 are translated straightforwardly. Perhaps the only noteworthy 
-rule is \TyIAbs. This rule associates the type $\rulet_1$ with 
+rule is \rref{Ty-IAbs}. This rule associates the type $\rulet_1$ with 
 the fresh variable $x$ in the type environment. 
 This creates the necessary evidence that can be used by resolutions 
-in the body of the rule abstraction to construct System F terms of type $|\rulet_1|$. 
+in the body of the rule abstraction to construct System F terms of type $\ttrans[\rulet_1]$. 
 
 %- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 \paragraph{Resolution}
@@ -73,7 +73,7 @@ The more interesting part of the translation happens when resolving queries.
 Queries are translated by rule $\rref{Ty-Query}$ using the auxiliary resolution
 judgment $\ivturns$:
 \begin{equation*}
-\tenv \ivturns \rulet~\gbox{\leadsto E}
+\dres{\tenv}{\rulet}{E}
 \end{equation*}
 which is shown, in deterministic form, in Figure~\ref{fig:resolution2}.  The
 translation builds a System F term as evidence for the resolution.  
@@ -100,14 +100,14 @@ of desirable properties.
 
 \begin{theorem}[Type-Preserving Translation]\label{thm:type:preservation} Let $e$ be a $\name$
   expression, $\rulet$ be a type, $\tenv$ be a type environment and $E$ be a System F expression. If
-  $\tenv \turns \relation{e}{\rulet} \leadsto E$, then $|\tenv| \turns \relation{E}{|\rulet|}$.
+  $\wte{\tenv}{e}{\rulet}{E}$, then $\fwte{\etrans{\tenv}}{E}{\ttrans[\rulet]}$.
 \end{theorem}
 Here we define the translation of the type environment form $\name$ to System F as:
 \begin{equation*}
 \begin{array}{rcl@{\hspace{2cm}}rcl}
-|\epsilon| & = & \epsilon & |\tenv,\alpha| & = & |\tenv|, \alpha \\
-|\tenv,x : \rulet| & = & |\tenv|, x : |\rulet| &
-|\tenv, \rulet \leadsto x| & = & |\tenv|, x : |\rulet|
+\etrans{\epsilon} & = & \epsilon & \etrans{\tenv,\alpha} & = & \etrans{\tenv}, \alpha \\
+\etrans{\tenv,x : \rulet} & = & \etrans{\tenv}, x : \ttrans[\rulet] &
+\etrans{\tenv, \rulet \leadsto x} & = & \etrans{\tenv}, x : \ttrans[\rulet]
 \end{array}
 \end{equation*}
 
@@ -115,7 +115,7 @@ An important lemma in the theorem's proof is the type preservation of
 resolution.
 \begin{lemma}[Type-Preserving Resolution]
 Let $\tenv$ be a type environment, $\rulet$ be a type and E be a System F expression.
-If $\tenv \vturns \rulet \leadsto E$, then $|\tenv| \vdash E : |\rulet|$.
+If $\ares{\tenv}{\rulet}{E}$, then $\fwte{\etrans{\tenv}}{E}{\ttrans[\rulet]}$.
 \end{lemma}
 % Both the theorem and the lemma are proven in Appendix~\ref{proof:preservation}.
 
@@ -125,21 +125,23 @@ Firstly, the deterministic version of resolution is a sound variation on the ori
 \begin{lemma}[Soundness]
 Figure~\ref{fig:resolution2}'s definition of resolution is sound (but
 incomplete) with respect to Figure~\ref{fig:resolution1}'s definition.
-\[\forall \tenv, \rulet, E: \quad\quad \tenv \ivturns \rulet \leadsto E \quad\Rightarrow\quad \tenv \vturns \rulet \leadsto E \]
+\[\forall \tenv, \rulet, E: \quad\quad \dres{\tenv}{\rulet}{E} \quad\Rightarrow\quad \ares{\tenv}{\rulet}{E} \]
 \end{lemma}
 Secondly, the deterministic resolution guarantees a strong form of coherence:
 \begin{lemma}[Determinacy]
 The generated evidence of resolution is uniquely determined.
-\[\forall \tenv, \rulet, E_1, E_2: \quad\quad \tenv \ivturns \rulet \leadsto E_1 ~\wedge~ \tenv \ivturns \rulet \leadsto E_2 \quad\Rightarrow\quad E_1 = E_2 \]
+\[\forall \tenv, \rulet, E_1, E_2: \quad\quad 
+     \dres{\tenv}{\rulet}{E_1} ~\wedge~ 
+     \dres{\tenv}{\rulet}{E_2} \quad\Rightarrow\quad E_1 = E_2 \]
 \end{lemma}
 Thirdly, on top of the immediate coherence of deterministic resolution, 
 an additional coherence property holds.  
 \begin{lemma}[Stability]
 Resolution is stable under type substitution.
 \[\forall \tenv,\alpha,\tenv',\sigma,\rulet, E: \enskip\
-\tenv,\alpha,\tenv' \ivturns \rulet \leadsto E \enskip\wedge\enskip \tenv \vdash \sigma
+\dres{\tenv,\alpha,\tenv'}{\rulet}{E} \enskip\wedge\enskip \tenv \vdash \sigma
 \enskip\Rightarrow\enskip 
-\tenv,\tenv'[\sigma/\alpha] \ivturns \rulet[\sigma/\alpha] \leadsto E[|\sigma|/\alpha] \]
+\dres{\tenv,\tenv'[\sigma/\alpha]}{\rulet[\sigma/\alpha]}{E[\ttrans[\sigma]/\alpha]} \]
 \end{lemma}
 
 %-------------------------------------------------------------------------------
@@ -173,8 +175,8 @@ With the evidence we can state the correctness of the algorithm.
 
 \begin{theorem}[Partial Correctness]
 Let $\tenv$ be a type environment, $\rulet$ be a type and E be a System F expression.
-Assume that $\epsilon \vdash_{\mathit{unamb}} \rulet$ and also $\forall \rulet_i \in \tenv: \epsilon \vdash_{\mathit{unamb}} \rulet_i$.
-Then $\tenv \ivturns \rulet \leadsto E$ if and only if $\tenv \vdash_{\mathit{alg}} \rulet \leadsto E$,
+Assume that $\unambig{\epsilon}{\rulet}$ and also $\forall \rulet_i \in \tenv: \unambig{\epsilon}{\rulet_i}$.
+Then $\dres{\tenv}{\rulet}{E}$ if and only if $\adres{\tenv}{\rulet}{E}$,
 provided that the algorithm terminates.
 \end{theorem}
 
@@ -183,12 +185,12 @@ provided that the algorithm terminates.
 Finally, we define the dynamic semantics of $\name$ as the composition of
 the type-directed translation and System F's dynamic semantics.  Following
 Siek's notation~\cite{systemfg}, this dynamic semantics is:
-\[ \mathit{eval}(e) = V \quad\quad \textit{where } \epsilon \turns \relation{e}{\rulet} \leadsto E \textit{ and } E \rightarrow^* V  \]
-with $\rightarrow^*$ the reflexive, transitive closure of System F's standard single-step call-by-value reduction relation (see \cite[Chapter 23]{tapl}).
+\[ \mathit{eval}(e) = V \quad\quad \textit{where } \wte{\epsilon}{e}{\rulet}{E} \textit{ and } E \rightarrow^* V  \]
+with $\rightarrow^*$ the reflexive, transitive closure of System F's standard single-step call-by-value reduction relation (see Chapter 23 of \cite{tapl}).
 
 Now we can state the conventional type safety theorem for $\name$:
 \begin{theorem}[Type Safety]
-If $\epsilon \turns \relation{e}{\rulet}$, then $\mathit{eval}(e) = V$ for
+If $\wtep{\epsilon}{e}{\rulet}$, then $\mathit{eval}(e) = V$ for
 some System F value $V$.
 \end{theorem}
 The proof follows trivially from Theorem~\ref{thm:type:preservation}.

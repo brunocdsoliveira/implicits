@@ -7,7 +7,6 @@
 % \newtheorem{proposition}[theorem]{Proposition}
 % \newtheorem{corollary}[theorem]{Corollary}
 
-\newcommand{\head}[1]{\mathrm{hd}(#1)}
 \newcommand{\suty}{\sigma}
 \newcommand{\name}{\textsc{Cochis}\xspace}
 
@@ -333,6 +332,19 @@
 
 % annotated dmres
 \newcommand{\dmresa}[7]{\hello{#1; #2; [#3]~\gbox{\leadsto #4} \ivturns #5~\gbox{\leadsto #6}; #7}}
+
+%termination
+\newcommand{\term}[1]{\hello{\turns_\mathit{term} #1}}
+\newcommand{\occ}[2]{\hello{\mathit{occ}_{#1}(#2)}}
+\newcommand{\tnorm}[1][\cdot]{\hello{\|#1\|}}
+\newcommand{\head}[1]{\hello{\mathrm{hd}(#1)}}
+
+%elaboration
+\newcommand{\ttrans}[1][\cdot]{\hello{|#1|}}
+\newcommand{\etrans}[1]{\hello{|#1|}}
+
+% System F
+\newcommand{\fwte}[3]{\hello{#1 \turns_{\scriptscriptstyle \hspace{-1mm}\mathtt{F}} #2 : #3}}
 
 %%% Local Variables: 
 %%% mode: latex

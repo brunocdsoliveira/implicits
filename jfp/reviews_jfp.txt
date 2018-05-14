@@ -505,7 +505,9 @@ Fixed.
 > mention this extra condition.  Please clarify.
 > 
 > p. 33: "(see Chapter 23)" of what? TAPL?
-> 
+
+Yes, this is fixed now.
+ 
 > p. 35, Section 6.3:
 > 
 >  - "The first difference is that the implicit calculus, like Scala,
@@ -1130,7 +1132,13 @@ added a bit of extra space to amply the effect.
 > - Page 28, Definition, line 4: "above vali[<-di]ty concern"
 > - Page 28, line -1: "unifications derived for"
 >   Replace "unifications" by "unification problems"
+
+FIXED
+
 > - Page 30, line -4: "is ev[a<-e]ntually a goal"
+
+FIXED
+
 > - Page 31, line 5: " head \tau_2 [<-of] \rho_2"
 
 FIXED

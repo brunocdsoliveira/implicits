@@ -156,8 +156,8 @@ with $n$-ary arguments in the implicit calculus is simple, but quite ad-hoc
 and forbids certain types of resolution that are allowed in $\ourlang$. For example,
 the query:
 \begin{equation*}
-  \tychar \To \tybool,
-  \tybool \To \tyint \vturns \tychar \To \tyint
+  \aresp{\tychar \To \tybool,
+  \tybool \To \tyint}{\tychar \To \tyint}
 \end{equation*} does not resolve under the deterministic resolution rules of
 the implicit calculus, but it resolves in $\ourlang$. Essentially
 resolving such query requires adding the rule type's context to the
