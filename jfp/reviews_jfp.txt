@@ -976,6 +976,9 @@ TODO: add definition of well-formedness for environments
 >   non-ambiguous. So what don't you write
 >           \Gamma |-_r^f  \rho ~> E
 >           \Gamma; \rho ~> x |-_r^f  \tau ~> E; \Sigma
+
+TODO
+
 > - Besides, it seems that the notation
 >           \Gamma; \rho ~> x |-_r^f  \tau ~> E; \Sigma
 >   has been chosen especially to obfuscate the intuition... Why not just
@@ -984,10 +987,16 @@ TODO: add definition of well-formedness for environments
 >   that, roughly:
 >         \rho "can be instantiated" to \rho_1 => ... \rho_n => \tau
 >   where \rho_1, ... \rho_n is the codomain of \Sigma'
+
+TODO
+
 > - Why do you use smaller fonts for technical rules?  Given that maths also
 >   contain many subscripts, I do not think this is wise and I would prefer
 >   normal size: you could save horizontal space by writing rule names above
 >   the rules (rule names could remain in small size, though).
+
+TODO
+
 > - The gray overlay in typing rules is annoyingly noisy: it attracts the eye,
 >   while this is supposed to be something that the reader does not have to
 >   look at in a first reading. I suggest just using (the right amount of)
@@ -1000,6 +1009,9 @@ less distracting.
 >   the use of a special notation (e.g. "=^def=" or "=^\delta=") for
 > definitional
 >   equality.
+
+TODO
+
 > - It would help if the PDF contained more hyper-references so as to ease the
 >   navigation in the digital version of the document: 
 >   hyper-references for rule names, figures, urls, citations, etc. 
@@ -1008,9 +1020,11 @@ less distracting.
 >   have not been introduced in the current subsection.
 
 We have added hyper references for figures, urls and citations.
-TODO: add hyperrefs for rule names
 
 > - Several lines are overfull.
+
+TODO
+
 > - There seems to be a problem with some of your display math environments,
 >   as many displayed math formulars are followed by an extra blank space on
 >   the beginning of the next line, as in:
@@ -1021,13 +1035,31 @@ TODO: add hyperrefs for rule names
 >   > after display text...
 >   Just a few examples of this are:
 >    + page 17, line -4: " While these are..."
+
+FIXED
+
 >    + page 18, line 15: " The definition of resolution..."
+
+FIXED
+
 > - Some hard space (so as to avoid line breaks) are missing between single
 >   letter math formulas ending a phrase on the beginning of a line.
 >    + page 15, line 5: "2."
+
+FIXED
+
 >    + page 18, line 9: "$\rho$.  Rules (FR-Tabs) and ..."
+
+FIXED
+
 >    + page 27, 4.3, line -7: "$\Gamma$.\footenotemark {5}"
+
+FIXED
+
 >    + page 31, 5.1, line 2: "F.  The gray parts..."
+
+FIXED
+
 > ## LINEAR COMMENTS
 > Please, use the lineno package, when submitting a paper for reviewing.
 > - Abstract, l-6, compact formulation: this is arguable, given the complexity
@@ -1062,10 +1094,16 @@ TODO: add hyperrefs for rule names
 >   Or you should say:
 >   "That is any query that is polymorphic before instantiation will be resolved
 >   using the same rule after instantiation."
+
+TODO
+
 > - Page 14, line -4: ", and refers to the bound value with variable x."  This
 >   compact formulation is difficult to understand, and formally incorrect:
 >   "\lambda (x : \rho). e" is an expression (e.g. a lambda abstraction), not
 >   a binder! "\lambda" alone is a binder. That is a bit confusing.
+
+Reformulated.
+
 > - Page 15, line 5:
 >   I would have first defined
 >         implicit e1 : \rho in e =def= (\lam?\rho.e1) with e
@@ -1079,36 +1117,73 @@ TODO: add hyperrefs for rule names
 >         implicit {\vec {e : \rho}} in e0
 >                 =def= implicit e_1 : \rho_1. ... implicit e_n : \rho_n in e0
 >   (Note that your definition is ``syntactically'' ill-formed.)
+
+TODO
+
 > - Page 17, line -7: "have overlapping conclusions."
 >   Give an example of overlapping conclusions or a forward pointer.
+
+TODO
+
 > - Page 17, 3.4, l5: "resolving "a" given "G = a ~> x"
 >   What is "a"? ---does not belong to the grammar of COCHIS.
+
+That should have been \alpha. It's fixed now.
+
 > - Page 17, line -5: (\lambda y.y)x
 >   Seems to be missing a space for the application.
+
+There is a small space.
+
 > - (optional) Page 19, footnote 4:
 >   I am not sure this is a happy choice. It shows that the focused type
 >   systems is too tricky to be shown to the reader...
 > - Page 20,  line -15: (An alternative ... for this purpose)
 >   This is not an equivalent solution as it would allow to type more
 >   programs. This should be made clearer.
+
+TODO
+
 > - Page 20, line -11:  "The auxiliary judgment"
 >   should be "This auxiliary judgment"
+
+FIXED
+
 > - Page 20, line -10:  "also fixes the type variables \vec \alpha".
 >   should be "fixes its free type variables \vec \alpha".
+
+FIXED
+
 > - Page 20, line -7:  "these contexts are unambiguous"
 >   Could you explain the intuition?
+
+TODO
+
 > - Page 20, line -7:  "rule (Ty_Query)"
 >   adding "in Fig 2, page 16"
+
+The rule name is now a hyperlink.
+
 > - Page 21, Committed choice, line -7: "replace all three ... a new judgment"
 >   This is a misleading intuition, since the new judgment requires the same
 >   sort of three hypotheses in Rule DL-RuleMatch.  Could you rephrase it
 >   differently?
+
+We now use the verb "encapsulate" which conveys that the hypotheses have been
+moved to a separate definition.
+
 > - Page 21, Committed choice, line -9: "Rule (FR-Simp)"
 >   Should be (Fr-Simp'), i.e. the one given below.
+
+FIXED
+
 > - Page 21, Committed choice, line -1: "\Gamma = \Gamma'"
 >   Here "=" is not definitional equality as everywhere else, so you should
 >   not use the same symbol, e.g, replace it by "\Gamma and \Gamma' are
 >   identical".
+
+FIXED
+
 > - Page 21, Rule DL-RuleNoMatch: "\not \exists E, \Sigma:"
 >   This is an undefined and non-standard notation.
 >   The standard notation would be a comma and a space instead of ":".
@@ -1123,13 +1198,31 @@ the quantifier and the judgement form than the comma would do. We have now
 added a bit of extra space to amply the effect.
 
 > - Page 22, line -1 "we would like [to<-] this"
+
+FIXED
+
 > - Page 23, line -9-16: "we can only  consider[ing<-] substitutions"
+
+FIXED
+
 > - Page 23, line -9: "substitution [is<-] \epsilon is trivially"
+
+FIXED
+
 > - Page 24, section 4, line 4: "coherence checking"
 >   This is a new terminology, not used anywhere else.
 >   What do you mean?
+
+TODO
+
 > - Page 27, 4.2, line 8: "instantiation inst[<-e]ad of"
+
+FIXED
+
 > - Page 28, Definition, line 4: "above vali[<-di]ty concern"
+
+FIXED
+
 > - Page 28, line -1: "unifications derived for"
 >   Replace "unifications" by "unification problems"
 

@@ -38,14 +38,15 @@ $\forall \alpha. \rulet$; and the novel \textit{rule} types $\rulet_1 \iarrow
 called the \textit{context} and type $\rulet_2$ the \textit{head}.
 
 Expressions $e$ include three abstraction-elimination pairs.
-Binder $\lambda (x:\rulet). e$ abstracts expression $e$ over values of type $\rulet$,
-is eliminated by application $e_1\,e_2$, and refers to the bound value with variable $x$.
-Binder $\Lambda \alpha.e$ abstracts expression $e$ over types, is eliminated
-by type application $e\,\rulet$, and refers to the bound type with type variable $\alpha$ 
-(but $\alpha$ itself is not a valid expression). Binder $\ilambda \rulet. e$ 
-abstracts expression $e$ over implicit values of type $\rulet$, is eliminated by
-implicit application $e_1 \with e_2$, and refers to the implicitly bound value with 
-implicit query $\query \rulet$.
+The form $\lambda (x:\rulet). e$ abstracts over a value of type $\rulet$ in expression $e$,
+which can refer to it with variable $x$; the abstraction is eliminated by 
+application $e_1\,e_2$.
+Similarly, $\Lambda \alpha.e$ abstracts over a type in expression $e$, which can refer to
+it with type variable $\alpha$; the abstraction is eliminated
+by type application $e\,\rulet$. Finally, $\ilambda \rulet. e$ 
+abstracts over implicit values of type $\rulet$ in expression $e$, which can refer to it
+with implicit query $\query \rulet$; the abstraction is eliminated by
+implicit application $e_1 \with e_2$.
 For convenience we adopt the Barendregt convention~\cite{barendregt}, that
 variables in binders are distinct, throughout this article.
 % Without loss of generality we assume that all variables $x$
@@ -53,7 +54,7 @@ variables in binders are distinct, throughout this article.
 % can be easily renamed apart to be so.
 
 Using rule abstractions and applications we can build the |implicit| 
-sugar used in Section \ref{sec:overview}.
+sugar used in Section~\ref{sec:overview}.
 %{
 %format == = "\defeq"
 %format e1
@@ -306,17 +307,17 @@ that only one inference rule applies at any given point and thereby rules out
 gratuitous forms of nondeterminism. 
 
 As an example of such gratuitous nondeterminism consider
-the following two ways of resolving $a$ given 
-$\tenv = a~\gbox{\leadsto x}$:
+the following two ways of resolving $\alpha$ given 
+$\tenv = \alpha~\gbox{\leadsto x}$:
 \begin{equation*}
 \begin{array}{c}
 \myexrule{AR-IVar}
-   {a~\gbox{\leadsto x} \in \tenv}
-   {\ares{\tenv}{a}{x}}
+   {\alpha~\gbox{\leadsto x} \in \tenv}
+   {\ares{\tenv}{\alpha}{x}}
 \end{array}
 \end{equation*}%
 % ==========
-% TC a |= a
+% TC \alpha |= \alpha
 
 \noindent
 versus
@@ -327,15 +328,15 @@ versus
       \myexrule{AR-IAbs}
          {
             \myexrule{AR-IVar}
-               { a~\gbox{\leadsto y} \in \tenv, a~\gbox{\leadsto y}}
-               { \ares{\tenv, a~\gbox{\leadsto y}}{a}{y} }
+               { \alpha~\gbox{\leadsto y} \in \tenv, \alpha~\gbox{\leadsto y}}
+               { \ares{\tenv, \alpha~\gbox{\leadsto y}}{\alpha}{y} }
          }
-         {\ares{\tenv}{a \iarrow a}{\lambda y. y}} \\
+         {\ares{\tenv}{\alpha \iarrow \alpha}{\lambda y. y}} \\
       \myexrule{AR-IVar}
-         {a ~\gbox{\leadsto x} \in \tenv}
-         {\ares{\tenv}{a}{x}}
+         {\alpha ~\gbox{\leadsto x} \in \tenv}
+         {\ares{\tenv}{\alpha}{x}}
    }
-   {\ares{\tenv}{a}{(\lambda y.y)\,x}}
+   {\ares{\tenv}{\alpha}{(\lambda y.y)\,x}}
 \end{array}
 \end{equation*}%
 While these are two different proofs, they use the information in the context
@@ -420,7 +421,7 @@ types $\type$ as the base case.
 
 The main judgement $\frres{\tenv}{\rulet}{E}$ focuses on the
 type $\rulet$ that is to be resolved -- we call this type the ``goal''. There
-are three rules, for the three possible syntactic forms of $\rulet$.
+are three rules, for the three possible syntactic forms of~$\rulet$.
 %
 Rules~\rref{FR-TAbs} and~\rref{FR-IAbs} decompose the goal by
 applying implication and quantifier introductions respectively.  Once the goal
@@ -605,10 +606,10 @@ empty.
 \end{center}
 }
 
-The auxiliary judgement expresses that all type variables $\bar{\alpha}$ 
+This auxiliary judgement expresses that all type variables $\bar{\alpha}$ 
 are resolved when matching against $\rulet$.
 Its base case, rule \rref{UA-Simp}, expresses
-that fixing the simple type $\type$ also fixes the type variables
+that fixing the simple type $\type$ fixes its free type variables
 $\bar{\alpha}$. Inductive rule \rref{UA-TAbs}
 accumulates the bound type variables $\bar{\alpha}$ before the
 head. Rule \rref{UA-IAbs} skips over any contexts
@@ -638,12 +639,12 @@ different, i.e., incoherent, elaborations.
 
 Our solution is to replace the nondeterministic relation $\rulet \in \tenv$ by
 a deterministic one that selects the first matching rule in the environment and
-commits to it. In fact, we replace all three hypotheses of rule~\rref{FR-Simp}
-by a new judgement $\lres{\tenv}{\tenv'}{\type}{E}$ which resolves
+commits to it. In fact, we encapsulate all three hypotheses of rule~\rref{FR-Simp}
+in a new judgement $\lres{\tenv}{\tenv'}{\type}{E}$ which resolves
 $\type$ with the first matching rule in the environment $\tenv'$ and performs
 any recursive resolutions against the environment $\tenv$. Of course, the modified
-rule~\rref{FR-Simp} invokes this judgement with two copies of the same environment, i.e.,
-$\tenv' = \tenv$.
+rule~\rref{FR-Simp'} invokes this judgement with two copies of the same environment, i.e.,
+$\tenv$ and $\tenv'$ are identical.
 \bda{c}
   \myrule {FR-Simp'}
           {\lres{\tenv}{\tenv}{\type}{E}
@@ -744,7 +745,7 @@ substitution does not make sense for every type variable in the environment.
 Consider for example resolving the type $\forall \beta. \beta \arrow \beta$
 against the environment $\tenv_0 = \forall \gamma. \gamma \arrow
 \gamma~\gbox{\leadsto x}, \alpha, \alpha \arrow \alpha ~\gbox{\leadsto y}$.
-Clearly, we would like to this resolution of $\forall \beta. \beta \to \beta$
+Clearly, we would like this resolution of $\forall \beta. \beta \to \beta$
 to succeed against $\forall \gamma. \gamma \to \gamma$.
 
 Unfortunately, the above formulation of stability unnecessarily throws a
@@ -785,7 +786,7 @@ them make sense. Essentially, there are two groups of substitutions:
 \item The substitution $\theta' = [\beta/\alpha]$ also generates a match. However, this 
       substitution does not make sense either because code inlining can only result in substitutions 
       of $\alpha$ by types that are well-scoped in the prefix of the environment before $\alpha$.
-      In the case of the example this means that we can only considering substitutions
+      In the case of the example this means that we can only consider substitutions
       $[\rulet/\alpha]$ where $\wfty{\forall \gamma. \gamma \arrow \gamma~\gbox{\leadsto x}}{\rulet}$. In
       other words, $\rulet$ cannot have any free type variables. Obviously there is no such
       $\rulet$ that yields a match.
@@ -797,7 +798,7 @@ syntax for substitutions as sequences of single variable substitutions.
 {\bda{llrl}
     \text{Substitutions}     & \theta & ::=  & \epsilon \mid [\rulet/\alpha] \cdot \theta
   \eda }
-Rule~\rref{S-Empty} states that the empty substitution is $\epsilon$ is
+Rule~\rref{S-Empty} states that the empty substitution $\epsilon$ is
 trivially valid. Rule~\rref{S-Cons} covers the inductive case
 $[\rulet/\alpha] \cdot \theta$. It says that the single variable substitution
 $[\rulet/\alpha]$ is valid if $\alpha$ appears in the sequence of substitutable type
@@ -1433,7 +1434,7 @@ of the type variables $\bar{\alpha}$.
 
 We apply the same deferred-instantation technique as with the first difference: Instead,
 of applying a substitution first and then checking whether the rule matches the goal, we 
-defer the instantiation to the end where we can deterministically pick one instantiation instad of considering all valid instantiations. 
+defer the instantiation to the end where we can deterministically pick one instantiation instead of considering all valid instantiations. 
 As a consequence of the similarity, 
 the definition of the judgement $\coherent{\bar{\alpha}}{\tenv}{\rulet}{\type}$ is a
 variation on that of $\admres{\bar{\alpha}}{\tenv}{\rulet}{
@@ -1514,13 +1515,13 @@ Figure~\ref{fig:algorithm}. The main unification judgement $\theta =
 \mgu{\rulet_1}{\rulet_2}$ is defined by rule~\rref{U-Main}. This rule
 computes the unifier in terms of the auxiliary judgement $\theta =
 \mgun{\bar{\alpha}}{\rulet_1}{\rulet_}$, which is essentially standard
-unification, and then checks the above vality concerns.  Indeed, for any type
+unification, and then checks the above validity concerns.  Indeed, for any type
 variable $\beta$ that appears in the image of a type variable $\alpha$, either
 $\beta$ must appear before $\alpha$ in the environment $\tenv$ (regular
 validity), or $\beta$ must itself be a unification variable (the exceptional
 case). The relative position of variables is checked with 
 the auxiliary judgement $\before{\beta}{\alpha}$ whose one rule verifies
-that $\beta$ appears before $\alpha$ in the environment $\tenv$.\footnote{If
+that $\beta$ appears before $\alpha$ in the environment~$\tenv$.\footnote{If
 type variables are represented by de Bruijn indices, this can be done by
 checking whether one index is greater than the other.}
 
