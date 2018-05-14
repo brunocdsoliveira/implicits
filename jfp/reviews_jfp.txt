@@ -456,7 +456,21 @@ Fixed.
 > algorithmic version holds).
 > 
 > What am I missing?
-> 
+
+The confusion may be that for the algorithmic version the two conditions
+must both hold:
+
+||r1|| < ||r2||  /\   occ_a(r1) <= occ_a(r2)
+
+These conditions are met by your first example:
+     ||r1|| = 1  <  3 = ||r2||
+                /\
+  occ_a(r1) = 1  =  1 = occ_a(1)
+
+but not by your second example where the two are swapped.
+
+We have modified the text to clarify this.
+
 > p. 32:
 > 
 >  - Please add a forward reference to the proofs in appendix A, or
@@ -664,46 +678,121 @@ FIXED
 > Referee: 2
 > 
 > Comments to the Author
-> This paper aims to reconcile the apparently competing goals of implicit programming mechanisms, which infer parts of programs by searching for values of an appropriate type. This includes type classes in Haskell (essentially classifying types by the operations they can perform, which internally involves searching for an instance of a "dictionary" of those operations), instance arguments in Agda, implicits in Scala and traits in Rust. The Haskell approach requires coherence---in Haskell's case, that there is exactly one instance of a
-> class for any type, but more generally that any valid program has exactly one meaning---whereas the others are more flexible in that they allow local scoping and multiple instances, at the cost of the ease of reasoning and predictability given by coherence.
+> This paper aims to reconcile the apparently competing goals of implicit
+> programming mechanisms, which infer parts of programs by searching for values
+> of an appropriate type. This includes type classes in Haskell (essentially
+> classifying types by the operations they can perform, which internally
+> involves searching for an instance of a "dictionary" of those operations),
+> instance arguments in Agda, implicits in Scala and traits in Rust. The
+> Haskell approach requires coherence---in Haskell's case, that there is
+> exactly one instance of a class for any type, but more generally that any
+> valid program has exactly one meaning---whereas the others are more flexible
+> in that they allow local scoping and multiple instances, at the cost of the
+> ease of reasoning and predictability given by coherence.
 > 
-> It introduces a new calculus, COCHIS, a flexible calculus supporting the desirable features of local scoping, multiple instances and others while also retaining coherence. Most usefully, in my opinion, it also provides a semantics for the calculus via a translation to System F, which is shown to be type-safe and coherent with (partly) mechanised proofs.
+> It introduces a new calculus, COCHIS, a flexible calculus supporting the
+> desirable features of local scoping, multiple instances and others while also
+> retaining coherence. Most usefully, in my opinion, it also provides a
+> semantics for the calculus via a translation to System F, which is shown to
+> be type-safe and coherent with (partly) mechanised proofs.
 > 
-> I think this is generally a nicely written paper. It clearly explains the problem in terms of concrete programming language design questions, and provides a nice solution which I believe could influence the design of implicit programming systems in future.  There is a good concise summary of the problem space and the approaches taken by various languages and systems. In particular it lists the desirable features of a type class mechanism which Haskell can't have (except via extensions) due to requiring coherence. A big disadvantage is that it prevents modularity---instances can't be locally scoped and must be visible everywhere in a program.
+> I think this is generally a nicely written paper. It clearly explains the
+> problem in terms of concrete programming language design questions, and
+> provides a nice solution which I believe could influence the design of
+> implicit programming systems in future.  There is a good concise summary of
+> the problem space and the approaches taken by various languages and systems.
+> In particular it lists the desirable features of a type class mechanism which
+> Haskell can't have (except via extensions) due to requiring coherence. A big
+> disadvantage is that it prevents modularity---instances can't be locally
+> scoped and must be visible everywhere in a program.
 > 
-> Overall, I'd recommend publication; I think the core mechanism presented is clear and well explained and with some adaptation could be incorporated into a fully featured functional language. It provides a sound theoretical base which explains the ad-hoc implementations that appear now in several programming languages. I would, however, like to see some larger and more realistic examples which illustrate how COCHIS deals with some of the examples given in the overview. There's several small examples throughout but bringing them together in a section at the end to give an overall evaluation of the system would be helpful. One particular example I'd like to see discussed further is the "Set" example mentioned on page 6. This is
-> often cited in informal discussions as a reason coherence is necessary, but really the issue is global uniqueness (that Haskell can violate in any case). This is discussed a bit in related work but I'd like to see a deeper discussion to properly understand the contribution COCHIS makes, since the calculus itself doesn't preserve global uniqueness.
+> Overall, I'd recommend publication; I think the core mechanism presented is
+> clear and well explained and with some adaptation could be incorporated into
+> a fully featured functional language. It provides a sound theoretical base
+> which explains the ad-hoc implementations that appear now in several
+> programming languages. I would, however, like to see some larger and more
+> realistic examples which illustrate how COCHIS deals with some of the
+> examples given in the overview. There's several small examples throughout but
+> bringing them together in a section at the end to give an overall evaluation
+> of the system would be helpful. One particular example I'd like to see
+> discussed further is the "Set" example mentioned on page 6. This is
+> often cited in informal discussions as a reason coherence is necessary, but
+> really the issue is global uniqueness (that Haskell can violate in any case).
+> This is discussed a bit in related work but I'd like to see a deeper
+> discussion to properly understand the contribution COCHIS makes, since the
+> calculus itself doesn't preserve global uniqueness.
 > 
 > Some specific comments, suggestions, nitpicks, etc:
 > 
-> p5 I am happy to see this definition of coherence given explicitly, because sometimes listening to Haskell programmers one might believe that coherence is entirely about global uniqueness of type class instances!
+> p5 I am happy to see this definition of coherence given explicitly, because
+> sometimes listening to Haskell programmers one might believe that coherence
+> is entirely about global uniqueness of type class instances!
 > 
-> p6 Maybe not so important to mention here, but related to the overall problem: Examples like Trans make me think of how type classes are sometimes used for reasoning, and I wonder if at least some of the difficulties with type classes are reduced if one could use dependent types for reasoning instead.  Say, with "Set", one could consider parameterizing a Set on the type class instance.
+> p6 Maybe not so important to mention here, but related to the overall
+> problem: Examples like Trans make me think of how type classes are sometimes
+> used for reasoning, and I wonder if at least some of the difficulties with
+> type classes are reduced if one could use dependent types for reasoning
+> instead.  Say, with "Set", one could consider parameterizing a Set on the
+> type class instance.
 > 
-> p8 Presumably "look for a value of type Ord[A]" means a brute force search of everything in scope, returning the first result? Or are there some constraints?
+> p8 Presumably "look for a value of type Ord[A]" means a brute force search of
+> everything in scope, returning the first result? Or are there some
+> constraints?
 > 
-> p10 A minor thing, but I was getting a bit impatient to learn some detail of COCHIS by this point - it promises a lot after all, so I wonder if it's possible to put some intuition about its main points earlier, in section 1? Up to p13 at least, the description of the calculus is unsurprising, and it's only once we get to overlapping rules that it really gets interesting.
+> p10 A minor thing, but I was getting a bit impatient to learn some detail of
+> COCHIS by this point - it promises a lot after all, so I wonder if it's
+> possible to put some intuition about its main points earlier, in section 1?
+> Up to p13 at least, the description of the calculus is unsurprising, and it's
+> only once we get to overlapping rules that it really gets interesting.
 > 
-> p15 "We explain this concept in Section 3.5" - there's been a few forward references at this point, for example also the notion of "stability of resolution" and these notions seem to me to be crucial to the calculus, whereas what we've seen so far remains unsurprising to me at least.
+> p15 "We explain this concept in Section 3.5" - there's been a few forward
+> references at this point, for example also the notion of "stability of
+> resolution" and these notions seem to me to be crucial to the calculus,
+> whereas what we've seen so far remains unsurprising to me at least.
 > 
-> "The important twist is that..." - what makes this important? What is its effect, and what would happen otherwise? 
+> "The important twist is that..." - what makes this important? What is its
+> effect, and what would happen otherwise? 
 > (Ah, this question appears to be answered on p18)
 > 
-> p19 "It is not difficult to see..." - in that case, please explain why and let the reader be the judge of difficulty! Or probably better, avoid the phrase.
+> p19 "It is not difficult to see..." - in that case, please explain why and
+> let the reader be the judge of difficulty! Or probably better, avoid the
+> phrase.
 > 
-> p20 Introducing a new syntactic sort (again) to refine the grammar some more - could you present the complete grammar at the beginning in section 3.1 and say that you're going to explain it by taking an initial grammar and refining it? Then I wouldn't be wondering how many more refinements there are going to be... although I do like this way of presenting it, by encountering problems and refining the grammar to solve them.
+> p20 Introducing a new syntactic sort (again) to refine the grammar some more
+> - could you present the complete grammar at the beginning in section 3.1 and
+> say that you're going to explain it by taking an initial grammar and refining
+> it? Then I wouldn't be wondering how many more refinements there are going to
+> be... although I do like this way of presenting it, by encountering problems
+> and refining the grammar to solve them.
 > 
-> p24 (Nitpick, really) The sentence that introduces section 4 is a bit odd because we haven't seen these figures yet - and Figure 8 is several pages away. Perhaps better to say that the section introduces an algorithm which translates COCHIS to System F by resolving implicits deterministically.
+> p24 (Nitpick, really) The sentence that introduces section 4 is a bit odd
+> because we haven't seen these figures yet - and Figure 8 is several pages
+> away. Perhaps better to say that the section introduces an algorithm which
+> translates COCHIS to System F by resolving implicits deterministically.
 > 
-> p27 First line, please don't say "obviously" and "clearly" no matter how obvious and clear they are to you! Especially when the apparently "obvious" thing isn't valid...
+> p27 First line, please don't say "obviously" and "clearly" no matter how
+> obvious and clear they are to you! Especially when the apparently "obvious"
+> thing isn't valid...
 > 
 > Typo "vality concerns"
+
+FIXED
+ 
+> I wonder how this unification algorithm relates with the unification used in
+> dependently typed languages like Agda (see e.g. Higher-Order Dynamic Pattern
+> Unification for Dependent Types and Records by Abel and Pientka or Ulf
+> Norell's PhD thesis) w.r.t. scoping concerns? Especially since it would be
+> nice to integrate the resolution algorithm with instance arguments, for
+> example.
 > 
-> I wonder how this unification algorithm relates with the unification used in dependently typed languages like Agda (see e.g. Higher-Order Dynamic Pattern Unification for Dependent Types and Records by Abel and Pientka or Ulf Norell's PhD thesis) w.r.t. scoping concerns? Especially since it would be nice to integrate the resolution algorithm with instance arguments, for example.
+> p31 Figure 2 was a long time ago. Can you repeat what you need here? It's
+> awkward to flick back and forward, especially reading on screen. I think it
+> would also be nice to present the desirable properties of the translation
+> (the ones you prove later) up front.
 > 
-> p31 Figure 2 was a long time ago. Can you repeat what you need here? It's awkward to flick back and forward, especially reading on screen. I think it would also be nice to present the desirable properties of the translation (the ones you prove later) up front.
-> 
-> p36 "It should be easy enough" - this needs backing up, I'm not sure how easy it would be! I would find this more convincing with a sketch of Set in COCHIS noting the restrictions you'd need to make in a source language.
+> p36 "It should be easy enough" - this needs backing up, I'm not sure how easy
+> it would be! I would find this more convincing with a sketch of Set in COCHIS
+> noting the restrictions you'd need to make in a source language.
 > 
 > Referee: 3
 > 

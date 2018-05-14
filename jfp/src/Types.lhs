@@ -1774,7 +1774,7 @@ requires that the head $\type_1$ of $\rulet_1$ is strictly smaller than the
 head $\type_2$ of $\rulet_2$.
 In addition, the rule ensures that this property is stable
 under type substitution. Consider for instance the type
-$\forall a. (a \arrow a) \iarrow (a \arrow \mathit{Int} \arrow \tyint)$. 
+$\forall a. (a \arrow a) \iarrow (a \arrow \tyint \arrow \tyint)$. 
 The head's size 5 is strictly greater than the context
 constraint's size 3. Yet, if we instantiate $\alpha$ to
 $(\tyint \arrow \tyint \arrow \tyint)$, 
@@ -1785,12 +1785,14 @@ Declaratively, we can formulate stability as:
 \[\forall \theta.
 \mathit{dom}(\theta) \subseteq \mathit{ftv}(\rulet_1) \cup \mathit(ftv)(\rulet_2): 
 \enskip \tnorm[\theta(\rulet_1)] <
-\tnorm[\theta(\rulet_2)]\]
-Instead of enumerating all possible substitutions, rule~\rref{T-Rule} uses instead an
-equivalent algorithmic formulation which states that the number of occurrences
-of any free type variable $\alpha$ may not be larger in $\rulet_1$ than in
-$\rulet_2$. The auxiliary function $\occ{\alpha}{\rulet}$ is used here to
-determine the number of occurrences of $\alpha$ in $\rulet$.
+\tnorm[\theta(\rulet_2)]\] Instead of enumerating all possible substitutions,
+rule~\rref{T-Rule} uses instead an equivalent algorithmic formulation which
+states that, in addition to $\tnorm[\rulet_1] < \tnorm[\rulet_2]$, the number of
+occurrences of any free type variable $\alpha$ may not be larger in $\rulet_1$
+than in $\rulet_2$. The auxiliary function $\occ{\alpha}{\rulet}$ is used here
+to determine the number of occurrences of $\alpha$ in $\rulet$. In our example
+above, we do have that $\tnorm[\alpha \to \alpha] = 3 < 5 = \tnorm[\alpha \to \tyint \to \tyint]$,
+the second condition is not satisfied, i.e., $\occ{\alpha}{\alpha \to \alpha} = 2 \not\leq 1 = \occ{\alpha}{\alpha \to \tyint \to \tyint}$.
 
 Finally, as the types have a recursive structure whereby their components are
 themselves added to the environment, rule~\rref{T-Rule} also enforces the
