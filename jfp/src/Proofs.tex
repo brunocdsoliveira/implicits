@@ -267,7 +267,7 @@ The above proof relies on the following lemma.
 \begin{lemma}\label{lemma:s23:1}
   If 
 \begin{equation*}
-  \dmres{\tenv}{\rulet}{E}{\type}{E'}{\bar{\rulet} \leadsto \bar{x}}
+  \dmres{\tenv}{\rulet}{E}{\type}{E'}{\ie{\ruleset}{\bar{x}}}
 %   \tenv; \rulet \leadsto E \ivturns \type \leadsto E'; \bar{\rulet} \leadsto \bar{x}
 \end{equation*}
   and
@@ -277,7 +277,7 @@ The above proof relies on the following lemma.
 \end{equation*}
   and
 \begin{equation*}
-  \ares{\tenv}{\bar{\rulet}}{\bar{E}}
+  \ares{\tenv}{\ruleset}{\bar{E}}
 %  \tenv \vturns \bar{\rulet} \leadsto \bar{E}
 \end{equation*}
   then
@@ -296,10 +296,10 @@ The proof proceeds by induction on the derivation of the first assumption and re
 In order to deal with the de Bruijn variable representation in our mechanization,
 judgement
 \begin{equation*}
-  \dmres{\tenv}{\rulet}{E}{\type}{E'}{\bar{\rulet} \leadsto \bar{x}}
+  \dmres{\tenv}{\rulet}{E}{\type}{E'}{\ie{\ruleset}{\bar{x}}}
 %\tenv; \rulet \leadsto E \ivturns \type \leadsto E'; \bar{\rulet} \leadsto \bar{x}
 \end{equation*}
-differs from the corresponding mechanized definition (\texttt{DRes\_match} in file CochisDet.v) in the first argument, $\tenv$. In our mechanization, $\tenv$ is expressed by means of two environments, $\Delta_m$ and $\tenv_m$, so that $\tenv = \tenv_m,\Delta_m$.
+differs from the corresponding mechanized definition (\texttt{DRes\_match} in file CochisDet.v) in the first argument, $\tenv$. In our mechanization, $\tenv$ is expressed by means of two environments, $\denv_m$ and $\tenv_m$, so that $\tenv = \tenv_m,\denv_m$.
 
 %###############################################################################
 {\centering
@@ -308,7 +308,7 @@ differs from the corresponding mechanized definition (\texttt{DRes\_match} in fi
 \begin{lemma}\label{lemma:s23:5}
 If 
 \begin{equation*}
-  \dmres{\tenv}{\rulet}{E}{\type}{E'}{\bar{\rulet} \leadsto \bar{x}}
+  \dmres{\tenv}{\rulet}{E}{\type}{E'}{\ie{\ruleset}{\bar{x}}}
 %  \tenv; \rulet \leadsto E \ivturns \type \leadsto E'; \bar{\rulet} \leadsto \bar{x}
 \end{equation*}
 and
@@ -318,7 +318,7 @@ and
 \end{equation*}
 then
 \begin{equation*}
-  \ares{\tenv, \ie{\bar{\rulet}}{\bar{x}}}{\type}{E'}
+  \ares{\tenv, \ie{\ruleset}{\bar{x}}}{\type}{E'}
 %  \tenv, \bar{\rulet} \leadsto \bar{x} \vturns \tau \leadsto E'
 \end{equation*}
 \end{lemma}
@@ -787,7 +787,7 @@ then
 
 \begin{proof}
 From the lemma's third and fourth hypotheses, the hypothesis
-of rule \mylabel{R-Main} and Lemma~\ref{lemma:determinism:1} the desired
+of rule \rref{R-Main} and Lemma~\ref{lemma:determinism:1} the desired
 result follows
 \begin{equation*}
   E_1 = E_2
@@ -838,7 +838,7 @@ The proof proceeds by induction on the derivation of the third hypothesis.
 %===============================================================================
 
 It follows that the lemma's fourth hypothesis is also derived by rule
-\mylabel{R-IAbs}. It follows from the lemma's second hypothesis that 
+\rref{R-IAbs}. It follows from the lemma's second hypothesis that 
 \begin{equation*}
   \unambig{}{\rulet_1}\quad\wedge\quad \unambig{}{\rulet_2}
   %\unamb \rulet_1 \quad\wedge\quad \unamb \rulet_2
@@ -1089,7 +1089,7 @@ The proof proceeds by induction on the derivation of the first hypothesis.
 %$\bar{\alpha} \unamb \type'$ \ \\
 %===============================================================================
 
-  Then the second and third hypothesis of the lemma must have been formed by rule \mylabel{M-Simp}
+  Then the second and third hypothesis of the lemma must have been formed by rule \rref{M-Simp}
   and hence 
 \begin{equation*}
   \bar{\suty}_1 = \epsilon = \bar{\suty}_1'
@@ -1227,58 +1227,68 @@ Deterministic resolution is stable under substitution.
 \begin{lemma}\label{lemma:coherence:1}
   If 
 \begin{equation*}
-   \bar{\alpha},\alpha,\bar{\alpha}'; \tenv,\alpha,\tenv' \ivturns \rulet\leadsto E
+  \drres{\bar{\alpha},\alpha,\bar{\alpha}}{\tenv,\alpha,\tenv'}{\rulet}{E}
+%   \bar{\alpha},\alpha,\bar{\alpha}'; \tenv,\alpha,\tenv' \ivturns \rulet\leadsto E
 \end{equation*}
   and
 \begin{equation*}
-  \tenv \turns \suty
+  \wfty{\tenv}{\suty}
+%  \tenv \turns \suty
 \end{equation*}
   then
 \begin{equation*}
-  \bar{\alpha},\bar{\alpha}'; \tenv,\tenv'[\suty/\alpha] \ivturns \rulet[\suty/\alpha] \leadsto E[|\suty|/\alpha]
+  \drres{\bar{\alpha},\bar{\alpha}'}{\tenv,\tenv'[\suty/\alpha]}{\rulet[\suty/\alpha]}{E[|\suty|/\alpha]}
+%  \bar{\alpha},\bar{\alpha}'; \tenv,\tenv'[\suty/\alpha] \ivturns \rulet[\suty/\alpha] \leadsto E[|\suty|/\alpha]
 \end{equation*}
 \end{lemma}
 \end{minipage}
 }}
 
 \begin{proof}
+The proof proceeds by induction on the derivation of the first hypothesis.
 \begin{description}
 \setlength{\itemsep}{1em}
-%===============================================================================
-\item[\fbox{\texttt{(R-IAbs)}}]\quad$\bar{\alpha},\alpha,\bar{\alpha}';\tenv,\alpha,\tenv'
-\ivturns \rulet_1 \iarrow \rulet_2 \leadsto \lambda\relation{x}{|\rulet_1|}.E$ \ \\
-%===============================================================================
-  From the rule's hypothesis and the induction hypothesis we have
-\begin{equation*}
-\bar{\alpha},\bar{\alpha}';\tenv,(\tenv',\rulet_1\leadsto x)[\suty/\alpha] \ivturns \rulet_2[\suty/\alpha] \leadsto E[|\suty|/\alpha]
-\end{equation*}
-
-  From the definition of substitution and rule \mylabel{R-IAbs} we then conclude
-\begin{equation*}
-\bar{\alpha},\bar{\alpha}';\tenv,\tenv'[\suty/\alpha] \ivturns (\rulet_1 \iarrow \rulet_2)[\suty/\alpha] \leadsto (\lambda x:|\rulet_1|.E)[|\suty|/\alpha]
-\end{equation*}
 
 %===============================================================================
-\item[\fbox{\texttt{(R-TAbs)}}]\quad$\bar{\alpha},\alpha,\bar{\alpha}';\tenv,\alpha,\tenv'
-\ivturns \forall\beta.\rulet \leadsto \Lambda\beta.E$ \ \\
+\item[\fbox{\rref{R-IAbs}}]\quad$\drres{\bar{\alpha},\alpha,\bar{\alpha}'}{\tenv,\alpha,\tenv'}{\rulet_1 \To \rulet_2}{\abs{\relation{x}{|\rulet_1|}}{E}}$ \\
+%$\bar{\alpha},\alpha,\bar{\alpha}';\tenv,\alpha,\tenv'\ivturns \rulet_1 \iarrow \rulet_2 \leadsto \lambda\relation{x}{|\rulet_1|}.E$ \ \\
 %===============================================================================
-  From the rule's hypothesis and the induction hypothesis we have
-\begin{equation*}
-\bar{\alpha},\bar{\alpha}';\tenv,(\tenv',\beta)[\suty/\alpha] \ivturns \rulet[\suty/\alpha] \leadsto E[|\suty|/\alpha]
-\end{equation*}
 
-  From the definition of substitution and rule \mylabel{R-TAbs} we then conclude
+From the rule's hypothesis and the induction hypothesis we have
 \begin{equation*}
-\bar{\alpha},\bar{\alpha}';\tenv,\tenv'[\suty/\alpha] \ivturns (\forall\beta.\rulet)[\suty/\alpha] \leadsto (\Lambda\beta.E)[|\suty|/\alpha]
+\drres{\bar{\alpha},\bar{\alpha}'}{\tenv,(\tenv',\ie{\rulet_1}{x})[\suty/\alpha]}{\rulet_2[\suty/\alpha]}{E[\etrans{\suty}/\alpha]}
+%\bar{\alpha},\bar{\alpha}';\tenv,(\tenv',\rulet_1\leadsto x)[\suty/\alpha] \ivturns \rulet_2[\suty/\alpha] \leadsto E[|\suty|/\alpha]
+\end{equation*}
+From the definition of substitution and rule \rref{R-IAbs} we then conclude
+\begin{equation*}
+\drres{\bar{\alpha},\bar{\alpha}'}{\tenv,\tenv'[\suty/\alpha]}{(\rulet_1 \iarrow \rulet_2)[\suty/\alpha]}{(\abs{\relation{x}{\etrans{\rulet_1}}}{E})[\etrans{\suty}/\alpha]}
+%\bar{\alpha},\bar{\alpha}';\tenv,\tenv'[\suty/\alpha] \ivturns (\rulet_1 \iarrow \rulet_2)[\suty/\alpha] \leadsto (\lambda x:|\rulet_1|.E)[|\suty|/\alpha]
 \end{equation*}
 
 %===============================================================================
-\item[\fbox{\texttt{(R-Simp)}}]\quad$\bar{\alpha},\alpha,\bar{\alpha}';\tenv,\alpha,\tenv'
-\ivturns \type \leadsto E$ \ \\
+\item[\fbox{\rref{R-TAbs}}]\quad$\drres{\bar{\alpha},\alpha,\bar{\alpha}'}{\tenv,\alpha,\tenv'}{\tall{\beta}{\rulet}}{\Abs{\beta}{E}}$\\
+%$\bar{\alpha},\alpha,\bar{\alpha}';\tenv,\alpha,\tenv'\ivturns \forall\beta.\rulet \leadsto \Lambda\beta.E$ \ \\
 %===============================================================================
-  From the rule's hypothesis and Lemma~\ref{lemma:coherence:2} we conclude
+
+From the rule's hypothesis and the induction hypothesis we have
 \begin{equation*}
-  \bar{\alpha},\bar{\alpha}'; \tenv,\tenv'[\suty/\alpha];\tenv''' \ivturns \type[\suty/\alpha] \leadsto E[|\suty|/\alpha]
+\drres{\bar{\alpha},\bar{\alpha}'}{\tenv,(\tenv',\beta)[\suty/\alpha]}{\rulet[\suty/\alpha]}{E[|\suty|/\alpha]}
+%\bar{\alpha},\bar{\alpha}';\tenv,(\tenv',\beta)[\suty/\alpha] \ivturns \rulet[\suty/\alpha] \leadsto E[|\suty|/\alpha]
+\end{equation*}
+From the definition of substitution and rule \rref{R-TAbs} we then conclude
+\begin{equation*}
+\drres{\bar{\alpha},\bar{\alpha}'}{\tenv,\tenv'[\suty/\alpha]}{(\tall{\beta}{\rulet})[\suty/\alpha]}{(\Abs{\beta}{E})[\etrans{\suty}/\alpha]}
+%\bar{\alpha},\bar{\alpha}';\tenv,\tenv'[\suty/\alpha] \ivturns (\forall\beta.\rulet)[\suty/\alpha] \leadsto (\Lambda\beta.E)[|\suty|/\alpha]
+\end{equation*}
+%===============================================================================
+\item[\fbox{\rref{R-Simp}}]\quad$\drres{\bar{\alpha},\alpha,\bar{\alpha}'}{\tenv,\alpha,\tenv'}{\type}{E}$ \\
+%$\bar{\alpha},\alpha,\bar{\alpha}';\tenv,\alpha,\tenv'\ivturns \type \leadsto E$ \ \\
+%===============================================================================
+
+From the rule's hypothesis and Lemma~\ref{lemma:coherence:2} we conclude
+\begin{equation*}
+\dlres{\bar{\alpha},\bar{\alpha}'}{\tenv,\tenv'[\suty/\alpha]}{\tenv'''}{\type[\suty/\alpha]}{E[\etrans{\suty}/\alpha]}
+%  \bar{\alpha},\bar{\alpha}'; \tenv,\tenv'[\suty/\alpha];\tenv''' \ivturns \type[\suty/\alpha] \leadsto E[|\suty|/\alpha]
 \end{equation*}
   and
 \begin{equation*}
@@ -1287,12 +1297,14 @@ Deterministic resolution is stable under substitution.
   The latter could only have been obtained by ryle \mylabel{R-2}. 
   Hence, we know that $\tenv''' = \tenv,\tenv'[\suty/\alpha]$ and the former is equivalent to
 \begin{equation*}
-  \bar{\alpha},\bar{\alpha}'; \tenv,\tenv'[\suty/\alpha];\tenv,\tenv'[\suty/\alpha] \ivturns \type[\suty/\alpha] \leadsto E[|\suty|/\alpha]
+\dlres{\bar{\alpha},\bar{\alpha}'}{\tenv,\tenv'[\suty/\alpha]}{\tenv,\tenv'[\suty/\alpha]}{\type[\suty/\alpha]}{E[\etrans{\suty}/\alpha]}
+%  \bar{\alpha},\bar{\alpha}'; \tenv,\tenv'[\suty/\alpha];\tenv,\tenv'[\suty/\alpha] \ivturns \type[\suty/\alpha] \leadsto E[|\suty|/\alpha]
 \end{equation*}
 
-  With this fact we can conclude by rule \mylabel{R-Simp}
+With this fact we can conclude by rule \rref{R-Simp}
 \begin{equation*}
-\bar{\alpha},\bar{\alpha}';\tenv,\tenv'[\suty/\alpha] \ivturns \type[\suty/\alpha] \leadsto E[|\suty|/\alpha]
+\drres{\bar{\alpha},\bar{\alpha}'}{\tenv,\tenv'[\suty/\alpha]}{\type[\suty/\alpha]}{E[\etrans{\suty}/\alpha]}
+%\bar{\alpha},\bar{\alpha}';\tenv,\tenv'[\suty/\alpha] \ivturns \type[\suty/\alpha] \leadsto E[|\suty|/\alpha]
 \end{equation*}
 \end{description}
 \end{proof}
