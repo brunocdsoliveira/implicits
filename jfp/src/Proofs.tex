@@ -1350,6 +1350,7 @@ where
 }}
 
 \begin{proof}
+The proof proceeds by induction on the derivation of the first hypothesis.
 \begin{description}
 \setlength{\itemsep}{1em}
 %===============================================================================
@@ -1465,6 +1466,7 @@ R(\tenv;\alpha;(\tenv_1',\ie{\rulet}{x}),\tenv_2';\tenv,\alpha,(\tenv_1',\ie{\ru
 R(\tenv;\alpha;\tenv';\tenv'',\ie{\rulet}{x};\tenv,(\tenv_1',\ie{\rulet}{x})[\suty/\alpha];\suty)
 \end{equation*}
   \end{enumerate}
+  
 %===============================================================================
 \item[\fbox{\rref{L-Var}}]\quad$\dlres{\bar{\alpha},\alpha,\bar{\alpha}'}{\tenv,\alpha,\tenv'}{\tenv'', \relation{x}{\rulet}}{\type}{E}$\\
 %$\bar{\alpha},\alpha,\bar{\alpha}';\tenv,\alpha,\tenv';\tenv'', x : \rulet  \ivturns \type \leadsto E$ \ \\
@@ -1480,7 +1482,6 @@ Then following the rule's hypothesis and the induction hypothesis we have:
   \dlres{\bar{\alpha},\bar{\alpha}'}{\tenv,\tenv'[\suty/\alpha]}{\tenv''',\relation{x}{\rulet[\suty/\alpha]}}{\type[\suty/\alpha]}{E[|\suty|/\alpha]}
 %  \bar{\alpha},\bar{\alpha}';\tenv,\tenv'[\suty/\alpha];\tenv''',x:\rulet[\suty/\alpha] \ivturns \type[\suty/\alpha] \leadsto E[|\suty|/\alpha]
 \end{equation*}
-
   Similarly, following the rule's hypothesis and the induction hypothesis we have:
 \begin{equation*}
   R(\tenv;\alpha;\tenv';\tenv'';\tenv''';\suty)
@@ -1519,7 +1520,6 @@ R(\tenv;\alpha;\tenv';\tenv'',\relation{x}{\rulet};\tenv,(\tenv_1',\relation{x}{
 \end{equation*}
   \end{enumerate}
 
-
 %===============================================================================
 \item[\fbox{\rref{L-TyVar}}]\quad$\dlres{\bar{\alpha},\alpha,\bar{\alpha}'}{\tenv,\alpha,\tenv'}{\tenv'',\beta}{\type}{E}$\\
 %$\bar{\alpha},\alpha,\bar{\alpha}';\tenv,\alpha,\tenv';\tenv'',\beta \ivturns \type \leadsto E$ \ \\
@@ -1535,7 +1535,6 @@ R(\tenv;\alpha;\tenv';\tenv'',\relation{x}{\rulet};\tenv,(\tenv_1',\relation{x}{
   \dlres{\bar{\alpha},\bar{\alpha}'}{\tenv,\tenv'[\suty/\alpha]}{\tenv''',\beta}{\type[\suty/\alpha]}{E[|\suty|/\alpha]}
 %  \bar{\alpha},\bar{\alpha}';\tenv,\tenv'[\suty/\alpha];\tenv''',\beta \ivturns \type[\suty/\alpha] \leadsto E[|\suty|/\alpha]
 \end{equation*}
-
   Similarly, following the rule's hypothesis and the induction hypothesis we have:
 \begin{equation*}
   R(\tenv;\alpha;\tenv';\tenv'';\tenv''';\suty)
@@ -1587,7 +1586,6 @@ R(\tenv;\alpha;(\tenv_1',\beta),\tenv_2';\tenv,\alpha,(\tenv_1',\beta);\tenv,(\t
 R(\tenv;\alpha;\tenv';\tenv'',\beta;\tenv,(\tenv_1',\beta)[\suty/\alpha];\suty)
 \end{equation*}
   \end{enumerate}
-
 \end{description}
 \end{proof}
 
@@ -1598,63 +1596,77 @@ R(\tenv;\alpha;\tenv';\tenv'',\beta;\tenv,(\tenv_1',\beta)[\suty/\alpha];\suty)
 \begin{lemma}\label{lemma:coherence:3}
   If 
 \begin{equation*}
-   \tenv,\alpha,\tenv'; \rulet \leadsto E \ivturns \type \leadsto E'; \bar{\rulet} \leadsto \bar{x}
+  \dmres{\tenv,\alpha,\tenv'}{\rulet}{E}{\type}{E'}{\ie{\ruleset}{\bar{x}}}
+%   \tenv,\alpha,\tenv'; \rulet \leadsto E \ivturns \type \leadsto E'; \bar{\rulet} \leadsto \bar{x}
 \end{equation*}
   and
 \begin{equation*}
-  \tenv \turns \suty
+  \wfty{\tenv}{\suty}
+%  \tenv \turns \suty
 \end{equation*}
   then
 \begin{equation*}
-   \tenv,\tenv'[\suty/\alpha]; \rulet[\suty/\alpha] \leadsto E[|\suty|/\alpha] \ivturns \type[\suty/\alpha] \leadsto E'[|\suty|/\alpha]; \bar{\rulet}[\suty/\alpha] \leadsto \bar{x}
+  \dmres{\tenv,\tenv'[\suty/\alpha]}{\rulet[\suty/\alpha]}{E[|\suty|/\alpha]}{\type[\suty/\alpha]}{E'[|\suty|/\alpha]}{\ie{\ruleset[\suty/\alpha]}{\bar{x}}}
+%   \tenv,\tenv'[\suty/\alpha]; \rulet[\suty/\alpha] \leadsto E[|\suty|/\alpha] \ivturns \type[\suty/\alpha] \leadsto E'[|\suty|/\alpha]; \bar{\rulet}[\suty/\alpha] \leadsto \bar{x}
 \end{equation*}
 \end{lemma}
 \end{minipage}
 }}
 
 \begin{proof}
+The proof proceeds by induction on the derivation of the first hypothesis.
 \begin{description}
 \setlength{\itemsep}{1em}
 %===============================================================================
-\item[\fbox{\texttt{(M-Simp)}}]\quad$\tenv,\alpha,\tenv'; \type \leadsto E \ivturns \type \leadsto E; \epsilon$ \ \\
+\item[\fbox{\rref{M-Simp}}]\quad$\dmres{\tenv,\alpha,\tenv'}{\type}{E}{\type}{E}{\epsilon}$\\
+%$\tenv,\alpha,\tenv'; \type \leadsto E \ivturns \type \leadsto E; \epsilon$ \ \\
 %===============================================================================
-  The desired conclusion follows directly from rule \mylabel{M-Simp}
+
+The desired conclusion follows directly from rule \rref{M-Simp}
 \begin{equation*}
-  \tenv,\tenv'[\suty/\alpha]; \type[\suty/\alpha] \leadsto E[|\suty/\alpha|] \ivturns \type[\suty/\alpha] \leadsto E[|\suty/\alpha|]; \epsilon
+\dmres{\tenv,\tenv'[\suty/\alpha]}{\type[\suty/\alpha]}{E[|\suty/\alpha|]}{\type[\suty/\alpha]}{E[|\suty/\alpha|]}{\epsilon}
+%  \tenv,\tenv'[\suty/\alpha]; \type[\suty/\alpha] \leadsto E[|\suty/\alpha|] \ivturns \type[\suty/\alpha] \leadsto E[|\suty/\alpha|]; \epsilon
 \end{equation*}
 
 %===============================================================================
-\item[\fbox{\texttt{(M-IApp)}}]\quad$\tenv,\alpha,\tenv'; \rulet_1 \iarrow \rulet_2 \leadsto E \ivturns \type \leadsto E'; \Sigma, \rulet_1 \leadsto x$ \ \\
+\item[\fbox{\rref{M-IApp}}]\quad$\dmres{\tenv,\alpha,\tenv'}{\rulet_1 \To \rulet_2}{E}{\type}{E'}{\Sigma,\ie{\rulet_1}{x}}$\\
+%$\tenv,\alpha,\tenv'; \rulet_1 \iarrow \rulet_2 \leadsto E \ivturns \type \leadsto E'; \Sigma, \rulet_1 \leadsto x$ \ \\
 %===============================================================================
-  From the rule's hypothesis and the induction hypothesis we have 
+
+From the rule's hypothesis and the induction hypothesis we have 
 \begin{equation*}
-  \tenv,(\tenv',\rulet_1 \leadsto x)[\suty/\alpha]; \rulet_2[\suty/\alpha] \leadsto (E x)[|\suty|/\alpha] \ivturns \type[\suty/\alpha] \leadsto E'[|\suty|/\alpha]; \Sigma[\suty/\alpha]
+\dmres{\tenv,(\tenv',\ie{\rulet_1}{x})[\suty/\alpha]}{\rulet_2[\suty/\alpha]}{(E~x)[|\suty|/\alpha]}{\type[\suty/\alpha]}{E'[|\suty|/\alpha]}{\Sigma[\suty/\alpha]}
+%  \tenv,(\tenv',\rulet_1 \leadsto x)[\suty/\alpha]; \rulet_2[\suty/\alpha] \leadsto (E x)[|\suty|/\alpha] \ivturns \type[\suty/\alpha] \leadsto E'[|\suty|/\alpha]; \Sigma[\suty/\alpha]
+\end{equation*}
+  Then from the definition of substutition and rule \rref{M-IApp} we conclude
+\begin{equation*}
+  \dmres{\tenv,\tenv'[\suty/\alpha]}{(\rulet_1 \To \rulet_2)[\suty/\alpha]}{E[|\suty|/\alpha]}{\type[\suty/\alpha]}{E'[|\suty|/\alpha]}{(\Sigma,\ie{\rulet_1}{x})[\suty/\alpha]}
+%  \tenv,\tenv'[\suty/\alpha]; (\rulet_1 \iarrow \rulet_2)[\suty/\alpha] \leadsto E[|\suty|/\alpha] \ivturns \type[\suty/\alpha] \leadsto E'[|\suty|/\alpha]; (\Sigma,\rulet_1 \leadsto x)[\suty/\alpha]
 \end{equation*}
 
-  Then from the definition of substutition and rule \mylabel{M-IApp} we conclude
-\begin{equation*}
-  \tenv,\tenv'[\suty/\alpha]; (\rulet_1 \iarrow \rulet_2)[\suty/\alpha] \leadsto E[|\suty|/\alpha] \ivturns \type[\suty/\alpha] \leadsto E'[|\suty|/\alpha]; (\Sigma,\rulet_1 \leadsto x)[\suty/\alpha]
-\end{equation*}
+%===============================================================================
+\item[\fbox{\rref{M-TApp}}]\quad$\dmres{\tenv,\alpha,\tenv'}{\tall{\beta}{\rulet}}{E}{\type}{E'}{\Sigma}$\\
+%$\tenv,\alpha,\tenv'; \forall\beta.\rulet \leadsto E \ivturns \type \leadsto E'; \Sigma$ \ \\
+%===============================================================================
 
-%===============================================================================
-\item[\fbox{\texttt{(M-TApp)}}]\quad$\tenv,\alpha,\tenv'; \forall\beta.\rulet \leadsto E \ivturns \type \leadsto E'; \Sigma$ \ \\
-%===============================================================================
   From the rule's first hypothesis and the induction hypothesis we have 
 \begin{equation*}
-  \tenv,\tenv'[\suty/\alpha]; \rulet[\suty'/\beta][\suty/\alpha] \leadsto (E |\suty'|)[|\suty|/\alpha] \ivturns \type[\suty/\alpha] \leadsto E'[|\suty|/\alpha]; \Sigma[\suty/\alpha]
+  \dmres{\tenv,\tenv'[\suty/\alpha]}{\rulet[\suty'/\beta][\suty/\alpha]}{(E |\suty'|)[|\suty|/\alpha]}{\type[\suty/\alpha]}{E'[|\suty|/\alpha]}{\Sigma[\suty/\alpha]}
+%  \tenv,\tenv'[\suty/\alpha]; \rulet[\suty'/\beta][\suty/\alpha] \leadsto (E |\suty'|)[|\suty|/\alpha] \ivturns \type[\suty/\alpha] \leadsto E'[|\suty|/\alpha]; \Sigma[\suty/\alpha]
 \end{equation*}
 
   From the rule's second hypothesis (and the preservation of well-typing under type-susbstitution) we have
 \begin{equation*}
-  \tenv,\tenv'[\suty/\alpha] \vdash \suty'[\suty'/\alpha]
+\wfty{\tenv,\tenv'[\suty/\alpha]}{\suty'[\suty'/\alpha]}
+%  \tenv,\tenv'[\suty/\alpha] \vdash \suty'[\suty'/\alpha]
 \end{equation*}
 
-  From these two facts we conclude by rule \mylabel{M-TApp}, reasoning modulo
+  From these two facts we conclude by rule \rref{M-TApp}, reasoning modulo
   the definition of substitution
 \begin{equation*}
-  \tenv,\tenv'[\suty/\alpha]; (\forall\beta.\rulet)[\suty/\alpha] \leadsto E[|\suty|/\alpha] \ivturns \type[\suty/\alpha] \leadsto E'[|\suty|/\alpha]; \Sigma[\suty/\alpha]
+  \dmres{\tenv,\tenv'[\suty/\alpha]}{(\tall{\beta}{\rulet})[\suty/\alpha]}{E[|\suty|/\alpha]}{\type[\suty/\alpha]}{E'[|\suty|/\alpha]}{\Sigma[\suty/\alpha]}
+%  \tenv,\tenv'[\suty/\alpha]; (\forall\beta.\rulet)[\suty/\alpha] \leadsto E[|\suty|/\alpha] \ivturns \type[\suty/\alpha] \leadsto E'[|\suty|/\alpha]; \Sigma[\suty/\alpha]
 \end{equation*}
-
 \end{description}
 \end{proof}
 
