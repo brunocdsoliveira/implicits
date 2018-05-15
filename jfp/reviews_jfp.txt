@@ -434,10 +434,9 @@ Fixed.
 > 
 >  1. Why does this condition use $\tau_i$ instead of $\rho_i$?  The
 >  explanation further down in the text suggests it should be $\rho_i$.
-> 
+ 
 >  2. Why does the condition use the non-strict order $\leq$ on
 >  naturals?  The declarative counterpart discussed in the text
->  suggests it should be the strict <.
 > 
 >  - "Rule (T-Rule) uses instead an equivalent algorithmic formulation".
 > Is the algorithmic formulation really equivalent?  Take
@@ -469,7 +468,8 @@ These conditions are met by your first example:
 
 but not by your second example where the two are swapped.
 
-We have modified the text to clarify this.
+We have modified the text to address all the concerns raised above
+and to make the approach and its validity clearer.
 
 > p. 32:
 > 

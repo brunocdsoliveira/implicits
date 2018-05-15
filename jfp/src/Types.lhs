@@ -1745,8 +1745,8 @@ This paper adapts those restrictions to the setting of \name.
 
 We show termination by characterising the resolution process as a (resolution)
 tree with goals in the nodes. The initial goal sits at the root of the tree. A
-multi-edge from a parent node to its children presents a rule from the
-environment that matches the parent node’s goal; the nodes children are the
+multi-edge from a parent node to its children represents a rule from the
+environment that matches the parent node’s goal; the node's children are the
 recursive goals. 
 
 Resolution terminates if the tree is finite.  Hence, if it does not terminate,
@@ -1772,8 +1772,16 @@ universally quantified types. Finally, rule~\rref{T-Rule} enforces
 the actual condition on rule types $\rulet_1 \iarrow \rulet_2$, which
 requires that the head $\type_1$ of $\rulet_1$ is strictly smaller than the
 head $\type_2$ of $\rulet_2$.
-In addition, the rule ensures that this property is stable
-under type substitution. Consider for instance the type
+
+To account for polymorphism and the fact that the type variables in rule types
+can be intanstiated, rule \rref{T-Rule} ensures that 
+the $\tnorm[\tau_1] < \tnorm[\tau_2]$ property is stable under substitution.
+Declaratively, we can formulate this stability under substitution as: 
+\[\forall \theta.
+\mathit{dom}(\theta) \subseteq \mathit{ftv}(\type_1) \cup \mathit(ftv)(\type_2): 
+\enskip \tnorm[\theta(\type_1)] < \tnorm[\theta(\type_2)]\] 
+
+Consider for instance the type
 $\forall a. (a \arrow a) \iarrow (a \arrow \tyint \arrow \tyint)$. 
 The head's size 5 is strictly greater than the context
 constraint's size 3. Yet, if we instantiate $\alpha$ to
@@ -1781,18 +1789,25 @@ $(\tyint \arrow \tyint \arrow \tyint)$,
 then the
 head's size becomes 10 while the context constraint's size becomes 11.
 
-Declaratively, we can formulate stability as: 
-\[\forall \theta.
-\mathit{dom}(\theta) \subseteq \mathit{ftv}(\rulet_1) \cup \mathit(ftv)(\rulet_2): 
-\enskip \tnorm[\theta(\rulet_1)] <
-\tnorm[\theta(\rulet_2)]\] Instead of enumerating all possible substitutions,
-rule~\rref{T-Rule} uses instead an equivalent algorithmic formulation which
-states that, in addition to $\tnorm[\rulet_1] < \tnorm[\rulet_2]$, the number of
-occurrences of any free type variable $\alpha$ may not be larger in $\rulet_1$
-than in $\rulet_2$. The auxiliary function $\occ{\alpha}{\rulet}$ is used here
-to determine the number of occurrences of $\alpha$ in $\rulet$. In our example
-above, we do have that $\tnorm[\alpha \to \alpha] = 3 < 5 = \tnorm[\alpha \to \tyint \to \tyint]$,
-the second condition is not satisfied, i.e., $\occ{\alpha}{\alpha \to \alpha} = 2 \not\leq 1 = \occ{\alpha}{\alpha \to \tyint \to \tyint}$.
+The declarative formulation above is not suitable in an algorithm because
+it enumerates all possible substitutions.
+Rule~\rref{T-Rule} uses instead an
+equivalent algorithmic formulation which states that, in addition to
+$\tnorm[\type_1] < \tnorm[\type_2]$, the number of occurrences
+of any free type variable $\alpha$ may not be larger in $\type_1$ than
+in $\type_2$. The first condition expresses that for the empty subsitution,
+the size strictly decreases, say from $\tnorm[\type_2] = n$ to $
+\tnorm[\type_1] = m$. If we instantiate a type variable $\alpha$ to a type $\suty$ of size $k$,
+then the sizes change to 
+$\tnorm[[\suty/\alpha]\type_1] = m + k \times \occ{\alpha}{\type_1}$ and
+$\tnorm[[\suty/\alpha]\type_2] = n + k \times \occ{\alpha}{\type_2}$  where
+the auxiliary function $\occ{\alpha}{\rulet}$ determines the number of occurrences of $\alpha$ in $\rulet$. 
+The second condition guarantees that $k \times \occ{\alpha}{\type_1} \leq k \times \occ{\alpha}{\type_2}$
+and thus that the strict decrease is preserved under substitution.
+In our example above, we do have that $\tnorm[\alpha \to \alpha] = 3 < 5 =
+\tnorm[\alpha \to \tyint \to \tyint]$, the second condition is not satisfied,
+i.e., $\occ{\alpha}{\alpha \to \alpha} = 2 \not\leq 1 = \occ{\alpha}{\alpha \to
+\tyint \to \tyint}$.
 
 Finally, as the types have a recursive structure whereby their components are
 themselves added to the environment, rule~\rref{T-Rule} also enforces the
