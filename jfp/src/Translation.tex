@@ -122,27 +122,69 @@ If $\ares{\tenv}{\rulet}{E}$, then $\fwte{\etrans{\tenv}}{E}{\ttrans[\rulet]}$.
 Moreover, we can express three key properties of Figure~\ref{fig:resolution2}'s
 definition of resolution in terms of the generated evidence.
 Firstly, the deterministic version of resolution is a sound variation on the original ambiguous resolution.
-\begin{lemma}[Soundness]
+\begin{theorem}[Soundness]
 Figure~\ref{fig:resolution2}'s definition of resolution is sound (but
 incomplete) with respect to Figure~\ref{fig:resolution1}'s definition.
 \[\forall \tenv, \rulet, E: \quad\quad \dres{\tenv}{\rulet}{E} \quad\Rightarrow\quad \ares{\tenv}{\rulet}{E} \]
-\end{lemma}
-Secondly, the deterministic resolution guarantees a strong form of coherence:
-\begin{lemma}[Determinacy]
+\end{theorem}
+Secondly, the deterministic resolution guarantees is effectively deterministic:
+\begin{theorem}[Determinacy]
 The generated evidence of resolution is uniquely determined.
 \[\forall \tenv, \rulet, E_1, E_2: \quad\quad 
      \dres{\tenv}{\rulet}{E_1} ~\wedge~ 
      \dres{\tenv}{\rulet}{E_2} \quad\Rightarrow\quad E_1 = E_2 \]
-\end{lemma}
+\end{theorem}
+It follows immediately that deterministic resolution is also coherent,
+which is formulated as follows for our elaboration-based setting.
+\begin{corollary}[Coherence]
+\[\forall \tenv, \rulet, E_1, E_2: \quad\quad 
+     \dres{\tenv}{\rulet}{E_1} ~\wedge~ 
+     \dres{\tenv}{\rulet}{E_2} \quad\Rightarrow\quad 
+     \fctx{\etrans{\tenv}}{E_1}{E_2}{\ttrans[\rulet]} \]
+\end{corollary}
+Here the judgment $\fctx{\tenv}{E_1}{E_2}{T}$
+denotes \emph{contextual equivalence}, which captures that
+$E_1$ and $E_2$ behave the same in any well-typed program context. We do not give the
+formal definition here as it is not required to prove the corollary; we only
+need to know that it is an equivalence relation, and, more spefically, that
+it is reflexive, i.e., any well-typed System~F term is contextually equivalent
+to itself. 
+
 Thirdly, on top of the immediate coherence of deterministic resolution, 
-an additional coherence property holds.  
-\begin{lemma}[Stability]
+an additional stability property holds.  
+\begin{lemma}[Stability of Resolution]
 Resolution is stable under type substitution.
 \[\forall \tenv,\alpha,\tenv',\sigma,\rulet, E: \enskip\
 \dres{\tenv,\alpha,\tenv'}{\rulet}{E} \enskip\wedge\enskip \tenv \vdash \sigma
 \enskip\Rightarrow\enskip 
 \dres{\tenv,\tenv'[\sigma/\alpha]}{\rulet[\sigma/\alpha]}{E[\ttrans[\sigma]/\alpha]} \]
-\end{lemma}
+\end{lemma}%
+This is a key lemma to establish that static reduction of type application 
+preserves typing and elaboration.
+\begin{lemma}[Stability of Typing under Type Application Reduction]
+Static reduction of type application preserves typing.
+\[\forall \tenv,\alpha,\sigma,\rulet, E: \enskip\
+\wte{\tenv}{(\Lambda \alpha.e)\,\suty}{\rulet}{(\Lambda \alpha.E)\,\ttrans[\suty]}
+\enskip\Rightarrow\enskip 
+\wte{\tenv}{e[\suty/\alpha]}{\rulet}{E[\ttrans[\suty]/\alpha]}
+   \]
+\end{lemma}%
+This, together with another property of System~F's contextual equivalence:
+\[ \forall \tenv, \alpha, E, T, T': \enskip\
+     \fwte{\tenv}{(\Lambda \alpha.E)\,T}{T'} \enskip\Rightarrow\enskip 
+     \fctx{\tenv}{(\Lambda \alpha.E)\,T}{E[T/\alpha]}{T'}\]
+allows us to conclude the correctness of static reduction of type application.
+\begin{theorem}[Correctness of Type Application Reduction]
+If a type application and its reduced form elaborate to two System~F terms,
+those terms are contextually equivalent.
+\begin{equation*}
+\forall \tenv, \alpha, e, \suty, E1, E2 : \enskip\\
+\wte{\tenv}{(\Lambda \alpha.e)\,\suty}{\rulet}{E_1} ~\wedge~
+\wte{\tenv}{e[\suty/\alpha]}{\rulet}{E_2}
+\enskip\Rightarrow\enskip 
+\fctx{\etrans{\tenv}}{E_1}{E_2}{\ttrans[\rulet]}
+\end{equation*}
+\end{theorem}
 
 %-------------------------------------------------------------------------------
 \subsection{Evidence Generation in the Algorithm}
