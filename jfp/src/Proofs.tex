@@ -990,10 +990,10 @@ The proof proceeds by induction on the derivation of the third hypothesis.
 \end{equation*}
 
 %===============================================================================
-\item[\fbox{\rref{(L-TyVar)}}]\quad$\dlres{\bar{\alpha}}{\tenv}{\tenv',\alpha}{\type}{E_1}$\\
+\item[\fbox{\rref{L-TyVar}}]\quad$\dlres{\bar{\alpha}}{\tenv}{\tenv',\alpha}{\type}{E_1}$\\
 %$\bar{\alpha};\tenv;\tenv',\alpha \ivturns \type \leadsto E_1$ \ \\
 %===============================================================================
-  Clearly the fourth hypothesis is also derived by rule \ref{L-TyVar}.
+  Clearly the fourth hypothesis is also derived by rule \rref{L-TyVar}.
   Moreover, from the second hypothesis it follows that $\unambig{}{\tenv'}$.
   Hence, from the induction hypothesis we conclude that
 \begin{equation*}
@@ -1063,9 +1063,9 @@ and
 \end{equation*}
 then
 \begin{equation*}
-  \bar{\suty}_1 = \bar{\suty}_1' \quad\wedge\quad \bar{\suty}_2 = \bar{\suty}_2'
-  \quad\wedge\quad E_1 = E_2 \quad\wedge\quad \Sigma_1 = \Sigma_2
-  \quad\wedge\quad \unamb \Sigma_1
+  \bar{\suty}_1 = \bar{\suty}_1' \andl \bar{\suty}_2 = \bar{\suty}_2'
+  \andl E_1 = E_2 \andl \Sigma_1 = \Sigma_2
+  \andl \unambig{}{\Sigma_1}
 \end{equation*}
 % where
 % \begin{equation*}
@@ -1122,10 +1122,10 @@ The proof proceeds by induction on the derivation of the first hypothesis.
   From their two hypotheses and from the hypothesis of the rule and the induction hypothesis, we obtain
   the desired results
 \begin{equation*}
-  \bar{\suty}_1 = \bar{\suty}_1' \quad\wedge\quad \bar{\suty}_2 = \bar{\suty}_2'
-  \quad\wedge\quad 
+  \bar{\suty}_1 = \bar{\suty}_1' \andl \bar{\suty}_2 = \bar{\suty}_2'
+  \andl
   E_1 = E_2
-  \quad\wedge\quad
+  \andl
   \Sigma_1,\ie{\rulet_1[|\bar{\sigma}_2|/\bar{\alpha}]}{x}
   = 
   \Sigma_2,\ie{\rulet_1[|\bar{\sigma}_2'|/\bar{\alpha}]}{x}
@@ -1147,25 +1147,25 @@ Then the second and third hypothesis of the lemma must have been formed by rule 
   From their two hypotheses and from the hypothesis of the rule and the induction hypothesis, we obtain
 \begin{equation*}
   \bar{\suty}_2,\suty_{1,2} = \bar{\suty}_2',\suty_{1,2}' 
-  \quad\wedge\quad 
+  \andl
   \bar{\suty}_{1,1} = \bar{\suty}_{1,1}'
-  \quad\wedge\quad 
+  \andl
   E_1 = E_2
-  \quad\wedge\quad 
+  \andl
   \Sigma_1 = \Sigma_2
-  \quad\wedge\quad 
-  \unamb \Sigma_1
+  \andl
+  \unambig{}{\Sigma_1}
 \end{equation*}
   
   From this we conclude the desired result 
 \begin{equation*}
-  \bar{\suty}_1 = \bar{\suty}_1' \quad\wedge\quad \bar{\suty}_2 = \bar{\suty}_2'
-  \quad\wedge\quad 
+  \bar{\suty}_1 = \bar{\suty}_1' \andl \bar{\suty}_2 = \bar{\suty}_2'
+  \andl
   E_1 = E_2
-  \quad\wedge\quad 
+  \andl
   \Sigma_1 = \Sigma_2
-  \quad\wedge\quad 
-  \unamb \Sigma_1
+  \andl
+  \unambig{}{\Sigma_1}
 \end{equation*}
 \end{description}
 \end{proof}
@@ -1256,12 +1256,12 @@ The proof proceeds by induction on the derivation of the first hypothesis.
 
 From the rule's hypothesis and the induction hypothesis we have
 \begin{equation*}
-\drres{\bar{\alpha},\bar{\alpha}'}{\tenv,(\tenv',\ie{\rulet_1}{x})[\suty/\alpha]}{\rulet_2[\suty/\alpha]}{E[\etrans{\suty}/\alpha]}
+\drres{\bar{\alpha},\bar{\alpha}'}{\tenv,(\tenv',\ie{\rulet_1}{x})[\suty/\alpha]}{\rulet_2[\suty/\alpha]}{E[|\suty|/\alpha]}
 %\bar{\alpha},\bar{\alpha}';\tenv,(\tenv',\rulet_1\leadsto x)[\suty/\alpha] \ivturns \rulet_2[\suty/\alpha] \leadsto E[|\suty|/\alpha]
 \end{equation*}
 From the definition of substitution and rule \rref{R-IAbs} we then conclude
 \begin{equation*}
-\drres{\bar{\alpha},\bar{\alpha}'}{\tenv,\tenv'[\suty/\alpha]}{(\rulet_1 \iarrow \rulet_2)[\suty/\alpha]}{(\abs{\relation{x}{\etrans{\rulet_1}}}{E})[\etrans{\suty}/\alpha]}
+\drres{\bar{\alpha},\bar{\alpha}'}{\tenv,\tenv'[\suty/\alpha]}{(\rulet_1 \iarrow \rulet_2)[\suty/\alpha]}{(\abs{\relation{x}{|\rulet_1|}}{E})[|\suty|/\alpha]}
 %\bar{\alpha},\bar{\alpha}';\tenv,\tenv'[\suty/\alpha] \ivturns (\rulet_1 \iarrow \rulet_2)[\suty/\alpha] \leadsto (\lambda x:|\rulet_1|.E)[|\suty|/\alpha]
 \end{equation*}
 
@@ -1277,7 +1277,7 @@ From the rule's hypothesis and the induction hypothesis we have
 \end{equation*}
 From the definition of substitution and rule \rref{R-TAbs} we then conclude
 \begin{equation*}
-\drres{\bar{\alpha},\bar{\alpha}'}{\tenv,\tenv'[\suty/\alpha]}{(\tall{\beta}{\rulet})[\suty/\alpha]}{(\Abs{\beta}{E})[\etrans{\suty}/\alpha]}
+\drres{\bar{\alpha},\bar{\alpha}'}{\tenv,\tenv'[\suty/\alpha]}{(\tall{\beta}{\rulet})[\suty/\alpha]}{(\Abs{\beta}{E})[|\suty|/\alpha]}
 %\bar{\alpha},\bar{\alpha}';\tenv,\tenv'[\suty/\alpha] \ivturns (\forall\beta.\rulet)[\suty/\alpha] \leadsto (\Lambda\beta.E)[|\suty|/\alpha]
 \end{equation*}
 %===============================================================================
@@ -1287,7 +1287,7 @@ From the definition of substitution and rule \rref{R-TAbs} we then conclude
 
 From the rule's hypothesis and Lemma~\ref{lemma:coherence:2} we conclude
 \begin{equation*}
-\dlres{\bar{\alpha},\bar{\alpha}'}{\tenv,\tenv'[\suty/\alpha]}{\tenv'''}{\type[\suty/\alpha]}{E[\etrans{\suty}/\alpha]}
+\dlres{\bar{\alpha},\bar{\alpha}'}{\tenv,\tenv'[\suty/\alpha]}{\tenv'''}{\type[\suty/\alpha]}{E[|\suty|/\alpha]}
 %  \bar{\alpha},\bar{\alpha}'; \tenv,\tenv'[\suty/\alpha];\tenv''' \ivturns \type[\suty/\alpha] \leadsto E[|\suty|/\alpha]
 \end{equation*}
   and
@@ -1297,13 +1297,12 @@ From the rule's hypothesis and Lemma~\ref{lemma:coherence:2} we conclude
   The latter could only have been obtained by ryle \mylabel{R-2}. 
   Hence, we know that $\tenv''' = \tenv,\tenv'[\suty/\alpha]$ and the former is equivalent to
 \begin{equation*}
-\dlres{\bar{\alpha},\bar{\alpha}'}{\tenv,\tenv'[\suty/\alpha]}{\tenv,\tenv'[\suty/\alpha]}{\type[\suty/\alpha]}{E[\etrans{\suty}/\alpha]}
+\dlres{\bar{\alpha},\bar{\alpha}'}{\tenv,\tenv'[\suty/\alpha]}{\tenv,\tenv'[\suty/\alpha]}{\type[\suty/\alpha]}{E[|\suty|/\alpha]}
 %  \bar{\alpha},\bar{\alpha}'; \tenv,\tenv'[\suty/\alpha];\tenv,\tenv'[\suty/\alpha] \ivturns \type[\suty/\alpha] \leadsto E[|\suty|/\alpha]
 \end{equation*}
-
 With this fact we can conclude by rule \rref{R-Simp}
 \begin{equation*}
-\drres{\bar{\alpha},\bar{\alpha}'}{\tenv,\tenv'[\suty/\alpha]}{\type[\suty/\alpha]}{E[\etrans{\suty}/\alpha]}
+\drres{\bar{\alpha},\bar{\alpha}'}{\tenv,\tenv'[\suty/\alpha]}{\type[\suty/\alpha]}{E[|\suty|/\alpha]}
 %\bar{\alpha},\bar{\alpha}';\tenv,\tenv'[\suty/\alpha] \ivturns \type[\suty/\alpha] \leadsto E[|\suty|/\alpha]
 \end{equation*}
 \end{description}
@@ -1316,7 +1315,8 @@ With this fact we can conclude by rule \rref{R-Simp}
 \begin{lemma}\label{lemma:coherence:2}
   If 
 \begin{equation*}
-   \bar{\alpha},\alpha,\bar{\alpha}'; \tenv,\alpha,\tenv';\tenv'' \ivturns \type \leadsto E
+\dlres{\bar{\alpha},\alpha,\bar{\alpha}'}{\tenv,\alpha,\tenv'}{\tenv''}{\type}{E}
+%   \bar{\alpha},\alpha,\bar{\alpha}'; \tenv,\alpha,\tenv';\tenv'' \ivturns \type \leadsto E
 \end{equation*}
   and
 \begin{equation*}
@@ -1324,11 +1324,13 @@ With this fact we can conclude by rule \rref{R-Simp}
 \end{equation*}
   and
 \begin{equation*}
-  \tenv \turns \suty
+\wfty{\tenv}{\suty}
+%  \tenv \turns \suty
 \end{equation*}
   then
 \begin{equation*}
-  \bar{\alpha},\bar{\alpha}'; \tenv,\tenv'[\suty/\alpha];\tenv''' \ivturns \type[\suty/\alpha] \leadsto E[|\suty|/\alpha]
+\dlres{\bar{\alpha},\bar{\alpha}'}{\tenv,\tenv'[\suty/\alpha]}{\tenv'''}{\type[\suty/\alpha]}{E[|\suty|/\alpha]}
+%  \bar{\alpha},\bar{\alpha}'; \tenv,\tenv'[\suty/\alpha];\tenv''' \ivturns \type[\suty/\alpha] \leadsto E[|\suty|/\alpha]
 \end{equation*}
   and
 \begin{equation*}
@@ -1348,75 +1350,84 @@ where
 }}
 
 \begin{proof}
+The proof proceeds by induction on the derivation of the first hypothesis.
 \begin{description}
 \setlength{\itemsep}{1em}
 %===============================================================================
-\item[\fbox{\texttt{(L-RuleMatch)}}]\quad$
-  \bar{\alpha},\alpha,\bar{\alpha}'; \tenv,\alpha,\tenv'; \tenv'',\rulet \leadsto x \ivturns \type \leadsto E
+\item[\fbox{\rref{L-RuleMatch}}]\quad$
+\dlres{\bar{\alpha},\alpha,\bar{\alpha}'}{\tenv,\alpha,\tenv'}{\tenv'',\ie{\rulet}{x}}{\type}{E}
+%  \bar{\alpha},\alpha,\bar{\alpha}'; \tenv,\alpha,\tenv'; \tenv'',\rulet \leadsto x \ivturns \type \leadsto E
 $ \ \\
 %===============================================================================
+
   Then it follows from the first hypothesis of the rule and of Lemma~\ref{lemma:coherence:3}
   that
 \begin{equation*}
-\tenv,\tenv'[\suty/\alpha]; \rulet[\suty/\alpha] \leadsto E[|\suty|/\alpha] \ivturns \type[\suty/\alpha] \leadsto E'[|\suty|/\alpha]; \bar{\rulet}[\suty/\alpha] \leadsto \bar{x}
+\dmres{\tenv,\tenv'[\suty/\alpha]}{\rulet[\suty/\alpha]}{E[|\suty|/\alpha]}{\type[\suty/\alpha]}{E'[|\suty|/\alpha]}{\ie{\ruleset[\suty/\alpha]}{\bar{x}}}
+%\tenv,\tenv'[\suty/\alpha]; \rulet[\suty/\alpha] \leadsto E[|\suty|/\alpha] \ivturns \type[\suty/\alpha] \leadsto E'[|\suty|/\alpha]; \bar{\rulet}[\suty/\alpha] \leadsto \bar{x}
 \end{equation*}
-
   Also it follows from the second hypothesis of the rule and of Lemma~\ref{lemma:coherence:1}
   that
 \begin{equation*}
-  \bar{\alpha},\bar{\alpha}'; \tenv,\tenv'[\suty/\alpha] \ivturns \bar{\rulet}[\suty/\alpha] \leadsto \bar{E}[|\suty|/\alpha]
+\drres{{\alpha},\bar{\alpha}'}{\tenv,\tenv'[\suty/\alpha]}{\ruleset[\suty/\alpha]}{\bar{E}[|\suty|/\alpha]}
+%  \bar{\alpha},\bar{\alpha}'; \tenv,\tenv'[\suty/\alpha] \ivturns \bar{\rulet}[\suty/\alpha] \leadsto \bar{E}[|\suty|/\alpha]
 \end{equation*}
-
-  By combining these two observations with rule \mylabel{L-RuleMatch} we obtain the first desired result
+  By combining these two observations with rule \rref{L-RuleMatch} we obtain the first desired result
 \begin{equation*}
-  \bar{\alpha},\bar{\alpha}'; \tenv,\tenv'[\suty/\alpha]; \tenv''',\rulet[\suty/\alpha] \leadsto x \ivturns \type[\suty/\alpha] \leadsto E[|\suty|/\alpha]
-\end{equation*}
-  
+\dlres{\bar{\alpha},\bar{\alpha}'}{\tenv,\tenv'[\suty/\alpha]}{\tenv''',\ie{\rulet[\suty/\alpha]}{x}}{\type[\suty/\alpha]}{E[|\suty|/\alpha]}
+%  \bar{\alpha},\bar{\alpha}'; \tenv,\tenv'[\suty/\alpha]; \tenv''',\rulet[\suty/\alpha] \leadsto x \ivturns \type[\suty/\alpha] \leadsto E[|\suty|/\alpha]
+\end{equation*}  
   We obtain the second desired result by case analysis on $\tenv'' \subseteq \tenv,\alpha,\tenv'$:
   \begin{enumerate}
-  \item $\tenv = \tenv_1,\rulet \leadsto x,\tenv_2 \quad\wedge\quad \tenv'' = \tenv_1$: \\
+  \item $\tenv = \tenv_1,\ie{\rulet}{x},\tenv_2 \quad\wedge\quad \tenv'' = \tenv_1$: \\
   In this case we can use rule \mylabel{R-1} to establish:
 \begin{equation*}
-  R((\tenv_1,\rulet \leadsto x),\tenv_2;\alpha;\tenv';\tenv_1,\rulet \leadsto x;\tenv_1,\rulet \leadsto x;\sigma)
+  R((\tenv_1,\ie{\rulet}{x}),\tenv_2;\alpha;\tenv';\tenv_1,\ie{\rulet}{x};\tenv_1,\ie{\rulet}{x};\sigma)
 \end{equation*}
   which is equivalent to
 \begin{equation*}
-  R(\tenv;\alpha;\tenv';\tenv'',\rulet \leadsto x;\tenv'',\rulet \leadsto x;\sigma)
+  R(\tenv;\alpha;\tenv';\tenv'',\ie{\rulet}{x};\tenv'',\ie{\rulet}{x};\sigma)
 \end{equation*}
 
-  \item $\tenv' = \tenv_1',\rulet \leadsto x, \tenv_2' \quad\wedge\quad \tenv'' = \tenv,\alpha,\tenv_1'$: \\
+  \item $\tenv' = \tenv_1',\ie{\rulet}{x}, \tenv_2' \andl \tenv'' = \tenv,\alpha,\tenv_1'$: \\
   In this case we can use rule \mylabel{R-2} to establish:
 \begin{equation*}
-  R(\tenv;\alpha;(\tenv_1',\rulet \leadsto x),\tenv_2';\tenv,\alpha,(\tenv_1',\rulet \leadsto x);
-  \tenv,(\tenv_1',\rulet \leadsto x)[\suty/\alpha];\sigma)
+  R(\tenv;\alpha;(\tenv_1',\ie{\rulet}{x}),\tenv_2';\tenv,\alpha,(\tenv_1',\ie{\rulet}{x});
+  \tenv,(\tenv_1',\ie{\rulet}{x})[\suty/\alpha];\sigma)
 \end{equation*}
   which is equivalent to
 \begin{equation*}
-  R(\tenv;\alpha;\tenv';\tenv'',\rulet \leadsto x;\tenv,(\tenv_1',\rulet \leadsto x)[\suty/\alpha];\sigma)
+  R(\tenv;\alpha;\tenv';\tenv'',\ie{\rulet}{x};\tenv,(\tenv_1',\ie{\rulet}{x})[\suty/\alpha];\sigma)
 \end{equation*}
   \end{enumerate}
 
 %===============================================================================
-\item[\fbox{\texttt{(L-RuleNoMatch)}}]\quad$\bar{\alpha},\alpha,\bar{\alpha}'; \tenv,\alpha,\tenv'; \tenv'',\rulet \leadsto x \ivturns \type \leadsto E'$ \ \\
+\item[\fbox{\rref{L-RuleNoMatch}}]\quad$\dlres{\bar{\alpha},\alpha,\bar{\alpha}'}{\tenv,\alpha,\tenv'}{\tenv'',\ie{\rulet}{x}}{\type}{E'}$\\
+%$\bar{\alpha},\alpha,\bar{\alpha}'; \tenv,\alpha,\tenv'; \tenv'',\rulet \leadsto x \ivturns \type \leadsto E'$ \ \\
 %===============================================================================
-  The rule's first hypothesis states that
+
+The rule's first hypothesis states that
 \begin{equation*}
-  \not\exists \theta, E, \Sigma, \mathit{dom}(\theta) \subseteq (\bar{\alpha},\alpha,\bar{\alpha}'): \theta(\tenv,\alpha,\tenv'); \theta(\rulet)\leadsto x \ivturns \theta(\tau)\leadsto E; \Sigma
+  \not\exists \theta, E, \Sigma, \mathit{dom}(\theta) \subseteq (\bar{\alpha},\alpha,\bar{\alpha}'):
+  \dmres{\theta(\tenv,\alpha,\tenv')}{\theta(\rulet)}{x}{\theta(\type)}{E}{\Sigma}
+  %\theta(\tenv,\alpha,\tenv'); \theta(\rulet)\leadsto x \ivturns \theta(\tau)\leadsto E; \Sigma
 \end{equation*}
   Hence, the above also holds when we restrict $\theta$ to be of the form
 $\theta' \cdot [\suty/\alpha]$. In this case, the above simplifies to
 \begin{equation*}
-  \not\exists \theta', E, \Sigma, \mathit{dom}(\theta) \subseteq (\bar{\alpha},\bar{\alpha}'): \theta'(\tenv,\tenv'[\suty/\alpha]); \theta'(\rulet[\suty/\alpha])\leadsto x \ivturns \theta'(\tau[\suty/\alpha])\leadsto E; \Sigma
+  \not\exists \theta', E, \Sigma, \mathit{dom}(\theta) \subseteq (\bar{\alpha},\bar{\alpha}'):
+  \dmres{\theta'(\tenv,\tenv'[\suty/\alpha])}{\theta'(\rulet[\suty/\alpha])}{x}{\theta'(\type[\suty/\alpha])}{E}{\Sigma}
+  %\theta'(\tenv,\tenv'[\suty/\alpha]); \theta'(\rulet[\suty/\alpha])\leadsto x \ivturns \theta'(\tau[\suty/\alpha])\leadsto E; \Sigma
 \end{equation*}
-
   From the rule's second hypothesis and the induction hypothesis we have
 \begin{equation*}
-  \bar{\alpha},\bar{\alpha}';\tenv,\tenv'[\suty/\alpha];\tenv''' \ivturns \type[\suty/\alpha] \leadsto E'[|\suty|/\alpha]
+  \dlres{\bar{\alpha},\bar{\alpha}'}{\tenv,\tenv'[\suty/\alpha]}{\tenv'''}{\type[\suty/\alpha]}{E'[|\suty|/\alpha]}
+%  \bar{\alpha},\bar{\alpha}';\tenv,\tenv'[\suty/\alpha];\tenv''' \ivturns \type[\suty/\alpha] \leadsto E'[|\suty|/\alpha]
 \end{equation*}
-
-  With rule \mylabel{L-RuleNoMatch} we combine these two observations into the desired first result
+  With rule \rref{L-RuleNoMatch} we combine these two observations into the desired first result
 \begin{equation*}
-  \bar{\alpha},\bar{\alpha}';\tenv,(\tenv',\rulet \leadsto x)[\suty/\alpha];\tenv''' \ivturns \type[\suty/\alpha] \leadsto E'[|\suty|/\alpha]
+  \dlres{\bar{\alpha},\bar{\alpha}'}{\tenv,(\tenv',\ie{\rulet}{x})[\suty/\alpha]}{\tenv'''}{\type[\suty/\alpha]}{E'[|\suty|/\alpha]}
+%  \bar{\alpha},\bar{\alpha}';\tenv,(\tenv',\rulet \leadsto x)[\suty/\alpha];\tenv''' \ivturns \type[\suty/\alpha] \leadsto E'[|\suty|/\alpha]
 \end{equation*}
 
   Similarly, following the rule's second hypothesis and the induction hypothesis we have:
@@ -1428,46 +1439,49 @@ $\theta' \cdot [\suty/\alpha]$. In this case, the above simplifies to
   \begin{enumerate}
   \item \mylabel{R-1}: \\ Then we have
 \begin{equation*}
-  \tenv = \tenv_1,x:\rulet,\tenv_2  \quad\wedge\quad \tenv'' = \tenv_1 \quad\wedge\quad \tenv''' = \tenv_1
+  \tenv = \tenv_1,x:\rulet,\tenv_2  \andl \tenv'' = \tenv_1 \andl \tenv''' = \tenv_1
 \end{equation*}
        By rule \mylabel{R-2} we then have
 \begin{equation*}
-R((\tenv_1,x:\rulet),\tenv_2;\alpha;\tenv';\tenv_1,\rulet \leadsto x;\tenv_1,\rulet\leadsto x;\suty)
+R((\tenv_1,x:\rulet),\tenv_2;\alpha;\tenv';\tenv_1,\ie{\rulet}{x};\tenv_1,\ie{\rulet}{x};\suty)
 \end{equation*}
         which, given all the equations we have, is equivalent to
 \begin{equation*}
-R(\tenv;\alpha;\tenv';\tenv'',\rulet\leadsto x;\tenv'',\rulet\leadsto x;\suty)
+R(\tenv;\alpha;\tenv';\tenv'',\ie{\rulet}{x};\tenv'',\ie{\rulet}{x};\suty)
 \end{equation*}
 
   \item \mylabel{R-2}: \\
    Then we have
 \begin{equation*}
-  \tenv' = \tenv_1',\tenv_2'  \quad\wedge\quad \tenv'' = \tenv,\alpha,\tenv_1' \quad\wedge\quad 
+  \tenv' = \tenv_1',\tenv_2'  \andl \tenv'' = \tenv,\alpha,\tenv_1' \andl 
       \tenv''' = \tenv,\tenv_1'[\suty/\alpha]
 \end{equation*}
-
-  Since $\tenv'',\rulet \leadsto x \subseteq \tenv,\alpha,\tenv'$, it follows that $\tenv_2' = \rulet\leadsto x,\tenv_{2,2}'$.
+  Since $\tenv'',\ie{\rulet}{x} \subseteq \tenv,\alpha,\tenv'$, it follows that $\tenv_2' = \ie{\rulet}{x},\tenv_{2,2}'$.
   Hence, by rule $\mylabel{R-2}$ we can establish
 \begin{equation*}
-R(\tenv;\alpha;(\tenv_1',\rulet\leadsto x),\tenv_2';\tenv,\alpha,(\tenv_1',\rulet \leadsto x);\tenv,(\tenv_1',\rulet\leadsto x)[\suty/\alpha];\suty)
+R(\tenv;\alpha;(\tenv_1',\ie{\rulet}{x}),\tenv_2';\tenv,\alpha,(\tenv_1',\ie{\rulet}{x});\tenv,(\tenv_1',\ie{\rulet}{x})[\suty/\alpha];\suty)
 \end{equation*}
         which, given all the equations we have, is equivalent to
 \begin{equation*}
-R(\tenv;\alpha;\tenv';\tenv'',\rulet\leadsto x;\tenv,(\tenv_1',\rulet \leadsto x)[\suty/\alpha];\suty)
+R(\tenv;\alpha;\tenv';\tenv'',\ie{\rulet}{x};\tenv,(\tenv_1',\ie{\rulet}{x})[\suty/\alpha];\suty)
 \end{equation*}
   \end{enumerate}
+  
 %===============================================================================
-\item[\fbox{\texttt{(L-Var)}}]\quad$\bar{\alpha},\alpha,\bar{\alpha}';\tenv,\alpha,\tenv';\tenv'', x : \rulet  \ivturns \type \leadsto E$ \ \\
+\item[\fbox{\rref{L-Var}}]\quad$\dlres{\bar{\alpha},\alpha,\bar{\alpha}'}{\tenv,\alpha,\tenv'}{\tenv'', \relation{x}{\rulet}}{\type}{E}$\\
+%$\bar{\alpha},\alpha,\bar{\alpha}';\tenv,\alpha,\tenv';\tenv'', x : \rulet  \ivturns \type \leadsto E$ \ \\
 %===============================================================================
-  Then following the rule's hypothesis and the induction hypothesis we have:
-\begin{equation*}
-  \bar{\alpha},\bar{\alpha}';\tenv,\tenv'[\suty/\alpha];\tenv''' \ivturns \type[\suty/\alpha] \leadsto E[|\suty|/\alpha]
-\end{equation*}
-  By rule \mylabel{L-Var} and the definition of substitution we then have
-\begin{equation*}
-  \bar{\alpha},\bar{\alpha}';\tenv,\tenv'[\suty/\alpha];\tenv''',x:\rulet[\suty/\alpha] \ivturns \type[\suty/\alpha] \leadsto E[|\suty|/\alpha]
-\end{equation*}
 
+Then following the rule's hypothesis and the induction hypothesis we have:
+\begin{equation*}
+  \dlres{\bar{\alpha},\bar{\alpha}'}{\tenv,\tenv'[\suty/\alpha]}{\tenv'''}{\type[\suty/\alpha]}{E[|\suty|/\alpha]}
+%  \bar{\alpha},\bar{\alpha}';\tenv,\tenv'[\suty/\alpha];\tenv''' \ivturns \type[\suty/\alpha] \leadsto E[|\suty|/\alpha]
+\end{equation*}
+  By rule \rref{L-Var} and the definition of substitution we then have
+\begin{equation*}
+  \dlres{\bar{\alpha},\bar{\alpha}'}{\tenv,\tenv'[\suty/\alpha]}{\tenv''',\relation{x}{\rulet[\suty/\alpha]}}{\type[\suty/\alpha]}{E[|\suty|/\alpha]}
+%  \bar{\alpha},\bar{\alpha}';\tenv,\tenv'[\suty/\alpha];\tenv''',x:\rulet[\suty/\alpha] \ivturns \type[\suty/\alpha] \leadsto E[|\suty|/\alpha]
+\end{equation*}
   Similarly, following the rule's hypothesis and the induction hypothesis we have:
 \begin{equation*}
   R(\tenv;\alpha;\tenv';\tenv'';\tenv''';\suty)
@@ -1477,48 +1491,50 @@ R(\tenv;\alpha;\tenv';\tenv'',\rulet\leadsto x;\tenv,(\tenv_1',\rulet \leadsto x
   \begin{enumerate}
   \item \mylabel{R-1}: \\ Then we have
 \begin{equation*}
-  \tenv = \tenv_1,x:\rulet,\tenv_2  \quad\wedge\quad \tenv'' = \tenv_1 \quad\wedge\quad \tenv''' = \tenv_1
+  \tenv = \tenv_1,\relation{x}{\rulet},\tenv_2  \andl \tenv'' = \tenv_1 \andl \tenv''' = \tenv_1
 \end{equation*}
        By rule \mylabel{R-2} we then have
 \begin{equation*}
-R((\tenv_1,x:\rulet),\tenv_2;\alpha;\tenv';\tenv_1,x:\rulet;\tenv_1,x:\rulet;\suty)
+R((\tenv_1,\relation{x}{\rulet}),\tenv_2;\alpha;\tenv';\tenv_1,\relation{x}{\rulet};\tenv_1,\relation{x}{\rulet};\suty)
 \end{equation*}
         which, given all the equations we have, is equivalent to
 \begin{equation*}
-R(\tenv;\alpha;\tenv';\tenv'',x:\rulet;\tenv'',x:\rulet;\suty)
+R(\tenv;\alpha;\tenv';\tenv'',\relation{x}{\rulet};\tenv'',\relation{x}{\rulet};\suty)
 \end{equation*}
 
   \item \mylabel{R-2}: \\
    Then we have
 \begin{equation*}
-  \tenv' = \tenv_1',\tenv_2'  \quad\wedge\quad \tenv'' = \tenv,\alpha,\tenv_1' \quad\wedge\quad 
+  \tenv' = \tenv_1',\tenv_2' \andl \tenv'' = \tenv,\alpha,\tenv_1' \andl
       \tenv''' = \tenv,\tenv_1'[\suty/\alpha]
 \end{equation*}
 
-  Since $\tenv'',x:\rulet \subseteq \tenv,\alpha,\tenv'$, it follows that $\tenv_2' = x:\rulet,\tenv_{2,2}'$.
+  Since $\tenv'',\relation{x}{\rulet} \subseteq \tenv,\alpha,\tenv'$, it follows that $\tenv_2' = \relation{x}{\rulet},\tenv_{2,2}'$.
   Hence, by rule $\mylabel{R-2}$ we can establish
 \begin{equation*}
-R(\tenv;\alpha;(\tenv_1',x:\rulet),\tenv_2';\tenv,\alpha,(\tenv_1',x:\rulet);\tenv,(\tenv_1',x:\rulet)[\suty/\alpha];\suty)
+R(\tenv;\alpha;(\tenv_1',\relation{x}{\rulet}),\tenv_2';\tenv,\alpha,(\tenv_1',\relation{x}{\rulet});\tenv,(\tenv_1',\relation{x}{\rulet})[\suty/\alpha];\suty)
 \end{equation*}
         which, given all the equations we have, is equivalent to
 \begin{equation*}
-R(\tenv;\alpha;\tenv';\tenv'',x:\rulet;\tenv,(\tenv_1',x:\rulet)[\suty/\alpha];\suty)
+R(\tenv;\alpha;\tenv';\tenv'',\relation{x}{\rulet};\tenv,(\tenv_1',\relation{x}{\rulet})[\suty/\alpha];\suty)
 \end{equation*}
   \end{enumerate}
 
+%===============================================================================
+\item[\fbox{\rref{L-TyVar}}]\quad$\dlres{\bar{\alpha},\alpha,\bar{\alpha}'}{\tenv,\alpha,\tenv'}{\tenv'',\beta}{\type}{E}$\\
+%$\bar{\alpha},\alpha,\bar{\alpha}';\tenv,\alpha,\tenv';\tenv'',\beta \ivturns \type \leadsto E$ \ \\
+%===============================================================================
 
-%===============================================================================
-\item[\fbox{\texttt{(L-TyVar)}}]\quad$\bar{\alpha},\alpha,\bar{\alpha}';\tenv,\alpha,\tenv';\tenv'',\beta \ivturns \type \leadsto E$ \ \\
-%===============================================================================
   Then following the rule's hypothesis and the induction hypothesis we have:
 \begin{equation*}
-  \bar{\alpha},\bar{\alpha}';\tenv,\tenv'[\suty/\alpha];\tenv''' \ivturns \type[\suty/\alpha] \leadsto E[|\suty|/\alpha]
+  \dlres{\bar{\alpha},\bar{\alpha}'}{\tenv,\tenv'[\suty/\alpha]}{\tenv'''}{\type[\suty/\alpha]}{E[|\suty|/\alpha]}
+%  \bar{\alpha},\bar{\alpha}';\tenv,\tenv'[\suty/\alpha];\tenv''' \ivturns \type[\suty/\alpha] \leadsto E[|\suty|/\alpha]
 \end{equation*}
-  By rule \mylabel{L-TyVar} and the definition of substitution we then have
+  By rule \rref{L-TyVar} and the definition of substitution we then have
 \begin{equation*}
-  \bar{\alpha},\bar{\alpha}';\tenv,\tenv'[\suty/\alpha];\tenv''',\beta \ivturns \type[\suty/\alpha] \leadsto E[|\suty|/\alpha]
+  \dlres{\bar{\alpha},\bar{\alpha}'}{\tenv,\tenv'[\suty/\alpha]}{\tenv''',\beta}{\type[\suty/\alpha]}{E[|\suty|/\alpha]}
+%  \bar{\alpha},\bar{\alpha}';\tenv,\tenv'[\suty/\alpha];\tenv''',\beta \ivturns \type[\suty/\alpha] \leadsto E[|\suty|/\alpha]
 \end{equation*}
-
   Similarly, following the rule's hypothesis and the induction hypothesis we have:
 \begin{equation*}
   R(\tenv;\alpha;\tenv';\tenv'';\tenv''';\suty)
@@ -1528,7 +1544,7 @@ R(\tenv;\alpha;\tenv';\tenv'',x:\rulet;\tenv,(\tenv_1',x:\rulet)[\suty/\alpha];\
   \begin{enumerate}
   \item \mylabel{R-1}: \\ Then we have
 \begin{equation*}
-  \tenv = \tenv_1,\tenv_2  \quad\wedge\quad \tenv'' = \tenv_1 \quad\wedge\quad \tenv''' = \tenv_1
+  \tenv = \tenv_1,\tenv_2 \andl \tenv'' = \tenv_1 \andl \tenv''' = \tenv_1
 \end{equation*}
   We further distinguish between two mutually exclusive cases:
   \begin{enumerate}
@@ -1556,7 +1572,7 @@ R(\tenv;\alpha;\tenv';\tenv'',\beta;\tenv_1,\beta;\suty)
   \item \mylabel{R-2}: \\
    Then we have
 \begin{equation*}
-  \tenv' = \tenv_1',\tenv_2'  \quad\wedge\quad \tenv'' = \tenv,\alpha,\tenv_1' \quad\wedge\quad 
+  \tenv' = \tenv_1',\tenv_2' \andl \tenv'' = \tenv,\alpha,\tenv_1' \andl
       \tenv''' = \tenv,\tenv_1'[\suty/\alpha]
 \end{equation*}
 
@@ -1570,7 +1586,6 @@ R(\tenv;\alpha;(\tenv_1',\beta),\tenv_2';\tenv,\alpha,(\tenv_1',\beta);\tenv,(\t
 R(\tenv;\alpha;\tenv';\tenv'',\beta;\tenv,(\tenv_1',\beta)[\suty/\alpha];\suty)
 \end{equation*}
   \end{enumerate}
-
 \end{description}
 \end{proof}
 
@@ -1581,63 +1596,77 @@ R(\tenv;\alpha;\tenv';\tenv'',\beta;\tenv,(\tenv_1',\beta)[\suty/\alpha];\suty)
 \begin{lemma}\label{lemma:coherence:3}
   If 
 \begin{equation*}
-   \tenv,\alpha,\tenv'; \rulet \leadsto E \ivturns \type \leadsto E'; \bar{\rulet} \leadsto \bar{x}
+  \dmres{\tenv,\alpha,\tenv'}{\rulet}{E}{\type}{E'}{\ie{\ruleset}{\bar{x}}}
+%   \tenv,\alpha,\tenv'; \rulet \leadsto E \ivturns \type \leadsto E'; \bar{\rulet} \leadsto \bar{x}
 \end{equation*}
   and
 \begin{equation*}
-  \tenv \turns \suty
+  \wfty{\tenv}{\suty}
+%  \tenv \turns \suty
 \end{equation*}
   then
 \begin{equation*}
-   \tenv,\tenv'[\suty/\alpha]; \rulet[\suty/\alpha] \leadsto E[|\suty|/\alpha] \ivturns \type[\suty/\alpha] \leadsto E'[|\suty|/\alpha]; \bar{\rulet}[\suty/\alpha] \leadsto \bar{x}
+  \dmres{\tenv,\tenv'[\suty/\alpha]}{\rulet[\suty/\alpha]}{E[|\suty|/\alpha]}{\type[\suty/\alpha]}{E'[|\suty|/\alpha]}{\ie{\ruleset[\suty/\alpha]}{\bar{x}}}
+%   \tenv,\tenv'[\suty/\alpha]; \rulet[\suty/\alpha] \leadsto E[|\suty|/\alpha] \ivturns \type[\suty/\alpha] \leadsto E'[|\suty|/\alpha]; \bar{\rulet}[\suty/\alpha] \leadsto \bar{x}
 \end{equation*}
 \end{lemma}
 \end{minipage}
 }}
 
 \begin{proof}
+The proof proceeds by induction on the derivation of the first hypothesis.
 \begin{description}
 \setlength{\itemsep}{1em}
 %===============================================================================
-\item[\fbox{\texttt{(M-Simp)}}]\quad$\tenv,\alpha,\tenv'; \type \leadsto E \ivturns \type \leadsto E; \epsilon$ \ \\
+\item[\fbox{\rref{M-Simp}}]\quad$\dmres{\tenv,\alpha,\tenv'}{\type}{E}{\type}{E}{\epsilon}$\\
+%$\tenv,\alpha,\tenv'; \type \leadsto E \ivturns \type \leadsto E; \epsilon$ \ \\
 %===============================================================================
-  The desired conclusion follows directly from rule \mylabel{M-Simp}
+
+The desired conclusion follows directly from rule \rref{M-Simp}
 \begin{equation*}
-  \tenv,\tenv'[\suty/\alpha]; \type[\suty/\alpha] \leadsto E[|\suty/\alpha|] \ivturns \type[\suty/\alpha] \leadsto E[|\suty/\alpha|]; \epsilon
+\dmres{\tenv,\tenv'[\suty/\alpha]}{\type[\suty/\alpha]}{E[|\suty/\alpha|]}{\type[\suty/\alpha]}{E[|\suty/\alpha|]}{\epsilon}
+%  \tenv,\tenv'[\suty/\alpha]; \type[\suty/\alpha] \leadsto E[|\suty/\alpha|] \ivturns \type[\suty/\alpha] \leadsto E[|\suty/\alpha|]; \epsilon
 \end{equation*}
 
 %===============================================================================
-\item[\fbox{\texttt{(M-IApp)}}]\quad$\tenv,\alpha,\tenv'; \rulet_1 \iarrow \rulet_2 \leadsto E \ivturns \type \leadsto E'; \Sigma, \rulet_1 \leadsto x$ \ \\
+\item[\fbox{\rref{M-IApp}}]\quad$\dmres{\tenv,\alpha,\tenv'}{\rulet_1 \To \rulet_2}{E}{\type}{E'}{\Sigma,\ie{\rulet_1}{x}}$\\
+%$\tenv,\alpha,\tenv'; \rulet_1 \iarrow \rulet_2 \leadsto E \ivturns \type \leadsto E'; \Sigma, \rulet_1 \leadsto x$ \ \\
 %===============================================================================
-  From the rule's hypothesis and the induction hypothesis we have 
+
+From the rule's hypothesis and the induction hypothesis we have 
 \begin{equation*}
-  \tenv,(\tenv',\rulet_1 \leadsto x)[\suty/\alpha]; \rulet_2[\suty/\alpha] \leadsto (E x)[|\suty|/\alpha] \ivturns \type[\suty/\alpha] \leadsto E'[|\suty|/\alpha]; \Sigma[\suty/\alpha]
+\dmres{\tenv,(\tenv',\ie{\rulet_1}{x})[\suty/\alpha]}{\rulet_2[\suty/\alpha]}{(E~x)[|\suty|/\alpha]}{\type[\suty/\alpha]}{E'[|\suty|/\alpha]}{\Sigma[\suty/\alpha]}
+%  \tenv,(\tenv',\rulet_1 \leadsto x)[\suty/\alpha]; \rulet_2[\suty/\alpha] \leadsto (E x)[|\suty|/\alpha] \ivturns \type[\suty/\alpha] \leadsto E'[|\suty|/\alpha]; \Sigma[\suty/\alpha]
+\end{equation*}
+  Then from the definition of substutition and rule \rref{M-IApp} we conclude
+\begin{equation*}
+  \dmres{\tenv,\tenv'[\suty/\alpha]}{(\rulet_1 \To \rulet_2)[\suty/\alpha]}{E[|\suty|/\alpha]}{\type[\suty/\alpha]}{E'[|\suty|/\alpha]}{(\Sigma,\ie{\rulet_1}{x})[\suty/\alpha]}
+%  \tenv,\tenv'[\suty/\alpha]; (\rulet_1 \iarrow \rulet_2)[\suty/\alpha] \leadsto E[|\suty|/\alpha] \ivturns \type[\suty/\alpha] \leadsto E'[|\suty|/\alpha]; (\Sigma,\rulet_1 \leadsto x)[\suty/\alpha]
 \end{equation*}
 
-  Then from the definition of substutition and rule \mylabel{M-IApp} we conclude
-\begin{equation*}
-  \tenv,\tenv'[\suty/\alpha]; (\rulet_1 \iarrow \rulet_2)[\suty/\alpha] \leadsto E[|\suty|/\alpha] \ivturns \type[\suty/\alpha] \leadsto E'[|\suty|/\alpha]; (\Sigma,\rulet_1 \leadsto x)[\suty/\alpha]
-\end{equation*}
+%===============================================================================
+\item[\fbox{\rref{M-TApp}}]\quad$\dmres{\tenv,\alpha,\tenv'}{\tall{\beta}{\rulet}}{E}{\type}{E'}{\Sigma}$\\
+%$\tenv,\alpha,\tenv'; \forall\beta.\rulet \leadsto E \ivturns \type \leadsto E'; \Sigma$ \ \\
+%===============================================================================
 
-%===============================================================================
-\item[\fbox{\texttt{(M-TApp)}}]\quad$\tenv,\alpha,\tenv'; \forall\beta.\rulet \leadsto E \ivturns \type \leadsto E'; \Sigma$ \ \\
-%===============================================================================
   From the rule's first hypothesis and the induction hypothesis we have 
 \begin{equation*}
-  \tenv,\tenv'[\suty/\alpha]; \rulet[\suty'/\beta][\suty/\alpha] \leadsto (E |\suty'|)[|\suty|/\alpha] \ivturns \type[\suty/\alpha] \leadsto E'[|\suty|/\alpha]; \Sigma[\suty/\alpha]
+  \dmres{\tenv,\tenv'[\suty/\alpha]}{\rulet[\suty'/\beta][\suty/\alpha]}{(E |\suty'|)[|\suty|/\alpha]}{\type[\suty/\alpha]}{E'[|\suty|/\alpha]}{\Sigma[\suty/\alpha]}
+%  \tenv,\tenv'[\suty/\alpha]; \rulet[\suty'/\beta][\suty/\alpha] \leadsto (E |\suty'|)[|\suty|/\alpha] \ivturns \type[\suty/\alpha] \leadsto E'[|\suty|/\alpha]; \Sigma[\suty/\alpha]
 \end{equation*}
 
   From the rule's second hypothesis (and the preservation of well-typing under type-susbstitution) we have
 \begin{equation*}
-  \tenv,\tenv'[\suty/\alpha] \vdash \suty'[\suty'/\alpha]
+\wfty{\tenv,\tenv'[\suty/\alpha]}{\suty'[\suty'/\alpha]}
+%  \tenv,\tenv'[\suty/\alpha] \vdash \suty'[\suty'/\alpha]
 \end{equation*}
 
-  From these two facts we conclude by rule \mylabel{M-TApp}, reasoning modulo
+  From these two facts we conclude by rule \rref{M-TApp}, reasoning modulo
   the definition of substitution
 \begin{equation*}
-  \tenv,\tenv'[\suty/\alpha]; (\forall\beta.\rulet)[\suty/\alpha] \leadsto E[|\suty|/\alpha] \ivturns \type[\suty/\alpha] \leadsto E'[|\suty|/\alpha]; \Sigma[\suty/\alpha]
+  \dmres{\tenv,\tenv'[\suty/\alpha]}{(\tall{\beta}{\rulet})[\suty/\alpha]}{E[|\suty|/\alpha]}{\type[\suty/\alpha]}{E'[|\suty|/\alpha]}{\Sigma[\suty/\alpha]}
+%  \tenv,\tenv'[\suty/\alpha]; (\forall\beta.\rulet)[\suty/\alpha] \leadsto E[|\suty|/\alpha] \ivturns \type[\suty/\alpha] \leadsto E'[|\suty|/\alpha]; \Sigma[\suty/\alpha]
 \end{equation*}
-
 \end{description}
 \end{proof}
 
