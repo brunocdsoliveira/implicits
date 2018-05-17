@@ -165,7 +165,9 @@
 > ability to substitute equals for equals" -- is there a difference
 > between the last two properties (stability and equational reasoning)?
 > The characterization of "stability" on p. 2 seems to suggest otherwise.
-> 
+
+TODO
+ 
 >  - "COCHIS's resolution employs additional techniques to be entirely
 > deterministic and coherent" -- what is the difference between a
 > "deterministic" and a "coherent" resolution strategy?  On p. 3,
@@ -174,7 +176,9 @@
 > meaning (that is, the semantics is not ambiguous)."  Given this
 > definition, a coherent resolution strategy seems to necessarily be
 > non-ambiguous, i.e. deterministic.
-> 
+
+TODO
+ 
 > p. 5: the show/read example is an excellent illustration of why
 > ambiguity in resolution leads to incoherence.  However, the main
 > source of ambiguity here seems to be the choice of how to instantiate
@@ -189,10 +193,14 @@
 >   show String (read String "3") == "3"
 > 
 > in COCHIS?
-> 
+
+TODO
+
 > p. 6: The context "Trans a =>" seems to be missing in the signature of
 > "bad".
-> 
+
+TODO
+ 
 > p. 10:
 > 
 >  - paragraph "Incoherence in Scala" and p. 11, Fig. 1: it would be
@@ -200,7 +208,9 @@
 > Scala and Haskell here, as this might be quite confusing to some
 > readers: A => B denotes a "rule" both in Haskell and COCHIS, but a
 > function type in Scala.
-> 
+
+TODO 
+
 >  - I am confused about whether Fig. 1 constitutes a counterexample to
 > coherence or to stability.  Returning to the original (Haskell)
 > example on p. 6, I am now similarly confused.  It appears that there
@@ -214,7 +224,9 @@
 > This suggests that both cases are counterexamples to stability rather
 > than coherence.  Is that correct?  Or maybe "coherence" is used here
 > to mean both determinacy and stability?  Please clarify.
-> 
+
+TODO
+ 
 >  - "not only is the semantics not preserved under unfolding, but
 > typing is not preserved either!" this statement seems slightly
 > misleading.  Here, a program that is initially "ill-typed"
@@ -224,13 +236,17 @@
 > well.  E.g. the STLC term $(\x:Int.x)"hello"$ is ill-typed (because of
 > the domain annotation $Int$), but it reduces to $"hello"$, which is
 > well-typed.
-> 
+
+TODO
+ 
 > p. 11:
 > 
 >  - "The type of the rule above is Int => Int."  Switching back
 > from Scala to COCHIS, it maybe it worth pointing out again, that "Int
 > => Int" is *not* to be confused with a Scala-style function type here.
-> 
+
+TODO
+ 
 >  - "Polymorphic Rules and Queries": the paragraph describes
 > polymorphic rules, but it remains unclear what a polymorphic query is.
 > Presumably a query of the form $?(\forall X.r)$?  Or is $?(Int, Int)$
@@ -238,7 +254,9 @@
 > polymorphic rule in the implicit environment?  Are there any practical
 > examples of where a query of the form $?(\forall X.r)$ might be
 > useful?
-> 
+
+TODO
+ 
 > p. 14:
 > 
 >  - "While this poses no threat to type soundness, (...) Consider the
@@ -252,20 +270,26 @@
 > another way to phrase this paragraph might be to say that you expect
 > types to be preserved under strong reduction in COCHIS (although you
 > do not prove this).
-> 
+
+TODO
+ 
 >  - Since COCHIS has first-class rules, it might be nice to also
 > discuss the possibility of querying for (possibly polymorphic) rule
 > types in this section.  Are there any examples where a query of the
 > form $?(r1 => r2)$ would be particularly useful?  Or is resolution of
 > rules only interesting for the purpose of resolving first-order
 > queries?
-> 
+
+TODO
+ 
 >  - Section 3.1: "In a rule type $\rho_1 => \rho_1$, type $\rho_1$ is
 > called the context and type $\rho_2$ the head."  It would be nice to
 > mention that this terminology follows Haskell's convention for type
 > class/instance declarations (it might be confusing to readers that are
 > not already familiar with this convention).
-> 
+
+TODO
+ 
 > p. 15:
 > 
 >  - the syntax of type environments is ambiguous if one does not
@@ -273,10 +297,14 @@
 > could be interpreted both as a type variable binding and as an
 > implicit binding with $\rho = \alpha$.  It might be useful to
 > distinguish the two syntactically.
-> 
+
+TODO
+ 
 >  - why is the well-formedness judgment $\Gamma |- \rho$ necessary?
 > Formalizations of System F usually get by without such a judgment (see
 > e.g. TAPL, ch. 23).
+
+TODO
 
 > p. 17: a minor typographic comment: the paragraphs immediately
 > following typing rules in the main text (such as those on this page
@@ -284,8 +312,7 @@
 > are slightly indented, but not as much as other paragraphs.  Maybe
 > some spurious white space is added after typing rules by a TeX macro?
 
-This is fixed now in Section 3.
-TODO: Fix in other sections
+FIXED
  
 > p. 18:
 > 
@@ -294,7 +321,9 @@ TODO: Fix in other sections
 > way.  My guess would be that simple types are those that do not have
 > corresponding pairs of intro/elim-rules in the ambiguous resolution
 > judgment?
-> 
+ 
+TODO
+
 >  - "The main judgment ... is defined with the help of the auxiliary
 > judgment ..."  Giving human-readable names to these judgments (and all
 > the others introduced throughout the the paper) would improve
@@ -302,7 +331,9 @@ TODO: Fix in other sections
 > main judgment "(focused) resolution" or "focusing" and the auxiliary
 > judgment "matching".  I will use these names in the remainder of my
 > comments.
-> 
+
+FIXED: we have adopted those two names.
+ 
 >  - "Both definitions are by induction on the type $\rho$ enclosed in
 > square brackets, ..."  This statement is confusing.  It suggests that
 > the two judgments are defined by recursion on the structure of types,
@@ -321,13 +352,18 @@ TODO: Fix in other sections
 > brackets are decreasing, or maybe the authors mean to say that the
 > judgments are defined inductively, and that they are syntax-directed
 > w.r.t. the types enclosed in the square brackets?  Please clarify.
-> 
+
+We now say that the definitions are syntax-directed on the types enclosed
+in square brackets.
+
 > p. 20: "For this reason we introduce the syntactic sort of monotypes:
 > ..."  It would be nice to have a bit more of a motivation for why this
 > is the "right" definition of monotypes.  E.g. why not include rules in
 > monotypes?  Is there a reason to think of $\alpha => \alpha$ as
 > polymorphic?  Please elaborate.
-> 
+
+TODO
+ 
 > p. 21:
 > 
 >  - "Our solution is to replace the nondeterministic relation ... by a
@@ -365,7 +401,11 @@ TODO: Fix in other sections
 > if backtracking were allowed.  There are probably good reasons to
 > forgo backtracking, but these are not discussed in the paper.  Why is
 > that?  Please elaborate.
-> 
+
+- We have added a discussion about why we prevent backtracking.
+
+- We have adopted the lookup name for the judgment.
+
 >  - "The (...) definition of the judgement itself proceeds by
 > structural induction on the environment $\Gamma'$."  In what sense
 > does the lookup judgment "proceed by structural induction"?  The
@@ -392,16 +432,23 @@ Fixed.
 >  - "in the main and first auxiliary judgement", I'm not sure
 > which judgments are meant here.  Which is the main auxiliary judgment?
 > Resolution?  Lookup?  Please consider using human-readable names...
-> 
+
+Fixed.
+
 > p. 25, Fig. 7: why have a stability judgment with only one rule that
 > is only used once?  Would it not have been easier to just inline this
 > judgment into the (L-RuleNoMatch) rule?
-> 
+
+We feel that is useful to name the condition. Also, the algorithmic
+system uses a corresponding judgement with multiple rules.
+ 
 > p. 26, a minor syntactic point about the example algorithmic
 > derivation at the top of this page: this derivation uses "focusing
 > brackets" [ ... ] around the goals of the algorithmic matching
 > judgment, whereas Fig. 8 does not.
-> 
+
+The notation is now consistent.
+
 > p. 29, termination condition: it is unclear to me how the termination
 > condition is used in practice.  The paragraph says "It is trivial to
 > show that the size strictly decreases, if we require that every rule
@@ -409,7 +456,9 @@ Fixed.
 > Assuming a particular (algorithmic) resolution judgment $\Gamma
 > |-_{alg} \rho$, where should I apply the termination condition?  To
 > every type in $\Gamma$?  To $\rho$ as well?
-> 
+
+We have clarified this in the text.
+
 > Assuming this, I can check that the example where $\Gamma = Char =>
 > Int; Int => Char$ is indeed rejected because $hd(Char) = Int$,
 > $hd(Char) = Char$ and $||Int|| = ||Char||$, i.e. the heads are not
@@ -425,7 +474,12 @@ Fixed.
 > 
 > But surely, we would want the above program to be accepted?  Am I
 > missing something here?
-> 
+
+We have added a paragraph discussing this issue. Permissive termination
+conditions are not the main focus of our work; coherence is. 
+Moreover, the conditions we have set out here have already shown useful for
+quantified class constraints in Haskell.
+ 
 > p. 30:
 > 
 >  - Fig. 10: in (T-Rule), the 6th premise is
@@ -476,7 +530,9 @@ and to make the approach and its validity clearer.
 >  - Please add a forward reference to the proofs in appendix A, or
 > better yet, forward references from the individual theorems in this
 > section to the corresponding lemmas in the appendix.
-> 
+
+TODO
+ 
 >  - "Secondly, the deterministic resolution guarantees a strong form of
 > coherence", in what sense is this a "strong form" of coherence?  In
 > the introduction and at the beginning of Section 2.2 you define
@@ -486,14 +542,18 @@ and to make the approach and its validity clearer.
 > non-ambiguous/deterministic ("The generated evidence of resolution is
 > uniquely determined").  Is there some subtle distinction between
 > coherent, non-ambiguous and deterministic that I am missing?
-> 
+
+TODO
+ 
 >  - "Thirdly, on top of the immediate coherence of deterministic
 > resolution, an additional coherence property holds", I find this
 > statement confusing.  What is a "coherence property" (other than the
 > property of coherence itself)?  In what sense is stability is a
 > coherence property?  Maybe "coherence property" is used informally to
 > mean "desirable property of an IP system"?  Please clarify.
-> 
+
+TODO
+ 
 >  - Lemma 5.4.  The lemma states informally that "Resolution is stable
 > under substitution" but the formal statement only covers *monotype*
 > substitutions.  Why this restriction?  In the introductory section,
@@ -504,7 +564,9 @@ and to make the approach and its validity clearer.
 > queries".  But instantiation is not restricted to monotypes (see rule
 > (Ty-TApp) in Fig. 2) so Lemma 5.4 only states a weak version of
 > stability.
-> 
+
+TODO
+ 
 >  - Theorem 5.3. "... provided that the algorithm terminates."  It is
 > unclear to me why this last part of the statement is necessary.  If
 > the algorithm does not terminate, there is no (finite) derivation of
@@ -517,7 +579,9 @@ and to make the approach and its validity clearer.
 > differently w.r.t. termination?  Neither Lemma A.18 (the soundness
 > part of this theorem) nor Lemma A.24 (completeness) in appendix A
 > mention this extra condition.  Please clarify.
-> 
+
+TODO
+ 
 > p. 33: "(see Chapter 23)" of what? TAPL?
 
 Yes, this is fixed now.
@@ -528,16 +592,22 @@ Yes, this is fixed now.
 > does not enforce coherence."  Again, I'm wondering whether "coherence"
 > here refers to determinacy or to stability (see my comments above
 > about the example in Fig. 1).
-> 
+
+TODO
+ 
 >  - "For example, the query: (...) does not resolve under the
 > deterministic resolution rules of the implicit calculus", this seems
 > to imply that resolution is indeed deterministic in the implicit
 > calculus, which leads me to conclude that it is in fact coherent but
 > not stable.  Please clarify.
-> 
+
+TODO
+ 
 >  - "As we have already explained in Section 3.5 this approach is
 > incoherent."  -->  deterministic but unstable.
-> 
+
+TODO
+ 
 >  - I'll stop pointing out the inconsistent terminology ("coherence"
 > vs. "deterministic" and "stable") from now on.
 > 
@@ -545,7 +615,9 @@ Yes, this is fixed now.
 > Section 6.3 use committed choice semantics or backtracking.  This is
 > certainly relevant when comparing expressivity/flexibility.  Please
 > elaborate.
-> 
+
+TODO 
+
 > p. 36: "This would retain several of benefits" --> "several of the
 > benefits".
 
@@ -554,13 +626,17 @@ FIXED
 > p. 37: "(our first auxiliary judgement), ... (our third auxiliary
 > judgement)".  I do not remember which judgments this refers to.
 > Please consider using human-readable names.
-> 
+
+Fixed.
+ 
 > p. 41, Appendix A:  Why are the lemmas in this appendix numbered
 > differently from the lemmas and theorems in Section 5?  Please
 > consider renumbering the lemmas or at least adding a forward and
 > backward references between the appendix and the corresponding
 > statements in Section 5.
-> 
+
+TODO
+ 
 > p. 42:
 > 
 >  - "it states that an extended context preserves all the derivations
@@ -569,11 +645,15 @@ FIXED
 > earlier in the paper.  This is of course common terminology, but there
 > is a slight risk of confusion as the argument type of a rule is also
 > called "context".
-> 
+
+TODO
+ 
 >  - Section A.3: the notation for deterministic resolution judgments is
 > inconsistent w.r.t. that introduced in Fig. 7: all the focusing
 > brackets have been dropped.
-> 
+
+TODO
+
 > p. 44:
 > 
 >  - Section A.4 (and following sections): it would be nice to start
@@ -966,7 +1046,13 @@ TODO: Elaborate on the connection with Haskell type classes.
 > common useful examples used by the Haskell community would be implemented in
 > COCHIS.
 
-TODO: discuss committed choice more
+We have added a discussion. Basically, backtracking is shunned in type checkers
+for various pragmatic reasons. As an illustration, we have opted for
+backtracking in our Quantified Class Constraints work (derived from Cochis) for
+Haskell, but the backtracking has been rejected by Simon Peyton Jones who
+prefers restrictions instead, quoting worries about performance as the main
+reason. 
+See https://github.com/Gertjan423/ghc-proposals/blob/quantified-constraints/proposals/0000-quantified-constraints.rst#overlap
 
 > ## Comparison with other solutions
 > The discussion of related works is split between the introductory section,

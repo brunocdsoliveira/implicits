@@ -300,7 +300,7 @@
 
 % deterministic resolution
 \newcommand{\dres}[3]{\hello{#1 \ivturns #2~\gbox{\leadsto #3}}}
-\newcommand{\drres}[4]{\hello{#1; #2 \fturns [#3]~\gbox{\leadsto #4}}}
+\newcommand{\drres}[4]{\hello{#1; #2 \ivturns [#3]~\gbox{\leadsto #4}}}
 \newcommand{\dlres}[5]{\hello{#1; #2; [#3] \ivturns #4~\gbox{\leadsto #5}}}
 \newcommand{\dmres}[6]{\hello{#1; [#2]~\gbox{\leadsto #3} \ivturns #4~\gbox{\leadsto #5}; #6}}
 
@@ -340,6 +340,7 @@
 \newcommand{\occ}[2]{\hello{\mathit{occ}_{#1}(#2)}}
 \newcommand{\tnorm}[1][\cdot]{\hello{\|#1\|}}
 \newcommand{\head}[1]{\hello{\mathrm{hd}(#1)}}
+\newcommand{\nterm}[1]{\hello{\not\turns_\mathit{term} #1}}
 
 %elaboration
 \newcommand{\ttrans}[1][\cdot]{\hello{|#1|}}

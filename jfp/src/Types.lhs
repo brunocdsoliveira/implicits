@@ -360,7 +360,9 @@ and allows only the first and more direct of these two proofs.
 \begin{minipage}{.969\textwidth}
 \bda{c}
 \Sigma ::= \epsilon \mid \Sigma, \rulet~\gbox{\leadsto x} \\ \\
-\myruleform{\frres{\tenv}{\rulet}{E}}
+%- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -%
+\hfill \myruleform{\frres{\tenv}{\rulet}{E}} \hfill \llap{\it Focusing}
+%- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -%
 \\ \\
   \myrule {FR-TAbs}
           {\frres{\tenv, \alpha}{\rulet}{E}}
@@ -381,7 +383,10 @@ and allows only the first and more direct of these two proofs.
           }
           {\frres{\tenv}{\type}{\leadsto E[\bar{E}'/\bar{x}']}}
 \\ \\
-\myruleform{\fmres{\tenv}{\rulet}{E}{\type}{E'}{\Sigma}}
+%- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -%
+\hfill \myruleform{\fmres{\tenv}{\rulet}{E}{\type}{E'}{\Sigma}} \hfill \llap{\it Matching}
+%- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -%
+
 \\ \\
   \myrule {FM-TApp}
           {\wfty{\tenv}{\rulet'} \\\\
@@ -413,13 +418,13 @@ class of \emph{simple} types:
   \eda }%
 The definition of resolution with focusing that uses this refined grammar
 is given in 
-Figure~\ref{fig:resolutionf}. The main judgment $\frres{\tenv}{\rulet}{E}$ is
-defined with the help of the auxiliary judgement $\fmres{\tenv}
-{\rulet}{E}{\type}{E'}{\Sigma}$. Both definitions are
-by induction on the type $\rulet$ enclosed in square brackets, with simple
-types $\type$ as the base case.
+Figure~\ref{fig:resolutionf}. The main \emph{focusing} judgment $\frres{\tenv}{\rulet}{E}$ is
+defined with the help of the auxiliary \emph{matching} judgement $\fmres{\tenv}
+{\rulet}{E}{\type}{E'}{\Sigma}$. Both definitions are syntax-directed
+on the type $\rulet$ enclosed in square brackets. 
+% with simple types $\type$ as the base case.
 
-The main judgement $\frres{\tenv}{\rulet}{E}$ focuses on the
+The focusing judgement $\frres{\tenv}{\rulet}{E}$ focuses on the
 type $\rulet$ that is to be resolved -- we call this type the ``goal''. There
 are three rules, for the three possible syntactic forms of~$\rulet$.
 %
@@ -432,7 +437,7 @@ goal, a notion that is captured by the auxiliary judgment. Matching
 gives rise to a sequence $\Sigma$ of new (and hopefully simpler) goals
 that are resolved recursively.
 
-The auxiliary judgment
+The matching judgment
 $\fmres{\tenv}{\rulet}{E}{\type}{E'}{\Sigma}$ focuses on
 the rule $\rulet$ and checks whether it matches the simple goal
 $\type$. Again, there are three rules for the three possible forms
@@ -484,7 +489,7 @@ to make resolution ``super''-deterministic: resolution is preserved under
 type substitution.
 
 %- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-\paragraph{Predicative Instantiation}
+\subsubsection{Predicative Instantiation}
 To see why the impredicative instantation, i.e., the instantiation with types
 that contain universal quantifiers, in
 rule~\rref{FM-TApp} causes
@@ -546,7 +551,7 @@ we only allow instantiation with monotypes $\suty$:
 \eda
 
 %- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-\paragraph{Non-Ambiguity Constraints}
+\subsubsection{Non-Ambiguity Constraints}
 
 Rule \rref{FM-TApp'} does not explain how the substitution
 $[\suty/\alpha]$ for the rule type $\forall \alpha.\rulet$ should be obtained.
@@ -630,9 +635,9 @@ ambiguity.
 
 
 %- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-\paragraph{Committed Choice}
+\subsubsection{Committed Choice}
 The other remaining source of nondeterminism is the nondeterministic choice
-$\rulet \in \tenv$ that appears in rule~\rref{FR-Simp}. Consider the trivial
+$\rulet \in \tenv$ that appears in rule~\rref{FR-Simp} of the focusing judgment. Consider the trivial
 example of resolving the goal $\tyint$ against the environment $\tenv = \tyint~\gbox{\leadsto
 x}, \tyint~\gbox{\leadsto y}$. Both rules in the environment match the goal and yield
 different, i.e., incoherent, elaborations.
@@ -640,10 +645,10 @@ different, i.e., incoherent, elaborations.
 Our solution is to replace the nondeterministic relation $\rulet \in \tenv$ by
 a deterministic one that selects the first matching rule in the environment and
 commits to it. In fact, we encapsulate all three hypotheses of rule~\rref{FR-Simp}
-in a new judgement $\lres{\tenv}{\tenv'}{\type}{E}$ which resolves
+in a new \emph{lookup} judgement $\lres{\tenv}{\tenv'}{\type}{E}$ which resolves
 $\type$ with the first matching rule in the environment $\tenv'$ and performs
 any recursive resolutions against the environment $\tenv$. Of course, the modified
-rule~\rref{FR-Simp'} invokes this judgement with two copies of the same environment, i.e.,
+rule~\rref{FR-Simp'} invokes this lookup judgement with two copies of the same environment, i.e.,
 $\tenv$ and $\tenv'$ are identical.
 \bda{c}
   \myrule {FR-Simp'}
@@ -654,7 +659,9 @@ $\tenv$ and $\tenv'$ are identical.
 The (still preliminary) definition of the judgement itself is syntax-directed with respect to the
 type environment $\tenv'$:
 \bda{c}
-\myruleform{\lres{\tenv}{\tenv'}{\type}{E}}\\ \\
+%- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -%
+\hfill \myruleform{\lres{\tenv}{\tenv'}{\type}{E}} \hfill \llap{\it Lookup}\\ \\
+%- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -%
 
   \myrule{DL-RuleMatch}
           {\fmres{\tenv}{\rulet}{x}{\tau}{E}{\overline{\rulet'~\gbox{\leadsto x}}} \\
@@ -696,8 +703,27 @@ to resolve the goal $\tyint$ against the environment $\tenv =
 entry, which elaborates to $y$, is committed to and the second entry is not
 considered.
 
+\paragraph{No Backtracking}
+
+Observe that our definition commits more eagerly to a matching rule type than
+necessary to dispel nondeterminism. We even commit to a matching rule type, if
+its recursive goals do not resolve. For instance, when resolving $\tychar$
+against the environment $\tenv = \tybool, \tybool \To \tychar, \tyint \To
+\tychar$, we commit to $\tyint \To \tychar$ even though its recursive goal $\tyint$
+cannot be resolve and thus the resolution of $\tychar$ also fails. A more permissive
+approach would be to backtrack when a recursive resolution fails and try the next
+alternative matching rule. That would allow $\tychar$ to resolve. 
+
+While backtracking is a perfectly established technique in proof search and
+logic programming, it is often shunned in type checking algorithms for
+pragmatic reasons. In particular, it complicates the implementation of the type
+checker and incurs an overhead (e.g., maintaining a \emph{trail} stack) to
+allow undoining modifications. Moreover, it is harder to follow the algorithmic
+behavior and debug it, and less obvious how to report failure to the
+programmer. For these reasons, we have avoided backtracking in our design.
+ 
 %- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-\paragraph{Stability}
+\subsubsection{Stability}
 
 While the above committed-choice formulation of resolution is deterministic, it
 is a rather fragile, or \emph{unstable}, notion of resolution. Consider for
@@ -772,9 +798,9 @@ them make sense. Essentially, there are two groups of substitutions:
 
       Figure~\ref{fig:resolution2}, which puts all the measures together to
       obtain a type-directed, deterministic and stable resolution, addresses the
-      issue as follows. It introduces a top-level judgement $\dres{\tenv}{\rulet}{E}$
+      issue as follows. It introduces a top-level \emph{main} judgement $\dres{\tenv}{\rulet}{E}$
       to handle a query that delegates to the focusing-based judgements we have described above.
-      The only contribution of the new main judgement, which is defined by the single rule \rref{R-Main}, is to gather the type variables $\bar{\alpha}$
+      The only contribution of the main judgement, which is defined by the single rule \rref{R-Main}, is to gather the type variables $\bar{\alpha}$
       that appear in the environment at the point of the query by means of the function $\tyvars{\tenv}$, 
       and to pass them on through the auxiliary judgements to the point where the stability check is performed.
       Hence, the auxiliary judgements 
@@ -833,7 +859,7 @@ variables $\bar{\alpha},\bar{\alpha}'$ and the type environment after substituti
 }
    
 %- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-\paragraph{Summary}
+\subsubsection{Summary}
 
 \figtwocol{fig:resolution2}{Deterministic Resolution and Translation to System F}{
 \begin{center}
@@ -842,7 +868,7 @@ variables $\bar{\alpha},\bar{\alpha}'$ and the type environment after substituti
 \bda{c}
 \Sigma ::= \epsilon \mid \Sigma, \rulet~\gbox{\leadsto x} \\ \\
 %---------------------------------------------------------------------%
-\myruleform{\dres{\tenv}{\rulet}{E}} \\ \\
+\hfill \myruleform{\dres{\tenv}{\rulet}{E}}  \hfill \llap{\it Main}\\ \\
 %---------------------------------------------------------------------%
   \myrule {R-Main}
           {\drres{\tyvars{\tenv}}{\tenv}{\rulet}{E}}
@@ -856,7 +882,7 @@ variables $\bar{\alpha},\bar{\alpha}'$ and the type environment after substituti
 \end{array}
 \right. \\ \\
 %---------------------------------------------------------------------%
-\multicolumn{1}{c}{\myruleform{\drres{\bar{\alpha}}{\tenv}{\rulet}{E}}} \\ \\
+\hfill \myruleform{\drres{\bar{\alpha}}{\tenv}{\rulet}{E}} \hfill \llap{\it Focusing} \\ \\
 %---------------------------------------------------------------------%
 %%\quad\quad\quad
   \myrule{R-IAbs}
@@ -873,7 +899,7 @@ variables $\bar{\alpha},\bar{\alpha}'$ and the type environment after substituti
         {\drres{\bar{\alpha}}{\tenv}{\type}{E}} 
 \\ \\ \\
 %---------------------------------------------------------------------%
-\myruleform{\dlres{\bar{\alpha}}{\tenv}{\tenv'}{\type}{E}}\\ \\
+\hfill \myruleform{\dlres{\bar{\alpha}}{\tenv}{\tenv'}{\type}{E}} \hfill \llap{\it Lookup} \\ \\
 %---------------------------------------------------------------------%
   \myrule{L-RuleMatch}
           {\dmres{\tenv}{\rulet}{x}{\tau}{E}{\overline{\rulet'~\gbox{\leadsto x}}} \\
@@ -896,7 +922,7 @@ variables $\bar{\alpha},\bar{\alpha}'$ and the type environment after substituti
          {\dlres{\bar{\alpha}}{\tenv}{\tenv',\alpha}{\type}{E}} 
 \\ \\ \\
 %---------------------------------------------------------------------%
-\myruleform{\dmres{\tenv}{\rulet}{E}{\type}{E'}{\Sigma}}\\ \\
+\hfill \myruleform{\dmres{\tenv}{\rulet}{E}{\type}{E'}{\Sigma}} \hfill \llap{\it Matching} \\ \\
 %---------------------------------------------------------------------%
   \myrule{M-Simp}
          {}
@@ -913,7 +939,7 @@ variables $\bar{\alpha},\bar{\alpha}'$ and the type environment after substituti
          }
          {\dmres{\tenv}{\forall \alpha. \rulet}{E}{\type}{E'}{\Sigma}} \\ \\ \\
 %---------------------------------------------------------------------%
-\myruleform{\dstable{\bar{\alpha}}{\tenv}{\rulet}{x}{\type}} \\ \\
+\hfill \myruleform{\dstable{\bar{\alpha}}{\tenv}{\rulet}{x}{\type}} \hfill \llap{Stability} \\ \\
 %---------------------------------------------------------------------%
   \myrule{Stable}{\not\exists \theta, E, \Sigma: \enskip 
            \validsubst{\bar{\alpha}}{\tenv}{\theta}
@@ -1365,14 +1391,14 @@ it replaces explicit quantification over all substitutions $\theta$ in rule
 
 The definition of the algorithm is structured in the same way
 as the declarative specification: with one main judgement and three
-auxiliary ones that have similar roles. In fact, since the differences
-are not situated in the main and first auxiliary judgement, these are
+auxiliary ones that have similar roles (focusing, lookup, and matching). In fact, since the differences
+are not situated in the main and focusing judgement, these are
 actually identical.
 
 %- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 \subsection{Deferred Variable Instantiation}
-The first difference is situated in the third
-auxiliary judgement $\admres{\bar{\alpha}}{\tenv}{\rulet}{E}{\Sigma}{\type}{E'}{\Sigma'}$.
+The first difference is situated in the 
+matching judgement $\admres{\bar{\alpha}}{\tenv}{\rulet}{E}{\Sigma}{\type}{E'}{\Sigma'}$.
 While its declarative counterpart immediately instantiates the quantified type
 variable in rule~\rref{M-TApp}, this algorithmic formulation defers the
 instantiation to the point where a deterministic choice can be made. As long as
@@ -1425,7 +1451,7 @@ and its algorithmic counterpart:
 %- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 \subsection{Algorithmic Stability Check}
 
-The second difference can be found in the second judgement's rule \rref{Alg-L-RuleNoMatch}. Instead of
+The second difference can be found in \rref{Alg-L-RuleNoMatch} of the lookup judgment. Instead of
 using the $\dstable{\bar{\alpha}}{\tenv}{\rulet}{x}{\type}$ judgement, which quantifies over all valid 
 substitutions, this rule uses the algorithmic judgement
 $\coherent{\bar{\alpha}}{\tenv}{\rulet}{\type}$. This auxiliary judgement checks algorithmically
@@ -1551,12 +1577,16 @@ unification problems derived for their subterms.
 \framebox{\scriptsize
 \begin{minipage}{0.969\textwidth}
 \bda{c}
-\myruleform{\adres{\tenv}{\rulet}{E}} \\ \\
+%------------------------------------------------------------------------------%
+\hfill \myruleform{\adres{\tenv}{\rulet}{E}} \hfill \llap{\it Main}\\ \\
+%------------------------------------------------------------------------------%
 
 \myrule{Alg-R-Main}{\adrres{\tyvars{\tenv}}{\tenv}{\rulet}{E}}
         {\adres{\tenv}{\rulet}{E}}  \\ \\
 
-\myruleform{\adrres{\bar{\alpha}}{\tenv}{\rulet}{E}}  \\ \\
+%------------------------------------------------------------------------------%
+\hfill \myruleform{\adrres{\bar{\alpha}}{\tenv}{\rulet}{E}} \hfill \llap{\it Focusing} \\ \\
+%------------------------------------------------------------------------------%
 
 \myrule{Alg-R-IAbs}{\adrres{\bar{\alpha}}{\tenv, \rulet_1~\gbox{\leadsto x}}{\rulet_2}{E} \quad\quad \gbox{x~\mathit{fresh}}}
         {\adrres{\bar{\alpha}}{\tenv}{\rulet_1 \iarrow \rulet_2}{\lambda(x : ||\rulet_1||). E}} \quad\enskip
@@ -1570,7 +1600,9 @@ unification problems derived for their subterms.
         {\adrres{\bar{\alpha}}{\tenv}{\type}{E} }  \\ \\
 
 
-\multicolumn{1}{c}{\myruleform{\adlres{\bar{\alpha}}{\tenv}{\tenv'}{\type}{E} }} \\ \\
+%------------------------------------------------------------------------------%
+\hfill \myruleform{\adlres{\bar{\alpha}}{\tenv}{\tenv'}{\type}{E}} \hfill \llap{\it Lookup} \\ \\
+%------------------------------------------------------------------------------%
 
  \myrule{Alg-L-RuleMatch}{\admres{\epsilon}{\tenv}{\rulet}{x}{\epsilon}{\type}{E}{\bar{\rulet}'~\gbox{\leadsto \bar{x}'}} \quad\quad
           \adrres{\bar{\alpha}}{\tenv}{\rulet'}{E'} \quad (\forall \rulet' \in \bar{\rulet}')
@@ -1592,7 +1624,9 @@ unification problems derived for their subterms.
             {\adlres{\bar{\alpha}}{\tenv}{\tenv',\alpha}{\type}{E}} 
  \\ \\
 
-\multicolumn{1}{c}{\myruleform{\admres{\bar{\alpha}}{\tenv}{\rulet}{E}{\Sigma}{\type}{E'}{\Sigma'}}} \\ \\
+%------------------------------------------------------------------------------%
+\hfill \myruleform{\admres{\bar{\alpha}}{\tenv}{\rulet}{E}{\Sigma}{\type}{E'}{\Sigma'}} \hfill \llap{\it Matching} \\ \\
+%------------------------------------------------------------------------------%
 
 \myrule{Alg-M-Simp}{\theta = \mgu{\type}{\type'}
         }
@@ -1606,7 +1640,9 @@ unification problems derived for their subterms.
         {\admres{\bar{\alpha},\alpha}{\tenv,\alpha}{\rulet}{E\,\alpha}{\Sigma}{\type}{E'}{\Sigma'}}
         {\admres{\bar{\alpha}}{\tenv}{\forall \alpha. \rulet}{E}{\Sigma}{\type}{E'}{\Sigma'}} 
 \\ \\
-\myruleform{\coherent{\bar{\alpha}}{\tenv}{\rulet}{\type}} \\ \\
+%------------------------------------------------------------------------------%
+\hfill \myruleform{\coherent{\bar{\alpha}}{\tenv}{\rulet}{\type}} \hfill \llap{\it Coherence} \\ \\
+%------------------------------------------------------------------------------%
 \myrule{Coh-TApp}{\coherent{\bar{\alpha},\alpha}{\tenv,\alpha}{\rulet}{\type}}
         {\coherent{\bar{\alpha}}{\tenv}{\forall \alpha. \rulet}{\type}}  
 \quad\quad\quad
@@ -1738,7 +1774,7 @@ resolution of the rule type's context.
 The problem of non-termination has been widely studied in the context of
 Haskell's type classes, and a set of modular syntactic restrictions
 has been imposed on type class instances to avoid non-termination~\cite{fdchr}. 
-This paper adapts those restrictions to the setting of \name.
+This paper adapts those restrictions to the setting of \name. 
 
 %- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 \paragraph{Overall Approach}
@@ -1764,7 +1800,16 @@ children.
 \paragraph{Termination Condition}
 It is trivial to show that the size strictly decreases, if we require that
 every rule in the environment makes it so. This requirement is formalised as
- the termination condition $\term{\rulet}$ in Figure~\ref{fig:termination}.
+the termination condition $\term{\rulet}$ in Figure~\ref{fig:termination}.
+This condition should be imposed on every type added to the environment, namely
+to $\rulet_1$ in rule~\rref{Ty-IAbs} of Figure~\ref{fig:type} and to $\rulet_1$
+in rule~\rref{R-IAbs} of Figure~\ref{fig:resolution2}. However, because the latter
+concerns only a part of a resolved type, we feel that it is easier to follow for the
+programmer if we impose the
+condition instead on the whole resolved type in rule~\rref{Ty-Query} of
+Figure~\ref{fig:type}.
+
+
 
 The judgement is defined by case analysis on the type $\rulet$. Rule~\rref{T-Simp} states that simple types trivially satisfy the
 condition. Next, rule \rref{T-Forall} is the obvious congruence rule for
@@ -1875,3 +1920,14 @@ termination condition recursively on the components.
 % $\name$, termination of resolution coincides with the traditional program
 % termination problem. So, alternatively, $\name$  may enforce termination in
 % a less stringent manner using available termination checkers like~\cite{approve}.
+
+\paragraph{Discussion}
+Above we have adapted termination conditions for Haskell's type class
+resolution to \name. While our adapted conditions are sufficient for
+termination, they are not necessary. In fact, they can be rather restrictive.
+For instance, $\nterm{\tyint \To \tybool}$ because $\tnorm[\tyint] \not<
+\tnorm[\tybool]$. Indeed, resolving $\tybool$ in the context $\tenv_1 = \tybool
+\To \tyint, \tyint \To \tybool$ is problematic. Yet, it is not in the context
+$\tenv_2 = \tyint, \tyint \To \tybool$. The problem is that the conditions are
+not context sensitive. We leave exploring more permissive, context-sensitive
+conditions to future work.

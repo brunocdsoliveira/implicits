@@ -158,7 +158,8 @@ the query:
 \begin{equation*}
   \aresp{\tychar \To \tybool,
   \tybool \To \tyint}{\tychar \To \tyint}
-\end{equation*} does not resolve under the deterministic resolution rules of
+\end{equation*}%
+does not resolve under the deterministic resolution rules of
 the implicit calculus, but it resolves in $\ourlang$. Essentially
 resolving such query requires adding the rule type's context to the
 implicit environment in the course of the resolution process. But in
@@ -277,8 +278,8 @@ Part of the syntax-directedness of our deterministic resolution is very similar
 to that obtained by \emph{focusing} in proof
 search~\cite{focusing,Miller91b,Liang:2009}. Both approaches alternate a phase
 that
-is syntax directed on a ``query'' formula (our first auxiliary judgement),
-with a phase that is syntax directed on a given formula (our third auxiliary
+is syntax directed on a ``query'' formula (our focusing judgement),
+with a phase that is syntax directed on a given formula (our matching
 judgement). This is as far as the correspondence goes though, as the choice
 of given formula to focus on is typically not deterministic in focused proof
 search.
