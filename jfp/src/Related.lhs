@@ -183,7 +183,7 @@ Recently, following the implicit calculus and a preliminary version of
 $\ourlang$, Odersky et al.~\shortcite{odersky17implicits} presented the SI
 calculus as a new basis for the Scala language's treatment of implicits.
 Prominently, SI features implicit function types $T_1 ?\!\!\!\to T_2$, which
-are akin to $\ourlang$ $T_1 \iarrow T_2$ in $\ourlang$, and implicit queries
+are akin to rule types $T_1 \iarrow T_2$ in $\ourlang$, and implicit queries
 $?$, which are akin to $?_T$ in $\ourlang$. There are two main differences
 with $\ourlang$. Firstly, like the Hindley-Milner calculus SI is aimed at type
 inference and, e.g., does not feature explicit abstraction over implicits
@@ -243,13 +243,14 @@ only, as multiple rules for the same type can coexist in the same
 program. We agree that for programs such as the |Set| example, it is
 highly desirable to ensure that the same ordering instance is used
 consistently. $\ourlang$ is a core calculus, meant to enable the
-design of source languages that utilize its power. It should be easy
-enough to design source languages on top of $\ourlang$ that forbid
+design of source languages that utilize its power. 
+An example are Bottu et al.'s~\shortcite{haskell2017b} quantified class constraints for Haskell,
+which forbid
 local scoping constructs and, instead, make all declared rules visible
-in a single global environment. This would retain several of the
+in a single global environment. This retains several of the
 benefits of $\ourlang$ (such as first-class, higher-order rules, and
 coherent overlapping rules), while providing a form of global
-uniqueness. However this design would still be essentially
+uniqueness. However this design is still essentially
 non-modular, which is a key motivation for many alternatives to type
 classes to provide local scoping instead. 
 
