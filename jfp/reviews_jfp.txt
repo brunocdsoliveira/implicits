@@ -837,23 +837,31 @@ TODO
 > p19 "It is not difficult to see..." - in that case, please explain why and
 > let the reader be the judge of difficulty! Or probably better, avoid the
 > phrase.
-> 
+
+FIXED
+ 
 > p20 Introducing a new syntactic sort (again) to refine the grammar some more
 > - could you present the complete grammar at the beginning in section 3.1 and
 > say that you're going to explain it by taking an initial grammar and refining
 > it? Then I wouldn't be wondering how many more refinements there are going to
 > be... although I do like this way of presenting it, by encountering problems
 > and refining the grammar to solve them.
-> 
+
+TODO
+ 
 > p24 (Nitpick, really) The sentence that introduces section 4 is a bit odd
 > because we haven't seen these figures yet - and Figure 8 is several pages
 > away. Perhaps better to say that the section introduces an algorithm which
 > translates COCHIS to System F by resolving implicits deterministically.
-> 
+
+We have moved the reference to the new figure to the next paragraph.
+ 
 > p27 First line, please don't say "obviously" and "clearly" no matter how
 > obvious and clear they are to you! Especially when the apparently "obvious"
 > thing isn't valid...
-> 
+
+FIXED
+
 > Typo "vality concerns"
 
 FIXED
@@ -864,16 +872,23 @@ FIXED
 > Norell's PhD thesis) w.r.t. scoping concerns? Especially since it would be
 > nice to integrate the resolution algorithm with instance arguments, for
 > example.
-> 
+
+TODO
+ 
 > p31 Figure 2 was a long time ago. Can you repeat what you need here? It's
 > awkward to flick back and forward, especially reading on screen. I think it
 > would also be nice to present the desirable properties of the translation
 > (the ones you prove later) up front.
-> 
+
+TODO
+ 
 > p36 "It should be easy enough" - this needs backing up, I'm not sure how easy
 > it would be! I would find this more convincing with a sketch of Set in COCHIS
 > noting the restrictions you'd need to make in a source language.
-> 
+
+We now refer to the work of Bottu et al. on quantified class constraints for
+Haskell. This work, inspired by Cochis, enforces unique global instances.
+ 
 > Referee: 3
 > 
 > ## SUMMARY
@@ -1072,7 +1087,7 @@ TODO: discuss relation to other languages
 > or middle-size practical examples could be tried.  Altogether, this makes
 > the practical usefulness of the proposal hard to evaluate.
 
-TODO: create prototype implementation
+TODO: create prototype implementation?
 
 > ## Missed related works
 > Modular implicits (published in [1]) extend the OCaml language with some
@@ -1237,6 +1252,9 @@ FIXED
 
 > ## LINEAR COMMENTS
 > Please, use the lineno package, when submitting a paper for reviewing.
+
+We are now using this package.
+
 > - Abstract, l-6, compact formulation: this is arguable, given the complexity
 >   of the specification of the resolution judgment.
 > - Page 2, top, long list of languages: OCaml also has implicits as an
@@ -1313,11 +1331,15 @@ There is a small space.
 > - (optional) Page 19, footnote 4:
 >   I am not sure this is a happy choice. It shows that the focused type
 >   systems is too tricky to be shown to the reader...
+
+The problem is that focusing admits many fewer proofs, and for this problem
+a problematic one would be much larger and thus harder to explain.
+
 > - Page 20,  line -15: (An alternative ... for this purpose)
 >   This is not an equivalent solution as it would allow to type more
 >   programs. This should be made clearer.
 
-TODO
+The text has been reformulated to make this clearer.
 
 > - Page 20, line -11:  "The auxiliary judgment"
 >   should be "This auxiliary judgment"
@@ -1415,7 +1437,8 @@ FIXED
 >   I would not say this is a strong form of coherence, since here coherence
 >   is obtained the easy by just avoiding multiple paths...
 
-TODO: reformulate
+We have reformulated and distinguished a determinacy theorem from
+a coherence corollary.
 
 > - Page 33, Lemma 5.4: "Stable under [<-type] substitution"
 

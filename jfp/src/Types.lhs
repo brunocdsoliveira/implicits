@@ -248,7 +248,7 @@ Following the ``Propositions as Types'' correspondence~\cite{propsastypes}, we r
 $\alpha$ as a propositional variable and $\forall \alpha.\rulet$ as universal quantification.
 Yet, unlike in the traditional interpretation of types as propositions, we have two forms of arrows,
 functions $\rulet_1 \arrow \rulet_2$ and rules $\rulet_1 \iarrow \rulet_2$,
-and the important twist is that we choose to treat
+and the twist is that we choose to treat
 only rules as implications, leaving functions as uninterpreted predicates.
 
 % Figure~\ref{fig:resolution1} provides a first (ambiguous) definition of the
@@ -455,7 +455,7 @@ Finally, rule~\rref{FM-Simp}
 expresses the base case
 where the axiom is identical to the goal and there are no new goals.
 
-It is not difficult to see that this type-directed formulation of entailment
+This type-directed formulation of entailment
 greatly reduces the number of proofs for given goal.
 %\footnote{Without loss of expressive power. See for example~\cite{FrankFocusing}.} 
 For instance, for the example above there is only one proof:
@@ -574,10 +574,14 @@ in completely different ways.
 
 In order to avoid any problems, we conservatively forbid all ambiguous context
 types in the implicit environment with the $\unambig{}{\rulet_1}$
-side-condition in rule \rref{Ty-IAbs} of Figure~\ref{fig:type}. (An
-alternative design to avoid such ambiguity would instantiate unused type
-variables to a dummy type, like GHC's \texttt{GHC.Prim.Any}, which is only used
-for this purpose.) This judgement is defined in Figure~\ref{fig:unamb}
+side-condition in rule \rref{Ty-IAbs} of Figure~\ref{fig:type}.\footnote{A more
+permissive design would allow quantified type variables that are not
+mentioned anywhere, such as $\alpha$ in $\forall \alpha. \tyint \To \tyint$,
+and instantiate them
+to a dummy type, like GHC's \texttt{GHC.Prim.Any}, which is only used for this
+purpose. As such unused type variables serve little purpose, we have opted
+not to make an exception for them.} This judgement is
+defined in Figure~\ref{fig:unamb}
 in terms of the auxiliary judgement $\unambig{\bar{\alpha}}{\rulet}$ which
 takes an additional sequence of type variables $\alpha$ that is initially
 empty.
@@ -731,7 +735,7 @@ example resolving the goal $\tyint$ against the environment $\tenv =
 \tyint~\gbox{\leadsto x}, \alpha~\gbox{\leadsto y}$.  This scenario
 arises for instance when type checking the expression $e = \ilambda \tyint. (\Lambda \alpha. \ilambda \alpha. \query \tyint)\,\tyint$.
 Our definition of resolution skips the first entry in the environment because $\alpha$ does not
-match $\tyint$, commits to the second entry because $\tyint$ obviously matches
+match $\tyint$, commits to the second entry because $\tyint$ trivially matches
 $\tyint$, and elaborates to $x$.
 
 However, this resolution is not stable. Consider what happens when we apply a
@@ -771,7 +775,7 @@ substitution does not make sense for every type variable in the environment.
 Consider for example resolving the type $\forall \beta. \beta \arrow \beta$
 against the environment $\tenv_0 = \forall \gamma. \gamma \arrow
 \gamma~\gbox{\leadsto x}, \alpha, \alpha \arrow \alpha ~\gbox{\leadsto y}$.
-Clearly, we would like this resolution of $\forall \beta. \beta \to \beta$
+We would like this resolution of $\forall \beta. \beta \to \beta$
 to succeed against $\forall \gamma. \gamma \to \gamma$.
 
 Unfortunately, the above formulation of stability unnecessarily throws a
@@ -814,8 +818,8 @@ them make sense. Essentially, there are two groups of substitutions:
       of $\alpha$ by types that are well-scoped in the prefix of the environment before $\alpha$.
       In the case of the example this means that we can only consider substitutions
       $[\rulet/\alpha]$ where $\wfty{\forall \gamma. \gamma \arrow \gamma~\gbox{\leadsto x}}{\rulet}$. In
-      other words, $\rulet$ cannot have any free type variables. Obviously there is no such
-      $\rulet$ that yields a match.
+      other words, $\rulet$ cannot have any free type variables. There is no such
+      $\rulet$ that matches $\beta$.
 \end{itemize}
  
 In summary, Figure~\ref{fig:subst} formalises our notion of valid substitutions
@@ -857,6 +861,7 @@ variables $\bar{\alpha},\bar{\alpha}'$ and the type environment after substituti
 } 
 \end{center} 
 }
+\tom{TODO: only substitute with $\suty$.}
    
 %- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 \subsubsection{Summary}
@@ -1380,7 +1385,7 @@ unambiguous, deterministic and stable definition of resolution.
 \section{Resolution Algorithm}
 
 
-This section presents in Figure~\ref{fig:algorithm} an algorithm that implements the
+This section presents an algorithm that implements the
 deterministic resolution rules of Figure~\ref{fig:resolution2}.
 It differs from the latter in two important ways: 
 firstly, it computes rather than guesses type substitutions in rule
@@ -1389,7 +1394,7 @@ and secondly,
 it replaces explicit quantification over all substitutions $\theta$ in rule
 \rref{Stable} with a tractable approach to coherence checking.
 
-The definition of the algorithm is structured in the same way
+The definition of the algorithm in, Figure~\ref{fig:algorithm}, is structured in the same way
 as the declarative specification: with one main judgement and three
 auxiliary ones that have similar roles (focusing, lookup, and matching). In fact, since the differences
 are not situated in the main and focusing judgement, these are
@@ -1507,9 +1512,9 @@ unifier can be expressed as its composition with another substitution.
 Yet, the most general unifier may not be a valid substitution, while more
 specific unifiers may be valid.  Consider for instance unifying $\alpha$ with
 $\beta \arrow \beta$ where $\tenv = \alpha, \beta$ and both $\alpha$ and
-$\beta$ are unification variables. The most general unifier is obviously
-$[\beta \arrow \beta/\alpha]$. However this unifier is clearly not valid, as
-$\alpha$ apears before $\beta$ in the environment. In contrast, there are
+$\beta$ are unification variables. The most general unifier is 
+$[\beta \arrow \beta/\alpha]$. However this unifier is not valid, as
+$\alpha$ appears before $\beta$ in the environment. In contrast, there are
 infinitely many more specific unifiers that are valid, all of the form
 $[\rulet\arrow\rulet/\alpha,\rulet/\beta]$ where $\rulet$ is a closed type.
 
@@ -1812,7 +1817,7 @@ Figure~\ref{fig:type}.
 
 
 The judgement is defined by case analysis on the type $\rulet$. Rule~\rref{T-Simp} states that simple types trivially satisfy the
-condition. Next, rule \rref{T-Forall} is the obvious congruence rule for
+condition. Next, rule \rref{T-Forall} is the congruence rule for
 universally quantified types. Finally, rule~\rref{T-Rule} enforces
 the actual condition on rule types $\rulet_1 \iarrow \rulet_2$, which
 requires that the head $\type_1$ of $\rulet_1$ is strictly smaller than the
