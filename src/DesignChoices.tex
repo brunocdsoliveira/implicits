@@ -24,21 +24,18 @@ one is performance.
 
 Consider the following piece of code:
 
-\begin{code}
 
-data IntSet = C a deriving Eq
-
-class C a where
-  m :: a -> a
-
-instance Eq a => C [a] where
-
-instance Ord a => C [a] where
-
-fun :: StablePtr Int -> [StablePtr Int]
-fun sp = m [sp]
-
-\end{code}
+> data IntSet = C a deriving Eq
+> 
+> class C a where
+>   m :: a -> a
+>
+> instance Eq a => C [a] where
+> 
+> instance Ord a => C [a] where
+> 
+> fun :: StablePtr Int -> [StablePtr Int]
+> fun sp = m [sp]
 
 The point here is that StablePtr supports equality but not ordering. That is there 
 is a type class instance |Eq (StablePtr a)|, but no type class instance |Ord (StablePtr a)|. 
@@ -59,9 +56,7 @@ that don't work well. \bruno{Should I really go into this?}
 
 Superclasses look alot like overlapping instances, for example:
 
-\begin{code}
-
-\end{code}
+>
 
 But resolution in the presence of superclasses behaves differently from overlapping instances. 
 
