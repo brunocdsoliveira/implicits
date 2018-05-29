@@ -1,0 +1,71 @@
+\section{Design Choices}
+
+Before diving into the technical details, we wish to discuss and justify a number of design 
+choices taken in \name. Mostly, many of these choices are motivated by the design of Haskell 
+type classes or Scala implicits.
+
+\bruno{Cite some of the papers that discuss various design options for Haskell?}
+
+
+\subsection{Predicative Instantiation}
+
+System F is an impredicative calculus, allowing the instantiation of type variables with 
+arbitrary (polymorphic) types. In contrast most functional languages only allow instantiation 
+of \emph{monotypes}. Cochis is a predicative calculus. 
+
+\subsection{Committed Choice}
+
+\name employs a committed choice for resolution. The motivation for this choice is 
+largely due to the startegy employed by Haskell. Since early on it was decided that Haskell 
+should not use backtracking during resolution. One key motivator for this is reasoning. Another 
+one is performance.
+
+\paragraph{Overlapping Instances}
+
+Consider the following piece of code:
+
+
+> data IntSet = C a deriving Eq
+> 
+> class C a where
+>   m :: a -> a
+>
+> instance Eq a => C [a] where
+> 
+> instance Ord a => C [a] where
+> 
+> fun :: StablePtr Int -> [StablePtr Int]
+> fun sp = m [sp]
+
+The point here is that StablePtr supports equality but not ordering. That is there 
+is a type class instance |Eq (StablePtr a)|, but no type class instance |Ord (StablePtr a)|. 
+
+The question is should the above code type-check or not? In GHC Haskell the answer is no. 
+Even though for this program there is no ambiguity: the only choice is to pick the first 
+type class instance, the program is nevertheless rejected. 
+
+This is because Haskell's resolution does not consider the contexts in the resolution process:
+it only considers the head of a type class instance. 
+
+\section{Superclasses}
+
+Superclasses are not supported by \name. Here \name follows the design of Scala implicits, which 
+do not have a concept similar to superclasses. In Scala a similar mechanism to 
+superclasses can often be achieved with OO Subtyping and class hierarchies, although there are situations 
+that don't work well. \bruno{Should I really go into this?} 
+
+Superclasses look alot like overlapping instances, for example:
+
+>
+
+But resolution in the presence of superclasses behaves differently from overlapping instances. 
+
+Superclasses have a ad-hoc treatement in GHC. 
+
+\subsection{Coherence}
+
+We use coherence as determinism in our paper. But, generally speaking, coherence can be interpreted
+more broadly. 
+
+
+ 
