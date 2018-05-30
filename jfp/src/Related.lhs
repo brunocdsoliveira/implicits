@@ -53,6 +53,15 @@ This is in stark contrast with most other IP mechanisms, including $\ourlang$,
 where recursive resolution and the ability to compose rules automatically is 
 a key feature and source of convenience.
 
+An interesting design of implicits has also been created in
+OCaml~\cite{DBLP:journals/corr/WhiteBY15}, where the implicit entities are
+OCaml modules. Like \name, these implicits have local scope, but, unlike \name,
+coherence is obtained by performing a backtracking search over all possible
+ways to resolve an implicit module signature, and fail if there is not exactly
+one way. Hence, while introducing overlapping implicits is allowed, they are
+only usable if only one leads to a full resolution. As far as we know, a partial
+prototype exists but the approach has not been formalised yet.
+
 \subsection{Implicit Programming with Coherence and Global Scoping}
 
 Several core calculi and refinements have been proposed in the context
@@ -198,15 +207,6 @@ SI features a simplified type system that is incoherent and a resolution
 algorithm that supports only monomorphic types, while the compiler's much more
 complex enforcement of coherence and support for polymorphism are only
 discussed informally. 
-
-An interesting design of implicits has also been created in
-OCaml~\cite{DBLP:journals/corr/WhiteBY15}, where the implicit entities are
-OCaml modules. Like \name, these implicits have local scope, but those introduced in
-an inner scope do not override overlapping ones from an outer scope. Instead,
-coherence is obtained by performing a backtracking search over all possible
-ways to resolve an implicit module signature, and fail if there is not exactly
-one way. As far as we know, a partial prototype exists but the approach has not
-been formalised yet.
 
 \paragraph{IP Mechanisms in Dependently Typed Programming}
 A number of dependently typed languages also have IP mechanisms
