@@ -46,7 +46,7 @@ which infer values by using type information. Examples of IP
 mechanisms include Haskell's type classes~\cite{adhoc}, C++'s
 concepts~\cite{concepts}, JavaGI's generalized interfaces~\cite{javagi}, Coq's type
 classes~\cite{coqclasses}, Scala's
-implicits~\cite{scala}, Agda's \emph{instance arguments}~\cite{instanceargs}, and Rust's \emph{traits}~\cite{rust}. IP can also be viewed as a form of
+implicits~\cite{scala}, Agda's \emph{instance arguments}~\cite{instanceargs}, Rust's \emph{traits}~\cite{rust}, and OCaml's \emph{modular implicits}~\cite{DBLP:journals/corr/WhiteBY15}. IP can also be viewed as a form of
 (type-directed) program synthesis~\cite{Manna:1980:DAP:357084.357090}. The programming is said to
 be \emph{implicit} because expressions (e.g., those for function
 parameters) can be omitted by the programmer. Instead the necessary values are

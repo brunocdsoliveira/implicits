@@ -1097,7 +1097,7 @@ TODO: create prototype implementation?
 > detailed formalization (but conversely they has a prototype implementation).
 > A comparison between modular implicits and COCHIS is therefore expected.
 
-TODO: discuss [1] in related work
+We now discuss OCaml's modular implicits in the Related Work section.
 
 > ## Predicative instantiation (page 20, line 3)
 > The language is presented as a framework for implicits in "System F", which
@@ -1259,6 +1259,9 @@ We are now using this package.
 >   of the specification of the resolution judgment.
 > - Page 2, top, long list of languages: OCaml also has implicits as an
 >   experimental feature [1].
+
+ADDED
+
 > - Page 2, l-12: The issue is that "when... instances" (...).  Could you
 >   explain the quote on a concrete example, so that it is understandable
 >   without looking at the reference?
