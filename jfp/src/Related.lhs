@@ -199,6 +199,14 @@ algorithm that supports only monomorphic types, while the compiler's much more
 complex enforcement of coherence and support for polymorphism are only
 discussed informally. 
 
+An interesting design of implicits has also been created in
+OCaml~\cite{DBLP:journals/corr/WhiteBY15}, where the implicit entities are
+OCaml modules. Like \name, these implicits have local scope, but those introduced in
+an inner scope do not override overlapping ones from an outer scope. Instead,
+coherence is obtained by performing a backtracking search over all possible
+ways to resolve an implicit module signature, and fail if there is not exactly
+one way. As far as we know, a partial prototype exists but the approach has not
+been formalised yet.
 
 \paragraph{IP Mechanisms in Dependently Typed Programming}
 A number of dependently typed languages also have IP mechanisms
