@@ -748,13 +748,19 @@ TODO
 > 
 >  - where/how is the substitution order $\theta_1 \sqsubseteq \theta_2$
 > defined?
-> 
+
+TODO
+ 
 >  - only the first conclusion of this lemma is proven, what about the
 > second and third conclusions?
-> 
+
+TODO
+
 > p. 60, Lemma A.29: where is the proof of this lemma?
-> 
-> 
+
+
+TODO
+ 
 > Referee: 2
 > 
 > Comments to the Author
@@ -1185,7 +1191,7 @@ TODO
 >   normal size: you could save horizontal space by writing rule names above
 >   the rules (rule names could remain in small size, though).
 
-TODO
+We no longer use scriptsize in the rules.
 
 > - The gray overlay in typing rules is annoyingly noisy: it attracts the eye,
 >   while this is supposed to be something that the reader does not have to

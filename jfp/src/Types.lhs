@@ -200,7 +200,7 @@ is explained next.
 
 \figtwocol{fig:resolution1}{Ambiguous Resolution}{
 \begin{center}
-\framebox{\scriptsize
+\framebox{%\scriptsize
 \begin{minipage}{.969\textwidth}
 \bda{c}
 \myruleform{\ares{\tenv}{\rulet}{E}}
@@ -360,7 +360,7 @@ and allows only the first and more direct of these two proofs.
 
 \figtwocol{fig:resolutionf}{Focusing Resolution}{
 \begin{center}
-\framebox{\scriptsize
+\framebox{%\scriptsize
 \begin{minipage}{.969\textwidth}
 \bda{c}
 \Sigma ::= \epsilon \mid \Sigma, \rulet~\gbox{\leadsto x} \\ \\
@@ -1585,7 +1585,7 @@ unification problems derived for their subterms.
 
 \figtwocol{fig:algorithm}{Resolution Algorithm}{
 \begin{center}
-\framebox{\scriptsize
+\framebox{%\scriptsize
 \begin{minipage}{0.969\textwidth}
 \bda{c}
 %------------------------------------------------------------------------------%
@@ -1600,11 +1600,11 @@ unification problems derived for their subterms.
 %------------------------------------------------------------------------------%
 
 \myrule{Alg-R-IAbs}{\adrres{\bar{\alpha}}{\tenv, \rulet_1~\gbox{\leadsto x}}{\rulet_2}{E} \quad\quad \gbox{x~\mathit{fresh}}}
-        {\adrres{\bar{\alpha}}{\tenv}{\rulet_1 \iarrow \rulet_2}{\lambda(x : ||\rulet_1||). E}} \quad\enskip
+        {\adrres{\bar{\alpha}}{\tenv}{\rulet_1 \iarrow \rulet_2}{\lambda(x : ||\rulet_1||). E}} \\ \\ 
 
 \myrule{Alg-R-TAbs}
         {\adrres{\bar{\alpha}}{\tenv,\alpha}{\rulet}{E}}
-        {\adrres{\bar{\alpha}}{\tenv}{\forall \alpha. \rulet}{\Lambda \alpha. E}}  \\ \\
+        {\adrres{\bar{\alpha}}{\tenv}{\forall \alpha. \rulet}{\Lambda \alpha. E}}  \quad\enskip
 
 \myrule{Alg-R-Simp}
         {\adlres{\bar{\alpha}}{\tenv}{\tenv}{\type}{E}}
@@ -1615,8 +1615,8 @@ unification problems derived for their subterms.
 \hfill \myruleform{\adlres{\bar{\alpha}}{\tenv}{\tenv'}{\type}{E}} \hfill \llap{\it Lookup} \\ \\
 %------------------------------------------------------------------------------%
 
- \myrule{Alg-L-RuleMatch}{\admres{\epsilon}{\tenv}{\rulet}{x}{\epsilon}{\type}{E}{\bar{\rulet}'~\gbox{\leadsto \bar{x}'}} \quad\quad
-          \adrres{\bar{\alpha}}{\tenv}{\rulet'}{E'} \quad (\forall \rulet' \in \bar{\rulet}')
+ \myrule{Alg-L-RuleMatch}{\admres{\epsilon}{\tenv}{\rulet}{x}{\epsilon}{\type}{E}{\bar{\rulet}'~\gbox{\leadsto \bar{x}'}} \quad\enskip
+          \adrres{\bar{\alpha}}{\tenv}{\rulet'}{E'} \enskip (\forall \rulet' \in \bar{\rulet}')
          }
          {\adlres{\bar{\alpha}}{\tenv}{ \tenv', \rulet~\gbox{\leadsto x}}{\type}{E[\bar{E}'/\bar{x}'] }}  \\ \\
  
@@ -1670,7 +1670,7 @@ unification problems derived for their subterms.
 
 \figtwocol{fig:mgu}{Unification Algorithm}{
 \begin{center}
-\framebox{\scriptsize
+\framebox{%\scriptsize
 \begin{minipage}{0.969\textwidth}
 \bda{c}
 % \multicolumn{1}{c}{\myruleform{\theta = \mathit{mgu}_{\bar{\alpha}}(\rulet_1,\rulet_2)}} \\ \\
@@ -1871,7 +1871,7 @@ termination condition recursively on the components.
 
 \figtwocol{fig:termination}{Termination Condition}{
 \begin{center}
-\framebox{\scriptsize
+\framebox{%\scriptsize
 \begin{minipage}{.969\textwidth}
 \begin{equation*}
 \ba{c}
@@ -1899,7 +1899,7 @@ termination condition recursively on the components.
     \ea
 \end{equation*}%
 \begin{equation*}
-    \ba{rcl@@{\hspace{7mm}}rcl}
+    \ba{rcl@@{\hspace{4mm}}rcl}
       \occ{\alpha}{\beta} & = & \left\{ \begin{array}{ll} 
          1 & \hspace{1cm}(\alpha = \beta) \\
          0 & \hspace{1cm}(\alpha \neq \beta)
