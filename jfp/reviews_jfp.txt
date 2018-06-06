@@ -1319,7 +1319,8 @@ TODO
 > - Page 17, line -7: "have overlapping conclusions."
 >   Give an example of overlapping conclusions or a forward pointer.
 
-TODO
+The example follows immediately. We have exended the explanation to
+point out that it illustrates the issue.
 
 > - Page 17, 3.4, l5: "resolving "a" given "G = a ~> x"
 >   What is "a"? ---does not belong to the grammar of COCHIS.
@@ -1357,7 +1358,7 @@ FIXED
 > - Page 20, line -7:  "these contexts are unambiguous"
 >   Could you explain the intuition?
 
-TODO
+DONE
 
 > - Page 20, line -7:  "rule (Ty_Query)"
 >   adding "in Fig 2, page 16"

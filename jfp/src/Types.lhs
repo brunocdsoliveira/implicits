@@ -263,12 +263,12 @@ rules have overlapping conclusions. Hence, a deterministic resolution algorithm
 is non-obvious.
 % \item
 Secondly and more importantly, the definition is \emph{ambiguous}: a type
-can be derived in multiple different ways. For instance, 
-consider resolution under the environment
+can be derived in multiple different ways. As an example of both issues, 
+consider that under the environment
 \[
 \Gamma_0 = \tyint,\tybool,(\tybool\iarrow\tyint)
 \]
-there are two different derivations for
+there are two different derivations for resolving
 $\aresp{\Gamma_0}{\tyint}$:
 \begin{equation*}
 \begin{array}{c}
@@ -291,6 +291,10 @@ and
    {\aresp{\Gamma_0}{\tyint}}
 \end{array}
 \end{equation*}%%
+This example illustrates the first issue; in particular the inference rules
+\rref{AR-IVar} and \rref{AR-IApp} overlap as both can be used to conclude
+$\aresp{\Gamma_0}{\tyint}$. It also shows the second issues as there are two
+full different derivation trees for $\aresp{\Gamma_0}{\tyint}$.
 While this may seem harmless at the type-level, at the value-level each
 derivation corresponds to a (possibly) different value. Hence, ambiguous
 resolution renders the meaning of a program ambiguous.
@@ -623,7 +627,9 @@ $\bar{\alpha}$. Inductive rule \rref{UA-TAbs}
 accumulates the bound type variables $\bar{\alpha}$ before the
 head. Rule \rref{UA-IAbs} skips over any contexts
 on the way to the head, but also recursively requires that these contexts are
-unambiguous. 
+unambiguous. The latter is necessary because rule \rref{FR-Simp} resolves those contexts
+recursively when $\rulet$ matches the resolvent; as recursive resolvents they then add
+their contexts to the implicit environment in rule \rref{FR-IAbs}. 
 
 Finally, the unambiguity condition is imposed on the queried type $\rulet$
 in rule \rref{Ty-Query} because this type too may extend the implicit
