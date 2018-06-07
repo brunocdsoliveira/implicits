@@ -748,13 +748,19 @@ TODO
 > 
 >  - where/how is the substitution order $\theta_1 \sqsubseteq \theta_2$
 > defined?
-> 
+
+TODO
+ 
 >  - only the first conclusion of this lemma is proven, what about the
 > second and third conclusions?
-> 
+
+TODO
+
 > p. 60, Lemma A.29: where is the proof of this lemma?
-> 
-> 
+
+
+TODO
+ 
 > Referee: 2
 > 
 > Comments to the Author
@@ -1097,7 +1103,7 @@ TODO: create prototype implementation?
 > detailed formalization (but conversely they has a prototype implementation).
 > A comparison between modular implicits and COCHIS is therefore expected.
 
-TODO: discuss [1] in related work
+We now discuss OCaml's modular implicits in the Related Work section.
 
 > ## Predicative instantiation (page 20, line 3)
 > The language is presented as a framework for implicits in "System F", which
@@ -1185,7 +1191,7 @@ TODO
 >   normal size: you could save horizontal space by writing rule names above
 >   the rules (rule names could remain in small size, though).
 
-TODO
+We no longer use scriptsize in the rules.
 
 > - The gray overlay in typing rules is annoyingly noisy: it attracts the eye,
 >   while this is supposed to be something that the reader does not have to
@@ -1259,6 +1265,9 @@ We are now using this package.
 >   of the specification of the resolution judgment.
 > - Page 2, top, long list of languages: OCaml also has implicits as an
 >   experimental feature [1].
+
+ADDED
+
 > - Page 2, l-12: The issue is that "when... instances" (...).  Could you
 >   explain the quote on a concrete example, so that it is understandable
 >   without looking at the reference?
@@ -1316,7 +1325,8 @@ TODO
 > - Page 17, line -7: "have overlapping conclusions."
 >   Give an example of overlapping conclusions or a forward pointer.
 
-TODO
+The example follows immediately. We have exended the explanation to
+point out that it illustrates the issue.
 
 > - Page 17, 3.4, l5: "resolving "a" given "G = a ~> x"
 >   What is "a"? ---does not belong to the grammar of COCHIS.
@@ -1354,7 +1364,7 @@ FIXED
 > - Page 20, line -7:  "these contexts are unambiguous"
 >   Could you explain the intuition?
 
-TODO
+DONE
 
 > - Page 20, line -7:  "rule (Ty_Query)"
 >   adding "in Fig 2, page 16"
