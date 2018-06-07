@@ -108,6 +108,8 @@ that is broken in the presence of overlapping instances
 substitutions. The issue is that 
 the behaviour of resolution for an expression |e| can change if |e| 
 gets a more specific type, leading to a different evaluation result. 
+This is problematic because seemingly harmless inlinings, 
+will actually have a different semantics before and after the inlining.
 Because of this problem, the design of Haskell type classes
 significantly restricts the set of valid overlapping instances to ensure 
 that stability holds, and the meaning of an expression does not change 
@@ -115,7 +117,7 @@ simply due to a more specific type. In other words, resolution
 should resolve implicit values using the same rules before 
 and after instantiation of type variables.
 
-As an orthogonal remark, in the Haskell community the term coherence
+As an orthogonal remark, in the Haskell community, the term coherence
 is often colloquially used to emcompass several different properties,
 including global uniqueness, stability and the original coherence
 definition by Reynolds~\cite{Reynolds91coherence}. However it is
@@ -133,7 +135,7 @@ instances to exist for the same type in different scopes in the same
 program. Scala also allows a powerful form of overlapping 
 implicits~\cite{implicits}. The essence of this style of implicit
 programming is modelled by the \emph{implicit
-  calculus}~\cite{oliveira12implicit} and the recent . The implicit 
+  calculus}~\cite{oliveira12implicit} or the more recent SI calculus~\cite{odersky17implicits}. The implicit 
 calculus supports a number of features that are not supported 
 by type classes. Besides local scoping, in the implicit calculus 
 \emph{any type} can have an implicit value. In contrast Haskell's type
@@ -142,24 +144,30 @@ as a special kind of record) to be passed implicitly. Finally the
 implicit calculus supports higher-order instances/rules: 
 that is rules, where the rule requirements can themselves be other rules. 
 The
-implicit calculus has been shown to be type-safe.
-Unfortunately, both the implicit calculus and the various existing
-language mechanisms that embody flexibility tend to not preserve
-important properties such as stability, which prevents the 
-ability to substitute equals for equals. 
+implicit calculus has been shown to be type-safe, and it also ensures
+coherence, but it lacks stability. The SI calculus lacks both
+coherence and stability, but the authors present a simply-typed subset 
+that is coherent\footnote{It makes no sense to talk about stability
+  in a simply typed calculus, since this is a property that is only
+  relevant for polymorphic calculi.}.
+Unfortunately, while both the implicit/SI calculus and the various existing
+language mechanisms embody flexibility, the lack of
+important properties such as stability makes reasoning about the
+semantics of programs harder, and can prevent refactorings and 
+compiler optimizations such as inlining. 
 
 The design of IP mechanisms has led to heated
 debate~\cite{show-stopping,uniqueness,kmett} about the
 pros and cons of each school of thought: ease of reasoning versus
 flexibility. Proponents of the Haskell school of thought argue that
-having coherence is extremely desirable, and flexibility should not
-come at the cost of that property. Proponents of flexible IP
-mechanisms argue that flexibility is more important and, in
-practice, problems due to incoherence are rare. 
-As far as we are aware only two designs preserve coherence, while
-allowing some extra flexibility for local scoping~\cite{modular,systemfg}. However
-neither of those designs supports overlapping instances and various
-other features, such as first-class and higher-order rules.
+having coherence, stability and uniqueness of instances is extremely desirable, and flexibility should not
+come at the cost of those properties. Proponents of flexible IP
+mechanisms argue that flexibility is more important, and that
+uniqueness of instances goes against modularity. 
+As far as we are aware no current designs that support local scoping,
+overlapping instances and various
+other features, such as first-class and higher-order rules, while at
+the same time also ensuring both coherence and stability.
 %%The current
 %%state-of-affairs seems to indicate that both goals are at odds with
 %%each other, and cannot be easily reconciled.
@@ -171,7 +179,7 @@ is an improved variant of the implicit calculus that guarantees
 \emph{coherence} and \emph{stability}. \name supports local scoping, overlapping instances,
 first-class instances and higher-order rules. Yet, in contrast to most
 previous work that supports such features, the calculus is not only
-type-safe, but also coherent. Naturally, the unrestricted calculus
+type-safe, but also stable and coherent. Naturally, the unrestricted calculus
 does not support global uniqueness of instances, since this property depends on the
 global scoping restriction. Nevertheless, if retaining global
 uniqueness is desired, that can be modeled by the subset of
@@ -229,6 +237,7 @@ statically excludes ill-behaved programs. Section~\ref{sec:trans} provides the e
 semantics of our calculus into System F and correctness results. 
 %Section 5 presents the source language and its encoding into $\ourlang$. 
 Section~\ref{sec:related} discusses related work and Section~\ref{sec:conclusion} concludes.
+\bruno{don't forget to revise organization after rewriting.}
 
 %if False
 This paper is a rewrite and expansion of the conference paper by Oliveira et

@@ -11,7 +11,7 @@
 \label{sec:overview}
 
 This section summarises the relevant background on type classes, IP 
-and coherence, and introduces $\ourlang$'s key features for ensuring coherence.
+and coherence, and introduces the key features of $\ourlang$.
 We first discuss Haskell type classes, the oldest
 and most well-established IP mechanism, then compare them to
 Scala implicits, and finally we introduce the coherence approach taken in $\ourlang$.
