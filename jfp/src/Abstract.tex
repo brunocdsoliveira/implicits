@@ -3,8 +3,8 @@ resolution, making programs more compact and easier to read.
 Examples of IP mechanisms include Haskell's type classes, Scala's
 implicits, Agda's instance arguments, Coq's type classes, and Rust's
 traits.  The design of IP mechanisms has led to heated debate:
-proponents of one school argue for the desirability of coherence, ensuring
-that each implicit value has a unique resolution; while proponents of another
+proponents of one school argue for the desirability of strong
+reasoning properties; while proponents of another
 school argue for the power and flexibility of local scoping or
 overlapping instances.  The current state-of-affairs seems to indicate
 the two goals are at odds with one another and cannot easily be
@@ -12,18 +12,22 @@ reconciled.
 
 This paper presents \name, the Calculus Of CoHerent ImplicitS,
 an improved variant of the implicit calculus that offers flexibility
-while preserving coherence and avoiding ambiguity. \name supports
+while preserving two key properties: \emph{coherence} and
+\emph{stability of substitutions}. \name supports
 polymorphism, local scoping,
 overlapping instances, first-class instances, and higher-order
-rules, while remaining type safe and coherent.
+rules, while remaining type safe, coherent and stable under substitution.
 
 \name has a compact formulation.
 We introduce a logical formulation of how to resolve implicits, which
 is simple but ambiguous and incoherent, and a second formulation,
-which is less simple but unambiguous and coherent.  Every resolution
+which is less simple but unambiguous, coherent and stable.  Every resolution
 of the second formulation is also a resolution of the first, but not
 conversely.  Parts of the second formulation bear a close resemblance
 to a standard technique for proof search called focussing.
+\bruno{We should consider changing the title. Actually our main
+  novelty isn't coherent implicits: stability is more of the novelty
+  here. }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 

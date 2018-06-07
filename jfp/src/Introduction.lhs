@@ -54,26 +54,28 @@ provided automatically via a \emph{type-directed resolution} process.
 These implicit values are either fetched by type from the current (implicit)
 environment or constructed by type-directed rules.
 
-Currently there are two main schools of thought regarding
-the design of IP mechanisms. Haskell's type classes~\cite{adhoc} embody
-the first school of thought, which is guided by the \emph{ease of
-  reasoning} qualities of pure functional languages, and the
-\emph{predictability} of programs. To ensure these goals the semantics
-of the language should be \emph{coherent}~\cite{Reynolds91coherence,qual}. Coherence
-means that any valid program must have exactly one meaning (that is,
-the semantics is not ambiguous). In fact Haskell
-type classes are supposed to support an even stronger property, the so-called \emph{global
-  uniqueness} of
-  instances~\cite{uniqueness}.
-Global uniqueness ensures that \emph{at any point in a
-  program, and independently of the context} the type-directed
-resolution process always returns the same value for the same
-resolved type. This is a consequence of Haskell having a restriction of at most one
-instance of a type class per type in a program.
+Currently there are two main schools of thought regarding the design
+of IP mechanisms. Haskell's type classes~\cite{adhoc} embody the first
+school of thought, which is guided by the \emph{ease of reasoning}
+qualities of pure functional languages, and the \emph{predictability}
+of programs. To ensure these goals the semantics of the language
+should satisfy a number of properties. One of those properties is
+\emph{coherence}~\cite{Reynolds91coherence,qual}.  The original
+definition of coherence in the literature is that any valid program
+must have exactly one meaning (that is, the semantics is not
+ambiguous). 
+In fact Haskell type classes are supposed to support an even stronger
+property, the so-called \emph{global uniqueness} of
+instances~\cite{uniqueness}.  Global uniqueness ensures that \emph{at
+  any point in a program, and independently of the context} the
+type-directed resolution process always returns the same value for the
+same resolved type. This is a consequence of Haskell having a
+restriction of at most one instance of a type class per type in a
+program.
 
 While both coherence and global uniqueness of instances are preserved in Haskell,
 this comes at a cost. Since the first implementations of type classes,
-Haskell imposes several restrictions to guarantee coherence. 
+Haskell imposes several restrictions to guarantee those properties. 
 Various past work has pointed out limitations of type classes~\cite{named_instance,systemct,implicit_explicit,modular,Garcia:2007extended,implicits,chain,oliveira12implicit}. 
 In particular type classes allow at most one instance per type (or severely 
 restrict overlapping instances) to exist in a program. This means  
@@ -87,7 +89,11 @@ cannot be higher-order~\cite{oliveira12implicit}.
 Advanced
 features of type classes, such as overlapping
 instances~\cite{overlapping_instances},
-also pose severe problems for coherence. 
+also pose severe problems, since they go against the principle 
+of one instance per type. One issue is that ``\emph{when more specific overlapping
+instances are added, the proofs of some predicates will change to use
+the new instances}''~\cite{chain}. In essence special care (via restrictions) is needed to preserve
+coherence in the presence of overlapping instances. 
 % In purely functional programming,
 % ``\emph{substituting equals for equals}'' is expected to hold. That is,
 % when given two equivalent expressions, replacing one by the other in a larger program
@@ -96,18 +102,28 @@ also pose severe problems for coherence.
 % Special care (via restrictions) is needed to preserve
 % coherence and the ability of substituting equals for equals in the
 % presence of overlapping instances. 
-In particular, an important
-property that is broken in the presence of overlapping instances 
+Another important property
+that is broken in the presence of overlapping instances 
 (if special care is not taken) is the so-called \emph{stability} of
-substitutions. The issue is that ``\emph{when more specific overlapping
-instances are added, the proofs of some predicates will change to use
-the new instances}''~\cite{chain}. Therefore, if care is not taken, 
+substitutions. The issue is that 
 the behaviour of resolution for an expression |e| can change if |e| 
 gets a more specific type, leading to a different evaluation result. 
 Because of this problem, the design of Haskell type classes
 significantly restricts the set of valid overlapping instances to ensure 
 that stability holds, and the meaning of an expression does not change 
-simply due to a more specific type. 
+simply due to a more specific type. In other words, resolution 
+should resolve implicit values using the same rules before 
+and after instantiation of type variables.
+
+As an orthogonal remark, in the Haskell community the term coherence
+is often colloquially used to emcompass several different properties,
+including global uniqueness, stability and the original coherence
+definition by Reynolds~\cite{Reynolds91coherence}. However it is
+important to note that the three properties are distinct. For example
+global uniqueness implies coherence, but not the converse.
+Furthermore it is also possible to have coherence, but not stability.
+In this paper we will use coherence in Reynolds sense, and be precise 
+about the different properties under discussion.
 
 An alternative school of thought in the design of IP mechanisms favours \emph{flexibility}. For example, 
 Scala implicits and Agda's instance arguments do not impose all of
@@ -117,7 +133,7 @@ instances to exist for the same type in different scopes in the same
 program. Scala also allows a powerful form of overlapping 
 implicits~\cite{implicits}. The essence of this style of implicit
 programming is modelled by the \emph{implicit
-  calculus}~\cite{oliveira12implicit}. The implicit 
+  calculus}~\cite{oliveira12implicit} and the recent . The implicit 
 calculus supports a number of features that are not supported 
 by type classes. Besides local scoping, in the implicit calculus 
 \emph{any type} can have an implicit value. In contrast Haskell's type
@@ -128,8 +144,9 @@ that is rules, where the rule requirements can themselves be other rules.
 The
 implicit calculus has been shown to be type-safe.
 Unfortunately, both the implicit calculus and the various existing
-language mechanisms that embody flexibility do not preserve
-coherence, stability and the ability to substitute equals for equals. 
+language mechanisms that embody flexibility tend to not preserve
+important properties such as stability, which prevents the 
+ability to substitute equals for equals. 
 
 The design of IP mechanisms has led to heated
 debate~\cite{show-stopping,uniqueness,kmett} about the

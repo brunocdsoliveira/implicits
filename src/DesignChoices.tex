@@ -47,6 +47,12 @@ type class instance, the program is nevertheless rejected.
 This is because Haskell's resolution does not consider the contexts in the resolution process:
 it only considers the head of a type class instance. 
 
+A few concerns are:
+
+1) open vs closed world. In open world you could add more instances, so you don't know whether your choice is unique or the best
+2) reasoning: if you backtrack then programmers have to follow the backtracking reasoning, which can be complex for more involved instance declarations
+3) performance: You may pay significant penalties at compile time by backtracking
+
 \section{Superclasses}
 
 Superclasses are not supported by \name. Here \name follows the design of Scala implicits, which 
@@ -61,6 +67,17 @@ Superclasses look alot like overlapping instances, for example:
 But resolution in the presence of superclasses behaves differently from overlapping instances. 
 
 Superclasses have a ad-hoc treatement in GHC. 
+
+special treatment of superclasses:
+
+compute the closure of all given superclasses before resolution
+
+-> treat that closure like other givens
+
+ when matching, try to match the givens first, because they are non-recursive
+
+-> if none of the givens work, try global instances
+
 
 \subsection{Coherence}
 
