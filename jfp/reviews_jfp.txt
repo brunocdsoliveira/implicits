@@ -879,7 +879,17 @@ FIXED
 > nice to integrate the resolution algorithm with instance arguments, for
 > example.
 
-TODO
+The problem in dependently typed languages is much more complicated because
+type-level lambda abstractions and beta-reductions have to be taken into
+account. Our type system does not feature these.
+
+A more closely related problem is that of Dunfield and Krishnaswami's "Complete
+and Easy Bidirectional Typechecking for Higher-Rank Polymorphism".  They have a
+subtyping relation between polymorphic types that expresses that one type can
+be instantiated to another type. Their algorithm is also concerned about
+scopes. There are several differences with our setting, notably subtyping is
+asymmetric and features contravariance, while unification/equality is symmetric
+and features only covariant rules. We now point out the connection.
  
 > p31 Figure 2 was a long time ago. Can you repeat what you need here? It's
 > awkward to flick back and forward, especially reading on screen. I think it

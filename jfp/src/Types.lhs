@@ -1492,16 +1492,18 @@ judgement where only the rule's quantified variables are instantiated.
 The unification algorithm $\theta= \mgu{\rulet_1}{\rulet_2}$ is
 a key component of the two algorithmic changes explained above.
 
-Figure~\ref{fig:mgu} provides its definition, which is an extension of standard
-first-order unification~\cite{martellimonatanari}. The domain restriction
-$\bar{\alpha}$ denotes which type variables are to be treated as unification
-variables; all other type variables are to be treated as constants. The returned
-substitution is 
-a unifier of $\rulet_1$ and $\rulet_2$, i.e., $\theta(\rulet_1) = \theta(\rulet_2)$.
+Figure~\ref{fig:mgu} provides its definition, which is a hybrid between
+standard first-order unification~\cite{martellimonatanari} and 
+polymorphic type instantiation~\cite{dunfield}. The
+domain restriction $\bar{\alpha}$ denotes which type variables are to be
+treated as unification variables; all other type variables are to be treated as
+constants. The returned substitution is a unifier of $\rulet_1$ and $\rulet_2$,
+i.e., $\theta(\rulet_1) = \theta(\rulet_2)$.
 
 %- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 \paragraph{Validity}
-The differences with standard first-order unification arise because the
+The differences with standard first-order unification arise because, like polymorphic 
+type instantiation, the
 algorithm has to account for the scope of type variables. Indeed, as we have already
 explained in Section~\ref{subsec:det}, we expect that the returned substitution
 is valid, i.e., $\validsubst{\bar{\alpha}}{\tenv}{\theta}$.
@@ -1558,9 +1560,10 @@ $\beta$ must appear before $\alpha$ in the environment $\tenv$ (regular
 validity), or $\beta$ must itself be a unification variable (the exceptional
 case). The relative position of variables is checked with 
 the auxiliary judgement $\before{\beta}{\alpha}$ whose one rule verifies
-that $\beta$ appears before $\alpha$ in the environment~$\tenv$.\footnote{If
+that $\beta$ appears before $\alpha$ in the environment~$\tenv$;\footnote{If
 type variables are represented by de Bruijn indices, this can be done by
-checking whether one index is greater than the other.}
+checking whether one index is greater than the other.} a similar check on 
+relative positions can be found in Dunfield and Krishnaswami's algorithm~\cite{dunfield}.
 
 The auxiliary judgement $\mgun{\bar{\alpha}}{\rulet_1}{\rulet_2}$ computes the
 actual unifier. 
