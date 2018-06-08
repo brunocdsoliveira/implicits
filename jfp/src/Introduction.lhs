@@ -108,11 +108,11 @@ that is broken in the presence of overlapping instances
 substitutions. The issue is that 
 the behaviour of resolution for an expression |e| can change if |e| 
 gets a more specific type, leading to a different evaluation result. 
-This is problematic because seemingly harmless inlinings, 
-will actually have a different semantics before and after the inlining.
+This is problematic because seemingly harmless inlinings 
+may change the semantics.
 Because of this problem, the design of Haskell type classes
 significantly restricts the set of valid overlapping instances to ensure 
-that stability holds, and the meaning of an expression does not change 
+that stability holds, and that the meaning of an expression does not change 
 simply due to a more specific type. In other words, resolution 
 should resolve implicit values using the same rules before 
 and after instantiation of type variables.
@@ -122,9 +122,9 @@ is often colloquially used to emcompass several different properties,
 including global uniqueness, stability and the original coherence
 definition by Reynolds~\cite{Reynolds91coherence}. However it is
 important to note that the three properties are distinct. For example
-global uniqueness implies coherence, but not the converse.
+global uniqueness implies coherence, but the converse is not true.
 Furthermore it is also possible to have coherence, but not stability.
-In this paper we will use coherence in Reynolds sense, and be precise 
+In this paper we will use coherence in Reynolds' sense, and be precise 
 about the different properties under discussion.
 
 An alternative school of thought in the design of IP mechanisms favours \emph{flexibility}. For example, 
@@ -164,7 +164,7 @@ having coherence, stability and uniqueness of instances is extremely desirable, 
 come at the cost of those properties. Proponents of flexible IP
 mechanisms argue that flexibility is more important, and that
 uniqueness of instances goes against modularity. 
-As far as we are aware no current designs that support local scoping,
+As far as we are aware there are no current designs that support local scoping,
 overlapping instances and various
 other features, such as first-class and higher-order rules, while at
 the same time also ensuring both coherence and stability.
