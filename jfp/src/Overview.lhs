@@ -14,7 +14,7 @@ This section summarises the relevant background on type classes, IP
 and coherence, and introduces the key features of $\ourlang$.
 We first discuss Haskell type classes, the oldest
 and most well-established IP mechanism, then compare them to
-Scala implicits, and finally we introduce the coherence approach taken in $\ourlang$.
+Scala implicits, and finally we introduce the approach taken in $\ourlang$.
 
 \subsection{Type Classes and Implicit Programming}\label{subsec:tclasses}
 
@@ -118,16 +118,18 @@ the classes |Show| and |Read|:
 >   read :: String -> a
 
 The program is rejected because
-there is more that one possible choice for |a|, for example
-it could be |Int|, |Float|, or |Char|. 
+there is more that one possible choice for |a|. For example
+|a| can be intantiated to |Int|, |Float|, or |Char|. 
 Choosing |a=Float| leads to |False|,
 since showing the float |3| would result in |"3.0"|,
-while choosing |a=Int| leads to |True|.
+while choosing |a=Int| leads to |True|. In other words if this 
+expression was accepted then it could have multiple possible semantics. 
+To ensure coherence instead of making an arbitrary choice Haskell rejects such program.
 
-\paragraph{Overlapping and Incoherent Instances} 
+\paragraph{Overlapping Instances} 
 Advanced features of type classes, such as overlapping
 instances, require additional restrictions to
-ensure coherence.  The following program illustrates the issues:
+ensure coherence. The following program illustrates part of the issues:
 
 > class Trans a where trans :: a -> a
 > instance Trans a where trans x = x
@@ -135,34 +137,106 @@ ensure coherence.  The following program illustrates the issues:
 
 \noindent This program declares a type class |Trans a| for defining
 transformations on some type |a|. The first instance provides a default
-implementation for any type, the identity transformation.  The second instance
+implementation for any type, the identity transformation. The second instance
 defines a transformation for integers only. 
 
-The overlapping declarations are clearly incoherent,
+An important question here is what happens if 
+we write an expression like |trans 3|. Shall we pick the first 
+or the second instance? Ideally this question should be answered 
+by the language specification. One possible choice for the 
+specification (not the Haskell choice) 
+would be to allow any matching instance to be used, but 
+such choice would lead to incoherence, since |trans 3| could 
+then both evaluate to |3| or |4|. Instead, for overlapping instances, 
+the Haskell specification~\cite{} makes a different choice and 
+declares that the \emph{most specific instance} should be chosen. 
+Therefore, for the expression |trans 3|, the most specific is |Trans Int| 
+and the expression evaluates to |4|. 
+
+For the particular program |trans 3|, the Haskell specification manages to avoid 
+incoherence by taking the choice of using the 
+most specific instance, which ensures an unambigous semantics. 
+Thus Haskell preserves coherence in the presence of a certain kind of overlapping instances, 
+but there are other problematic overlapping instances that threaten the coherence property.
+
+\paragraph{Incoherent Instances}
+With overlapping instances it is not always the case that a most specific 
+instance exists. Consider the following type class and instance declarations:
+
+> class C a b where 
+>   m :: a -> b -> Bool
+>
+> instance C Bool a where 
+>   m x y = x
+>
+> instance C a Bool where
+>   m x y = y
+
+\noindent If we write the following program 
+
+> incoherent = m True False -- rejected without IncoherentInstances extension
+
+\noindent then there is no most specific instance: both instances are equality as specific.
+In this case, even with the overlapping instances extension activated, Haskell rejects 
+the program. 
+
+However Haskell also supports one additional extension, called \emph{IncoherentInstances}, 
+for allowing a more general kind of overlapping instances. With
+IncoherentInstances activated, Haskell accepts the |incoherent| definition. 
+The (informal) language specification\footnote{FILL ME!} for \emph{IncoherentInstances}
+ essentially says that in such situation any matching instance could be picked. 
+Thus either of the two instances above can be picked, resulting in different 
+evaluation results for the expression. Thus, as the name indicates, the 
+expression |incoherent| leads to incoherence.
+
+
+\begin{comment}
+The overlapping declarations can be incoherent 
 since it is unclear whether |trans 3| should return
 |3| using the first instance, or |4| using the second instance.
 Because the second instance is more specific, one 
 might expect that it supersedes the first one; and that is indeed how
 Haskell assigns a meaning to overlapping instances when they are permitted.
+\end{comment}
 
-But now consider the following declaration.
+\subsection{Stability in Type Classes}
+
+Another important property that is closely related to coherence is \emph{stability}. 
+Informally stability ensures that instantiation of type variables does not affect resolution. 
+Unfortunatelly overlapping instances threaten this property. 
+Consider the following declaration, that uses the |trans| method from the type 
+class |trans| and the two instances declared previously:
 
 > bad :: a -> a
-> bad x = trans x  -- incoherent definition!
+> bad x = trans x  -- unstable definition!
 
 If Haskell were to accept this definition, it
 would have to implement |trans| using the first instance,
 since |trans| is applied at the arbitrary type |a|.
-Now |bad 3| returns |3| but |trans 3| returns |4|,
+Unfortunatelly this would mean that |bad 3| returns |3| but |trans 3| returns |4|,
 even though |bad| and |trans| are defined to be
 equal, a nasty impediment to equational reasoning!
 
 For this reason Haskell rejects the program by default. A programmer who really
 wants such behaviour can enable the \emph{IncoherentInstances} compiler flag,
-which allows the program to typecheck. But the use of incoherent instances is
-greatly discouraged.
+which allows the program to typecheck. 
 
-\paragraph{Global Uniqueness of Instances} A consequence 
+Note that even though to allow |bad| we need the
+\emph{IncoherentInstances} extension, which is suggestive of the
+definition breaking \emph{coherence}, the issue here is not really
+coherence but rather stability. That is type instantiation affects the
+choice of the instance.  As this example illustrates instability is
+actually observable from a compiler implementation like GHC: we can
+observe that |bad 3| and |trans 3| behave differently. In contrast
+(in)coherence is not really observable from a compiler implementation:
+we need a language specification to understand whether there is
+incoherence or not.
+
+The \emph{IncoherentInstances} extension is understood to be highly problematic 
+among Haskell programmers, since it can break both stability and coherence. 
+Thus its use is greatly discouraged. 
+
+\subsection{Global Uniqueness in Type Classes} A consequence 
 of having at most one instance of a type class 
 per type in a program is \emph{global uniqueness} of instances~\cite{uniqueness}. That is, 
 at any point in the program type class resolution for a particular 
@@ -191,7 +265,7 @@ various circumstances.\footnote{\url{http://stackoverflow.com/questions/12735274
 In fact it is acknowledged that providing a global uniqueness check is quite 
 challenging for Haskell implementations.\footnote{\url{https://mail.haskell.org/pipermail/haskell-cafe/2012-October/103887.html}}
 
-\subsection{Scala Implicits and Incoherence}
+\subsection{Scala Implicits and Stability}
 
 Scala implicits~\cite{implicits} are an interesting alternative IP
 design. Unlike type classes, implicits have locally scoped
@@ -350,9 +424,9 @@ function types}, which are a generalization
 of the original Scala implicits~\cite{implicits}, and demonstrate
 several interesting use cases for implicits.
 
-\paragraph{Incoherence in Scala}
+\paragraph{Instability in Scala}
 Although Scala allows \emph{nested} local scoping and overlapping rules,
-\textit{coherence} is not guaranteed. Figure~\ref{fig:scala} illustrates
+\textit{stability} is not guaranteed. Figure~\ref{fig:scala} illustrates
 the issue briefly, based on the example from Section~\ref{sec:overview-coherence}.
 Line~(1) defines a function |id| with type parameter |a|, which is simply
 the identity function of type |a => a|.
@@ -377,7 +451,7 @@ trait A {
 }
 object B extends A {
    implicit def succ : Int => Int = x => x + 1	   // (3)
-   def bad[a](x:a) : a = trans[a](x)		   // (4) incoherent definition!
+   def bad[a](x:a) : a = trans[a](x)		   // (4) unstable definition!
    val v1 = bad[Int](3)				   // (5) evaluates to 3
    // val v2 = trans[Int](3)		           // (6) substituting bad by trans is rejected
 }
@@ -414,27 +488,15 @@ or not~\cite{oliveira12implicit,odersky17implicits}.
 %%definition of |trans| gets one point from being in a de, and the rule |trans|  
 Rejecting line~(6) has another unfortunate consequence: not only is the
 semantics not preserved under unfolding, but typing is not preserved either!
-Clearly preserving desirable properties such as coherence and type preservation is 
+Clearly preserving desirable properties such as stability and type preservation is 
 a subtle matter in the presence of implicits and deserves careful study. 
 
 \subsection{An Overview of $\ourlang$}\label{sec:overview:ourlang}
 
-\begin{comment}
-Like Haskell $\ourlang$ requires coherence and
-like Scala it permits nested declarations, and does not guarantee global uniqueness.
-$\ourlang$ improves upon 
-the implicit calculus~\cite{oliveira12implicit}, which is an incoherent calculus 
-designed to model the essence of Scala implicits. Like the implicit
-calculus it combines standard scoping mechanisms (abstractions and
-applications) and types \`a la System~F, with a
-logic-programming-style query language. The key features that are modelled 
-in $\ourlang$, and a discussion of how they relate to the mechanisms in Scala and Haskell, are presented next.
-\end{comment}
-
-Like Haskell $\ourlang$ guarantees coherence and like Scala it permits
+Like Haskell $\ourlang$ guarantees stability and coherence and like Scala it permits
 nested/overlapping declarations, and does not guarantee global
 uniqueness. $\ourlang$ improves upon the implicit
-calculus~\cite{oliveira12implicit} by having coherence and a better,
+calculus~\cite{oliveira12implicit} by having stability and a better,
 more expressive design for resolution. Like the implicit calculus the
 primary goal of $\ourlang$ is to model \emph{implicit resolution} and
 the \emph{scoping} of implicit values used by resolution. 
@@ -723,10 +785,22 @@ returns $2$ and not $1$:
 
 
 
-\subsubsection{Encoding Type Classes in $\ourlang$} 
-Type classes can be encoded in $\ourlang$ similarly to how type classes can be
-encoded in Scala. Next we illustrate how the encoding works on the examples
-from  Section~\ref{subsec:tclasses}.  To help with readability we assume a few
+\subsubsection{Encoding Simple Type Classes in $\ourlang$} 
+A simple form of type classes can be encoded in $\ourlang$ similarly 
+to how type classes can be encoded in Scala. In this section we briefly 
+(and informally) illustrate the encoding using examples. 
+The simple encoding presented here is that does not deal with \emph{superclasses}. 
+We discuss superclasses, as well as other important features such as type-inference 
+in Section~\ref{}.
+\begin{comment} 
+However it is known that superclasses can be modelled as sugar, by computing a 
+transitive closure of the superclasses~\cite{}. Indeed in recent work 
+Bottu et al.~\cite{}, has shown how to take some of the key ideas of $\ourlang$ 
+to model an 
+\end{comment}
+
+Next we illustrate how the encoding works on the examples
+from  Section~\ref{subsec:tclasses}. To help with readability we assume a few
 convenient source language features not available in $\ourlang$ (which is
 designed as a formal core calculus rather than a full-fledged source language). 
 In particular $\ourlang$ has no type-inference and, as such, requires explicit
