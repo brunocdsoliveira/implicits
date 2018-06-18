@@ -833,7 +833,7 @@ The proof proceeds by induction on the derivation of the third hypothesis.
 \setlength{\itemsep}{1em}
 %===============================================================================
 \item[\fbox{\rref{R-IAbs}}]
-\quad$\drres{\bar{\alpha}}{\tenv}{\rulet_1 \iarrow \rulet_2}{\abs{\relation{x}{|\rulet_1|}}{E_1}}$ \\
+\quad$\drres{\bar{\alpha}}{\tenv}{\rulet_1 \iarrow \rulet_2}{\abs{x}{\etrans{\rulet_1}}{E_1}}$ \\
 %$\bar{\alpha};\tenv \ivturns \rulet_1 \iarrow \rulet_2 \leadsto \lambda\relation{x}{||\rulet_1||}.E_1$ \ \\
 %===============================================================================
 
@@ -854,7 +854,7 @@ From the rule's hypothesis and the induction hypothesis, it follows that
 \end{equation*}
 Hence, we may conclude
 \begin{equation*}
-  \abs{\relation{x}{|\rulet_1|}}{E_1} =  \abs{\relation{x}{|\rulet_1|}}{E_2}
+  \abs{x}{|\rulet_1|}{E_1} =  \abs{x}{|\rulet_1|}{E_2}
 %  \lambda x:|\rulet_1|.E_1 = \lambda x:|\rulet_1|.E_2
 \end{equation*}
 
@@ -1250,7 +1250,7 @@ The proof proceeds by induction on the derivation of the first hypothesis.
 \setlength{\itemsep}{1em}
 
 %===============================================================================
-\item[\fbox{\rref{R-IAbs}}]\quad$\drres{\bar{\alpha},\alpha,\bar{\alpha}'}{\tenv,\alpha,\tenv'}{\rulet_1 \To \rulet_2}{\abs{\relation{x}{|\rulet_1|}}{E}}$ \\
+\item[\fbox{\rref{R-IAbs}}]\quad$\drres{\bar{\alpha},\alpha,\bar{\alpha}'}{\tenv,\alpha,\tenv'}{\rulet_1 \To \rulet_2}{\abs{x}{|\rulet_1|}{E}}$ \\
 %$\bar{\alpha},\alpha,\bar{\alpha}';\tenv,\alpha,\tenv'\ivturns \rulet_1 \iarrow \rulet_2 \leadsto \lambda\relation{x}{|\rulet_1|}.E$ \ \\
 %===============================================================================
 
@@ -1261,7 +1261,7 @@ From the rule's hypothesis and the induction hypothesis we have
 \end{equation*}
 From the definition of substitution and rule \rref{R-IAbs} we then conclude
 \begin{equation*}
-\drres{\bar{\alpha},\bar{\alpha}'}{\tenv,\tenv'[\suty/\alpha]}{(\rulet_1 \iarrow \rulet_2)[\suty/\alpha]}{(\abs{\relation{x}{|\rulet_1|}}{E})[|\suty|/\alpha]}
+\drres{\bar{\alpha},\bar{\alpha}'}{\tenv,\tenv'[\suty/\alpha]}{(\rulet_1 \iarrow \rulet_2)[\suty/\alpha]}{(\abs{x}{\etrans{\rulet_1}}{E})[|\suty|/\alpha]}
 %\bar{\alpha},\bar{\alpha}';\tenv,\tenv'[\suty/\alpha] \ivturns (\rulet_1 \iarrow \rulet_2)[\suty/\alpha] \leadsto (\lambda x:|\rulet_1|.E)[|\suty|/\alpha]
 \end{equation*}
 
@@ -1670,6 +1670,287 @@ From the rule's hypothesis and the induction hypothesis we have
 \end{description}
 \end{proof}
 
+%###############################################################################
+
+\fbox{ \centering
+\begin{minipage}{0.95\columnwidth}
+\begin{lemma}\label{lemma:asoundness:0}
+  If 
+\begin{equation*}
+  \wte{\tenv}{\mmapp{(\Abs{\alpha}{e})}{\suty}}{\rulet[\suty/\alpha]}{\mmapp{(\Abs{\alpha}{E})}{\etrans{\suty}}}
+\end{equation*}
+  then
+\begin{equation*}
+  \wte{\tenv}{e[\suty/\alpha]}{\rulet[\suty/\alpha]}{E[\ttrans[\suty]/\alpha]}
+\end{equation*}
+\end{lemma}
+\end{minipage}
+}
+
+\begin{proof}
+By case analysis, the two last rules used in the derivation of the theorem's hypothesis must be
+instances of \rref{Ty-TAbs} and \rref{Ty-TApp}, as shown below.
+
+\begin{equation*}
+\inferrule*[Left=\textsc{Ty-TApp}]
+  {
+    {\inferrule*[Left=\textsc{Ty-TAbs}]
+      {\wte{\tenv,\alpha}{e}{\rulet}{E}}
+      {\wte{\tenv}{\Abs{\alpha}{e}}{\forall\alpha.\rulet}{\Abs{\alpha}{E}}}} \and
+      \wfty{\tenv}{\suty}
+  }
+  {
+    \wte{\tenv}{\mmapp{(\Abs{\alpha}{e})}{\suty}}{\rulet[\suty/\alpha]}{\mmapp{(\Abs{\alpha}{E})}{\etrans{\suty}}}
+  }
+\end{equation*}
+Therefore, it suffices to show that
+\begin{equation*}
+\begin{array}{r l}
+\text{If}&\wte{\tenv,\alpha}{e}{\rulet}{E}\\
+\text{and}&\wfty{\tenv}{\suty},\\
+\text{then}&\wte{\tenv}{e[\suty/\alpha]}{\rulet[\suty/\alpha]}{E[\etrans{\suty}/\alpha]}
+\end{array}
+\end{equation*}
+This can be proven as a special case ($\tenv' = \epsilon$) of the following theorem.
+\end{proof}
+
+\fbox{ \centering
+\begin{minipage}{0.95\columnwidth}
+\begin{lemma}\label{lemma:asoundness:0}
+  If 
+\begin{equation*}
+  \wte{\tenv,\alpha,\tenv'}{e}{\rulet}{E}
+\end{equation*}
+  and
+\begin{equation*}
+  \wfty{\tenv}{\suty}
+\end{equation*}
+  then
+\begin{equation*}
+  \wte{\tenv,\tenv'[\suty/\alpha]}{e[\suty/\alpha]}{\rulet[\suty/\alpha]}{E[\ttrans[\suty]/\alpha]}
+\end{equation*}
+\end{lemma}
+\end{minipage}
+}
+
+\begin{proof}
+The proof proceeds by induction on the first hypothesis.\\
+
+%===============================================================================
+\item[\fbox{\rref{Ty-Var}}]\quad$\wte{\tenv,\alpha,\tenv'}{x}{\rulet}{x}$\\
+%===============================================================================
+From the rule's premise, we know that $(\relation{x}{\rulet}) \in \tenv,\alpha, \tenv'$.
+In combination with the theorem's second hypothesis, we obtain
+$(\relation{x}{\rulet[\suty/\alpha]}) \in \tenv,\tenv'[\suty/\alpha]$. Rule \rref{Ty-Var} can then be instantiated with the latter, to conclude
+$\wte{\tenv,\tenv'[\suty/\alpha]}{x}{\rulet[\suty/\alpha]}{x}$.\\
+
+%===============================================================================
+\item[\fbox{\rref{Ty-Abs}}]\quad$\wte{\tenv,\alpha,\tenv'}{\abs{x}{\rulet_1}{e}}{\rulet_1\to\rulet_2}{\abs{x}{\etrans{\rulet_1}}{E}}$\\
+%===============================================================================
+From the rule's premise, we get
+$\wte{\tenv,\alpha,\tenv',\relation{x}{\rulet_1}}{e}{\rulet_2}{E}$. By passing this to the
+induction hypothesis, we obtain
+\begin{equation*}
+\wte{\tenv,\tenv'[\suty/\alpha],\relation{x}{\rulet_1[\suty/\alpha]}}{e}{\rulet_2[\suty/\alpha]}{E[\etrans{\suty}/\alpha]}
+\end{equation*}
+From the definition of substitution and by supplying the latter to rule \rref{Ty-Abs}, we reach
+the goal.\\
+
+%===============================================================================
+\item[\fbox{\rref{Ty-App}}]\quad$\wte{\tenv,\alpha,\tenv'}{\mmapp{e_1}{e_2}}{\rulet_2}{\mmapp{E_1}{E_2}}$\\
+%===============================================================================
+From the assumptions of rule \rref{Ty-App}, the induction hypothesis and the definition of
+substitution, we obtain
+\begin{equation*}
+\wte{\tenv,\tenv'[\suty/\alpha]}{e_2}{\rulet_1[\suty/\alpha]\to\rulet_2[\suty/\alpha]}{E_1[\etrans{\suty}/\alpha]}
+\end{equation*}
+and
+\begin{equation*}
+\wte{\tenv,\tenv'[\suty/\alpha]}{e_1}{\rulet_1[\suty/\alpha]}{E_2[\etrans{\suty}/\alpha]}
+\end{equation*}
+By instantiating rule \rref{Ty-App} with the two judgments above, we obtain our goal.\\
+
+%===============================================================================
+\item[\fbox{\rref{Ty-TAbs}}]\quad$\wte{\tenv,\alpha,\tenv'}{\Abs{\alpha'}{e}}{\tall{\alpha'}{\rulet}}{\Abs{\alpha'}{E}}$\\
+%===============================================================================
+From the assumptions of rule \rref{Ty-TAbs} and the induction hypothesis, we obtain
+\begin{equation*}
+\wte{\tenv,(\tenv',\alpha')[\suty/\alpha]}{e[\suty/\alpha]}{\rulet}{E\etrans{\suty}/\alpha]}
+\end{equation*}
+where, from the definition of substitution, we have
+$(\tenv',\alpha')[\suty/\alpha] = \tenv'[\suty/\alpha],\alpha'$. Using this equation in the judgment above, we reach the goal by applying rule \rref{Ty-TAbs} on it.\\
+
+%===============================================================================
+\item[\fbox{\rref{Ty-TApp}}]\quad$\wte{\tenv,\alpha,\tenv'}{\mmapp{e}{\rulet_1}}{\rulet_2[\rulet_1/\alpha']}{\mmapp{E}{\etrans{\rulet_1}}}$\\
+%===============================================================================
+\klara{Do I need to first clarify that $\alpha \neq \alpha'$? YES!}\\
+The first assumption of rule \rref{Ty-TApp} is
+\begin{equation*}
+\wte{\tenv,\alpha,\tenv'}{e}{\tall{\alpha'}{\rulet_2}}{E}
+\end{equation*}
+Then, by the induction hypothesis and the definition of substitution, we get
+\begin{equation*}
+\wte{\tenv,\tenv'[\suty/\alpha]}{e[\suty/\alpha]}{\tall{\alpha'}{(\rulet_2[\suty/\alpha])}}{E[\etrans{\suty}/\alpha]}
+\end{equation*}
+From the second hypothesis of rule \rref{Ty-TApp} and by presevation of type well-scoping
+under type substitution (straight-forward to prove) we get
+\begin{equation*}
+\wfty{\tenv,\tenv'[\suty/\alpha]}{\rulet_1[\suty/\alpha]}
+\end{equation*}
+
+Using the two obtained results in rule \rref{Ty-TApp}, we get
+\begin{equation*}
+\wte{\tenv,\tenv'[\suty/\alpha]}{\mmapp{(e[\suty/\alpha])}{(\rulet_1[\suty/\alpha])}}{(\rulet_2[\suty/\alpha])[\rulet_1[\suty/\alpha] /\alpha']}{\mmapp{E[\etrans{\suty}/\alpha]}{\etrans{\rulet_1[\suty/\alpha]}}}
+\end{equation*}
+which is syntactically equal to our goal, since by the definition of substitution and type
+translation and from the commutativity-like property of substitution composition, we get the following equations.
+\begin{equation*}
+\arraycolsep=1.4pt\def\arraystretch{1.5}
+\begin{array}{c}
+\mmapp{(e[\suty/\alpha])}{(\rulet_1[\suty/\alpha])} = (\mmapp{e}{\rulet_1})[\suty/\alpha]\\
+(\rulet_2[\suty/\alpha])[\rulet_1[\suty/\alpha] /\alpha'] = \rulet_2[\rulet_1/\alpha'][\suty/\alpha]\\
+\mmapp{E[\etrans{\suty}/\alpha]}{\etrans{\rulet_1[\suty/\alpha]}} = \mmapp{E[\etrans{\suty}/\alpha]}{\etrans{\rulet_1}[\etrans{\suty}/\alpha]} = (\mmapp{E}{\rulet_1})[\etrans{\suty}/\alpha]
+\end{array}
+\end{equation*}
+
+%===============================================================================
+\item[\fbox{\rref{Ty-IAbs}}]\quad$\wte{\tenv,\alpha,\tenv'}{\ilambda \rulet_1.e}{\rulet_1 \iarrow \rulet_2}{\abs{x}{\etrans{\rulet_1}}{E}}$\\
+%===============================================================================
+From the first assumption of rule \rref{Ty-IAbs} and the induction hypothesis, we get
+\begin{equation*}
+\wte{\tenv,\tenv'[\suty/\alpha],\ie{\rulet_1[\suty/\alpha]}{x}}{e[\suty/\alpha]}{\rulet_2[\suty/\alpha]}{E[\etrans{\suty}/\alpha]}
+\end{equation*}
+
+%===============================================================================
+\item[\fbox{\rref{Ty-Var}}]\quad$\wte{\tenv,\alpha,\tenv'}{x}{\rulet}{E}$\\
+%===============================================================================
+
+%===============================================================================
+\item[\fbox{\rref{Ty-Var}}]\quad$\wte{\tenv,\alpha,\tenv'}{x}{\rulet}{E}$\\
+%===============================================================================
+\end{proof}
+
+%###############################################################################
+\fbox{ \centering
+\begin{minipage}{0.95\columnwidth}
+\begin{lemma}\label{lemma:unamb_subst:0}
+  If 
+\begin{equation*}
+  \wfty{\tenv,\alpha,\tenv'}{\rulet}
+\end{equation*}
+  and
+\begin{equation*}
+  \wfty{\tenv}{\suty}
+\end{equation*}
+  and
+\begin{equation*}
+  \unambig{}{\rulet}
+\end{equation*}
+  then
+\begin{equation*}
+  \unambig{}{\rulet[\suty/\alpha]}
+\end{equation*}
+\end{lemma}
+\end{minipage}
+}
+\begin{proof}
+The proof proceeds by induction on the theorem's third hypothesis, mutually with the next proof
+(Lemma~\ref{lemma:unamb_subst:1}). That Lemma is used to prove the case of \rref{UA-Main},
+which is the only case.
+\end{proof}
+
+%###############################################################################
+\fbox{ \centering
+\begin{minipage}{0.95\columnwidth}
+\begin{lemma}\label{lemma:unamb_subst:1}
+  If 
+\begin{equation*}
+  \wfty{\tenv,\alpha,\tenv'}{\rulet}
+\end{equation*}
+  and
+\begin{equation*}
+  \wfty{\tenv}{\suty}
+\end{equation*}
+  and
+\begin{equation*}
+  \unambig{\bar{\alpha},\alpha,\bar{\alpha}'}{\rulet}
+\end{equation*}
+  then
+\begin{equation*}
+  \unambig{\bar{\alpha},\bar{\alpha}'}{\rulet[\suty/\alpha]}
+\end{equation*}
+\end{lemma}
+\end{minipage}
+}
+\begin{proof}
+The proof proceeds by induction on the theorem's third hypothesis, mutually with the previous
+proof.\\
+
+%===============================================================================
+\item[\fbox{\rref{UA-Simp}}]\quad$\unambig{\bar{\alpha},\alpha,\bar{\alpha}'}{\tau}$\\
+%===============================================================================
+From the first two hypotheses of the theorem, we know that
+\begin{equation*}
+\ftv{\suty}\subseteq\ftv{\tau}\quad\text{and}\quad\alpha\notin\ftv{\suty}
+\end{equation*}
+Using these two facts, we get
+\begin{equation*}
+\arraycolsep=1.4pt\def\arraystretch{1}
+\begin{array}{rl}
+\ftv{\tau[\suty/\alpha]} &= \left( \ftv{\tau}\setminus\{\alpha\} \right) \cup\ftv{\suty}\\
+                         &= \ftv{\tau}\setminus\{\alpha\}
+\end{array}
+\end{equation*}
+
+The assumption of rule \rref{UA-Simp} is
+\begin{equation*}
+\bar{\alpha},\alpha,\bar{\alpha}'\subseteq\ftv{\tau}
+\end{equation*}
+Hence,
+\begin{equation*}
+\bar{\alpha},\bar{\alpha}'\subseteq\ftv{\tau}\setminus\{\alpha\} = \ftv{\tau[\suty/\alpha]}
+\end{equation*}
+Using this to instantiate rule \rref{UA-Simp}, we reach the goal:
+\begin{equation*}
+\unambig{\bar{\alpha},\bar{\alpha}'}{\tau[\suty/\alpha]}
+\end{equation*}
+
+%===============================================================================
+\item[\fbox{\rref{UA-TAbs}}]\quad$\unambig{\bar{\alpha},\alpha,\bar{\alpha}'}{\tall{\beta}{\rulet}}$\\
+%===============================================================================
+From the assumption of the rule and the induction hypothesis, we get
+\begin{equation*}
+\unambig{\bar{\alpha},\bar{\alpha}',\beta}{\rulet[\suty/\alpha]}
+\end{equation*}
+By using this in rule \rref{UA-TAbs} and from the definition of substitution, we reach the goal:
+\begin{equation*}
+\unambig{\bar{\alpha},\bar{\alpha}'}{(\tall{\beta}{\rulet})[\suty/\alpha]}
+\end{equation*}
+
+%===============================================================================
+\item[\fbox{\rref{UA-IAbs}}]\quad$\unambig{\bar{\alpha},\alpha,\bar{\alpha}'}{\rulet_1\To\rulet_2}$\\
+%===============================================================================
+The first hypothesis of the theorem, adapted to this case, is $\wfty{\tenv,\alpha,\tenv'}{\rulet_1\To\rulet_2}$.
+By case analysis, this well-scoping judgment can only hold as the conclusion of rule \rref{WF-RulTy}. From its premises, we get
+\begin{equation*}
+\wfty{\tenv,\alpha,\tenv'}{\rulet_1}
+\end{equation*}
+
+Passing the first assumption of rule \rref{UA-IAbs}, the obtained well-scoping result above and
+the second hypothesis of the theorem to Lemma~\ref{lemma:unamb_subst:0}, results in
+\begin{equation*}
+\unambig{}{\rulet_1[\suty/\alpha]}
+\end{equation*}
+From the second assumption of rule \rref{UA-IAbs} and the induction hypothesis, we get
+\begin{equation*}
+\unambig{\bar{\alpha},\bar{\alpha}'}{\rulet_2[\suty/\alpha]}
+\end{equation*}
+By the definition of substitution and the last two obtained results used with rule
+\rref{UA-IAbs}, we reach the goal:
+\begin{equation*}
+\unambig{\bar{\alpha},\bar{\alpha}'}{(\rulet_1\To\rulet_2)[\suty/\alpha]}
+\end{equation*}
+\end{proof}
 %-------------------------------------------------------------------------------
 \subsection{Soundness of the Algorithm wrt Deterministic Resolution}
 
