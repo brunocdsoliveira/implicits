@@ -124,8 +124,8 @@ of resolution preserves types.
 The non-deterministic resolution judgement enjoys a number of
 typical binder-related properties.
 
-The first lemma is the weakening lemma: it states that an extended context
-preserves all the derivations of the original context.
+The first lemma is the weakening lemma: it states that an extended type environment
+preserves all the derivations of the original environment.
 
 %###############################################################################
 {\centering
@@ -149,8 +149,8 @@ preserves all the derivations of the original context.
 See file Cochis.v, Lemma \texttt{amb\_res\_weaken}.
 \end{proof}
 The second lemma is the substitution lemma which states that
-we can drop an axiom from the context if it is already implied
-by the remainder of the context.
+we can drop an axiom from the type environment if it is already implied
+by the remainder of the type environment.
 
 %###############################################################################
 {\centering
@@ -943,7 +943,7 @@ The proof proceeds by induction on the derivation of the third hypothesis.
   Then the fourth hypothesis was either derived from rule \rref{L-RuleMatch},
   or from rule \rref{L-RuleNoMatch}. However, the hypothesis of the latter is
   not satisfied: $\epsilon;E_1;\Sigma_1$ forms a counter-example. Hence, the fourth
-  hypothesis is also construted with rule \rref{L-RuleMatch}.
+  hypothesis is also derived using rule \rref{L-RuleMatch}.
 
   Then it follows from the first hypothesis of the rule and Lemma~\ref{lemma:determinism:3} that
 \begin{equation*}
@@ -1171,7 +1171,7 @@ Then the second and third hypothesis of the lemma must have been formed by rule 
 \end{proof}
 
 %-------------------------------------------------------------------------------
-\subsection{Resolution Coherence}\label{proof:coherence}
+\subsection{Resolution Stability}\label{proof:coherence}
 
 Deterministic resolution is stable under substitution.
 
@@ -1200,6 +1200,8 @@ Deterministic resolution is stable under substitution.
 }}
 
 \begin{proof}
+  The proof proceeds by induction on the first derivation and uses Lemma~\ref{lemma:coherence:1}.
+  
   The hypothesis of rule \rref{R-Main} then is
 \begin{equation*}
   \dres{\ftv{\tenv},\alpha,\ftv{\tenv'}}{\rulet}{E}
@@ -1245,7 +1247,7 @@ Deterministic resolution is stable under substitution.
 }}
 
 \begin{proof}
-The proof proceeds by induction on the derivation of the first hypothesis.
+The proof proceeds by induction on the derivation of the first hypothesis, mutually with Lemma~\ref{lemma:coherence:2}.
 \begin{description}
 \setlength{\itemsep}{1em}
 
@@ -1350,7 +1352,7 @@ where
 }}
 
 \begin{proof}
-The proof proceeds by induction on the derivation of the first hypothesis.
+The proof proceeds by induction on the derivation of the first hypothesis, mutually with Lemma~\ref{lemma:coherence:1}.
 \begin{description}
 \setlength{\itemsep}{1em}
 %===============================================================================
@@ -2165,7 +2167,7 @@ This follows from rule \mylabel{M-Simp}.
 \end{equation*}
   then
 \begin{equation*}
-  \bar{\alpha}; \rulet \coh \type
+  \bar{\alpha}; \tenv; \rulet \coh \type
 \end{equation*}
 \end{lemma}
 \end{minipage}
