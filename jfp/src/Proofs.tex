@@ -1834,7 +1834,7 @@ From the first assumption of rule \rref{Ty-IAbs} and the induction hypothesis, w
 \fbox{ \centering
 \begin{minipage}{0.95\columnwidth}
 \begin{lemma}\label{lemma:unamb_subst:0}
-  If 
+  If
 \begin{equation*}
   \wfty{\tenv,\alpha,\tenv'}{\rulet}
 \end{equation*}
@@ -1854,9 +1854,10 @@ From the first assumption of rule \rref{Ty-IAbs} and the induction hypothesis, w
 \end{minipage}
 }
 \begin{proof}
-The proof proceeds by induction on the theorem's third hypothesis, mutually with the next proof
-(Lemma~\ref{lemma:unamb_subst:1}). That Lemma is used to prove the case of \rref{UA-Main},
-which is the only case.
+The proof proceeds by induction on the theorem's third hypothesis, mutually with the next proof.
+The only induction case of this proof, \rref{UA-Main}, is proved as a special case
+($\bar{\alpha} = \epsilon$) of Lemma~\ref{lemma:unamb_subst:1}, since naturally
+$\alpha\notin\epsilon$.
 \end{proof}
 
 %###############################################################################
@@ -1873,11 +1874,15 @@ which is the only case.
 \end{equation*}
   and
 \begin{equation*}
-  \unambig{\bar{\alpha},\alpha,\bar{\alpha}'}{\rulet}
+  \unambig{\bar{\alpha}}{\rulet}
+\end{equation*}
+  and
+\begin{equation*}
+  \alpha\notin\bar{\alpha}
 \end{equation*}
   then
 \begin{equation*}
-  \unambig{\bar{\alpha},\bar{\alpha}'}{\rulet[\suty/\alpha]}
+  \unambig{\bar{\alpha}}{\rulet[\suty/\alpha]}
 \end{equation*}
 \end{lemma}
 \end{minipage}
@@ -1887,44 +1892,42 @@ The proof proceeds by induction on the theorem's third hypothesis, mutually with
 proof.\\
 
 %===============================================================================
-\item[\fbox{\rref{UA-Simp}}]\quad$\unambig{\bar{\alpha},\alpha,\bar{\alpha}'}{\tau}$\\
+\item[\fbox{\rref{UA-Simp}}]\quad$\unambig{\bar{\alpha}}{\tau}$\\
 %===============================================================================
-From the first two hypotheses of the theorem, we know that
-\begin{equation*}
-\ftv{\suty}\subseteq\ftv{\tau}\quad\text{and}\quad\alpha\notin\ftv{\suty}
-\end{equation*}
-Using these two facts, we get
+We need to show that $\unambig{\bar\alpha}{\tau[\suty/\alpha]}$, which can be satisfied only
+by (an appropriate instance of) rule \rref{UA-Simp}. Therefore, it suffices to show that
+$\bar\alpha\subseteq\ftv{\tau[\suty/\alpha]}$.
+
+From the first two hypotheses of the theorem, we know that $\alpha\notin\ftv{\suty}$. Using this,
+we can conclude
 \begin{equation*}
 \arraycolsep=1.4pt\def\arraystretch{1}
 \begin{array}{rl}
-\ftv{\tau[\suty/\alpha]} &= \left( \ftv{\tau}\setminus\{\alpha\} \right) \cup\ftv{\suty}\\
-                         &= \ftv{\tau}\setminus\{\alpha\}
+\ftv{\tau[\suty/\alpha]}&=(\ftv{\tau}\setminus\{\alpha\})\cup\ftv{\suty}\\
+                        &=(\ftv{\tau}\cup\ftv{\suty})\setminus\{\alpha\}
 \end{array}
 \end{equation*}
 
-The assumption of rule \rref{UA-Simp} is
+From the assumption of rule \rref{UA-Main}, we have that $\bar\alpha\subseteq\ftv{\tau}$.
+Then, it holds also that $\bar\alpha\subseteq\ftv{\tau}\cup\ftv{\suty}$ and from the fourth
+hypothesis of the theorem, we reach the goal:
 \begin{equation*}
-\bar{\alpha},\alpha,\bar{\alpha}'\subseteq\ftv{\tau}
-\end{equation*}
-Hence,
-\begin{equation*}
-\bar{\alpha},\bar{\alpha}'\subseteq\ftv{\tau}\setminus\{\alpha\} = \ftv{\tau[\suty/\alpha]}
-\end{equation*}
-Using this to instantiate rule \rref{UA-Simp}, we reach the goal:
-\begin{equation*}
-\unambig{\bar{\alpha},\bar{\alpha}'}{\tau[\suty/\alpha]}
+\bar\alpha\subseteq(\ftv{\tau}\cup\ftv{\suty})\setminus\{\alpha\}
 \end{equation*}
 
 %===============================================================================
-\item[\fbox{\rref{UA-TAbs}}]\quad$\unambig{\bar{\alpha},\alpha,\bar{\alpha}'}{\tall{\beta}{\rulet}}$\\
+\item[\fbox{\rref{UA-TAbs}}]\quad$\unambig{\bar{\alpha}}{\tall{\beta}{\rulet}}$\\
 %===============================================================================
+From the first hypothesis of the theorem, it is clear that $\alpha\neq\beta$, therefore
+$\alpha\notin\bar\alpha,\beta$.
+
 From the assumption of the rule and the induction hypothesis, we get
 \begin{equation*}
-\unambig{\bar{\alpha},\bar{\alpha}',\beta}{\rulet[\suty/\alpha]}
+\unambig{\bar{\alpha},\beta}{\rulet[\suty/\alpha]}
 \end{equation*}
 By using this in rule \rref{UA-TAbs} and from the definition of substitution, we reach the goal:
 \begin{equation*}
-\unambig{\bar{\alpha},\bar{\alpha}'}{(\tall{\beta}{\rulet})[\suty/\alpha]}
+\unambig{\bar{\alpha}}{(\tall{\beta}{\rulet})[\suty/\alpha]}
 \end{equation*}
 
 %===============================================================================
@@ -1943,12 +1946,12 @@ the second hypothesis of the theorem to Lemma~\ref{lemma:unamb_subst:0}, results
 \end{equation*}
 From the second assumption of rule \rref{UA-IAbs} and the induction hypothesis, we get
 \begin{equation*}
-\unambig{\bar{\alpha},\bar{\alpha}'}{\rulet_2[\suty/\alpha]}
+\unambig{\bar{\alpha}}{\rulet_2[\suty/\alpha]}
 \end{equation*}
 By the definition of substitution and the last two obtained results used with rule
 \rref{UA-IAbs}, we reach the goal:
 \begin{equation*}
-\unambig{\bar{\alpha},\bar{\alpha}'}{(\rulet_1\To\rulet_2)[\suty/\alpha]}
+\unambig{\bar{\alpha}}{(\rulet_1\To\rulet_2)[\suty/\alpha]}
 \end{equation*}
 \end{proof}
 %-------------------------------------------------------------------------------
