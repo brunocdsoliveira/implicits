@@ -497,7 +497,7 @@ or not~\cite{oliveira12implicit,odersky17implicits}.
 %%b) a rule has a more specific type than another rule~\footnote{There are other rules, 
 %%but they can be ignored for this example}. In this case there's a draw, since the 
 %%definition of |trans| gets one point from being in a de, and the rule |trans|  
-Rejecting line~(6) has another unfortunate consequence: not only is the
+Rejecting line~(6) has another unfortunate consequence. Not only is the
 semantics not preserved under unfolding, but typing is not preserved either: i.e. 
 going from line~(5) to line~(6) using a simple unfolding step makes the program ill-typed!
 Clearly preserving desirable properties such as stability and type preservation is 

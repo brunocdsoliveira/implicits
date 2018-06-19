@@ -209,6 +209,9 @@ TODO: yes, with explicit instantiation there wouldn't be ambiguity.
 Should we do something about this? I mean, at that point we are
 talking about Haskell.
 
+BRUNO: After discussion with Tom: Mention that implicit instantiation
+is the culprit here. 
+
 > p. 6: The context "Trans a =>" seems to be missing in the signature of
 > "bad".
 
@@ -287,8 +290,7 @@ TODO
 > types to be preserved under strong reduction in COCHIS (although you
 > do not prove this).
 
-TODO: Should we do something about this? I'm not sure how relevant
-this is!
+TODO? Maybe no need to mention strong reduction.
  
 >  - Since COCHIS has first-class rules, it might be nice to also
 > discuss the possibility of querying for (possibly polymorphic) rule
@@ -861,6 +863,18 @@ Genus). (Expand? Address in the paper itself?)
 > interesting.
 
 TODO: What else can we had to Section 1?
+
+Suggestion:
+
+Add more detail to the contribution list
+
+It currently does not mention that we achieve coherence through
+determinism
+
+We could separate the functionality from the properties and expand a
+bit on both
+
+Split first bullet into a few: functionality vs properties.
 
 > 
 > p15 "We explain this concept in Section 3.5" - there's been a few forward
