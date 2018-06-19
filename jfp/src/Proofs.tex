@@ -289,7 +289,7 @@ The above proof relies on the following lemma.
 \end{minipage}
 }}
 \begin{proof}
-See file CochisDet.v, Lemma \tt{DRes\_match\_Soundness}.
+See file CochisDet.v, Lemma \texttt{DRes\_match\_Soundness}.
 
 The proof proceeds by induction on the derivation of the first assumption and relies on Lemmas~\ref{lemma:substitution} (Substitution) and~\ref{lemma:s23:5}.
 \end{proof}
@@ -1716,9 +1716,10 @@ Therefore, it suffices to show that
 This can be proven as a special case ($\tenv' = \epsilon$) of the following theorem.
 \end{proof}
 
+%###############################################################################
 \fbox{ \centering
 \begin{minipage}{0.95\columnwidth}
-\begin{lemma}\label{lemma:asoundness:0}
+\begin{lemma}\label{lemma:asoundness:1}
   If 
 \begin{equation*}
   \wte{\tenv,\alpha,\tenv'}{e}{\rulet}{E}
@@ -1736,6 +1737,7 @@ This can be proven as a special case ($\tenv' = \epsilon$) of the following theo
 }
 
 \begin{proof}
+\klara{Don't forget to update with changes in the typing relation!}\\
 The proof proceeds by induction on the first hypothesis.\\
 
 %===============================================================================
@@ -1785,7 +1787,7 @@ $(\tenv',\alpha')[\suty/\alpha] = \tenv'[\suty/\alpha],\alpha'$. Using this equa
 %===============================================================================
 \item[\fbox{\rref{Ty-TApp}}]\quad$\wte{\tenv,\alpha,\tenv'}{\mmapp{e}{\rulet_1}}{\rulet_2[\rulet_1/\alpha']}{\mmapp{E}{\etrans{\rulet_1}}}$\\
 %===============================================================================
-\klara{Do I need to first clarify that $\alpha \neq \alpha'$? YES!}\\
+Note that $\alpha \neq \alpha'$.
 The first assumption of rule \rref{Ty-TApp} is
 \begin{equation*}
 \wte{\tenv,\alpha,\tenv'}{e}{\tall{\alpha'}{\rulet_2}}{E}
@@ -1816,20 +1818,61 @@ translation and from the commutativity-like property of substitution composition
 \end{equation*}
 
 %===============================================================================
-\item[\fbox{\rref{Ty-IAbs}}]\quad$\wte{\tenv,\alpha,\tenv'}{\ilambda \rulet_1.e}{\rulet_1 \iarrow \rulet_2}{\abs{x}{\etrans{\rulet_1}}{E}}$\\
+\item[\fbox{\rref{Ty-IAbs}}]\quad$\wte{\tenv,\alpha,\tenv'}{\ruleabs{\rulet_1}{e}}{\rulet_1 \iarrow \rulet_2}{\abs{x}{\etrans{\rulet_1}}{E}}$\\
 %===============================================================================
 From the first assumption of rule \rref{Ty-IAbs} and the induction hypothesis, we get
 \begin{equation*}
 \wte{\tenv,\tenv'[\suty/\alpha],\ie{\rulet_1[\suty/\alpha]}{x}}{e[\suty/\alpha]}{\rulet_2[\suty/\alpha]}{E[\etrans{\suty}/\alpha]}
 \end{equation*}
+Passing the second and third assumption of rule \rref{Ty-IAbs} together with the second
+hypothesis of this theorem to Lemma~\ref{lemma:unamb_subst:0}, we get
+\begin{equation*}
+\unambig{}{\rulet_1[\suty/\alpha]}
+\end{equation*}
+By preservation of type well-scoping under type substitution, it also holds that
+\begin{equation*}
+\wfty{\tenv,\tenv'[\suty/\alpha]}{\rulet_1[\suty/\alpha]}
+\end{equation*}
+
+By using the three obtained results and the freshness assumption of rule \rref{Ty-IAbs}
+to instantiate a new \rref{Ty-IAbs} rule, we reach the goal.
 
 %===============================================================================
-\item[\fbox{\rref{Ty-Var}}]\quad$\wte{\tenv,\alpha,\tenv'}{x}{\rulet}{E}$\\
+\item[\fbox{\rref{Ty-IApp}}]\quad$\wte{\tenv,\alpha,\tenv'}{\ruleapp{e_1}{e_2}}{\rulet_1}{\mmapp{E_1}{E_2}}$\\
 %===============================================================================
+From the two assumptions of rule \rref{Ty-IApp}, the induction hypothesis and the definition of
+substitution, we obtain
+\begin{equation*}
+\begin{array}{c}
+\wte{\tenv,\tenv'[\suty/\alpha]}{e_1[\suty/\alpha]}{\rulet_2[\suty/\alpha]\To\rulet_1[\suty/\alpha]}{E_1[\etrans{\suty}/\alpha]}\\
+\text{and}\quad\wte{\tenv,\tenv'[\suty/\alpha]}{e_2[\suty/\alpha]}{\rulet_2[\suty/\alpha]}{E_2[\etrans{\suty}/\alpha]}
+\end{array}
+\end{equation*}
+
+By passing the two judgments above to rule \rref{Ty-IAbs}, we obtain the desired result.
 
 %===============================================================================
-\item[\fbox{\rref{Ty-Var}}]\quad$\wte{\tenv,\alpha,\tenv'}{x}{\rulet}{E}$\\
+\item[\fbox{\rref{Ty-Query}}]\quad$\wte{\tenv,\alpha,\tenv'}{?\rulet}{\rulet}{E}$\\
 %===============================================================================
+From the first assumption of rule \rref{Ty-Query}, the second hypothesis of this theorem and
+Lemma~\ref{lemma:coherence:0} \klara{It is unclear to the reader why I use
+Lemma~\ref{lemma:coherence:0} and not Lemma~\ref{lemma:substitution}.}
+we get
+\begin{equation*}
+\dres{\tenv,\tenv'[\suty/\alpha]}{\rulet[\suty/\alpha]}{E[\etrans{\suty}/\alpha]}
+\end{equation*}
+From the second assumption of rule \rref{Ty-Query}, the second hypothesis of this theorem and
+the property of type well-scoping under substitution, we have
+\begin{equation*}
+\wfty{\tenv,\tenv'[\suty/\alpha]}{\rulet[\suty/\alpha]}
+\end{equation*}
+Finally, passing the second and third assumptions of rule \rref{Ty-Query} and the second
+hypothesis of this theorem to Lemma~\ref{lemma:unamb_subst:0}, results in
+\begin{equation*}
+\unambig{}{\rulet[\suty/\alpha]}
+\end{equation*}
+Then, we can instantiate rule \rref{Ty-Query} with the above three obtained results to reach
+the goal of this case.
 \end{proof}
 
 %###############################################################################

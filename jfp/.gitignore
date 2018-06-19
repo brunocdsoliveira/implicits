@@ -5,3 +5,7 @@
 *.ptb
 *.blg
 *.aux
+src/Introduction.tex
+src/Overview.tex
+src/Related.tex
+src/Types.tex
