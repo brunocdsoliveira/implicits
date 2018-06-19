@@ -1402,7 +1402,7 @@ and secondly,
 it replaces explicit quantification over all substitutions $\theta$ in rule
 \rref{Stable} with a tractable approach to coherence checking.
 
-The definition of the algorithm in, Figure~\ref{fig:algorithm}, is structured in the same way
+The definition of the algorithm, in Figure~\ref{fig:algorithm}, is structured in the same way
 as the declarative specification: with one main judgement and three
 auxiliary ones that have similar roles (focusing, lookup, and matching). In fact, since the differences
 are not situated in the main and focusing judgement, these are
