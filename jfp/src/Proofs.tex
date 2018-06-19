@@ -289,7 +289,7 @@ The above proof relies on the following lemma.
 \end{minipage}
 }}
 \begin{proof}
-See file CochisDet.v, Lemma \tt{DRes\_match\_Soundness}.
+See file CochisDet.v, Lemma \texttt{DRes\_match\_Soundness}.
 
 The proof proceeds by induction on the derivation of the first assumption and relies on Lemmas~\ref{lemma:substitution} (Substitution) and~\ref{lemma:s23:5}.
 \end{proof}
@@ -1785,7 +1785,7 @@ $(\tenv',\alpha')[\suty/\alpha] = \tenv'[\suty/\alpha],\alpha'$. Using this equa
 %===============================================================================
 \item[\fbox{\rref{Ty-TApp}}]\quad$\wte{\tenv,\alpha,\tenv'}{\mmapp{e}{\rulet_1}}{\rulet_2[\rulet_1/\alpha']}{\mmapp{E}{\etrans{\rulet_1}}}$\\
 %===============================================================================
-\klara{Do I need to first clarify that $\alpha \neq \alpha'$? YES!}\\
+Note that $\alpha \neq \alpha'$.
 The first assumption of rule \rref{Ty-TApp} is
 \begin{equation*}
 \wte{\tenv,\alpha,\tenv'}{e}{\tall{\alpha'}{\rulet_2}}{E}
