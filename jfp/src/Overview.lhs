@@ -62,7 +62,10 @@ Using |Ord| we can define a generic sorting function
 
 \noindent that takes a list of elements of an arbitrary type |a| and
 returns a list of the same type, as long as ordering is supported
-for type |a|. The body of the function may refer to |<=| on type |a|.
+for type |a|\footnote{Note that, in Haskell, the single arrow (|->|) denotes a 
+function type constructor, whereas the double arrow (|=>|) detones a type with 
+type class constraints (on the left of the arrow). In the |sort| function, for example, 
+|Ord a| are the constraints.}.
 
 \paragraph{Implicit Programming}
 Type classes are an implicit 
@@ -210,6 +213,12 @@ class |trans| and the two instances declared previously:
 > bad :: a -> a
 > bad x = trans x  -- unstable definition!
 
+Note here that the type of |bad| is |a -> a| instead of |Trans a => a -> a|. 
+In Haskell both signatures can be accepted, but they are not equivalent. With |Trans a => a -> a|
+resolution is applied lazily. That is, resolution is delayed to the calls of |bad|, allowing 
+the instance of |Trans a| to be selected when more static information is available. 
+In contrast with |a -> a| resolution is applied eagerly, and an instance must 
+be selected at the definition site. 
 If Haskell were to accept this definition, it
 would have to implement |trans| using the first instance,
 since |trans| is applied at the arbitrary type |a|.
@@ -429,7 +438,8 @@ Although Scala allows \emph{nested} local scoping and overlapping rules,
 \textit{stability} is not guaranteed. Figure~\ref{fig:scala} illustrates
 the issue briefly, based on the example from Section~\ref{sec:overview-coherence}.
 Line~(1) defines a function |id| with type parameter |a|, which is simply
-the identity function of type |a => a|.
+the identity function of type |a => a|\footnote{Note that the |a => b| notation 
+in Scala represents a function type, rather than a rule type.}.  
 The |implicit| keyword in the declaration specifies that this value may
 be used to synthesise an implicit argument.
 Line~(2) defines a function |trans| with type parameter |a|,
@@ -475,8 +485,9 @@ this definition is an equally nasty impediment to equational
 reasoning, since performing simple equational reasoning would lead to
 a different result. However unlike in Haskell, it is the intended
 behaviour: it is enabled by default and cannot be disabled.
-Interestingly the expression in line~(6), which is accepted in Haskell, is actually rejected in Scala.
-Here the Scala compiler does detect two possible instances for |Int => Int|,
+Interestingly the expression in line~(6), which is accepted in Haskell, is actually rejected in Scala. Note that the expression in line~(6) is simply the unfolding of the expression 
+in line~(5) (which is accepted in Scala).
+In the expression in line~(6) the Scala compiler does detect two possible instances for |Int => Int|,
 but does not select the most specific one. In this case the call in line~(6) is considered 
 ambiguous because Scala accounts for other factors, when deciding where there is ambiguity 
 or not~\cite{oliveira12implicit,odersky17implicits}.
@@ -487,7 +498,8 @@ or not~\cite{oliveira12implicit,odersky17implicits}.
 %%but they can be ignored for this example}. In this case there's a draw, since the 
 %%definition of |trans| gets one point from being in a de, and the rule |trans|  
 Rejecting line~(6) has another unfortunate consequence: not only is the
-semantics not preserved under unfolding, but typing is not preserved either!
+semantics not preserved under unfolding, but typing is not preserved either: i.e. 
+going from line~(5) to line~(6) using a simple unfolding step makes the program ill-typed!
 Clearly preserving desirable properties such as stability and type preservation is 
 a subtle matter in the presence of implicits and deserves careful study. 
 
@@ -567,7 +579,8 @@ of that type (in this case |Int|) in the implicit environment inside the body
 of the rule abstraction. Thus, queries over the rule abstraction type argument
 inside the rule body will succeed. 
 
-The type of the rule above is |Int => Int|. This type denotes that the rule has type |Int| provided 
+The type of the rule above is the \emph{rule type} |Int => Int|. 
+This type denotes that the rule has type |Int| provided 
 a value of type |Int| is available in the implicit environment. 
 The implicit environment is extended through rule application (analogous to
 extending the environment with function applications).
@@ -812,6 +825,7 @@ here we will assume such source language features.
  
 Firstly we use type synonyms to allow us to give a short name to a type.
 Secondly we use records. Using both of those constructs, the three type classes
+introduced in Sections~\ref{subsec:tclasses} and \ref{sec:overview-coherence}
 can be declared as:
 
 < type Ord a = {le : a -> a -> Bool}
@@ -920,7 +934,7 @@ Resolution is stable under substitution.
 \tenv,\tenv'[\sigma/\alpha] \ivturns \rulet[\sigma/\alpha] \leadsto E[|\sigma|/\alpha] \]
 \end{lemma}
 \end{comment}
-Essentially this property ensures that instantiation does not affect the 
+Essentially this property ensures that type instantiation does not affect the 
 resolution of queries. That is, after instantiation any polymorphic query will be resolved using 
 the same rules as before. If it cannot be statically guaranteed 
 that resolution behaves in the same way for \emph{every} instantiation, then 

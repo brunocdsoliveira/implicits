@@ -55,6 +55,9 @@
 >  - The terminology used in the paper is sometimes confusing.  In
 >    particular the informal and formal meaning of "coherence" seems to
 >    differ.
+
+BRUNO: I've been improving this, especially in Sections 1 and 2.
+
 > 
 > For the most part, this paper is very well written, in a clear and
 > accessible style.  Both the problem statement (incoherence
@@ -93,6 +96,9 @@
 > are erroneous.  Nevertheless, the proofs ought to be corrected.  For
 > an optimal outcome, it would probably help to finish the Coq
 > mechanization.
+
+BRUNO: How's progress with this?
+
 > 
 >  b) Limitation of the resolution algorithm.  There are a number of
 > restrictions introduced in the deterministic and algorithmic versions
@@ -118,6 +124,9 @@
 > despite their shortcomings, but unfortunately these reasons are not
 > discussed nor are the effects of the restrictions in terms of
 > expressivity.
+
+BRUNO: TODO have extended discussions in a new Discussion Section.
+
 > 
 > c) Confusing terminology.  There is a tension between the informal use
 > of the term "coherence" (mostly in Sections 1, 2 and 6) and its formal
@@ -152,7 +161,9 @@
 > if it were not the central theme of the paper.  Unless the term is
 > properly defined and consistently used, it is bound to confuse the
 > reader (it certainly confused me).
-> 
+
+BRUNO: I've been improving this. More to come.
+
 > 
 > ** Page-by-page evaluation **
 > 
@@ -166,7 +177,7 @@
 > between the last two properties (stability and equational reasoning)?
 > The characterization of "stability" on p. 2 seems to suggest otherwise.
 
-TODO
+BRUNO: Rewrote sentence.
  
 >  - "COCHIS's resolution employs additional techniques to be entirely
 > deterministic and coherent" -- what is the difference between a
@@ -177,7 +188,7 @@ TODO
 > definition, a coherent resolution strategy seems to necessarily be
 > non-ambiguous, i.e. deterministic.
 
-TODO
+TODO: Bruno: delay discussion to Discussion section?
  
 > p. 5: the show/read example is an excellent illustration of why
 > ambiguity in resolution leads to incoherence.  However, the main
@@ -194,12 +205,14 @@ TODO
 > 
 > in COCHIS?
 
-TODO
+TODO: yes, with explicit instantiation there wouldn't be ambiguity.
+Should we do something about this? I mean, at that point we are
+talking about Haskell.
 
 > p. 6: The context "Trans a =>" seems to be missing in the signature of
 > "bad".
 
-TODO
+BRUNO: Added additional explanation.
  
 > p. 10:
 > 
@@ -209,7 +222,7 @@ TODO
 > readers: A => B denotes a "rule" both in Haskell and COCHIS, but a
 > function type in Scala.
 
-TODO 
+BRUNO: Added a footnote 
 
 >  - I am confused about whether Fig. 1 constitutes a counterexample to
 > coherence or to stability.  Returning to the original (Haskell)
@@ -225,7 +238,8 @@ TODO
 > than coherence.  Is that correct?  Or maybe "coherence" is used here
 > to mean both determinacy and stability?  Please clarify.
 
-TODO
+BRUNO: Yes, it means stability. We changed the text to reflect that
+and, more generally, to be more precise about coherence and stability.
  
 >  - "not only is the semantics not preserved under unfolding, but
 > typing is not preserved either!" this statement seems slightly
@@ -237,7 +251,9 @@ TODO
 > the domain annotation $Int$), but it reduces to $"hello"$, which is
 > well-typed.
 
-TODO
+BRUNO: Added more explanation. The point is that we can go
+from a well-typed program (line 5) into a ill-typed program (line 6),
+simply by doing an unfolding step. 
  
 > p. 11:
 > 
@@ -271,7 +287,8 @@ TODO
 > types to be preserved under strong reduction in COCHIS (although you
 > do not prove this).
 
-TODO
+TODO: Should we do something about this? I'm not sure how relevant
+this is!
  
 >  - Since COCHIS has first-class rules, it might be nice to also
 > discuss the possibility of querying for (possibly polymorphic) rule
@@ -280,7 +297,7 @@ TODO
 > rules only interesting for the purpose of resolving first-order
 > queries?
 
-TODO
+TODO: Consider a polymorphic query example?
  
 >  - Section 3.1: "In a rule type $\rho_1 => \rho_1$, type $\rho_1$ is
 > called the context and type $\rho_2$ the head."  It would be nice to
@@ -807,7 +824,15 @@ TODO
 > This is discussed a bit in related work but I'd like to see a deeper
 > discussion to properly understand the contribution COCHIS makes, since the
 > calculus itself doesn't preserve global uniqueness.
-> 
+
+BRUNO: This work does not address the globally uniqueness property,
+therefore we cannot model the Set example in Cochis and have the same
+assurances that we do in Haskell.
+
+However, for a design that is largely inspired by Cochis and still
+tries to ensure the global uniqueness property see the HS 2017
+paper on "Quantified Class Constraints".
+
 > Some specific comments, suggestions, nitpicks, etc:
 > 
 > p5 I am happy to see this definition of coherence given explicitly, because
@@ -820,7 +845,10 @@ TODO
 > type classes are reduced if one could use dependent types for reasoning
 > instead.  Say, with "Set", one could consider parameterizing a Set on the
 > type class instance.
-> 
+
+BRUNO: This is indeed one possible approach (another one comes from
+Genus). (Expand? Address in the paper itself?)
+
 > p8 Presumably "look for a value of type Ord[A]" means a brute force search of
 > everything in scope, returning the first result? Or are there some
 > constraints?
@@ -829,7 +857,11 @@ TODO
 > COCHIS by this point - it promises a lot after all, so I wonder if it's
 > possible to put some intuition about its main points earlier, in section 1?
 > Up to p13 at least, the description of the calculus is unsurprising, and it's
-> only once we get to overlapping rules that it really gets interesting.
+> only once we get to overlapping rules that it really gets
+> interesting.
+
+TODO: What else can we had to Section 1?
+
 > 
 > p15 "We explain this concept in Section 3.5" - there's been a few forward
 > references at this point, for example also the notion of "stability of
@@ -1059,6 +1091,9 @@ TODO: Discuss the coherence design space as outlined above.
 
 TODO: Elaborate on the connection with Haskell type classes.
 
+BRUNO: Mention also that we do not show how to model superclasses
+here.
+
 > ## Committed choice
 > This is used to ensure deterministic resolution, which then trivially
 > implies coherence.  As mentioned just above, this may be a drawback in term
@@ -1105,6 +1140,9 @@ TODO: discuss relation to other languages
 
 TODO: create prototype implementation?
 
+BRUNO: We have an old prototype implementation, which can probably be
+used with minor modifications.
+
 > ## Missed related works
 > Modular implicits (published in [1]) extend the OCaml language with some
 > overloading mecanism at the level of modules that provides much of the
@@ -1128,6 +1166,8 @@ We now discuss OCaml's modular implicits in the Related Work section.
 > Hindley-Milner type system.
 
 TODO: discuss predicative instantiation wrt System F
+
+BRUNO: To add to the discussion section.
 
 > ## OTHER GENERAL COMMENTS
 > ### Incremental presentation of the type system.
@@ -1273,6 +1313,9 @@ We are now using this package.
 
 > - Abstract, l-6, compact formulation: this is arguable, given the complexity
 >   of the specification of the resolution judgment.
+
+FIXED: Dropped sentence.
+
 > - Page 2, top, long list of languages: OCaml also has implicits as an
 >   experimental feature [1].
 
@@ -1281,25 +1324,50 @@ ADDED
 > - Page 2, l-12: The issue is that "when... instances" (...).  Could you
 >   explain the quote on a concrete example, so that it is understandable
 >   without looking at the reference?
+
+FIXED? (BRUNO): Changed text. Is it clearer now?
+
 > - Page 3, line -8 "uses a stack discipline, and... from matching decisions".
 >   We expect this choice to have some drawback, but it is unclear where this
 >   is discussed. Could you briefly comment on this here, and possibly point
 >   to a more detailed discussion further on in the paper?
+
+TODO: Add some extra discussion in the discussion section?
+
 > - Page 3, line -6, "minimal formal model"
 >   The qualifier "minimal" is problematic in this context. You mean "small".
 >   Otherwise, you would need to be more specific in what sense this is
 >   minimal and justify why it is minimal in that sense.
+
+FIXED: Dropped minimal 
+
 > - Page 5, line -6 "->" and Page 6, line -9
 >   These are the first occurrences of "->" and "=>" and should be explained to
 >   be self-contained, and because these are reused without further
 >   explanation in Section 2.4.
+
+FIXED: Added a note
+
 > - Page 10, line -6. overfull line
+
+FIXED
+
 > - Page 11, line 4. "Int => Int"
 >   The meaning of the arrow should be explained (here or before).
+
+FIXED?: Mentioned that this is a "rule type".
+
 > - Page 13, line -6: "the three type classes can..."
->   Which ones? (please precisely point to them by page or section, etc.)
+>   Which ones? (please precisely point to them by page or section,
+>   etc.)
+
+FIXED
+
 > - Page 14, line 15: "that instantiation does not"
 >   Should be "type instantiation" or "type specialization".
+
+FIXED
+
 > - Page 14, line 16: "That is, after the same rules as before."
 >   "polymorphic query" is incorrect since, after instantiation, the query is
 >   monomorphic in this example.
