@@ -35,7 +35,8 @@ Types $\rulet$ comprise four constructs: type variables
 $\alpha$; function types $\rulet_1 \arrow \rulet_2$; universal types
 $\forall \alpha. \rulet$; and the novel \textit{rule} types $\rulet_1 \iarrow
 \rulet_2$.  In a rule type $\rulet_1 \iarrow \rulet_2$, type $\rulet_1$ is
-called the \textit{context} and type $\rulet_2$ the \textit{head}.
+called the \textit{context} and type $\rulet_2$ the \textit{head}, following
+Haskell's terminology for type class instances.
 
 Expressions $e$ include three abstraction-elimination pairs.
 The form $\lambda (x:\rulet). e$ abstracts over a value of type $\rulet$ in expression $e$,
@@ -243,7 +244,7 @@ Figure~\ref{fig:resolution1} provides a first, ambiguous definition of the
 resolution judgement. Its underlying principle is
 resolution in logic. 
 Intuitively, $\aresp{\tenv}{\rulet}$ holds if $\tenv$ entails $\rulet$, where the types in $\tenv$ and
-$\rulet$ are read as propositions, where $r$ stands for resolution and $a$ for ambiguous.
+$\rulet$ are read as propositions, $r$ stands for resolution and $a$ for ambiguous.
 Following the ``Propositions as Types'' correspondence~\cite{propsastypes}, we read
 $\alpha$ as a propositional variable and $\forall \alpha.\rulet$ as universal quantification.
 Yet, unlike in the traditional interpretation of types as propositions, we have two forms of arrows,
@@ -293,11 +294,12 @@ and
 \end{equation*}%%
 This example illustrates the first issue; in particular the inference rules
 \rref{AR-IVar} and \rref{AR-IApp} overlap as both can be used to conclude
-$\aresp{\Gamma_0}{\tyint}$. It also shows the second issues as there are two
+$\aresp{\Gamma_0}{\tyint}$. It also shows the second issue as there are two
 full different derivation trees for $\aresp{\Gamma_0}{\tyint}$.
 While this may seem harmless at the type-level, at the value-level each
 derivation corresponds to a (possibly) different value. Hence, ambiguous
-resolution renders the meaning of a program ambiguous.
+resolution renders the meaning of a program ambiguous. In other words, if both
+resolutions are allowed then the semantics is not coherent. 
 % \end{enumerate}
 
 We next address these two issues one by one.
@@ -385,7 +387,7 @@ and allows only the first and more direct of these two proofs.
            \fmres{\tenv}{\rulet}{x}{\type}{E}{\bar{\rulet}' ~\gbox{\leadsto \bar{x}'}}  \\
            \frres{\tenv}{\rulet'}{E'} \enskip (\forall \rulet' \in \bar{\rulet}')
           }
-          {\frres{\tenv}{\type}{\leadsto E[\bar{E}'/\bar{x}']}}
+          {\frres{\tenv}{\type}{ E[\bar{E}'/\bar{x}']}}
 \\ \\
 %- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -%
 \hfill \myruleform{\fmres{\tenv}{\rulet}{E}{\type}{E'}{\Sigma}} \hfill \llap{\it Matching}
@@ -1404,7 +1406,7 @@ and secondly,
 it replaces explicit quantification over all substitutions $\theta$ in rule
 \rref{Stable} with a tractable approach to coherence checking.
 
-The definition of the algorithm in, Figure~\ref{fig:algorithm}, is structured in the same way
+The definition of the algorithm, in Figure~\ref{fig:algorithm}, is structured in the same way
 as the declarative specification: with one main judgement and three
 auxiliary ones that have similar roles (focusing, lookup, and matching). In fact, since the differences
 are not situated in the main and focusing judgement, these are
