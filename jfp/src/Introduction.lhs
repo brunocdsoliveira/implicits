@@ -108,7 +108,7 @@ that is broken in the presence of overlapping instances
 substitutions. The issue is that 
 the behaviour of resolution for an expression |e| can change if |e| 
 gets a more specific type, leading to a different evaluation result. 
-This is problematic because seemingly harmless inlinings, 
+This is problematic because seemingly harmless inlinings 
 will actually have a different semantics before and after the inlining.
 Because of this problem, the design of Haskell type classes
 significantly restricts the set of valid overlapping instances to ensure 
@@ -118,20 +118,20 @@ should resolve implicit values using the same rules before
 and after instantiation of type variables.
 
 As an orthogonal remark, in the Haskell community, the term coherence
-is often colloquially used to emcompass several different properties,
+is often colloquially used to encompass several different properties,
 including global uniqueness, stability and the original coherence
 definition by Reynolds~\cite{Reynolds91coherence}. However it is
 important to note that the three properties are distinct. For example
 global uniqueness implies coherence, but not the converse.
 Furthermore it is also possible to have coherence, but not stability.
-In this paper we will use coherence in Reynolds sense, and be precise 
+In this paper we will use coherence in Reynolds' sense, and be precise 
 about the different properties under discussion.
 
 An alternative school of thought in the design of IP mechanisms favours \emph{flexibility}. For example, 
-Scala implicits and Agda's instance arguments do not impose all of
+Scala's implicits and Agda's instance arguments do not impose all of
 the type class restrictions. Scala supports local scoping of
 instances, which allows distinct 
-instances to exist for the same type in different scopes in the same
+instances to exist for the same type in different scopes of the same
 program. Scala also allows a powerful form of overlapping 
 implicits~\cite{implicits}. The essence of this style of implicit
 programming is modelled by the \emph{implicit
@@ -164,10 +164,10 @@ having coherence, stability and uniqueness of instances is extremely desirable, 
 come at the cost of those properties. Proponents of flexible IP
 mechanisms argue that flexibility is more important, and that
 uniqueness of instances goes against modularity. 
-As far as we are aware no current designs that support local scoping,
-overlapping instances and various
-other features, such as first-class and higher-order rules, while at
-the same time also ensuring both coherence and stability.
+As far as we are aware there are no current designs that support local scoping,
+overlapping instances and various other features, such as first-class and
+higher-order rules, while at the same time also ensuring both coherence and
+stability.
 %%The current
 %%state-of-affairs seems to indicate that both goals are at odds with
 %%each other, and cannot be easily reconciled.
@@ -178,7 +178,7 @@ This paper presents \name: the Calculus Of CoHerent ImplicitS. \name
 is an improved variant of the implicit calculus that guarantees 
 \emph{coherence} and \emph{stability}. \name supports local scoping, overlapping instances,
 first-class instances and higher-order rules. Yet, in contrast to most
-previous work that supports such features, the calculus is not only
+previous work that supports these features, the calculus is not only
 type-safe, but also stable and coherent. Naturally, the unrestricted calculus
 does not support global uniqueness of instances, since this property depends on the
 global scoping restriction. Nevertheless, if retaining global
