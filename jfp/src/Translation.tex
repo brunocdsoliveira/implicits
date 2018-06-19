@@ -17,7 +17,7 @@ corresponds to the grayed parts of Figures~\ref{fig:type}, \ref{fig:resolution1}
 %-------------------------------------------------------------------------------
 \subsection{Type-Directed Translation}
 Figure~\ref{fig:type} presents the translation rules that convert $\name$
-expressions into ones of System~F. 
+expressions into System~F expressions. 
 The gray parts of the figure extend the type system with the necessary
 information for the translation.
 
@@ -143,12 +143,15 @@ which is formulated as follows for our elaboration-based setting.
      \fctx{\etrans{\tenv}}{E_1}{E_2}{\ttrans[\rulet]} \]
 \end{corollary}
 Here the judgment $\fctx{\tenv}{E_1}{E_2}{T}$
-denotes \emph{contextual equivalence}, which captures that
+denotes \emph{contextual equivalence}~\cite{reynolds?}, which captures that
 $E_1$ and $E_2$ behave the same in any well-typed program context. We do not give the
 formal definition here as it is not required to prove the corollary; we only
 need to know that it is an equivalence relation, and, more spefically, that
 it is reflexive, i.e., any well-typed System~F term is contextually equivalent
 to itself. 
+\bruno{Should we not mention that contextual equivalence for System F
+  is well-studied, thus interested readers can consult the definition
+  in other works?}
 
 Thirdly, on top of the immediate coherence of deterministic resolution, 
 an additional stability property holds.  

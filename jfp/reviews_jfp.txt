@@ -341,7 +341,7 @@ FIXED
 > corresponding pairs of intro/elim-rules in the ambiguous resolution
 > judgment?
  
-TODO
+We have added this explanation.
 
 >  - "The main judgment ... is defined with the help of the auxiliary
 > judgment ..."  Giving human-readable names to these judgments (and all
@@ -1258,7 +1258,8 @@ TODO: add definition of well-formedness for environments
 >           \Gamma |-_r^f  \rho ~> E
 >           \Gamma; \rho ~> x |-_r^f  \tau ~> E; \Sigma
 
-TODO
+The square brackets are indeed redundant, but they do emphasize where the
+focus lies. This emphasis is intentional.
 
 > - Besides, it seems that the notation
 >           \Gamma; \rho ~> x |-_r^f  \tau ~> E; \Sigma
@@ -1291,7 +1292,8 @@ less distracting.
 > definitional
 >   equality.
 
-TODO
+We have decided not to adopt your suggestion. It would be easy to overlook
+a case and confuse the reader.
 
 > - It would help if the PDF contained more hyper-references so as to ease the
 >   navigation in the digital version of the document: 

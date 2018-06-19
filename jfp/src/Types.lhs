@@ -422,6 +422,10 @@ class of \emph{simple} types:
     \forall \alpha. \rulet \mid \rulet_1 \iarrow \rulet_2 \mid \type \\
     \text{Simple Types}  & \type                            & ::=  & \alpha \mid \rulet_1 \arrow \rulet_2 \\
   \eda }%
+Observe that simple types $\type$ are those types that do not have
+corresponding pairs of introduction and elimination rules in the ambiguous
+resolution judgment.
+
 The definition of resolution with focusing that uses this refined grammar
 is given in 
 Figure~\ref{fig:resolutionf}. The main \emph{focusing} judgment $\frres{\tenv}{\rulet}{E}$ is
@@ -1402,7 +1406,7 @@ and secondly,
 it replaces explicit quantification over all substitutions $\theta$ in rule
 \rref{Stable} with a tractable approach to coherence checking.
 
-The definition of the algorithm in, Figure~\ref{fig:algorithm}, is structured in the same way
+The definition of the algorithm, in Figure~\ref{fig:algorithm}, is structured in the same way
 as the declarative specification: with one main judgement and three
 auxiliary ones that have similar roles (focusing, lookup, and matching). In fact, since the differences
 are not situated in the main and focusing judgement, these are
