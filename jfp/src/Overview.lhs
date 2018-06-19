@@ -16,6 +16,7 @@ We first discuss Haskell type classes, the oldest
 and most well-established IP mechanism, then compare them to
 Scala implicits, and finally we introduce the approach taken in $\ourlang$.
 
+%-------------------------------------------------------------------------------
 \subsection{Type Classes and Implicit Programming}\label{subsec:tclasses}
 
 Type classes enable the declaration of overloaded functions like comparison.
@@ -32,6 +33,7 @@ occurrence of the type parameter |a| in their signature.
 % The type parameter may be neither an argument nor a return type,
 % as in showList :: [a] -> String.
 
+%~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 \paragraph{Instances and Type-Directed Rules}
 Instances implement type classes.
 % Implementations 
@@ -63,10 +65,11 @@ Using |Ord| we can define a generic sorting function
 \noindent that takes a list of elements of an arbitrary type |a| and
 returns a list of the same type, as long as ordering is supported
 for type |a|\footnote{Note that, in Haskell, the single arrow (|->|) denotes a 
-function type constructor, whereas the double arrow (|=>|) detones a type with 
+function type constructor, whereas the double arrow (|=>|) denotes a type with 
 type class constraints (on the left of the arrow). In the |sort| function, for example, 
 |Ord a| are the constraints.}.
 
+%~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 \paragraph{Implicit Programming}
 Type classes are an implicit 
 programming mechanism because implementations of type class operations 
@@ -85,6 +88,7 @@ to find a suitable implementation for |Ord (Int,Char)|.  The declarations given
 are sufficient to resolve an infinite number of other instances, such as
 |Ord (Char,(Int,Int))| and the like.
 
+%~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 \paragraph{One Instance Per Type} A characteristic of
 (Haskell) type classes is that only one instance is allowed for a
 given type. For example, it is forbidden to include the alternative ordering
@@ -99,6 +103,7 @@ the type parameter of the type class. If there are two
 type class instances for the same type, the compiler does not
 know which of the two to choose.
 
+%-------------------------------------------------------------------------------
 \subsection{Coherence in Type Classes}
 \label{sec:overview-coherence}
 
@@ -122,13 +127,14 @@ the classes |Show| and |Read|:
 
 The program is rejected because
 there is more that one possible choice for |a|. For example
-|a| can be intantiated to |Int|, |Float|, or |Char|. 
+|a| can be instantiated to |Int|, |Float|, or |Char|. 
 Choosing |a=Float| leads to |False|,
 since showing the float |3| would result in |"3.0"|,
 while choosing |a=Int| leads to |True|. In other words if this 
 expression was accepted then it could have multiple possible semantics. 
 To ensure coherence instead of making an arbitrary choice Haskell rejects such program.
 
+%~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 \paragraph{Overlapping Instances} 
 Advanced features of type classes, such as overlapping
 instances, require additional restrictions to
@@ -158,10 +164,11 @@ and the expression evaluates to |4|.
 
 For the particular program |trans 3|, the Haskell specification manages to avoid 
 incoherence by taking the choice of using the 
-most specific instance, which ensures an unambigous semantics. 
+most specific instance, which ensures an unambiguous semantics. 
 Thus Haskell preserves coherence in the presence of a certain kind of overlapping instances, 
 but there are other problematic overlapping instances that threaten the coherence property.
 
+%~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 \paragraph{Incoherent Instances}
 With overlapping instances it is not always the case that a most specific 
 instance exists. Consider the following type class and instance declarations:
@@ -179,15 +186,15 @@ instance exists. Consider the following type class and instance declarations:
 
 > incoherent = m True False -- rejected without IncoherentInstances extension
 
-\noindent then there is no most specific instance: both instances are equality as specific.
+\noindent then there is no most specific instance: both instances are equally specific.
 In this case, even with the overlapping instances extension activated, Haskell rejects 
 the program. 
 
-However Haskell also supports one additional extension, called \emph{IncoherentInstances}, 
+However Haskell also supports one additional extension, called \texttt{IncoherentInstances}, 
 for allowing a more general kind of overlapping instances. With
-IncoherentInstances activated, Haskell accepts the |incoherent| definition. 
-The (informal) language specification\footnote{FILL ME!} for \emph{IncoherentInstances}
- essentially says that in such situation any matching instance could be picked. 
+\texttt{IncoherentInstances} activated, Haskell accepts the |incoherent| definition. 
+The (informal) language specification\footnote{FILL ME!} for \texttt{IncoherentInstances}
+ essentially says that in such a situation any matching instance could be picked. 
 Thus either of the two instances above can be picked, resulting in different 
 evaluation results for the expression. Thus, as the name indicates, the 
 expression |incoherent| leads to incoherence.
@@ -202,11 +209,12 @@ might expect that it supersedes the first one; and that is indeed how
 Haskell assigns a meaning to overlapping instances when they are permitted.
 \end{comment}
 
+%-------------------------------------------------------------------------------
 \subsection{Stability in Type Classes}
 
 Another important property that is closely related to coherence is \emph{stability}. 
 Informally stability ensures that instantiation of type variables does not affect resolution. 
-Unfortunatelly overlapping instances threaten this property. 
+Unfortunately overlapping instances threaten this property. 
 Consider the following declaration, that uses the |trans| method from the type 
 class |trans| and the two instances declared previously:
 
@@ -217,34 +225,35 @@ Note here that the type of |bad| is |a -> a| instead of |Trans a => a -> a|.
 In Haskell both signatures can be accepted, but they are not equivalent. With |Trans a => a -> a|
 resolution is applied lazily. That is, resolution is delayed to the calls of |bad|, allowing 
 the instance of |Trans a| to be selected when more static information is available. 
-In contrast with |a -> a| resolution is applied eagerly, and an instance must 
+In contrast, with |a -> a| resolution is applied eagerly, and an instance must 
 be selected at the definition site. 
 If Haskell were to accept this definition, it
 would have to implement |trans| using the first instance,
 since |trans| is applied at the arbitrary type |a|.
-Unfortunatelly this would mean that |bad 3| returns |3| but |trans 3| returns |4|,
+Unfortunately this would mean that |bad 3| returns |3| but |trans 3| returns |4|,
 even though |bad| and |trans| are defined to be
 equal, a nasty impediment to equational reasoning!
 
 For this reason Haskell rejects the program by default. A programmer who really
-wants such behaviour can enable the \emph{IncoherentInstances} compiler flag,
-which allows the program to typecheck. 
+wants such behaviour can enable the \texttt{IncoherentInstances} compiler flag,
+which allows the program to type check. 
 
 Note that even though to allow |bad| we need the
-\emph{IncoherentInstances} extension, which is suggestive of the
+\texttt{IncoherentInstances} extension, which is suggestive of the
 definition breaking \emph{coherence}, the issue here is not really
-coherence but rather stability. That is type instantiation affects the
-choice of the instance.  As this example illustrates instability is
+coherence but rather stability. That is, type instantiation affects the
+choice of the instance.  As this example illustrates, instability is
 actually observable from a compiler implementation like GHC: we can
 observe that |bad 3| and |trans 3| behave differently. In contrast
 (in)coherence is not really observable from a compiler implementation:
 we need a language specification to understand whether there is
 incoherence or not.
 
-The \emph{IncoherentInstances} extension is understood to be highly problematic 
+The \texttt{IncoherentInstances} extension is understood to be highly problematic 
 among Haskell programmers, since it can break both stability and coherence. 
 Thus its use is greatly discouraged. 
 
+%-------------------------------------------------------------------------------
 \subsection{Global Uniqueness in Type Classes} A consequence 
 of having at most one instance of a type class 
 per type in a program is \emph{global uniqueness} of instances~\cite{uniqueness}. That is, 
@@ -271,9 +280,10 @@ descending order), and then break the ordering invariant by
 Although global uniqueness is, in principle, a property that should hold in
 Haskell programs, Haskell implementations actually violate this property in
 various circumstances.\footnote{\url{http://stackoverflow.com/questions/12735274/breaking-data-set-integrity-without-generalizednewtypederiving}}
-In fact it is acknowledged that providing a global uniqueness check is quite 
+In fact, it is acknowledged that providing a global uniqueness check is quite 
 challenging for Haskell implementations.\footnote{\url{https://mail.haskell.org/pipermail/haskell-cafe/2012-October/103887.html}}
 
+%-------------------------------------------------------------------------------
 \subsection{Scala Implicits and Stability}
 
 Scala implicits~\cite{implicits} are an interesting alternative IP
@@ -285,10 +295,11 @@ between implicits and type classes is that values of any type can be
 used as implicit parameters, and there are no special constructs analogous
 to type class or instance declarations. Instead, implicits are modelled
 with ordinary types. They can be abstracted over and do not suffer
-from the second-class nature of type classes. Such features mean that 
+from the second-class nature of type classes. These features mean that 
 Scala implicits have a wider range of applications than type classes.
 Unlike Haskell type classes, Scala implicits do not preserve coherence. 
 
+%~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 \paragraph{Modelling Type Classes with Implicits}
 In Scala there is no special construct for defining the interface of 
 a type class. Instead we can use regular interfaces to model 
@@ -321,11 +332,12 @@ signature |Ord a => a -> a -> Bool|, except that the implicit argument
 comes last. Additionally, unlike Haskell, at call sites it is 
 possible to pass the implicit argument explicitly, if desired. 
 
+%~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 \paragraph{Context Bounds and Queries} For the purposes of this paper we will, 
 however, present |cmp| using \emph{context bounds}: 
 an alternative way to declare functions with constraints (or implicit arguments), supported in Scala. Context bounds are a simple syntactic sugar built 
 on top of implicit parameters.
-Using context bounds, the |cmp| definition can be rewriten 
+Using context bounds, the |cmp| definition can be rewritten 
 into:
 
 %{
@@ -390,6 +402,7 @@ For example the call |sort (List((3,'a'), (2,'c'), (3,'b')))| is valid and does 
 require an explicit argument of type |Ord[(Int,Char)]|. Instead this argument is computed 
 from the implicit definitions for |Ord|.
 
+%~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 \paragraph{Wider Range of Applications for Implicits} Scala implicits do allow for 
 a wider range of applications than type classes.
 One example where implicits naturally address a problem that type classes 
@@ -433,6 +446,7 @@ function types}, which are a generalization
 of the original Scala implicits~\cite{implicits}, and demonstrate
 several interesting use cases for implicits.
 
+%~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 \paragraph{Instability in Scala}
 Although Scala allows \emph{nested} local scoping and overlapping rules,
 \textit{stability} is not guaranteed. Figure~\ref{fig:scala} illustrates
@@ -503,13 +517,14 @@ going from line~(5) to line~(6) using a simple unfolding step makes the program 
 Clearly preserving desirable properties such as stability and type preservation is 
 a subtle matter in the presence of implicits and deserves careful study. 
 
+%-------------------------------------------------------------------------------
 \subsection{An Overview of $\ourlang$}\label{sec:overview:ourlang}
 
-Like Haskell $\ourlang$ guarantees stability and coherence and like Scala it permits
+Like Haskell, our calculus $\ourlang$ guarantees stability and coherence and, like Scala, it permits
 nested/overlapping declarations, and does not guarantee global
 uniqueness. $\ourlang$ improves upon the implicit
 calculus~\cite{oliveira12implicit} by having stability and a better,
-more expressive design for resolution. Like the implicit calculus the
+more expressive design for resolution. Like the implicit calculus, the
 primary goal of $\ourlang$ is to model \emph{implicit resolution} and
 the \emph{scoping} of implicit values used by resolution. 
 Next we iterate 
@@ -518,7 +533,7 @@ over the key constructs and features of $\ourlang$.
 \begin{comment}
 An important remark is that $\ourlang$, like the implicit calculus, is
 designed as a \emph{core calculus}, and therefore provides no
-type-inference. As a result programs written in Cochis still require
+type-inference. As a result programs written in $\ourlang$ still require
 many type annotations. The primary goal of $\ourlang$ is to model
 \emph{implicit resolution} as well as the scoping of implicit values.
 Some work on type-inference can be found in implicit calculus
@@ -544,6 +559,7 @@ uses a set of rules
 \end{comment}
 
 
+%~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 \paragraph{Fetching Values by Type} A central construct in
 $\ourlang$ is a query. Queries allow values to be fetched by type, not by name.  
   For example, in the following function call
@@ -564,6 +580,7 @@ play exactly the same role as the operator |?| in Scala.
 %%omitted thanks to type inference. Our calculus makes implicit queries
 %%always manifest in text. 
 
+%~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 \paragraph{Constructing Values with Type-Directed Rules} $\ourlang$ constructs values, using
 programmer-defined, type-directed rules (similar to functions). A rule (or rule
 abstraction) defines how to compute, from implicit arguments, a value of a
@@ -639,6 +656,7 @@ values to the two rule abstractions. For example:
 \noindent which returns |(2,False)|.
 \end{comment} 
 
+%~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 \paragraph{Higher-Order Rules} $\ourlang$ supports higher-order
 rules. For example, the rule 
 %%\[
@@ -665,6 +683,7 @@ The following expression returns $(3, 4)$:
 %%Note that higher-order rules are a feature introduced by the implicit calculus and 
 %%are neither supported in Haskell nor Scala.
 
+%~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 \paragraph{Recursive Resolution} 
 Note that resolving the  query |(query (Pair Int Int))| above
 involves applying multiple rules. 
@@ -680,6 +699,7 @@ result of applying the pair-producing rule to $3$.
 %format biglam a n = "\Lambda " a ". " n 
 %format dots = "\ldots"
 
+%~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 \paragraph{Polymorphic Rules and Queries} $\ourlang$ allows polymorphic rules. For example, the rule 
 |biglam a (rule a (((query a),(query a))))|
 abstracts over a type using standard type abstraction and then uses 
@@ -713,6 +733,7 @@ rule. The following expression returns
 
 > implicit 3 in implicit True in implicit (biglam a (rule a (((query a),(query a))))) in (query (Pair Int Int), query (Pair Bool Bool))
 
+%~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 \paragraph{Combining Higher-Order and Polymorphic Rules} 
 The rule: 
 
@@ -748,6 +769,7 @@ integer pair). For example, the following expression returns $((3,3),(3,3))$:
 % to $3$, and the final answer $((3,3),(3,3))$ from applying the same
 % rule to $(3,3)$.
 
+%~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 \paragraph{Locally and Lexically Scoped Rules} 
 Rules can be nested and resolution respects the lexical scope of rules. 
 Consider the following program: 
@@ -797,14 +819,14 @@ returns $2$ and not $1$:
 %endif
 
 
-
+%~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 \subsubsection{Encoding Simple Type Classes in $\ourlang$} 
 A simple form of type classes can be encoded in $\ourlang$ similarly 
 to how type classes can be encoded in Scala. In this section we briefly 
 (and informally) illustrate the encoding using examples. 
 The simple encoding presented here is that does not deal with \emph{superclasses}. 
 We discuss superclasses, as well as other important features such as type-inference 
-in Section~\ref{}.
+in Section~\ref{}.\tom{fix reference!}
 \begin{comment} 
 However it is known that superclasses can be modelled as sugar, by computing a 
 transitive closure of the superclasses~\cite{}. Indeed in recent work 
@@ -813,10 +835,10 @@ to model an
 \end{comment}
 
 Next we illustrate how the encoding works on the examples
-from  Section~\ref{subsec:tclasses}. To help with readability we assume a few
+from Section~\ref{subsec:tclasses}. To help with readability we assume a few
 convenient source language features not available in $\ourlang$ (which is
 designed as a formal core calculus rather than a full-fledged source language). 
-In particular $\ourlang$ has no type-inference and, as such, requires explicit
+In particular $\ourlang$ has no type-inference and requires explicit
 rule applications and queries. The design of a source language that supports
 type-inference, implicit rule applications, implicit polymorphism and that 
 translates into a $\ourlang$-like calculus was already explored in our previous work on the implicit
@@ -877,6 +899,7 @@ argument of the call |sort [(3,'a'), (2,'c'), (3,'b')]| automatically inferred:
 <      implicit ordPair in
 <        sort [(3,'a'), (2,'c'), (3,'b')]
 
+%-------------------------------------------------------------------------------
 \subsection{Overlapping Rules and Stability in $\ourlang$}
 \label{sec:overview:incoherence}
 
