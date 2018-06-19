@@ -420,6 +420,10 @@ class of \emph{simple} types:
     \forall \alpha. \rulet \mid \rulet_1 \iarrow \rulet_2 \mid \type \\
     \text{Simple Types}  & \type                            & ::=  & \alpha \mid \rulet_1 \arrow \rulet_2 \\
   \eda }%
+Observe that simple types $\type$ are those types that do not have
+corresponding pairs of introduction and elimination rules in the ambiguous
+resolution judgment.
+
 The definition of resolution with focusing that uses this refined grammar
 is given in 
 Figure~\ref{fig:resolutionf}. The main \emph{focusing} judgment $\frres{\tenv}{\rulet}{E}$ is
