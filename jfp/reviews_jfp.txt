@@ -663,7 +663,7 @@ TODO
 > is a slight risk of confusion as the argument type of a rule is also
 > called "context".
 
-TODO
+FIXED
  
 >  - Section A.3: the notation for deterministic resolution judgments is
 > inconsistent w.r.t. that introduced in Fig. 7: all the focusing
@@ -708,7 +708,7 @@ TODO
 > p. 46, proof of Lemma A.11, case (L-RuleMatch): "construted with" -->
 > "constructed" (or better yet --> "derived using")
 
-TODO
+Fixed
  
 > p. 48
 > 
@@ -716,11 +716,11 @@ TODO
 > various $\sigma$ do not seem to align.  E.g. $\sigma'_{1,2}$ should
 > probably be $\sigma'_{2,2}$ or vice-versa.
 
-TODO
+Fixed
  
 >  - Section A.5: "Resolution coherence" --> "Resolution stability" (?)
 
-TODO
+Fixed
  
 >  - Proofs of Lemmas A.14, A.15 and A.16: please state the induction
 > strategy of these proofs.  By induction on which judgments, terms,
@@ -764,7 +764,7 @@ TODO
 > conclusion of the lemma (should be $\bar{\alpha}; \Gamma; \rho
 > |-_{coh} \tau$).
 
-TODO
+Fixed
  
 > p. 58, proof of Lemma A.26, case (L-RuleNoMatch): there is a missing
 > step in this case of the proof, probably involving Lemma A.21.  The
