@@ -221,8 +221,7 @@ With the evidence we can state the correctness of the algorithm.
 \begin{theorem}[Partial Correctness]
 Let $\tenv$ be a type environment, $\rulet$ be a type and E be a System F expression.
 Assume that $\unambig{\epsilon}{\rulet}$ and also $\forall \rulet_i \in \tenv: \unambig{\epsilon}{\rulet_i}$.
-Then $\dres{\tenv}{\rulet}{E}$ if and only if $\adres{\tenv}{\rulet}{E}$,
-provided that the algorithm terminates.
+Then $\dres{\tenv}{\rulet}{E}$ if and only if $\adres{\tenv}{\rulet}{E}$.
 \end{theorem}
 
 %-------------------------------------------------------------------------------
