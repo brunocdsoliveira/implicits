@@ -323,7 +323,9 @@ TODO
 > Formalizations of System F usually get by without such a judgment (see
 > e.g. TAPL, ch. 23).
 
-TODO
+You are right. The condition is not needed.
+
+TODO -> Drop it
 
 > p. 17: a minor typographic comment: the paragraphs immediately
 > following typing rules in the main text (such as those on this page
@@ -584,7 +586,7 @@ TODO - terminology
 > (Ty-TApp) in Fig. 2) so Lemma 5.4 only states a weak version of
 > stability.
 
-TODO
+TODO -> only allow predicative instantiation from the beginning
  
 >  - Theorem 5.3. "... provided that the algorithm terminates."  It is
 > unclear to me why this last part of the statement is necessary.  If
@@ -599,7 +601,7 @@ TODO
 > part of this theorem) nor Lemma A.24 (completeness) in appendix A
 > mention this extra condition.  Please clarify.
 
-TODO
+The proviso is indeed unnecessary. We have dropped it.
  
 > p. 33: "(see Chapter 23)" of what? TAPL?
 
@@ -654,7 +656,7 @@ Fixed.
 > backward references between the appendix and the corresponding
 > statements in Section 5.
 
-TODO
+TODO -> Klara
  
 > p. 42:
 > 
@@ -671,7 +673,7 @@ FIXED
 > inconsistent w.r.t. that introduced in Fig. 7: all the focusing
 > brackets have been dropped.
 
-TODO
+TODO -> Klara introduces the macros
 
 > p. 44:
 > 
@@ -682,12 +684,12 @@ TODO
 > of the various lemmas/proofs beforehand: which lemmas are proved by
 > mutual induction, which are auxiliary lemmas?
 
-TODO
+TODO -> Klara
  
 >  - Lemma A.10, A.11: the unambiguity judgment $|-_{unamb} \Gamma$ for
 > type environments has not been defined.
 
-TODO
+TODO -> Klara
  
 > p. 45, proof of Lemma A.11, case (R-TAbs): there seems to be an error
 > in this case of the proof: the IH cannot be applied as described.  The
@@ -705,7 +707,7 @@ TODO
 > |-_{unamb} \rho$ and invoking it in Lemma A.10 with $\bar{\alpha} =
 > \epsilon$. I have not checked the details, though.
 
-TODO
+TODO -> Klara: weakening of unamb
  
 > p. 46, proof of Lemma A.11, case (L-RuleMatch): "construted with" -->
 > "constructed" (or better yet --> "derived using")
@@ -729,15 +731,19 @@ Fixed
 > etc. are these proofs performed?  Are they performed mutually or
 > independently?
 
-TODO
+FIXED
  
 > p. 49: proof of Lemma A.15, case (R-Simp): "The latter could only have
-> been obtained by ryle (R-2)" --> "rule (R-2)" (?)  Please add a
+> been obtained by ryle (R-2)" --> "rule (R-2)" (?)  
+
+FIXED
+
+> Please add a
 > forward reference to the definition of the R-predicate in the
 > statement of Lemma A.16, or better yet, introduce and explain the role
 > of that predicate before using it in the proof of Lemma A.15.
 
-TODO
+TODO -> Klara: introduce and explain R before Lemma A.15
  
 > p. 56, proof of Lemma A.20, case (Alg-L-RuleNoMatch): there is an
 > error in this case of the proof: Lemma A.21 cannot be applied as
@@ -760,7 +766,7 @@ TODO
 > details.  Note that this creates an additional dependency of
 > the proof on Lemma A.27.
 
-TODO
+TODO -> Klara: apply the other lemma
  
 > p. 57, Lemma A.22: the type environment $\Gamma$ is missing in the
 > conclusion of the lemma (should be $\bar{\alpha}; \Gamma; \rho
@@ -783,23 +789,23 @@ Fixed
 > checked the details.  Note that this would add an extra dependency of
 > Lemma A.26 on Lemma A.21.
 
-TODO
+TODO -> Klara
  
 > p. 59, Lemma A.27:
 > 
 >  - where/how is the substitution order $\theta_1 \sqsubseteq \theta_2$
 > defined?
 
-TODO
+TODO -> Klara: define
  
 >  - only the first conclusion of this lemma is proven, what about the
 > second and third conclusions?
 
-TODO
+TODO -> Klara: add explanation
 
 > p. 60, Lemma A.29: where is the proof of this lemma?
 
-TODO
+TODO -> Klara (we assume this without proof?)
  
 > Referee: 2
 > 
