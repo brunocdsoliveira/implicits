@@ -767,17 +767,13 @@ TODO -> Klara: weakening of unamb
 FIXED
  
 > p. 49: proof of Lemma A.15, case (R-Simp): "The latter could only have
-> been obtained by ryle (R-2)" --> "rule (R-2)" (?)  
-
-FIXED
-
+> been obtained by ryle (R-2)" --> "rule (R-2)" (?)
 > Please add a
 > forward reference to the definition of the R-predicate in the
 > statement of Lemma A.16, or better yet, introduce and explain the role
 > of that predicate before using it in the proof of Lemma A.15.
 
-
-TODO -> Klara: introduce and explain R before Lemma A.15
+The definition of R is has been moved before Lemma A.15 and explained.
  
 > p. 56, proof of Lemma A.20, case (Alg-L-RuleNoMatch): there is an
 > error in this case of the proof: Lemma A.21 cannot be applied as
