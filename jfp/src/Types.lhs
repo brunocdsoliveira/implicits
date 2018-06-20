@@ -1519,11 +1519,11 @@ The second difference can be found in \rref{Alg-L-RuleNoMatch} of the lookup jud
 using the $\dstable{\bar{\alpha}}{\tenv}{\rulet}{x}{\type}$ judgement, which quantifies over all valid 
 substitutions, this rule uses the algorithmic judgement
 $\coherent{\bar{\alpha}}{\tenv}{\rulet}{\type}$. This auxiliary judgement checks algorithmically
-whether the context type $\rulet$ matches $\type$ under any possible instantiation
+whether the type $\rulet$ matches $\type$ under any possible instantiation
 of the type variables $\bar{\alpha}$.
 
 We apply the same deferred-instantation technique as with the first difference: Instead,
-of applying a substitution first and then checking whether the rule matches the goal, we 
+of applying a substitution first and then checking whether the implicit matches the goal, we 
 defer the instantiation to the end where we can deterministically pick one instantiation instead of considering all valid instantiations. 
 As a consequence of the similarity, 
 the definition of the judgement $\coherent{\bar{\alpha}}{\tenv}{\rulet}{\type}$ is a
@@ -1537,7 +1537,7 @@ Secondly, since the coherence check considers the substitution of the type
 variables $\bar{\alpha}$ that occur in the environment at the point of the
 query, rule \rref{Alg-L-RuleNoMatch} pre-populates the substitutable
 variables of the $\coh$ judgement with them. Contrast this with the matching
-judgement where only the rule's quantified variables are instantiated.
+judgement where only the implicit's quantified variables are instantiated.
 
 %-------------------------------------------------------------------------------
 \subsection{Scope-Aware Unification}
@@ -1655,7 +1655,7 @@ unification problems derived for their subterms.
 \hfill \myruleform{\adrres{\bar{\alpha}}{\tenv}{\rulet}{E}} \hfill \llap{\it Focusing} \\ \\
 %------------------------------------------------------------------------------%
 
-\myrule{Alg-R-IAbs}{\adrres{\bar{\alpha}}{\tenv, \rulet_1~\gbox{\leadsto x}}{\rulet_2}{E} \quad\quad \gbox{x~\mathit{fresh}}}
+\myrule{Alg-R-IAbs}{\adrres{\bar{\alpha}}{\tenv, \envi{\rulet_1}{x}}{\rulet_2}{E} \quad\quad \gbox{x~\mathit{fresh}}}
         {\adrres{\bar{\alpha}}{\tenv}{\rulet_1 \iarrow \rulet_2}{\lambda(x : ||\rulet_1||). E}} \\ \\ 
 
 \myrule{Alg-R-TAbs}
@@ -1674,12 +1674,12 @@ unification problems derived for their subterms.
  \myrule{Alg-L-RuleMatch}{\admres{\epsilon}{\tenv}{\rulet}{x}{\epsilon}{\type}{E}{\bar{\rulet}'~\gbox{\leadsto \bar{x}'}} \quad\enskip
           \adrres{\bar{\alpha}}{\tenv}{\rulet'}{E'} \enskip (\forall \rulet' \in \bar{\rulet}')
          }
-         {\adlres{\bar{\alpha}}{\tenv}{ \tenv', \rulet~\gbox{\leadsto x}}{\type}{E[\bar{E}'/\bar{x}'] }}  \\ \\
+         {\adlres{\bar{\alpha}}{\tenv}{ \tenv', \envi{\rulet}{x}}{\type}{E[\bar{E}'/\bar{x}'] }}  \\ \\
  
  \myrule{Alg-L-RuleNoMatch}
          {\incoherent{\bar{\alpha}}{\tenv}{\rulet}{\type} \quad\quad
           \adlres{\bar{\alpha}}{\tenv}{\tenv'}{\type}{E'}}
-         {\adlres{\bar{\alpha}}{\tenv}{\tenv', \rulet~\gbox{\leadsto x}}{\type}{E'}}  \\ \\
+         {\adlres{\bar{\alpha}}{\tenv}{\tenv', \envi{\rulet}{x}}{\type}{E'}}  \\ \\
     \myrule{Alg-L-Var}
             {\adlres{\bar{\alpha}}{\tenv}{\tenv'}{\type}{E}
             }
@@ -1700,7 +1700,7 @@ unification problems derived for their subterms.
         {\admres{\bar{\alpha}}{\tenv}{\type'}{E}{\Sigma}{\type}{||\theta||(E)}{\theta(\Sigma)}}  \\ \\
 
 \myrule{Alg-M-IApp}
-        {\admres{\bar{\alpha}}{\tenv, \rulet_1~\gbox{\leadsto x}}{\rulet_2}{E\,x}{\rulet_1~\gbox{\leadsto x}, \Sigma}{\type}{E'}{\Sigma'}\quad\quad \gbox{x~\mathit{fresh}}}
+        {\admres{\bar{\alpha}}{\tenv, \envi{\rulet_1}{x}}{\rulet_2}{E\,x}{\Sigma, \rulet_1~\gbox{\leadsto x}}{\type}{E'}{\Sigma'}\quad\quad \gbox{x~\mathit{fresh}}}
         {\admres{\bar{\alpha}}{\tenv}{\rulet_1 \iarrow \rulet_2}{E}{\Sigma}{\type}{E'}{\Sigma'}}  \\ \\
 
 \myrule{Alg-M-TApp}
@@ -1830,13 +1830,13 @@ then the resolution process may not terminate.  This section describes how to
 impose a set of modular syntactic restrictions that prevents non-termination. 
 As an example of non-termination consider 
 \begin{equation*}
-  \aresp{\tychar \To \tyint, \tyint \To \tychar}{\tyint}
+  \aresp{?(\tychar \To \tyint), ?(\tyint \To \tychar)}{\tyint}
 \end{equation*}%
-which loops, using alternatively the first and second rule in the
+which loops, using alternatively the first and second implicit in the
 environment. The source of this non-termination is the recursive 
 nature of resolution: a simple type can be resolved
-in terms of a rule type whose head it matches, but this requires further 
-resolution of the rule type's context. 
+in terms of an implicit type whose head it matches, but this requires further 
+resolution of the implicit type's context. 
 
 The problem of non-termination has been widely studied in the context of
 Haskell's type classes, and a set of modular syntactic restrictions
@@ -1993,8 +1993,8 @@ Above we have adapted termination conditions for Haskell's type class
 resolution to \name. While our adapted conditions are sufficient for
 termination, they are not necessary. In fact, they can be rather restrictive.
 For instance, $\nterm{\tyint \To \tybool}$ because $\tnorm[\tyint] \not<
-\tnorm[\tybool]$. Indeed, resolving $\tybool$ in the context $\tenv_1 = \tybool
-\To \tyint, \tyint \To \tybool$ is problematic. Yet, it is not in the context
-$\tenv_2 = \tyint, \tyint \To \tybool$. The problem is that the conditions are
+\tnorm[\tybool]$. Indeed, resolving $\tybool$ in the context $\tenv_1 = ?(\tybool
+\To \tyint), ?(\tyint \To \tybool)$ is problematic. Yet, it is not in the context
+$\tenv_2 = ?(\tyint), ?(\tyint \To \tybool)$. The problem is that the conditions are
 not context sensitive. We leave exploring more permissive, context-sensitive
 conditions to future work.
