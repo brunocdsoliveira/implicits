@@ -7,24 +7,25 @@
 
 The most closely related work can
 be divided into three strands: IP mechanisms that support local
-scoping with coherence, but forbid overlapping rules and lack other
+scoping with coherence and stability, but forbid overlapping rules and lack other
 types of flexibility; IP mechanisms that have global scoping and
-preserve coherence; and IP mechanisms that are incoherent but offer
-greater flexibility in terms of local scoping and/or overlapping
-rules.  $\ourlang$ is unique in offering flexibility 
+preserve coherence and stability; and IP mechanisms that are unstable and sometime incoherent
+but offer greater flexibility in terms of local scoping and/or overlapping
+rules. $\ourlang$ is unique in offering flexibility 
 (local scoping with overlapping rules, first-class rules 
-and higher-order rules), while preserving coherence.
+and higher-order rules), while preserving coherence and stability.
 
-\subsection{Implicit Programming with Local Scoping, Coherence but no Overlapping Rules}
+\subsection{Implicit Programming with Local Scoping, but no Overlapping Rules}
 Our work allows a very flexible model of implicits with first-class
 rules, higher-order rules and nested scoping with overlapping rules
-while guaranteeing coherence.  Closest to our work in terms of
-combining additional flexibility with coherence are \emph{modular type
+while guaranteeing coherence and stability.  Closest to our work in terms of
+combining additional flexibility with desirable properties (such as coherence and stability)
+are \emph{modular type
 classes}~\cite{modular} and System $F_{G}$~\cite{systemfg}. Both 
-works preserve coherence in the presence of local scoping, but (unlike
+works preserve coherence and stability in the presence of local scoping, but (unlike
 $\ourlang$) the local scopes \emph{forbid overlapping rules}. The
 restriction of no overlapping rules is an essential part of
-guaranteeing coherence. $\ourlang$ also has several other fundamental
+guaranteeing coherence and stability. $\ourlang$ also has several other fundamental
 differences to both modular type classes and System $F_{G}$.
 \textit{Modular type classes}~\cite{modular} are a language design
 that uses ML-modules to model type classes. The main novelty of this
@@ -62,7 +63,7 @@ one way. Hence, while introducing overlapping implicits is allowed, they are
 only usable if only one leads to a full resolution. As far as we know, a partial
 prototype exists but the approach has not been formalised yet.
 
-\subsection{Implicit Programming with Coherence and Global Scoping}
+\subsection{Implicit Programming with Global Scoping}
 
 Several core calculi and refinements have been proposed in the context
 of type classes. As already discussed in detail in
@@ -147,17 +148,18 @@ in that it does not support local instances. Moreover, they achieve coherence
 through requiring non-overlapping instances. Their algorithm performs a
 backtracking search among these instances as well as any local assumptions
 (which themselves can ultimately only be satisfied by combinations of global
-instances), rather than a linear committed-choice traversal of the environment. 
+instances), rather than a linear committed-choice traversal of the environment.
+\bruno{Have an expanded discussion}
 
-\subsection{Implicit Programming without Coherence}
+\subsection{Implicit Programming without Stability}
 
 \paragraph{Implicits} The implicit calculus~\cite{oliveira12implicit} is the main 
 inspiration for the design of $\ourlang$. There are two major 
 differences between $\ourlang$ and the implicit calculus. 
 The first difference is that the implicit calculus, like Scala, 
-does not enforce coherence. Programs similar to that in Figure~\ref{fig:scala}
+does not enforce stability. Programs similar to that in Figure~\ref{fig:scala}
 can be written in the implicit calculus and there is no way to detect 
-incoherence. The second difference is in the design of resolution. 
+instability. The second difference is in the design of resolution. 
 Rules in the implicit calculus have $n$-ary arguments, whereas 
 in $\ourlang$ rules have single arguments and $n$-ary arguments
 are simulated via multiple single argument rules. The resolution process 
@@ -185,9 +187,8 @@ in Section~\ref{subsec:det} this approach is incoherent.
 inspiration for the implicit calculus and, therefore, share various
 similarities with $\ourlang$.  In Scala implicit arguments can be of
 any type, and local scoping (including overlapping rules) is
-supported. However Scala implicits are incoherent and they do not
-allow higher-order rules either.
-
+supported. However the original model of Scala implicits did not allow
+allow higher-order rules.
 Recently, following the implicit calculus and a preliminary version of
 $\ourlang$, Odersky et al.~\shortcite{odersky17implicits} presented the SI
 calculus as a new basis for the Scala language's treatment of implicits.
@@ -203,7 +204,7 @@ and applications explicit.
 Secondly, while $\ourlang$ aims to formalise and investigate the meta-theory of
 resolution, the priority of Odersky et al. is not so much the SI calculus
 itself as the derived implementation of the Scala compiler. As a consequence,
-SI features a simplified type system that is incoherent and a resolution
+SI features a simplified type system that is incoherent and unstable and a resolution
 algorithm that supports only monomorphic types, while the compiler's much more
 complex enforcement of coherence and support for polymorphism are only
 discussed informally. 

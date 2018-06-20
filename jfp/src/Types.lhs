@@ -1404,7 +1404,7 @@ firstly, it computes rather than guesses type substitutions in rule
 \rref{M-TApp}; 
 and secondly,
 it replaces explicit quantification over all substitutions $\theta$ in rule
-\rref{Stable} with a tractable approach to coherence checking.
+\rref{Stable} with a tractable approach to stability checking.
 
 The definition of the algorithm, in Figure~\ref{fig:algorithm}, is structured in the same way
 as the declarative specification: with one main judgement and three

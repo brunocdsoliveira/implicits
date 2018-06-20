@@ -85,10 +85,19 @@ equational reasoning?
 > reasoning in the presence of non-monotype instantiations remains
 > unclear, and COCHIS allows such instantiations.  Seeing as stability
 > of resolution is one of the central features of COCHIS, this is a bit
-> disappointing.  Other (arguably less important) claims are not
+> disappointing.
+
+BRUNO: As discussed the plan is to change Section 2 so that we work
+on *predicative System F* from the start.
+
+> Other (arguably less important) claims are not
 > formally proven at all, e.g. termination of resolution, or validity of
 > unification (though informal arguments are given as to their
-> validity).  Proofs of the remaining claims (type safety, determinacy,
+> validity).
+
+BRUNO: Anything about this?
+
+> Proofs of the remaining claims (type safety, determinacy,
 > etc.) are given in the Coq mechanization and appendix A.  However, the
 > mechanization seems unfinished -- I found at least one judgment that is
 > postulated as an axiom rather than defined -- and the appendix contains
@@ -116,10 +125,17 @@ BRUNO: How's progress with this?
 > expressivity/power of resolution remains somewhat unclear (for the
 > case of unambiguity conditions, there is at least a brief discussion
 > of an example of harmless ambiguity, i.e. a "false positive").
+
+BRUNO: Point out that Haskell has similar restrictions
+
 > Finally, there are restrictions that just seem arbitrary, in the sense
 > that they are not motivated or discussed at all, e.g. the "committed
 > choice" semantics of resolution, which precludes backtracking, or the
 > particular choice of termination measure introduced in Section 4.4.
+
+BRUNO: Termination measure is motivated by Haskell.
+Discuss backtracking more.
+
 > Both of these restrictions cause programs to be rejected that one
 > would sensibly expect to be handled by a locally scoped resolution
 > strategy designed to cope with overlapping instances (see examples
@@ -268,7 +284,7 @@ simply by doing an unfolding step.
 > from Scala to COCHIS, it maybe it worth pointing out again, that "Int
 > => Int" is *not* to be confused with a Scala-style function type here.
 
-TODO
+FIXED: Added some more text.
  
 >  - "Polymorphic Rules and Queries": the paragraph describes
 > polymorphic rules, but it remains unclear what a polymorphic query is.
@@ -295,6 +311,7 @@ TODO
 > do not prove this).
 
 TODO? Maybe no need to mention strong reduction.
+IGNORE?
  
 >  - Since COCHIS has first-class rules, it might be nice to also
 > discuss the possibility of querying for (possibly polymorphic) rule
@@ -311,7 +328,7 @@ TODO: Consider a polymorphic query example?
 > class/instance declarations (it might be confusing to readers that are
 > not already familiar with this convention).
 
-TODO
+FIXED
  
 > p. 15:
 > 
@@ -418,6 +435,9 @@ TODO
 > first premise of (DL-RuleNoMatch).  An example of this sort would have
 > been very helpful (at least to me) in understanding what is meant by
 > "committed choice".
+
+TODO: Tom, should we consider adding the example above? It could be helpful.
+
 > 
 > The committed choice semantics is also rather surprising, in my
 > opinion.  It seems to go against the goal of allowing overlapping
@@ -430,6 +450,17 @@ TODO
 - We have added a discussion about why we prevent backtracking.
 
 - We have adopted the lookup name for the judgment.
+
+Haskell has does not backtrack. Here is an example
+
+class C a where ...
+
+instance C String
+
+instance C Int => C String
+
+A program with the above instances is rejected no matter what flags
+are used (overlapping, incoherent ...). 
 
 >  - "The (...) definition of the judgement itself proceeds by
 > structural induction on the environment $\Gamma'$."  In what sense

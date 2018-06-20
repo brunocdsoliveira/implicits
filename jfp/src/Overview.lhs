@@ -297,7 +297,8 @@ to type class or instance declarations. Instead, implicits are modelled
 with ordinary types. They can be abstracted over and do not suffer
 from the second-class nature of type classes. These features mean that 
 Scala implicits have a wider range of applications than type classes.
-Unlike Haskell type classes, Scala implicits do not preserve coherence. 
+Unlike Haskell type classes, however, with Scala implicits there is no way to 
+enforce stability. 
 
 %~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 \paragraph{Modelling Type Classes with Implicits}
