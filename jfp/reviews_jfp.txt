@@ -727,7 +727,7 @@ TODO -> Klara
 >  - Lemma A.10, A.11: the unambiguity judgment $|-_{unamb} \Gamma$ for
 > type environments has not been defined.
 
-TODO -> Klara
+Definition has been added.
 
 > p. 45, proof of Lemma A.11, case (R-TAbs): there seems to be an error
 > in this case of the proof: the IH cannot be applied as described.  The

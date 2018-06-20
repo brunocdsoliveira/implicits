@@ -749,8 +749,36 @@ See file CochisDet.v, Lemma \tt{DRes\_match\_impl\_vars}.
 % 
 %-------------------------------------------------------------------------------
 \subsection{Deterministic Resolution is Deterministic}\label{proof:determinism}
+As shown in Figure~\ref{fig:unambenv}, a typing environment is unambiguous when all its type
+variables and implicit entries have unambiguous types. This definition will be used thoughout
+this section.
 
-%\newcommand{\unamb}{\vdash_{\mathit{unamb}}}
+\figtwocol{fig:unambenv}{Unambiguous Type Environment}{
+\begin{center}
+\framebox{%\scriptsize
+\begin{minipage}{0.969\textwidth}
+\bda{c} 
+\multicolumn{1}{c}{\myruleform{\unambenv{\tenv}}} \\ \\
+\myrule{UE-Empty}
+  { }
+  { \unambenv{\epsilon} } \quad\quad\quad
+  
+\myrule{UE-Var}
+  {\unambenv{\tenv} \\ \unambig{}{\rulet} }
+  {\unambenv{\tenv, \relation{x}{\rulet}}}\\ \\
+
+\myrule{UE-TVar}
+  { \unambenv{\tenv} }
+  { \unambenv{\tenv,\alpha} } \quad\quad\quad
+
+\myrule{UE-Impl}
+  { \unambenv{\tenv} \quad\quad \unambig{}{\rulet} }
+  { \unambenv{\tenv, \ie{x}{\rulet}} }
+\eda
+\end{minipage}
+}
+\end{center}
+}
 
 %###############################################################################
 {\centering
