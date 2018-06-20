@@ -438,6 +438,9 @@ TODO
 
 TODO: Tom, should we consider adding the example above? It could be helpful.
 
+TOM: A similar example appears in textual form in the No Backtracking paragraph 
+of the Comitted Choice subsection.
+
 > 
 > The committed choice semantics is also rather surprising, in my
 > opinion.  It seems to go against the goal of allowing overlapping

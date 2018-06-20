@@ -281,6 +281,9 @@
 % Judgement Forms
 % ~~~~~~~~~~~~~~~
 
+% environment entry
+\newcommand{\envi}[2]{?#1~\gbox{\leadsto #2}}
+
 % well-formed types
 \newcommand{\wfty}[2]{\hello{#1 \turns #2}}
 
@@ -294,7 +297,7 @@
 
 % focusing resolution
 \newcommand{\frres}[3]{\hello{#1 \fturns [#2]~\gbox{\leadsto #3}}}
-\newcommand{\fmres}[6]{\hello{#1; [#2]~\gbox{\leadsto #3} \fturns #4~\gbox{\leadsto #5}; #6}}
+\newcommand{\fmres}[6]{\hello{#1; [#2]~\gbox{\leadsto #3} \fturns #6; #4~\gbox{\leadsto #5}}}
 
 % lookup
 \newcommand{\lres}[4]{\hello{#1;[#2] \ivturns #3~\gbox{\leadsto #4}}}
@@ -303,7 +306,7 @@
 \newcommand{\dres}[3]{\hello{#1 \ivturns #2~\gbox{\leadsto #3}}}
 \newcommand{\drres}[4]{\hello{#1; #2 \ivturns [#3]~\gbox{\leadsto #4}}}
 \newcommand{\dlres}[5]{\hello{#1; #2; [#3] \ivturns #4~\gbox{\leadsto #5}}}
-\newcommand{\dmres}[6]{\hello{#1; [#2]~\gbox{\leadsto #3} \ivturns #4~\gbox{\leadsto #5}; #6}}
+\newcommand{\dmres}[6]{\hello{#1; [#2]~\gbox{\leadsto #3} \ivturns #6; #4~\gbox{\leadsto #5}}}
 
 % algorithm
 \newcommand{\alg}{\turns_{\mathit{alg}}}

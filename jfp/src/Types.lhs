@@ -25,18 +25,24 @@ greyed parts can be ignored in this section and will be explained in the next.
 Here is the syntax of the calculus:
 \bda{llrl}
     \text{Types} & \rulet  & ::=  & \alpha \mid \rulet_1 \arrow \rulet_2 \mid \forall \alpha. \rulet \mid \rulet_1 \iarrow \rulet_2 \\
+    \text{Monotypes}     & \suty                            & ::=  & \alpha \mid \suty \arrow \suty \\
     \text{Expressions} & |e| & ::=  &
-     x \mid \lambda (x:\rulet).e \mid e_1\,e_2 \mid \Lambda \alpha. e \mid e\,\rulet \mid \query \rulet \mid \ilambda \rulet. e \mid e_1 \with e_2  \\
+     x \mid \lambda (x:\rulet).e \mid e_1\,e_2 \mid \Lambda \alpha. e \mid e\,\suty \mid \query \rulet \mid \ilambda \rulet. e \mid e_1 \with e_2  \\
 \eda
 %
 %%endif
 %
-Types $\rulet$ comprise four constructs: type variables
-$\alpha$; function types $\rulet_1 \arrow \rulet_2$; universal types
-$\forall \alpha. \rulet$; and the novel \textit{rule} types $\rulet_1 \iarrow
-\rulet_2$.  In a rule type $\rulet_1 \iarrow \rulet_2$, type $\rulet_1$ is
-called the \textit{context} and type $\rulet_2$ the \textit{head}, following
-Haskell's terminology for type class instances.
+Types $\rulet$ comprise four constructs: type variables $\alpha$; function
+types $\rulet_1 \arrow \rulet_2$; universal types $\forall \alpha. \rulet$; and
+the novel \textit{rule} types $\rulet_1 \iarrow \rulet_2$.  In a rule type
+$\rulet_1 \iarrow \rulet_2$, type $\rulet_1$ is called the \textit{context} and
+type $\rulet_2$ the \textit{head}, following Haskell's terminology for type
+class instances. Observe that $\ourlang$ types are similar to Haskell's type
+schemes with the exception that contexts are types rather than type class
+constraints. We also define a subset of types, called \emph{monotypes} $\suty$,
+which, like Haskell's monotypes, do not contain universal quantifiers or rule
+types.
+
 
 Expressions $e$ include three abstraction-elimination pairs.
 The form $\lambda (x:\rulet). e$ abstracts over a value of type $\rulet$ in expression $e$,
@@ -44,7 +50,8 @@ which can refer to it with variable $x$; the abstraction is eliminated by
 application $e_1\,e_2$.
 Similarly, $\Lambda \alpha.e$ abstracts over a type in expression $e$, which can refer to
 it with type variable $\alpha$; the abstraction is eliminated
-by type application $e\,\rulet$. Finally, $\ilambda \rulet. e$ 
+by \emph{predicative} type application $e\,\suty$ \tom{Add forward pointer to where
+the reason for this is explained.}. Finally, $\ilambda \rulet. e$ 
 abstracts over implicit values of type $\rulet$ in expression $e$, which can refer to it
 with implicit query $\query \rulet$; the abstraction is eliminated by
 implicit application $e_1 \with e_2$.
@@ -61,9 +68,9 @@ sugar used in Section~\ref{sec:overview}.
 %format e1
 \[ | implicit {-"\overline{"-} e : {-"\rulet}"-} in e1 == ({-" \overline{\lambda_? \rulet .} "-} e1) {-"\overline{"-} with e {-"}"-} | \]
 %}\bruno{Also introduce let, which is used later, in the translation.}
-Here $\overline{\lambda_? \rho .}$ is a shortform for 
+Here $\overline{\lambda_? \rho .}$ is a short form for 
 $\lambda_? \rho_1.~\ldots~\lambda_? \rho_n.$, and
-$\overline{|with|~e}$ is a shortform for
+$\overline{|with|~e}$ is a short form for
 |with| $e_1 \ldots $ |with| $e_n$.
 
 For brevity we have kept the $\name$ calculus small. Examples
@@ -79,22 +86,22 @@ literals and types.
 \begin{center}
 \framebox{%\scriptsize
 \begin{minipage}{.969\textwidth}
-\bda{c}
-\multicolumn{1}{c}{\myruleform{\wfty{\tenv}{\rulet}}} \\ \\
-
-  \myrule{WF-VarTy}
-         { \alpha \in \tenv }
-         { \wfty{\tenv }{ \alpha} } \quad\quad\quad
-  \myrule{WF-FunTy}
-         {\wfty{\tenv }{ \rulet_1} \quad\quad \wfty{\tenv }{ \rulet_2}}
-         {\wfty{\tenv }{ \rulet_1 \arrow \rulet_2}} \\ \\
-  \myrule{WF-AbsTy}
-         { \wfty{\tenv, \alpha }{ \rulet}}
-         { \wfty{\tenv }{ \forall\alpha.\rulet }} \quad\quad\quad
-  \myrule{WF-RulTy}
-         {\wfty{\tenv }{ \rulet_1} \quad\quad \wfty{\tenv }{ \rulet_2}}
-         {\wfty{\tenv }{ \rulet_1 \iarrow \rulet_2}}
-\eda
+%\bda{c}
+%\multicolumn{1}{c}{\myruleform{\wfty{\tenv}{\rulet}}} \\ \\
+%
+%  \myrule{WF-VarTy}
+%         { \alpha \in \tenv }
+%         { \wfty{\tenv }{ \alpha} } \quad\quad\quad
+%  \myrule{WF-FunTy}
+%         {\wfty{\tenv }{ \rulet_1} \quad\quad \wfty{\tenv }{ \rulet_2}}
+%         {\wfty{\tenv }{ \rulet_1 \arrow \rulet_2}} \\ \\
+%  \myrule{WF-AbsTy}
+%         { \wfty{\tenv, \alpha }{ \rulet}}
+%         { \wfty{\tenv }{ \forall\alpha.\rulet }} \quad\quad\quad
+%  \myrule{WF-RulTy}
+%         {\wfty{\tenv }{ \rulet_1} \quad\quad \wfty{\tenv }{ \rulet_2}}
+%         {\wfty{\tenv }{ \rulet_1 \iarrow \rulet_2}}
+%\eda
 
 \bda{c} 
 
@@ -110,7 +117,7 @@ literals and types.
 
 \myrule{Ty-Abs}
 { \wte{\tenv,\relation{x}{\rulet_1}}{e}{\rulet_2}{E}
-  \quad\quad\quad \wfty{\tenv}{\rulet_1}
+  % \quad\quad\quad \wfty{\tenv}{\rulet_1}
 }
 { \wte{\tenv}{\lambda \relation{x}{\rulet_1}.e}{\rulet_1 \arrow \rulet_2}
     {\lambda \relation{x}{||\rulet_1||}.E} } 
@@ -131,16 +138,16 @@ literals and types.
                \alpha.\rulet}{\Lambda \alpha.E_1} }
 \\ \\
   \myrule  {Ty-TApp}
-           { \wte{\tenv}{e}{\forall \alpha.\rulet_2}{E}
-             \quad\quad\quad
-             \wfty{\tenv}{\rulet_1}
+           { \wte{\tenv}{e}{\forall \alpha.\rulet}{E}
+             % \quad\quad\quad
+             % \wfty{\tenv}{\rulet_1}
            }
-           { \wte{\tenv}{e\,\rulet_1}{\rulet_2 [\rulet_1 /\alpha]}{E~||\rulet_1||}
+           { \wte{\tenv}{e\,\suty}{\rulet [\suty/\alpha]}{E~||\suty||}
            } 
 \\ \\
   \myrule  {Ty-IAbs}
-           { \wte{\tenv, \rulet_1 \gbox{\leadsto x}}{e}{\rulet_2}{E} 
-             \quad \wfty{\tenv}{\rulet_1}
+           { \wte{\tenv,\envi{\rulet_1}{x}}{e}{\rulet_2}{E} 
+             % \quad \wfty{\tenv}{\rulet_1}
              \quad \unambig{}{\rulet_1}
              \quad \gbox{x~\mathit{fresh}}}
            { \wte{\tenv}{\ilambda \rulet_1.e}{\rulet_1 \iarrow \rulet_2}{\lambda \relation{x}{||\rulet_1||}. E}
@@ -155,7 +162,7 @@ literals and types.
 \\ \\
 \myrule {Ty-Query}
 { \ares{\tenv}{\rulet}{E} \quad\quad\quad 
-  \wfty{\tenv}{\rulet} \quad\quad\quad 
+  % \wfty{\tenv}{\rulet} \quad\quad\quad 
   \unambig{}{\rulet}}
 { \wte{\tenv}{?\rulet}{\rulet}{E}
 }
@@ -166,26 +173,26 @@ literals and types.
 }
 
 Figure \ref{fig:type} presents the static type system of $\name$.
-Our language is based on System~F, which is included in our system.
+Our language is based on predicative System~F, which is included in our system.
 
-%- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-\paragraph{Well-Formed Types}
-As in System F, a type environment $\tenv$ records type variables $\alpha$
+% %- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+% \paragraph{Well-Formed Types}
+As in predicative System F, a type environment $\tenv$ records type variables $\alpha$
 and variables $x$ with associated types $\rulet$ that are in scope.
-New here is that it also records instances of implicits $\rulet$.
+New here is that it also records instances of implicits $?\rulet$.
 \bda{llrl} 
-\text{Type Environments}     & \tenv & ::= & \epsilon \mid \tenv, \relation{x}{\rulet} \mid \tenv , \alpha \mid \tenv, \rulet~\gbox{\leadsto x} \\
+\text{Type Environments}     & \tenv & ::= & \epsilon \mid \tenv, \relation{x}{\rulet} \mid \tenv , \alpha \mid \tenv, \envi{\rulet}{x} \\
 \eda
-Judgement $\wfty{\tenv}{\rulet}$ holds if type $\rulet$ is well-formed 
-with respect to type environment $\tenv$, that is, if all free type variables
-of $\rulet$ occur in $\tenv$.
+% Judgement $\wfty{\tenv}{\rulet}$ holds if type $\rulet$ is well-formed 
+% with respect to type environment $\tenv$, that is, if all free type variables
+% of $\rulet$ occur in $\tenv$.
 
-%- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-\paragraph{Well-Typed Expressions}
+% %- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+% \paragraph{Well-Typed Expressions}
 
 Typing judgment ${\wtep{\tenv}{e}{\rulet}}$ holds if
 expression $e$ has type $\rulet$ with respect to type environment $\tenv$.
-The first five rules copy the corresponding System F rules; only the last three deserve special attention.
+The first five rules copy the corresponding predicative System F rules; only the last three deserve special attention.
 Firstly, rule \rref{Ty-IAbs} extends the implicit environment with the type of an implicit instance.
 The side condition $\unambig{}{\rulet_1}$ states that
 the type $\rulet_1$ must be unambiguous; we explain this concept in Section~\ref{subsec:det}.
@@ -207,15 +214,15 @@ is explained next.
 \myruleform{\ares{\tenv}{\rulet}{E}}
 \\ \\
   \myrule {AR-IVar}
-          {\rulet~\gbox{\leadsto x} \in \tenv}
-          {\ares{tenv}{\rulet}{x}}
+          {\envi{\rulet}{x} \in \tenv}
+          {\ares{\tenv}{\rulet}{x}}
 \\ \\
   \myrule {AR-TAbs}
           {\ares{\tenv, \alpha}{\rulet}{E}}
           {\ares{\tenv}{\forall \alpha. \rulet}{\Lambda\alpha.E}} 
 \quad
   \myrule {AR-IAbs}
-          {\ares{\tenv, \rulet_1~\gbox{\leadsto x}}{\rulet_2}{E} 
+          {\ares{\tenv, \envi{\rulet_1}{x}}{\rulet_2}{E} 
            \quad\quad 
            \gbox{x~\mathit{fresh}}
           }
@@ -224,9 +231,9 @@ is explained next.
 \\ \\
   \myrule {AR-TApp}
           {\ares{\tenv}{\forall \alpha. \rulet}{E} 
-           \quad\quad \wfty{\tenv}{\rulet'}
+          %  \quad\quad \wfty{\tenv}{\suty}
           }
-          {\ares{\tenv}{\rulet[\rulet'/\alpha]}{E~||\rulet'||}}
+          {\ares{\tenv}{\rulet[\suty/\alpha]}{E~||\suty||}}
 \quad
   \myrule {AR-IApp}
           {\ares{\tenv}{\rulet_1 \iarrow \rulet_2}{E_2} 
@@ -248,9 +255,9 @@ $\rulet$ are read as propositions, $r$ stands for resolution and $a$ for ambiguo
 Following the ``Propositions as Types'' correspondence~\cite{propsastypes}, we read
 $\alpha$ as a propositional variable and $\forall \alpha.\rulet$ as universal quantification.
 Yet, unlike in the traditional interpretation of types as propositions, we have two forms of arrows,
-functions $\rulet_1 \arrow \rulet_2$ and rules $\rulet_1 \iarrow \rulet_2$,
+function types $\rulet_1 \arrow \rulet_2$ and rule types $\rulet_1 \iarrow \rulet_2$,
 and the twist is that we choose to treat
-only rules as implications, leaving functions as uninterpreted predicates.
+only rule types as implications, leaving function types as uninterpreted predicates.
 
 % Figure~\ref{fig:resolution1} provides a first (ambiguous) definition of the
 % resolution judgement $\tenv \vturns \rulet$ that corresponds to the intuition of
@@ -267,14 +274,14 @@ Secondly and more importantly, the definition is \emph{ambiguous}: a type
 can be derived in multiple different ways. As an example of both issues, 
 consider that under the environment
 \[
-\Gamma_0 = \tyint,\tybool,(\tybool\iarrow\tyint)
+\Gamma_0 = ?\tyint,?\tybool,?(\tybool\iarrow\tyint)
 \]
 there are two different derivations for resolving
 $\aresp{\Gamma_0}{\tyint}$:
 \begin{equation*}
 \begin{array}{c}
 \myexruleL{AR-IVar}
-   {\tyint \in \Gamma_0}
+   {?\tyint \in \Gamma_0}
    {\aresp{\Gamma_0}{\tyint}}
 \end{array}
 \end{equation*}%%
@@ -283,10 +290,10 @@ and
 \begin{array}{c}
 \myexruleL{AR-IApp}
    {\myexruleL{AR-IVar} 
-                {(\tybool \iarrow \tyint) \in \Gamma_0}
+                {?(\tybool \iarrow \tyint) \in \Gamma_0}
                 {\aresp{\Gamma_0}{\tybool \iarrow \tyint}} \\
     \myexrule{AR-IVar} 
-                {\tybool \in \Gamma_0}
+                {?\tybool \in \Gamma_0}
                 {\aresp{\Gamma_0}{\tybool}}
    }
    {\aresp{\Gamma_0}{\tyint}}
@@ -314,11 +321,11 @@ gratuitous forms of nondeterminism.
 
 As an example of such gratuitous nondeterminism consider
 the following two ways of resolving $\alpha$ given 
-$\tenv = \alpha~\gbox{\leadsto x}$:
+$\tenv = \alpha, \envi{\alpha}{x}$:
 \begin{equation*}
 \begin{array}{c}
 \myexrule{AR-IVar}
-   {\alpha~\gbox{\leadsto x} \in \tenv}
+   {\envi{\alpha}{x} \in \tenv}
    {\ares{\tenv}{\alpha}{x}}
 \end{array}
 \end{equation*}%
@@ -334,12 +341,12 @@ versus
       \myexrule{AR-IAbs}
          {
             \myexrule{AR-IVar}
-               { \alpha~\gbox{\leadsto y} \in \tenv, \alpha~\gbox{\leadsto y}}
-               { \ares{\tenv, \alpha~\gbox{\leadsto y}}{\alpha}{y} }
+               { \envi{\alpha}{y} \in (\tenv, \envi{\alpha}{y})}
+               { \ares{\tenv, \envi{\alpha}{y}}{\alpha}{y} }
          }
          {\ares{\tenv}{\alpha \iarrow \alpha}{\lambda y. y}} \\
       \myexrule{AR-IVar}
-         {\alpha ~\gbox{\leadsto x} \in \tenv}
+         {\envi{\alpha}{x} \in \tenv}
          {\ares{\tenv}{\alpha}{x}}
    }
    {\ares{\tenv}{\alpha}{(\lambda y.y)\,x}}
@@ -365,7 +372,7 @@ and allows only the first and more direct of these two proofs.
 \framebox{%\scriptsize
 \begin{minipage}{.969\textwidth}
 \bda{c}
-\Sigma ::= \epsilon \mid \Sigma, \rulet~\gbox{\leadsto x} \\ \\
+\Sigma ::= \epsilon \mid \rulet~\gbox{\leadsto x}, \Sigma \\ \\
 %- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -%
 \hfill \myruleform{\frres{\tenv}{\rulet}{E}} \hfill \llap{\it Focusing}
 %- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -%
@@ -375,7 +382,7 @@ and allows only the first and more direct of these two proofs.
           {\frres{\tenv}{\forall \alpha. \rulet}{\Lambda\alpha.E}} 
 \quad
   \myrule {FR-IAbs}
-          {\frres{\tenv, \rulet_1~\gbox{\leadsto x}}{\rulet_2}{E} 
+          {\frres{\tenv, \envi{\rulet_1}{x}}{\rulet_2}{E} 
            \quad\quad 
            \gbox{x~\mathit{fresh}}
           }
@@ -383,7 +390,7 @@ and allows only the first and more direct of these two proofs.
             \lambda\relation{x}{||\rulet_1||}.E}} 
 \\ \\
   \myrule {FR-Simp}
-          {\rulet~\gbox{\leadsto x} \in \tenv \\ 
+          {\envi{\rulet}{x} \in \tenv \\ 
            \fmres{\tenv}{\rulet}{x}{\type}{E}{\bar{\rulet}' ~\gbox{\leadsto \bar{x}'}}  \\
            \frres{\tenv}{\rulet'}{E'} \enskip (\forall \rulet' \in \bar{\rulet}')
           }
@@ -395,15 +402,15 @@ and allows only the first and more direct of these two proofs.
 
 \\ \\
   \myrule {FM-TApp}
-          {\wfty{\tenv}{\rulet'} \\\\
-           \fmres{\tenv}{[\rulet'/\alpha]\rulet}{E\,||\rulet'||}{\type}{E'}{\Sigma}
+          {% \wfty{\tenv}{\suty} \\\\
+           \fmres{\tenv}{\rulet[\suty/\alpha]}{E\,||\suty||}{\type}{E'}{\Sigma}
           }
           {\fmres{\tenv}{\forall \alpha.\rulet}{E}{\type}{E'}{\Sigma}}
 \\ \\
   \myrule {FM-IApp}
-          {\gbox{x~\text{fresh}} \\\\
-           \fmres{\tenv}{\rulet_2}{E\,x}{\type}{E'}{\Sigma}}
-          {\fmres{\tenv}{\rulet_1 \iarrow \rulet_2}{E}{\type}{E'}{\Sigma, \rulet_1~\gbox{\leadsto x}}}
+          {\fmres{\tenv}{\rulet_2}{E\,x}{\type}{E'}{\Sigma} \\ \gbox{x~\text{fresh}}
+          }
+          {\fmres{\tenv}{\rulet_1 \iarrow \rulet_2}{E}{\type}{E'}{\rulet_1~\gbox{\leadsto x}, \Sigma}}
 \\ \\
   \myrule {FM-Simp}
           {}
@@ -441,22 +448,23 @@ are three rules, for the three possible syntactic forms of~$\rulet$.
 Rules~\rref{FR-TAbs} and~\rref{FR-IAbs} decompose the goal by
 applying implication and quantifier introductions respectively.  Once the goal
 is stripped down to a simple type $\type$,
-Rule~\rref{FR-Simp} selects a rule $\rulet$ from the
-environment $\tenv$ to discharge it. The selected rule must \emph{match} the
+Rule~\rref{FR-Simp} selects an implicit $\rulet$ from the
+environment $\tenv$ to discharge it. The selected type must \emph{match} the
 goal, a notion that is captured by the auxiliary judgment. Matching
 gives rise to a sequence $\Sigma$ of new (and hopefully simpler) goals
 that are resolved recursively.
 
 The matching judgment
 $\fmres{\tenv}{\rulet}{E}{\type}{E'}{\Sigma}$ focuses on
-the rule $\rulet$ and checks whether it matches the simple goal
-$\type$. Again, there are three rules for the three possible forms
+the selected implicit $\rulet$ and checks whether it matches the simple goal
+$\type$; informally it captures that $\rulet$ can be instantiated
+to $\Sigma \iarrow \type$. Again, there are three rules for the three possible forms
 the rule can take.
 %
 Rule~\rref{FM-TApp} handles universal quantification by
 instantiating the quantified variable $\alpha$ in a way that recursively yields a match.
 %
-Rule~\rref{FM-IApp} handles an implication rule $\rulet_1
+Rule~\rref{FM-IApp} handles a rule type $\rulet_1
 \iarrow \rulet_2$ by recursively checking whether $\rulet_2$
 matches the goal. At the same time it yields a new goal $\rulet_1$ which
 needs to be resolved in order for the rule to apply.
@@ -472,12 +480,12 @@ For instance, for the example above there is only one proof:
 \begin{equation*}
 \begin{array}{c}
    \myexrule{FR-Simp}
-     { a \in \tenv \\
+     { \envi{\alpha}{x} \in \tenv \\
        \myexrule{FM-Simp}
          {}
-         {\fmres{\tenv}{a}{x}{a}{x}{\epsilon} }
+         {\fmres{\tenv}{\alpha}{x}{\alpha}{x}{\epsilon} }
      }
-     {\frres{\tenv}{a}{x}}
+     {\frres{\tenv}{\alpha}{x}}
 \end{array}
 \end{equation*}%
 
@@ -485,32 +493,42 @@ For instance, for the example above there is only one proof:
 \subsection{Deterministic and Stable Resolution}\label{subsec:det}
 
 While focusing provides a syntax-directed definition of resolution, it does not
-make resolution entirely deterministic. There are still three sources of
-non-determinism: 
-1) the \emph{impredicative} instantiation of type variable $\alpha$
-with a rule type $\rulet'$ in rule~\rref{FM-TApp}, 
-2) the \emph{ambiguous} instantiation of type variable $\alpha$
+make resolution entirely deterministic. There are still two sources of
+nondeterminism: 
+% 1) the \emph{impredicative} instantiation of type variable $\alpha$
+% with a rule type $\rulet'$ in rule~\rref{FM-TApp}, 
+1) the \emph{ambiguous} instantiation of type variable $\alpha$
 with a rule type $\rulet'$ in rule~\rref{FM-TApp},
-and 3) nondeterministic selection of a rule type $\rulet$ from the type environment
-$\tenv$ in rule~\rref{FR-Simp}. This section eradicates those three remaining
+and 2) nondeterministic selection of a rule type $\rulet$ from the type environment
+$\tenv$ in rule~\rref{FR-Simp}. This section eradicates those two remaining
 sources of nondeterminism to obtain an entirely deterministic formulation
 of resolution. On top of that, it imposes an additional \emph{stability} condition
 to make resolution ``super''-deterministic: resolution is preserved under
-type substitution.
+type substitution. First, though, we point out that our choice for predicative
+instantiation has pre-emptively avoided a further source of nondeterminism.
 
 %- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 \subsubsection{Predicative Instantiation}
-To see why the impredicative instantation, i.e., the instantiation with types
-that contain universal quantifiers, in
-rule~\rref{FM-TApp} causes
+
+We have restricted $\ourlang$ to predicative instantiation, i.e., type
+variables can only be instantiated with monotypes $\suty$. Impredicativity is a
+well-known source of nondeterminsm in other settings like type inference
+for the polymorphic $\lambda$-calculus~\cite{boehm85,pfenning93}. It would
+cause similar problems for $\ourlang$, in the rules ~\rref{AR-TApp} and
+\rref{FM-TApp} for ambiguous and focusing resolution that choose an
+instantiation of a type variable.
+
+% The established solution also works here: restrict to predicativity. 
+
+To see why the impredicative instantation in those rules causes
 nondeterminism, consider two ways resolving $\aresp{\tenv_1}{\tyint \iarrow \tyint}$
-against the environment $\tenv_1 = \forall \alpha.\alpha \iarrow \alpha$:\footnote{
-For the sake of compactness the example uses the original ambiguous definition of resolution.
+against the environment $\tenv_1 = ?(\forall \alpha.\alpha \iarrow \alpha)$:\footnote{
+For the sake of compactness the example uses the ambiguous definition of resolution.
  Similarly problematic examples can be created for the focusing-based definition.}
 \begin{equation*}
 \myexruleL{AR-TApp}
   {\myexruleL{AR-IVar}
-    {(\forall \alpha.\alpha \iarrow \alpha) \in \tenv_1}
+    {?(\forall \alpha.\alpha \iarrow \alpha) \in \tenv_1}
     {\aresp{\tenv_1}{\forall \alpha. \alpha \iarrow \alpha}}
   }
   {\aresp{\tenv_1}{\tyint \iarrow \tyint}}
@@ -521,14 +539,14 @@ and
   {\myexruleL{AR-IApp} 
     { \myexruleL{AR-TApp}
         { \myexruleL{AR-IVar}
-            {(\forall \alpha. \alpha \iarrow \alpha) \in \tenv_1}
+            {?(\forall \alpha. \alpha \iarrow \alpha) \in \tenv_1}
             {\aresp{\tenv_1}{\forall \alpha. \alpha \iarrow \alpha}}
         }
         {\aresp{\tenv_1}{(\forall \beta. \beta \iarrow \beta) \iarrow (\forall \beta. \beta \iarrow \beta)}}
         \quad\quad\quad
     \\
       \myexruleL{AR-IVar}
-        {(\forall \beta. \beta \iarrow \beta) \in \tenv_1}
+        {?(\forall \beta. \beta \iarrow \beta) \in \tenv_1}
         {\aresp{\tenv_1}{\forall \beta. \beta \iarrow \beta}}
     }
     {\aresp{\tenv_1}{\forall \beta. \beta \iarrow \beta}}
@@ -538,35 +556,64 @@ and
 The first proof only involves the instantiation of 
 $\alpha$ with $\tyint$. Yet, the second proof contains an impredicative
 instantiation of $\alpha$ with $\forall \beta. \beta \iarrow \beta$.
-Impredicativity is a well-known source of such problems in other settings, such
-as in type inference for the polymorphic $\lambda$-calculus~\cite{boehm85,pfenning93}. The established solution also works here: restrict to predicativity. 
-For this reason we introduce the syntactic sort of monotypes:
-{\bda{llrl}
-    \text{Monotypes}     & \suty                            & ::=  & \alpha \mid \suty \arrow \suty
-  \eda }
-We only allow instantiation with monotypes $\suty$:
-\bda{c}
-  \myrule {AR-TApp'}
-          {\ares{\tenv}{\forall \alpha. \rulet}{E} \quad\quad \wfty{\tenv}{\suty}}
-          {\ares{\tenv}{\rulet[\suty/\alpha]}{E~||\suty||}}
-\eda
-In the focusing-based formulation, this constraint is also enforced:
-we only allow instantiation with monotypes $\suty$:
-\bda{c}
-  \myrule {FM-TApp'}
-          {\wfty{\tenv}{\rulet'} \\\\
-           \fmres{\tenv}{[\suty/\alpha]\rulet}{E\,||\suty||}{\type}{E'}{\Sigma}
-          }
-          {\fmres{\tenv}{\forall \alpha.\rulet}{E}{\type}{E'}{\Sigma}}
-\eda
+
+We have adopted the standard solution from the outset, which only allows predicative
+instantiation and thus only accepts the first of the two derivations above.
+
+% \begin{equation*}
+% \myexruleL{AR-IApp}
+%   { \myexruleL{AR-IApp}
+%      { \myexrule{AR-TApp}
+%           { \myexrule{AR-IVar}
+%              { ?(\forall \alpha. \alpha \iarrow \alpha) \in \tenv_2 }
+%              { \aresp{\tenv_2}{\forall \alpha. \alpha \iarrow \alpha} }
+%           }
+%           { \aresp{\tenv_2}{(\tychar \iarrow \tyint)\iarrow(\tychar \iarrow \tyint)} }
+%        \\
+%        \myexrule{AR-IAbs}
+%         { \myexrule{AR-IVar}
+%            { ?\tyint \in (\tenv_2, \tychar) }
+%            { \aresp{\tenv_2, \tychar}{\tyint} }
+%         }
+%         { \aresp{\tenv_2}{\tychar \iarrow \tyint} }
+%      }
+%      {\aresp{\tenv_2}{\tychar \iarrow \tyint}}
+%     \\
+%     \myexrule{AR-IVar}
+%      {?\tychar \in \tenv_2}
+%      {\aresp{\tenv_2}{\tychar}}
+%   }
+%   { \aresp{\tenv_2}{\tyint}
+%   }
+% \end{equation*}%
+
+% For this reason we introduce the syntactic sort of monotypes:
+% {\bda{llrl}
+%     \text{Monotypes}     & \suty                            & ::=  & \alpha \mid \suty \arrow \suty
+%   \eda }
+% We only allow instantiation with monotypes $\suty$:
+% \bda{c}
+%   \myrule {AR-TApp'}
+%           {\ares{\tenv}{\forall \alpha. \rulet}{E} \quad\quad \wfty{\tenv}{\suty}}
+%           {\ares{\tenv}{\rulet[\suty/\alpha]}{E~||\suty||}}
+% \eda
+% In the focusing-based formulation, this constraint is also enforced:
+% we only allow instantiation with monotypes $\suty$:
+% \bda{c}
+%   \myrule {FM-TApp'}
+%           {\wfty{\tenv}{\rulet'} \\\\
+%            \fmres{\tenv}{[\suty/\alpha]\rulet}{E\,||\suty||}{\type}{E'}{\Sigma}
+%           }
+%           {\fmres{\tenv}{\forall \alpha.\rulet}{E}{\type}{E'}{\Sigma}}
+% \eda
 
 %- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 \subsubsection{Non-Ambiguity Constraints}
 
-Rule \rref{FM-TApp'} does not explain how the substitution
-$[\suty/\alpha]$ for the rule type $\forall \alpha.\rulet$ should be obtained.
+Rule \rref{FM-TApp} does not explain how the predicative substitution
+$[\suty/\alpha]$ for the type $\forall \alpha.\rulet$ should be obtained.
 At first sight it seems that the choice of $\suty$ is free and thus a source of
-non-determinism. However, in many cases the choice is not free at all, but is
+nondeterminism. However, in many cases the choice is not free at all, but is
 instead determined fully by the simple type $\type$ that we want to match.
 However, the choice is not always forced by the matching. Take for instance the context type $\forall \alpha. (\alpha \arrow \tystr)
 \iarrow (\tystr \arrow \alpha) \iarrow (\tystr \arrow \tystr)$. This 
@@ -653,13 +700,13 @@ ambiguity.
 %- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 \subsubsection{Committed Choice}
 The other remaining source of nondeterminism is the nondeterministic choice
-$\rulet \in \tenv$ that appears in rule~\rref{FR-Simp} of the focusing judgment. Consider the trivial
-example of resolving the goal $\tyint$ against the environment $\tenv = \tyint~\gbox{\leadsto
-x}, \tyint~\gbox{\leadsto y}$. Both rules in the environment match the goal and yield
+$?\rulet \in \tenv$ that appears in rule~\rref{FR-Simp} of the focusing judgment. Consider the trivial
+example of resolving the goal $\tyint$ against the environment $\tenv = \envi{\tyint}{
+x}, \envi{\tyint}{y}$. Both implicits in the environment match the goal and yield
 different, i.e., incoherent, elaborations.
 
-Our solution is to replace the nondeterministic relation $\rulet \in \tenv$ by
-a deterministic one that selects the first matching rule in the environment and
+Our solution is to replace the nondeterministic relation $?\rulet \in \tenv$ by
+a deterministic one that selects the first matching implicit in the environment and
 commits to it. In fact, we encapsulate all three hypotheses of rule~\rref{FR-Simp}
 in a new \emph{lookup} judgement $\lres{\tenv}{\tenv'}{\type}{E}$ which resolves
 $\type$ with the first matching rule in the environment $\tenv'$ and performs
@@ -683,12 +730,12 @@ type environment $\tenv'$:
           {\fmres{\tenv}{\rulet}{x}{\tau}{E}{\overline{\rulet'~\gbox{\leadsto x}}} \\
             \frres{\tenv}{\rulet'}{E'} \quad (\forall \rulet' \in \overline{\rulet}')
           }
-          {\lres{\tenv}{\tenv',\rulet~\gbox{\leadsto x}}{\type}{E[\bar{E}'/\bar{x}]}} \\ \\
+          {\lres{\tenv}{\tenv',\envi{\rulet}{x}}{\type}{E[\bar{E}'/\bar{x}]}} \\ \\
   \myrule{DL-RuleNoMatch}{
            \not\exists E, \Sigma:\enskip \fmres{\tenv}{\rulet}{x}{\type}{E}{\Sigma} \\
            \lres{\tenv}{\tenv'}{\type}{E'}
           }
-          {\lres{\tenv}{\tenv',\rulet~\gbox{\leadsto x}}{\type}{E'}} \\ \\
+          {\lres{\tenv}{\tenv',\envi{\rulet}{x}}{\type}{E'}} \\ \\
   \myrule{DL-Var}
          {\lres{\tenv}{\tenv'}{\type}{E}
          }
@@ -711,11 +758,11 @@ semantics: the first matching rule is committed to and further rules are not
 considered.
 
 Finally, rules~\rref{DL-Var} and \rref{DL-TyVar} skip the irrelevant
-non-rule entries in the type environment.
+non-implicit entries in the type environment.
 
 It is not difficult to see that with the above definition there is only one way
 to resolve the goal $\tyint$ against the environment $\tenv =
-\tyint~\gbox{\leadsto x}, \tyint~\gbox{\leadsto y}$. The first matching
+\envi{\tyint}{x}, \envi{\tyint}{y}$. The first matching
 entry, which elaborates to $y$, is committed to and the second entry is not
 considered.
 
@@ -724,8 +771,8 @@ considered.
 Observe that our definition commits more eagerly to a matching rule type than
 necessary to dispel nondeterminism. We even commit to a matching rule type, if
 its recursive goals do not resolve. For instance, when resolving $\tychar$
-against the environment $\tenv = \tybool, \tybool \To \tychar, \tyint \To
-\tychar$, we commit to $\tyint \To \tychar$ even though its recursive goal $\tyint$
+against the environment $\tenv = ?\tybool, ?(\tybool \To \tychar), ?(\tyint \To
+\tychar)$, we commit to $?(\tyint \To \tychar)$ even though its recursive goal $\tyint$
 cannot be resolve and thus the resolution of $\tychar$ also fails. A more permissive
 approach would be to backtrack when a recursive resolution fails and try the next
 alternative matching rule. That would allow $\tychar$ to resolve. 
@@ -744,7 +791,7 @@ programmer. For these reasons, we have avoided backtracking in our design.
 While the above committed-choice formulation of resolution is deterministic, it
 is a rather fragile, or \emph{unstable}, notion of resolution. Consider for
 example resolving the goal $\tyint$ against the environment $\tenv =
-\tyint~\gbox{\leadsto x}, \alpha~\gbox{\leadsto y}$.  This scenario
+\envi{\tyint}{x}, \alpha, \envi{\alpha}{y}$.  This scenario
 arises for instance when type checking the expression $e = \ilambda \tyint. (\Lambda \alpha. \ilambda \alpha. \query \tyint)\,\tyint$.
 Our definition of resolution skips the first entry in the environment because $\alpha$ does not
 match $\tyint$, commits to the second entry because $\tyint$ trivially matches
@@ -758,7 +805,7 @@ this refactoring on the resolution problem is to substitute $\tyint$ for the typ
 $\alpha$. As a consequence the resolution commits now to the first
 entry and elaborates to $y$ instead of $x$. Hence, more generally, the above
 definition of resolution is not stable under type substitution. This is problematic
-because it defies the common expectation that simple refactorings like the one
+because it defies the common expectation that simple refactorings like the reduction of type application
 above do not change a program's behavior.
 
 To avoid this problem and obtain stability under type substitution, we tighten
@@ -771,7 +818,7 @@ above simply does not resolve: unstable resolutions are invalid.
 	\stable{\tenv}{\rulet}{x}{\type} \\
            \lres{\tenv}{\tenv'}{\type}{E'}
           }
-          {\lres{\tenv}{\tenv',\rulet~\gbox{\leadsto x}}{\type}{E'}}
+          {\lres{\tenv}{\tenv',\envi{\rulet}{x}}{\type}{E'}}
 \eda
 where a first stab at a formalisation of the stability condition is:
 \bda{c}
@@ -785,10 +832,10 @@ The above formulation of the condition is a bit too lax; we have to be more
 precise about the domain and range of the substitution $\theta$.  Indeed,
 substitution does not make sense for every type variable in the environment.
 Consider for example resolving the type $\forall \beta. \beta \arrow \beta$
-against the environment $\tenv_0 = \forall \gamma. \gamma \arrow
-\gamma~\gbox{\leadsto x}, \alpha, \alpha \arrow \alpha ~\gbox{\leadsto y}$.
+against the environment $\tenv_0 = \envi{(\forall \gamma. \gamma \arrow
+\gamma)}{x}, \alpha, \envi{(\alpha \arrow \alpha)}{y}$.
 We would like this resolution of $\forall \beta. \beta \to \beta$
-to succeed against $\forall \gamma. \gamma \to \gamma$.
+to succeed against $?(\forall \gamma. \gamma \to \gamma)$.
 
 Unfortunately, the above formulation of stability unnecessarily throws a
 spanner in the works. Consider what happens:
@@ -829,24 +876,25 @@ them make sense. Essentially, there are two groups of substitutions:
       substitution does not make sense either because code inlining can only result in substitutions 
       of $\alpha$ by types that are well-scoped in the prefix of the environment before $\alpha$.
       In the case of the example this means that we can only consider substitutions
-      $[\rulet/\alpha]$ where $\wfty{\forall \gamma. \gamma \arrow \gamma~\gbox{\leadsto x}}{\rulet}$. In
-      other words, $\rulet$ cannot have any free type variables. There is no such
-      $\rulet$ that matches $\beta$.
+      $[\suty/\alpha]$ where $\wfty{\envi{(\forall \gamma. \gamma \arrow \gamma)}{x}}{\suty}$. In
+      other words, $\suty$ cannot have any free type variables. There is no such
+      $\suty$ that matches $\beta$.
 \end{itemize}
  
 In summary, Figure~\ref{fig:subst} formalises our notion of valid substitutions
-with the judgement $\validsubst{\bar{\alpha}}{\tenv}{\theta}$. It assumes an inductive
-syntax for substitutions as sequences of single variable substitutions.
-{\bda{llrl}
-    \text{Substitutions}     & \theta & ::=  & \epsilon \mid [\rulet/\alpha] \cdot \theta
-  \eda }
+with the judgement $\validsubst{\bar{\alpha}}{\tenv}{\theta}$. 
+% It assumes an inductive
+% syntax for substitutions as sequences of single variable substitutions.
+% {\bda{llrl}
+%     \text{Substitutions}     & \theta & ::=  & \epsilon \mid [\rulet/\alpha] \cdot \theta
+%   \eda }
 Rule~\rref{S-Empty} states that the empty substitution $\epsilon$ is
 trivially valid. Rule~\rref{S-Cons} covers the inductive case
-$[\rulet/\alpha] \cdot \theta$. It says that the single variable substitution
-$[\rulet/\alpha]$ is valid if $\alpha$ appears in the sequence of substitutable type
+$[\suty/\alpha] \cdot \theta$. It says that the single variable substitution
+$[\suty/\alpha]$ is valid if $\alpha$ appears in the sequence of substitutable type
 variables, expressed by the structural pattern $\bar{\alpha},\alpha,\bar{\alpha}'$.
 Moreover, $\alpha$ must appear in the type environment, expressed by a similar
-structural pattern $\tenv,\alpha,\tenv'$. Lastly, the type $\rulet$ must be well-scoped
+structural pattern $\tenv,\alpha,\tenv'$. Lastly, the type $\suty$ must be well-scoped
 with respect to the environment prefix $\tenv$.
 In addition, the remainder $\theta$ must be valid with respect to the remaining type
 variables $\bar{\alpha},\bar{\alpha}'$ and the type environment after substitution of $\alpha$.
@@ -856,24 +904,23 @@ variables $\bar{\alpha},\bar{\alpha}'$ and the type environment after substituti
 \figtwocol{fig:subst}{Valid Substitutions}{ \begin{center}
 \framebox{%\scriptsize 
 \begin{minipage}{0.969\textwidth} 
-\bda{c} \theta ::= \epsilon \mid [\rulet/\alpha] \cdot \theta \\ \\
+\bda{c} \theta ::= \epsilon \mid [\suty/\alpha] \cdot \theta \\ \\
 \myruleform{\validsubst{\bar{\alpha}}{\tenv}{\theta}} \\ \\ 
 \myrule {S-Empty} 
   {}
   {\validsubst{\bar{\alpha}}{\tenv}{\epsilon}} \\ \\ 
 \myrule {S-Cons} 
-  { \wfty{\tenv}{\rulet} \\ 
+  { \wfty{\tenv}{\suty} \\ 
     \validsubst{\bar{\alpha},\bar{\alpha}'}{\tenv, \theta(\tenv')}{\theta}
   }
   {\validsubst{\bar{\alpha},\alpha,\bar{\alpha}'}{\tenv, \alpha, \tenv'}
-   {[\rulet/\alpha] \cdot \theta}
+   {[\suty/\alpha] \cdot \theta}
   } 
 \eda 
 \end{minipage} 
 } 
 \end{center} 
 }
-\tom{TODO: only substitute with $\suty$.}
    
 %- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 \subsubsection{Summary}
@@ -883,7 +930,7 @@ variables $\bar{\alpha},\bar{\alpha}'$ and the type environment after substituti
 \framebox{%\scriptsize
 \begin{minipage}{0.969\textwidth}
 \bda{c}
-\Sigma ::= \epsilon \mid \Sigma, \rulet~\gbox{\leadsto x} \\ \\
+\Sigma ::= \epsilon \mid \rulet~\gbox{\leadsto x}, \Sigma \\ \\
 %---------------------------------------------------------------------%
 \hfill \myruleform{\dres{\tenv}{\rulet}{E}}  \hfill \llap{\it Main}\\ \\
 %---------------------------------------------------------------------%
@@ -895,7 +942,7 @@ variables $\bar{\alpha},\bar{\alpha}'$ and the type environment after substituti
 \tyvars{\epsilon}     & = & \epsilon &
 \tyvars{\tenv,\alpha} & = & \tyvars{\tenv},\alpha \\
 \tyvars{\tenv,x : \rulet} & = & \tyvars{\tenv} &
-\tyvars{\tenv,\rulet~\gbox{\leadsto x}} & = & \tyvars{\tenv} 
+\tyvars{\tenv,\envi{\rulet}{x}} & = & \tyvars{\tenv} 
 \end{array}
 \right. \\ \\
 %---------------------------------------------------------------------%
@@ -903,7 +950,7 @@ variables $\bar{\alpha},\bar{\alpha}'$ and the type environment after substituti
 %---------------------------------------------------------------------%
 %%\quad\quad\quad
   \myrule{R-IAbs}
-         {\drres{\bar{\alpha}}{\tenv, \rulet_1~\gbox{\leadsto x}}{\rulet_2}{E} \quad\quad \gbox{x~\mathit{fresh}}}
+         {\drres{\bar{\alpha}}{\tenv, \envi{\rulet_1}{x}}{\rulet_2}{E} \quad\quad \gbox{x~\mathit{fresh}}}
          {\drres{\bar{\alpha}}{\tenv}{\rulet_1 \iarrow \rulet_2}{
             \lambda\relation{x}{||\rulet_1||}.E}} 
 \quad\quad
@@ -922,12 +969,12 @@ variables $\bar{\alpha},\bar{\alpha}'$ and the type environment after substituti
           {\dmres{\tenv}{\rulet}{x}{\tau}{E}{\overline{\rulet'~\gbox{\leadsto x}}} \\
             \drres{\bar{\alpha}}{\tenv}{\rulet'}{E'} \quad (\forall \rulet' \in \overline{\rulet}')
           }
-          {\dlres{\bar{\alpha}}{\tenv}{\tenv',\rulet~\gbox{\leadsto x}}{\type}{E[\bar{E}'/\bar{x}]}} \\
+          {\dlres{\bar{\alpha}}{\tenv}{\tenv',\envi{\rulet}{x}}{\type}{E[\bar{E}'/\bar{x}]}} \\
   \myrule{L-RuleNoMatch}{
 	   \dstable{\bar{\alpha}}{\tenv}{\rulet}{x}{\type} \\
            \dlres{\bar{\alpha}}{\tenv}{\tenv'}{\type}{E'}
           }
-          {\dlres{\bar{\alpha}}{\tenv}{\tenv',\rulet~\gbox{\leadsto x}}{\type}{E'}} \\ \\
+          {\dlres{\bar{\alpha}}{\tenv}{\tenv',\envi{\rulet}{x}}{\type}{E'}} \\ \\
   \myrule{L-Var}
          {\dlres{\bar{\alpha}}{\tenv}{\tenv'}{\type}{E}
          }
@@ -945,14 +992,14 @@ variables $\bar{\alpha},\bar{\alpha}'$ and the type environment after substituti
          {}
          {\dmres{\tenv}{\type}{E}{\type}{E}{\epsilon}} \\ \\
   \myrule{M-IApp}
-         {\dmres{\tenv, \rulet_1 \gbox{\leadsto x}}{\rulet_2}{E\,x}{\type}{E'}{\Sigma}
+         {\dmres{\tenv, \envi{\rulet_1}{x}}{\rulet_2}{E\,x}{\type}{E'}{\Sigma}
           \quad\quad\quad \gbox{x~\mathit{fresh}}
          }
-         {\dmres{\tenv}{\rulet_1 \iarrow \rulet_2}{E}{\type}{E'}{\Sigma, \rulet_1~\gbox{\leadsto x}}} \\ \\ 
+         {\dmres{\tenv}{\rulet_1 \iarrow \rulet_2}{E}{\type}{E'}{\rulet_1~\gbox{\leadsto x}, \Sigma}} \\ \\ 
   \myrule{M-TApp}
          {\dmres{\tenv}{\rulet[\suty/\alpha]}{E\,||\suty||}{\type}{E'}{\Sigma}
-          \quad\quad\quad
-          \wfty{\tenv}{\suty}
+          % \quad\quad\quad
+          % \wfty{\tenv}{\suty}
          }
          {\dmres{\tenv}{\forall \alpha. \rulet}{E}{\type}{E'}{\Sigma}} \\ \\ \\
 %---------------------------------------------------------------------%
