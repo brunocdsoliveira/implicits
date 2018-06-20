@@ -338,15 +338,14 @@ FIXED
 > implicit binding with $\rho = \alpha$.  It might be useful to
 > distinguish the two syntactically.
 
-TODO
+We have prefixed the implicit entries with a question mark.
+
  
 >  - why is the well-formedness judgment $\Gamma |- \rho$ necessary?
 > Formalizations of System F usually get by without such a judgment (see
 > e.g. TAPL, ch. 23).
 
 You are right. The condition is not needed.
-
-TODO -> Drop it
 
 > p. 17: a minor typographic comment: the paragraphs immediately
 > following typing rules in the main text (such as those on this page
@@ -624,7 +623,7 @@ TODO
 > (Ty-TApp) in Fig. 2) so Lemma 5.4 only states a weak version of
 > stability.
 
-TODO -> only allow predicative instantiation from the beginning
+We now only allow predicative instantiation in rule Ty-TApp in Cochis.
  
 >  - Theorem 5.3. "... provided that the algorithm terminates."  It is
 > unclear to me why this last part of the statement is necessary.  If
@@ -959,7 +958,8 @@ FIXED
 > be... although I do like this way of presenting it, by encountering problems
 > and refining the grammar to solve them.
 
-TODO
+We now introduce monotypes in the initial grammar. This should make this issue
+less problematic.
  
 > p24 (Nitpick, really) The sentence that introduces section 4 is a bit odd
 > because we haven't seen these figures yet - and Figure 8 is several pages
@@ -1309,7 +1309,7 @@ focus lies. This emphasis is intentional.
 >         \rho "can be instantiated" to \rho_1 => ... \rho_n => \tau
 >   where \rho_1, ... \rho_n is the codomain of \Sigma'
 
-TODO
+We have changed the notation as you suggest.
 
 > - Why do you use smaller fonts for technical rules?  Given that maths also
 >   contain many subscripts, I do not think this is wise and I would prefer
