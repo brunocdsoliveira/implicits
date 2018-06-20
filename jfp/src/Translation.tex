@@ -47,7 +47,7 @@ $\name$ types $\rulet$ to System F types T:
 \ttrans[\rulet_1 \iarrow \rulet_2] & = & \ttrans[\rulet_1] \arrow \ttrans[\rulet_2] %\\
 \end{array}
 \end{equation*}
-Its reveals that implicit $\name$ arrows are translated to explicit System F function arrows.
+It reveals that implicit $\name$ arrows are translated to explicit System F function arrows.
 
 %- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 \paragraph{Translation of Terms}
@@ -86,7 +86,7 @@ rule \rref{R-TAbs}~wraps a type lambda binder around the System F expression
 resulting from the resolution of $\rulet$.
 
 For simple types $\type$ rule \rref{R-Simp} delegates the work of
-building evidence, when a matching rule $\rulet$ type is found in the
+building evidence, when a matching implicit $\rulet$ is found in the
 environment, to rule \rref{L-RuleMatch}. The evidence consists of two parts:
 $E$ is the evidence of matching $\type$ against $\rulet$. This match contains
 placeholders $\bar{x}$ for the contexts whose resolution is postponed by rule
@@ -107,7 +107,7 @@ Here we define the translation of the type environment form $\name$ to System F 
 \begin{array}{rcl@{\hspace{2cm}}rcl}
 \etrans{\epsilon} & = & \epsilon & \etrans{\tenv,\alpha} & = & \etrans{\tenv}, \alpha \\
 \etrans{\tenv,x : \rulet} & = & \etrans{\tenv}, x : \ttrans[\rulet] &
-\etrans{\tenv, \rulet \leadsto x} & = & \etrans{\tenv}, x : \ttrans[\rulet]
+\etrans{\tenv, \envi{\rulet}{x}} & = & \etrans{\tenv}, x : \ttrans[\rulet]
 \end{array}
 \end{equation*}
 
