@@ -15,7 +15,9 @@ rules. $\ourlang$ is unique in offering flexibility
 (local scoping with overlapping rules, first-class rules 
 and higher-order rules), while preserving coherence and stability.
 
+%----------------------------------------------------------------------
 \subsection{Implicit Programming with Local Scoping, but no Overlapping Rules}
+
 Our work allows a very flexible model of implicits with first-class
 rules, higher-order rules and nested scoping with overlapping rules
 while guaranteeing coherence and stability.  Closest to our work in terms of
@@ -54,7 +56,8 @@ This is in stark contrast with most other IP mechanisms, including $\ourlang$,
 where recursive resolution and the ability to compose rules automatically is 
 a key feature and source of convenience.
 
-\subsection{Implicit Programming with Local Scopind and Overlapping Rules}
+%----------------------------------------------------------------------
+\subsection{Implicit Programming with Local Scoping and Overlapping Rules}
 
 The implicit calculus~\cite{oliveira12implicit} is the main 
 inspiration for the design of $\ourlang$. There are two major 
@@ -70,8 +73,8 @@ with $n$-ary arguments in the implicit calculus is simple, but quite ad-hoc
 and forbids certain types of resolution that are allowed in $\ourlang$. For example,
 the query:
 \begin{equation*}
-  \aresp{\tychar \To \tybool,
-  \tybool \To \tyint}{\tychar \To \tyint}
+  \aresp{?(\tychar \To \tybool),
+  ?(\tybool \To \tyint)}{\tychar \To \tyint}
 \end{equation*}%
 does not resolve under the deterministic resolution rules of
 the implicit calculus, but it resolves in $\ourlang$. Essentially
