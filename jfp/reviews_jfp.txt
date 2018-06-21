@@ -338,15 +338,14 @@ FIXED
 > implicit binding with $\rho = \alpha$.  It might be useful to
 > distinguish the two syntactically.
 
-TODO
+We have prefixed the implicit entries with a question mark.
+
  
 >  - why is the well-formedness judgment $\Gamma |- \rho$ necessary?
 > Formalizations of System F usually get by without such a judgment (see
 > e.g. TAPL, ch. 23).
 
 You are right. The condition is not needed.
-
-TODO -> Drop it
 
 > p. 17: a minor typographic comment: the paragraphs immediately
 > following typing rules in the main text (such as those on this page
@@ -437,6 +436,9 @@ TODO
 > "committed choice".
 
 TODO: Tom, should we consider adding the example above? It could be helpful.
+
+TOM: A similar example appears in textual form in the No Backtracking paragraph 
+of the Comitted Choice subsection.
 
 > 
 > The committed choice semantics is also rather surprising, in my
@@ -621,7 +623,7 @@ TODO
 > (Ty-TApp) in Fig. 2) so Lemma 5.4 only states a weak version of
 > stability.
 
-TODO -> only allow predicative instantiation from the beginning
+We now only allow predicative instantiation in rule Ty-TApp in Cochis.
  
 >  - Theorem 5.3. "... provided that the algorithm terminates."  It is
 > unclear to me why this last part of the statement is necessary.  If
@@ -724,7 +726,7 @@ TODO -> Klara
 >  - Lemma A.10, A.11: the unambiguity judgment $|-_{unamb} \Gamma$ for
 > type environments has not been defined.
 
-TODO -> Klara
+Definition has been added.
 
 > p. 45, proof of Lemma A.11, case (R-TAbs): there seems to be an error
 > in this case of the proof: the IH cannot be applied as described.  The
@@ -765,17 +767,13 @@ TODO -> Klara: weakening of unamb
 FIXED
  
 > p. 49: proof of Lemma A.15, case (R-Simp): "The latter could only have
-> been obtained by ryle (R-2)" --> "rule (R-2)" (?)  
-
-FIXED
-
+> been obtained by ryle (R-2)" --> "rule (R-2)" (?)
 > Please add a
 > forward reference to the definition of the R-predicate in the
 > statement of Lemma A.16, or better yet, introduce and explain the role
 > of that predicate before using it in the proof of Lemma A.15.
 
-
-TODO -> Klara: introduce and explain R before Lemma A.15
+The definition of R is has been moved before Lemma A.15 and explained.
  
 > p. 56, proof of Lemma A.20, case (Alg-L-RuleNoMatch): there is an
 > error in this case of the proof: Lemma A.21 cannot be applied as
@@ -956,7 +954,8 @@ FIXED
 > be... although I do like this way of presenting it, by encountering problems
 > and refining the grammar to solve them.
 
-TODO
+We now introduce monotypes in the initial grammar. This should make this issue
+less problematic.
  
 > p24 (Nitpick, really) The sentence that introduces section 4 is a bit odd
 > because we haven't seen these figures yet - and Figure 8 is several pages
@@ -1306,7 +1305,7 @@ focus lies. This emphasis is intentional.
 >         \rho "can be instantiated" to \rho_1 => ... \rho_n => \tau
 >   where \rho_1, ... \rho_n is the codomain of \Sigma'
 
-TODO
+We have changed the notation as you suggest.
 
 > - Why do you use smaller fonts for technical rules?  Given that maths also
 >   contain many subscripts, I do not think this is wise and I would prefer

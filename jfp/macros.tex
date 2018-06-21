@@ -281,6 +281,9 @@
 % Judgement Forms
 % ~~~~~~~~~~~~~~~
 
+% environment entry
+\newcommand{\envi}[2]{?#1~\gbox{\leadsto #2}}
+
 % well-formed types
 \newcommand{\wfty}[2]{\hello{#1 \turns #2}}
 
@@ -294,7 +297,7 @@
 
 % focusing resolution
 \newcommand{\frres}[3]{\hello{#1 \fturns [#2]~\gbox{\leadsto #3}}}
-\newcommand{\fmres}[6]{\hello{#1; [#2]~\gbox{\leadsto #3} \fturns #4~\gbox{\leadsto #5}; #6}}
+\newcommand{\fmres}[6]{\hello{#1; [#2]~\gbox{\leadsto #3} \fturns #6; #4~\gbox{\leadsto #5}}}
 
 % lookup
 \newcommand{\lres}[4]{\hello{#1;[#2] \ivturns #3~\gbox{\leadsto #4}}}
@@ -303,16 +306,16 @@
 \newcommand{\dres}[3]{\hello{#1 \ivturns #2~\gbox{\leadsto #3}}}
 \newcommand{\drres}[4]{\hello{#1; #2 \ivturns [#3]~\gbox{\leadsto #4}}}
 \newcommand{\dlres}[5]{\hello{#1; #2; [#3] \ivturns #4~\gbox{\leadsto #5}}}
-\newcommand{\dmres}[6]{\hello{#1; [#2]~\gbox{\leadsto #3} \ivturns #4~\gbox{\leadsto #5}; #6}}
+\newcommand{\dmres}[6]{\hello{#1; [#2]~\gbox{\leadsto #3} \ivturns #6; #4~\gbox{\leadsto #5}}}
 
 % algorithm
-\newcommand{\alg}{\turns_{\mathit{alg}}}
+\newcommand{\alg}{\turns_{\mathrm{alg}}}
 \newcommand{\adres}[3]{\hello{#1 \alg #2 ~\gbox{\leadsto #3}}}
 \newcommand{\adrres}[4]{\hello{#1; #2 \alg #3 ~\gbox{\leadsto #4}}}
 \newcommand{\adlres}[5]{\hello{#1; #2; [#3] \alg #4~\gbox{\leadsto #5}}}
-\newcommand{\admres}[8]{\hello{#1; #2; [#3] ~\gbox{\leadsto #4}; #5 \alg #6 ~\gbox{\leadsto #7}; #8}}
-\newcommand{\mgu}[3][\bar{\alpha}]{\hello{\textit{unify}_{\tenv;#1}(#2,#3)}}
-\newcommand{\mgun}[4][\tenv]{\hello{\textit{unify'}_{#2}(#3,#4)}}
+\newcommand{\admres}[8]{\hello{#1; #2; [#3] ~\gbox{\leadsto #4}; #5 \alg  #8; #6 ~\gbox{\leadsto #7}}}
+\newcommand{\mgu}[3][\bar{\alpha}]{\hello{\mathrm{unify}_{\tenv;#1}(#2,#3)}}
+\newcommand{\mgun}[4][\tenv]{\hello{\mathrm{unify'}_{#2}(#3,#4)}}
 \newcommand{\before}[3][\tenv]{\hello{#2 >_{#1} #3}}
 
 % type variables
@@ -326,22 +329,23 @@
 \newcommand{\dstable}[5]{\hello{{\sf stable}(#1;#2;#3~\gbox{\leadsto #4};#5)}}
 
 % coherent
-\newcommand{\coh}{\turns_{\mathit{coh}}}
+\newcommand{\coh}{\turns_{\mathrm{sta}}}
 \newcommand{\coherent}[4]{\hello{#1; #2; #3 \coh #4}}
 \newcommand{\incoherent}[4]{\hello{#1; #2; #3 \not\coh #4}}
 
 % unambiguity condition
 \newcommand{\unambig}[2]{\hello{#1 \unamb #2}}
+\newcommand{\unambenv}[1]{\hello{\unambig{}{#1}}}
 
 % annotated dmres
 \newcommand{\dmresa}[7]{\hello{#1; #2; [#3]~\gbox{\leadsto #4} \ivturns #5~\gbox{\leadsto #6}; #7}}
 
 %termination
-\newcommand{\term}[1]{\hello{\turns_\mathit{term} #1}}
-\newcommand{\occ}[2]{\hello{\mathit{occ}_{#1}(#2)}}
+\newcommand{\term}[1]{\hello{\turns_\mathrm{term} #1}}
+\newcommand{\occ}[2]{\hello{\mathrm{occ}_{#1}(#2)}}
 \newcommand{\tnorm}[1][\cdot]{\hello{\|#1\|}}
 \newcommand{\head}[1]{\hello{\mathrm{hd}(#1)}}
-\newcommand{\nterm}[1]{\hello{\not\turns_\mathit{term} #1}}
+\newcommand{\nterm}[1]{\hello{\not\turns_\mathrm{term} #1}}
 
 %elaboration
 \newcommand{\ttrans}[1][\cdot]{\hello{|#1|}}
