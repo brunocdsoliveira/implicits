@@ -54,6 +54,64 @@ This is in stark contrast with most other IP mechanisms, including $\ourlang$,
 where recursive resolution and the ability to compose rules automatically is 
 a key feature and source of convenience.
 
+\subsection{Implicit Programming with Local Scopind and Overlapping Rules}
+
+The implicit calculus~\cite{oliveira12implicit} is the main 
+inspiration for the design of $\ourlang$. There are two major 
+differences between $\ourlang$ and the implicit calculus. 
+The first difference is that the implicit calculus, like Scala, 
+does not enforce stability. Programs similar to that in Figure~\ref{fig:scala}
+can be written in the implicit calculus and there is no way to detect 
+instability. The second difference is in the design of resolution. 
+Rules in the implicit calculus have $n$-ary arguments, whereas 
+in $\ourlang$ rules have single arguments and $n$-ary arguments
+are simulated via multiple single argument rules. The resolution process 
+with $n$-ary arguments in the implicit calculus is simple, but quite ad-hoc 
+and forbids certain types of resolution that are allowed in $\ourlang$. For example,
+the query:
+\begin{equation*}
+  \aresp{\tychar \To \tybool,
+  \tybool \To \tyint}{\tychar \To \tyint}
+\end{equation*}%
+does not resolve under the deterministic resolution rules of
+the implicit calculus, but it resolves in $\ourlang$. Essentially
+resolving such query requires adding the rule type's context to the
+implicit environment in the course of the resolution process. But in
+the implicit calculus the implicit environment never changes during
+resolution, which significantly weakens the power of resolution.
+
+Rouvoet~\shortcite{Rouvoet} presents $\lambda_\Rightarrow^S$, which is a
+variation on the implicit calculus. The key feature of his calculus is the
+focusing resolution of Figure~\ref{fig:resolutionf}, although Rouvoet does not
+make the connection with focusing in proof search. As we have already explained
+in Section~\ref{subsec:det} this approach is both incoherent and unstable.
+
+\emph{Scala implicits}~\cite{implicits,scala} were themselves the
+inspiration for the implicit calculus and, therefore, share various
+similarities with $\ourlang$.  In Scala implicit arguments can be of
+any type, and local scoping (including overlapping rules) is
+supported. However the original model of Scala implicits did not allow
+allow higher-order rules.
+Recently, following the implicit calculus and a preliminary version of
+$\ourlang$, Odersky et al.~\shortcite{odersky17implicits} presented the SI
+calculus as a new basis for the Scala language's treatment of implicits.
+Prominently, SI features implicit function types $T_1 ?\!\!\!\to T_2$, which
+are akin to rule types $T_1 \iarrow T_2$ in $\ourlang$, and implicit queries
+$?$, which are akin to $?_T$ in $\ourlang$. There are two main differences
+with $\ourlang$. Firstly, like the Hindley-Milner calculus SI is aimed at type
+inference and, e.g., does not feature explicit abstraction over implicits
+$\lambda_?T.e$ or type application $e\,T$ at the term level. In contrast,
+$\ourlang$ is more similar to System F in this sense, making all abstractions
+and applications explicit.
+
+Secondly, while $\ourlang$ aims to formalise and investigate the meta-theory of
+resolution, the priority of Odersky et al. is not so much the SI calculus
+itself as the derived implementation of the Scala compiler. As a consequence,
+SI features a simplified type system that is incoherent and unstable and a resolution
+algorithm that supports only monomorphic types, while the compiler's much more
+complex enforcement of coherence and support for polymorphism are only
+discussed informally.
+
 An interesting design of implicits has also been created in
 OCaml~\cite{DBLP:journals/corr/WhiteBY15}, where the implicit entities are
 OCaml modules. Like \name, these implicits have local scope, but, unlike \name,
@@ -88,7 +146,7 @@ There have been some proposals for addressing the limitations that
 arise from global scoping~\cite{named_instance,implicit_explicit} in the context 
 of Haskell type classes. Both \emph{named instances}~\cite{named_instance} and 
 \emph{Explicit Haskell}~\cite{implicit_explicit} preserve 
-most design choices taken in type clases (including global scoping), 
+most design choices taken in type classes (including global scoping), 
 but allow instances that do not participate in the 
 automatic resolution process to be named. This enables the possibility of overriding 
 the compiler's default resolution result with a user-defined choice.
@@ -150,63 +208,6 @@ backtracking search among these instances as well as any local assumptions
 (which themselves can ultimately only be satisfied by combinations of global
 instances), rather than a linear committed-choice traversal of the environment.
 \bruno{Have an expanded discussion}
-
-\subsection{Implicit Programming without Stability}
-
-\paragraph{Implicits} The implicit calculus~\cite{oliveira12implicit} is the main 
-inspiration for the design of $\ourlang$. There are two major 
-differences between $\ourlang$ and the implicit calculus. 
-The first difference is that the implicit calculus, like Scala, 
-does not enforce stability. Programs similar to that in Figure~\ref{fig:scala}
-can be written in the implicit calculus and there is no way to detect 
-instability. The second difference is in the design of resolution. 
-Rules in the implicit calculus have $n$-ary arguments, whereas 
-in $\ourlang$ rules have single arguments and $n$-ary arguments
-are simulated via multiple single argument rules. The resolution process 
-with $n$-ary arguments in the implicit calculus is simple, but quite ad-hoc 
-and forbids certain types of resolution that are allowed in $\ourlang$. For example,
-the query:
-\begin{equation*}
-  \aresp{?(\tychar \To \tybool), ?(\tybool \To \tyint)}{\tychar \To \tyint}
-\end{equation*}%
-does not resolve under the deterministic resolution rules of
-the implicit calculus, but it resolves in $\ourlang$. Essentially
-resolving such query requires adding the rule type's context to the
-implicit environment in the course of the resolution process. But in
-the implicit calculus the implicit environment never changes during
-resolution, which significantly weakens the power of resolution.
-
-Rouvoet~\shortcite{Rouvoet} presents $\lambda_\Rightarrow^S$, which is a
-variation on the implicit calculus. The key feature of his calculus is the
-focusing resolution of Figure~\ref{fig:resolutionf}, although Rouvoet does not
-make the connection with focusing in proof search. As we have already explained
-in Section~\ref{subsec:det} this approach is both incoherent and unstable.
-
-\emph{Scala implicits}~\cite{implicits,scala} were themselves the
-inspiration for the implicit calculus and, therefore, share various
-similarities with $\ourlang$.  In Scala implicit arguments can be of
-any type, and local scoping (including overlapping rules) is
-supported. However the original model of Scala implicits did not allow
-allow higher-order rules.
-Recently, following the implicit calculus and a preliminary version of
-$\ourlang$, Odersky et al.~\shortcite{odersky17implicits} presented the SI
-calculus as a new basis for the Scala language's treatment of implicits.
-Prominently, SI features implicit function types $T_1 ?\!\!\!\to T_2$, which
-are akin to rule types $T_1 \iarrow T_2$ in $\ourlang$, and implicit queries
-$?$, which are akin to $?_T$ in $\ourlang$. There are two main differences
-with $\ourlang$. Firstly, like the Hindley-Milner calculus SI is aimed at type
-inference and, e.g., does not feature explicit abstraction over implicits
-$\lambda_?T.e$ or type application $e\,T$ at the term level. In contrast,
-$\ourlang$ is more similar to System F in this sense, making all abstractions
-and applications explicit.
-
-Secondly, while $\ourlang$ aims to formalise and investigate the meta-theory of
-resolution, the priority of Odersky et al. is not so much the SI calculus
-itself as the derived implementation of the Scala compiler. As a consequence,
-SI features a simplified type system that is incoherent and unstable and a resolution
-algorithm that supports only monomorphic types, while the compiler's much more
-complex enforcement of coherence and support for polymorphism are only
-discussed informally. 
 
 \paragraph{IP Mechanisms in Dependently Typed Programming}
 A number of dependently typed languages also have IP mechanisms
