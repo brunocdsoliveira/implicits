@@ -9,7 +9,7 @@ The most closely related work can
 be divided into three strands: IP mechanisms that support local
 scoping with coherence and stability, but forbid overlapping rules and lack other
 types of flexibility; IP mechanisms that have global scoping and
-preserve coherence and stability; and IP mechanisms that are unstable and sometime incoherent
+preserve coherence and stability; and IP mechanisms that are unstable and sometimes incoherent
 but offer greater flexibility in terms of local scoping and/or overlapping
 rules. $\ourlang$ is unique in offering flexibility 
 (local scoping with overlapping rules, first-class rules 
@@ -181,7 +181,7 @@ Rouvoet~\shortcite{Rouvoet} presents $\lambda_\Rightarrow^S$, which is a
 variation on the implicit calculus. The key feature of his calculus is the
 focusing resolution of Figure~\ref{fig:resolutionf}, although Rouvoet does not
 make the connection with focusing in proof search. As we have already explained
-in Section~\ref{subsec:det} this approach is incoherent.
+in Section~\ref{subsec:det} this approach is both incoherent and unstable.
 
 \emph{Scala implicits}~\cite{implicits,scala} were themselves the
 inspiration for the implicit calculus and, therefore, share various
