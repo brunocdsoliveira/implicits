@@ -241,3 +241,27 @@ typeCheck SystemF.True
  = return BoolTy
 typeCheck SystemF.False 
  = return BoolTy
+
+-- Interpreter --------------
+
+eval :: Term -> Term
+eval t@(Var _)
+ = t
+eval t@(Abs _ _ _)
+ = t
+eval (App t1 t2)
+ = case eval t1 of
+     Abs v ty t1' -> eval (substVar v (eval t2) t1')
+     t1'          -> App t1' (eval t2)
+eval t@(TAbs _ _)
+ = t
+eval (TApp t ty2) 
+ = case eval t of
+     TAbs tv t' -> eval (substTVarInTerm tv ty2 t')
+     t'         -> TApp t' ty2
+eval t@(Int _)
+ = t
+eval t@(SystemF.True)
+ = t
+eval t@(SystemF.False)
+ = t
