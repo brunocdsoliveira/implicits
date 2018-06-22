@@ -745,7 +745,10 @@ Definition has been added.
 > \epsilon$. I have not checked the details, though.
 
 
-TODO -> Klara: weakening of unamb
+The context-type-unambiguity judgment enjoys a weakening property,
+easy to prove, according to which, if $\bar\alpha |-_{unamb} \rho$,
+then for any subset $\bar\alpha' \subseteq \bar\alpha$ it also holds
+that $\bar\alpha' |-_{unamb} \rho$.
  
 > p. 46, proof of Lemma A.11, case (L-RuleMatch): "construted with" -->
 > "constructed" (or better yet --> "derived using")
