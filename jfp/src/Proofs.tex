@@ -181,12 +181,10 @@ The lemma immediately follows from Lemma~\ref{lemma:s23:3}.
   If 
 \begin{equation*}
   \drres{\bar{\alpha}}{\tenv}{\rulet}{E}
-%  \bar{\alpha}; \tenv \ivturns \rulet \leadsto E 
 \end{equation*}
   then
 \begin{equation*}
   \ares{\tenv}{\rulet}{E}
-%    \tenv \vturns \rulet \leadsto E
 \end{equation*}
 \end{lemma}
 \end{minipage}
@@ -233,22 +231,18 @@ The above proof relies on the following lemma.
   If 
 \begin{equation*}
   \dmres{\tenv}{\rulet}{E}{\type}{E'}{\ie{\ruleset}{\bar{x}}}
-%   \tenv; \rulet \leadsto E \ivturns \type \leadsto E'; \bar{\rulet} \leadsto \bar{x}
 \end{equation*}
   and
 \begin{equation*}
   \ares{\tenv}{\rulet}{E}
-%  \tenv \vturns \rulet \leadsto E
 \end{equation*}
   and
 \begin{equation*}
   \ares{\tenv}{\ruleset}{\bar{E}}
-%  \tenv \vturns \bar{\rulet} \leadsto \bar{E}
 \end{equation*}
   then
 \begin{equation*}
   \ares{\tenv}{\type}{E'[\bar{E}/\bar{x}]}
-%  \tenv \vturns \tau \leadsto E'[\bar{E}/\bar{x}]
 \end{equation*}
 \end{lemma}
 \end{minipage}
@@ -262,7 +256,6 @@ In order to deal with the de Bruijn variable representation in our mechanization
 judgement
 \begin{equation*}
   \dmres{\tenv}{\rulet}{E}{\type}{E'}{\ie{\ruleset}{\bar{x}}}
-%\tenv; \rulet \leadsto E \ivturns \type \leadsto E'; \bar{\rulet} \leadsto \bar{x}
 \end{equation*}
 differs from the corresponding mechanized definition (\texttt{DRes\_match} in file CochisDet.v) in the first argument, $\tenv$. In our mechanization, $\tenv$ is expressed by means of two environments, $\denv_m$ and $\tenv_m$, so that $\tenv = \tenv_m,\denv_m$.
 
@@ -274,17 +267,14 @@ differs from the corresponding mechanized definition (\texttt{DRes\_match} in fi
 If 
 \begin{equation*}
   \dmres{\tenv}{\rulet}{E}{\type}{E'}{\ie{\ruleset}{\bar{x}}}
-%  \tenv; \rulet \leadsto E \ivturns \type \leadsto E'; \bar{\rulet} \leadsto \bar{x}
 \end{equation*}
 and
 \begin{equation*}
   \ares{\tenv}{\rulet}{E}
-%  \tenv \vturns \rulet \leadsto E
 \end{equation*}
 then
 \begin{equation*}
   \ares{\tenv, \ie{\ruleset}{\bar{x}}}{\type}{E'}
-%  \tenv, \bar{\rulet} \leadsto \bar{x} \vturns \tau \leadsto E'
 \end{equation*}
 \end{lemma}
 \end{minipage}
@@ -294,425 +284,6 @@ then
 See file CochisDet.v, Lemma \tt{DRes\_match\_impl\_vars}.
 \end{proof}
 
-
-
-% %-------------------------------------------------------------------------------
-% \subsection{Correctness of the Resolution Algorithm}
-% 
-% Lemma~\ref{lemma:sa:3} states that the resolution algorithm
-% $\vdash_{\mathit{alg}}$ is sound with respect to the deterministic resolution
-% specification $\vturns$.
-% 
-% Its proof relies on Lemma~\ref{lemma:sa:2}, which states that
-% the auxiliary relation $\vdash_{\mathit{match1st}}$ is sound, whose
-% proof in turn relies on Lemma~\ref{lemma:sa:1} which states that
-% the auxiliary relation $\vdash_{\mathit{match}}$ is sound.
-% 
-% The completeness proof proceeds in a similar fashion.
-% 
-% %###############################################################################
-% {\centering
-% \fbox{
-% \begin{minipage}{0.95\columnwidth}
-% \begin{lemma}\label{lemma:sa:1}
-%   If 
-% \begin{equation*}
-%     \rho;\bar{\rho};\bar{\alpha};\bar{\omega};E \vdash_{\mathit{match}} \tau \hookrightarrow \bar{\rho}';\bar{\omega'};E'
-% \end{equation*}
-%   then there exist $\bar{\rho}''$ with 
-% \begin{equation*}
-%   \bar{\rho}\theta \subseteq \bar{\rho'}
-% \end{equation*}
-%   where $\theta = [\bar{\rho''}/\bar{\alpha}]$,
-% 
-%   and 
-% \begin{equation*}
-%   \bar{\omega} \subseteq \bar{\omega}'
-% \end{equation*}
-% 
-%   such that forall $\env$ and $\bar{E}''$: 
-% 
-%   if
-% \begin{equation*}
-%   \bar{\alpha}; \env \vturns \rho_i' \leadsto E_i''\quad\quad (\forall \rho_i' \in \bar{\rho}')
-% \end{equation*}
-% 
-%   then 
-% \begin{equation*}
-%   \rho\theta \lhd \tau
-% \end{equation*}
-%   and
-% \begin{equation*}
-%   \bar{\alpha}; \env; \rho\theta \leadsto E|\theta|\eta \vdash_\downarrow \tau \leadsto E'\eta
-% \end{equation*}
-%   where $\eta = [\bar{E}''/\bar{\omega}']$
-% \end{lemma}
-% \end{minipage}
-% }}
-% 
-% \begin{proof}
-% The proof proceeds by induction on the derivation.
-% \begin{description}
-% %===============================================================================
-% \item[(\texttt{MTC-Simp})]\quad$\tau';\bar{\rho};\bar{\alpha};\bar{\omega};E \vdash_{\mathit{match}} \tau \hookrightarrow \bar{\rho}\theta;\bar{\omega};E|\theta|$ \ \\
-% %===============================================================================
-%   Obviously, we have that 
-% \begin{equation*}
-%   \bar{\omega} \subseteq \bar{\omega}
-% \end{equation*}
-% 
-%   and
-% \begin{equation*}
-%   \bar{\rho}\theta \subseteq \bar{\rho}\theta
-% \end{equation*}
-% 
-%   From rule \mylabel{MTC-Simp} we have
-% \begin{equation*}
-%   \theta = \mathit{mgu}_{\bar{\alpha}}(\tau,\tau')
-% \end{equation*}
-% 
-%   This means 
-% \begin{equation*}
-%   \tau'\theta = \tau
-% \end{equation*}
-% 
-%   Hence, from rule \mylabel{M-Simp} it follows that
-% \begin{equation*}
-%   \tau'\theta \lhd \tau
-% \end{equation*}
-% 
-%   Also, from rule \mylabel{I-Simp} it follows that
-% \begin{equation*}
-%   \bar{\alpha}; \env; \tau \leadsto E|\theta|\eta  \vdash_\downarrow \tau \leadsto E|\theta|\eta
-% \end{equation*}
-% 
-%   or, equivalently,
-% \begin{equation*}
-%   \bar{\alpha}; \env; \tau'\theta \leadsto E|\theta|\eta \vdash_\downarrow \tau \leadsto E|\theta|\eta
-% \end{equation*}
-% 
-% %===============================================================================
-% \item[(\texttt{MTC-IAbs})]\quad$\rho_1 \iarrow \rho_2;\bar{\rho};\bar{\alpha};\bar{\omega};E \vdash_{\mathit{match}} \tau \hookrightarrow \bar{\rho}';\bar{\omega};E'$ \ \\
-% %===============================================================================
-% 
-%   From the rule \mylabel{MTC-IAbs} and the induction hypothesis, it follows that
-% \begin{equation*}
-%   \bar{\omega}, \omega \subseteq \bar{\omega'}
-% \end{equation*}
-% 
-%   Hence,
-% \begin{equation*}
-%   \bar{\omega} \subseteq \bar{\omega'}
-% \end{equation*}
-% 
-%   Similarly, it follows that
-% \begin{equation*}
-%   (\bar{\rho},\rho_1)\theta \subseteq \bar{\rho}'
-% \end{equation*}
-% 
-%   Hence,
-% \begin{equation*}
-%   \bar{\rho}\theta \subseteq \bar{\rho}'
-% \end{equation*}
-% 
-%   Also, from the rule \mylabel{MTC-IAbs} and the induction hypothesis, it follows that
-% \begin{equation*}
-%   \rho_2\theta \lhd \tau
-% \end{equation*}
-% 
-%   and, by rule \mylabel{M-IApp}, we hence have
-% \begin{equation*}
-%   \rho_1\theta \iarrow \rho_2\theta \lhd \tau
-% \end{equation*}
-% 
-%   or, more succinctly,
-% \begin{equation*}
-%   (\rho_1 \iarrow \rho_2)\theta \lhd \tau
-% \end{equation*}
-% 
-%   Finally, from the rule \mylabel{MTC-IAbs} and the induction hypothesis, it follows that
-% \begin{equation*}
-%  \bar{\alpha}; \env; \rho_2\theta \leadsto (E\,\omega)|\theta|\eta \vdash_\downarrow \tau \leadsto E'\eta 
-% \end{equation*}
-% 
-%   or
-% \begin{equation*}
-%  \bar{\alpha}; \env; \rho_2\theta \leadsto (E\theta\eta)\,(\omega\eta) \vdash_\downarrow \tau \leadsto E'\eta 
-% \end{equation*}
-% 
-%   Using rule \mylabel{I-IAbs} we may then conclude
-% \begin{equation*}
-%  \bar{\alpha}; \env; \rho_1\theta \iarrow \rho_2\theta \leadsto E\theta\eta \vdash_\downarrow \tau \leadsto E'\eta 
-% \end{equation*}
-% 
-%   or, equivalently,
-% \begin{equation*}
-%  \bar{\alpha}; \env; (\rho_1 \iarrow \rho_2)\theta \leadsto E\theta\eta \vdash_\downarrow \tau \leadsto E'\eta 
-% \end{equation*}
-% 
-% %===============================================================================
-% \item[(\texttt{MTC-TAbs})]\quad$\forall \alpha.\rho;\bar{\rho};\bar{\alpha};\bar{\omega};E \vdash_{\mathit{match}} \tau \hookrightarrow \bar{\rho}';\bar{\omega};E'$ \ \\
-% %===============================================================================
-% 
-%   From the rule \mylabel{MTC-TAbs} and the induction hypothesis, it follows that
-% \begin{equation*}
-%   \bar{\omega} \subseteq \bar{\omega'}
-% \end{equation*}
-% 
-%   Similarly, it follows that
-% \begin{equation*}
-%   \bar{\rho}\theta \subseteq \bar{\rho}'
-% \end{equation*}
-% 
-%   Also it follows that
-% \begin{equation*}
-%   \rho\theta \lhd \tau
-% \end{equation*}
-% 
-%   or, equivalently,
-% \begin{equation*}
-%   \rho[\bar{\alpha}\theta/\bar{\alpha}][\alpha\theta/\alpha] \lhd \tau
-% \end{equation*}
-% 
-%   Hence, following rule \mylabel{MTC-TAbs}, we have that
-% \begin{equation*}
-%   \forall \alpha.(\rho[\bar{\alpha}\theta/\bar{\alpha}]) \lhd \tau
-% \end{equation*}
-% 
-%   or, equivalently,
-% \begin{equation*}
-%   (\forall \alpha.\rho)[\bar{\alpha}\theta/\bar{\alpha}] \lhd \tau
-% \end{equation*}
-% 
-%   Finally, from the rule \mylabel{MTC-TAbs} and the induction hypothesis, it follows that
-% \begin{equation*}
-%   \bar{\alpha}; \env; \rho\theta \leadsto (E\,\alpha)|\theta|\eta \vdash_\downarrow \tau \leadsto E'\eta 
-% \end{equation*}
-% 
-%   or, equivalently,
-% \begin{equation*}
-%   \bar{\alpha}; \env; \rho\theta \leadsto (E|\theta|[\alpha|\theta|/\alpha]\eta)\,(\alpha|\theta|) \vdash_\downarrow \tau \leadsto E'\eta 
-% \end{equation*}
-% 
-%   Hence, following rule \mylabel{I-TAbs}, we get
-% \begin{equation*}
-%   \bar{\alpha}; \env; (\forall \alpha.\rho)\theta \leadsto E|\theta|\eta \vdash_\downarrow \tau \leadsto E'\eta 
-% \end{equation*}
-% \end{description}
-% \end{proof}
-% 
-% %###############################################################################
-% {\centering
-% \fbox{
-% \begin{minipage}{0.95\columnwidth}
-% \begin{lemma}\label{lemma:sa:2}
-%   If 
-% \begin{equation*}
-%    \bar{\alpha}; \env \vdash_{\mathit{match1st}} \tau \hookrightarrow \bar{\rho}';\bar{\omega};E
-% \end{equation*}
-%   then there exist $\rho$ and $x$ such that
-% 
-% \begin{equation*}
-%   \elookup{\env}{\tau} = \rho \leadsto x
-% \end{equation*}
-% 
-% and for all $\env' \supseteq \env$
-% and for all $\bar{E}'$ such that
-% \begin{equation*}
-%   \bar{\alpha}; \env' \vturns \rho_i' \leadsto E_i'\quad\quad (\forall \rho_i' \in \bar{\rho}')
-% \end{equation*}
-% 
-% we have that
-% \begin{equation*}
-%   \bar{\alpha}; \env'; \rho \leadsto x \vdash_\downarrow \tau \leadsto E\eta
-% \end{equation*}
-% where $\eta = [\bar{E}'/\bar{\omega}]$.
-% \end{lemma}
-% \end{minipage}
-% }}
-% 
-% \begin{proof}
-% The proof proceeds by induction on the derivation.
-% \begin{description}
-% %===============================================================================
-% \item[(\texttt{M1-Head})]\quad$\bar{\alpha}; \env,\rho \leadsto x \vdash_{\mathit{match1st}} \tau \hookrightarrow \bar{\rho};\bar{\omega};E$ \ \\
-% %===============================================================================
-%   From rule \mylabel{M1-Head} and the previous lemma, we then have that
-% \begin{equation*}
-%   \rho \lhd \tau 
-% \end{equation*}
-%   
-%   Using rule \mylabel{L-Head} we can conclude that
-% \begin{equation*}
-%   \elookup{(\env,\rho\leadsto x)}{\tau} = \rho \leadsto x
-% \end{equation*}
-% 
-%   Similarly, we have that 
-% \begin{equation*}
-%   \bar{\alpha}; \env'; \rho \leadsto x\eta \vdash_\downarrow \tau \leadsto E\eta
-% \end{equation*}
-% 
-%   which simplifies to
-% \begin{equation*}
-%   \bar{\alpha}; \env'; \rho \leadsto x \vdash_\downarrow \tau \leadsto E\eta
-% \end{equation*}
-% 
-% %===============================================================================
-% \item[(\texttt{M1-Tail})]\quad$\bar{\alpha}; \env,\rho \leadsto x \vdash_{\mathit{match1st}} \tau \hookrightarrow \bar{\rho};\bar{\omega};E$ \ \\
-% %===============================================================================
-%   From rule \mylabel{M1-Tail} and the induction hypothesis, we then have that there
-%   exist $\rho'$ and $x'$ such that
-% \begin{equation*}
-%   \elookup{\env}{\tau} = \rho' \leadsto x'
-% \end{equation*}
-% 
-%   Also from rule \mylabel{M1-Tail} and a previous lemma, we have that
-% \begin{equation*}
-%   \rho \not\!\!\lhd \tau
-% \end{equation*}
-% 
-%   Hence, using rule \mylabel{L-Tail} we can conclude that 
-% \begin{equation*}
-%   \elookup{(\env,\rho\leadsto x)}{\tau} = \rho' \leadsto x'
-% \end{equation*}
-% 
-%   From rule \mylabel{M1-Tail} and the induction hypothesis, we also have that
-% \begin{equation*}
-%   \bar{\alpha}; \env'; \rho' \leadsto x' \vdash_\downarrow \tau \leadsto E\eta
-% \end{equation*}
-%   for $\env' \supseteq (\env,\rho \leadsto x)$.
-% 
-% \end{description}
-% \end{proof}
-% 
-% %###############################################################################
-% {\centering
-% \fbox{
-% \begin{minipage}{0.95\columnwidth}
-% \begin{lemma}\label{lemma:sa:3}
-%   If 
-% \begin{equation*}
-%    \bar{\alpha}; \env \vdash_{\mathit{alg}} \rho \leadsto E
-% \end{equation*}
-% 
-%   then
-% \begin{equation*}
-%   \bar{\alpha}; \env \vturns \rho \leadsto E
-% \end{equation*}
-% \end{lemma}
-% \end{minipage}
-% }}
-% 
-% \begin{proof}
-% The proof proceeds by induction on the derivation.
-% \begin{description}
-% %===============================================================================
-% \item[(\texttt{Alg-TAbs})]\quad$\bar{\alpha}; \env \vdash_{\mathit{alg}} \forall \alpha.\rho \leadsto \Lambda \alpha.E$ \ \\
-% %===============================================================================
-%   From rule \mylabel{Alg-TAbs} and the induction hypothesis, it follows that
-% \begin{equation*}
-%   \bar{\alpha}; \env \vdash_{\mathit{r}} \rho \leadsto E
-% \end{equation*}
-% 
-%   Using rule \mylabel{R-TAbs}, we then get
-% \begin{equation*}
-%   \bar{\alpha}; \env \vdash_{\mathit{r}} \forall \alpha.\rho \leadsto \Lambda \alpha.E
-% \end{equation*}
-% 
-% %===============================================================================
-% \item[(\texttt{Alg-IAbs})]\quad$\bar{\alpha}; \env \vdash_{\mathit{alg}} \rho_1 \iarrow \rho_2 \leadsto \lambda (x:|\rho_1|).E$ \ \\
-% %===============================================================================
-%   From rule \mylabel{Alg-IAbs} and the induction hypothesis, it follows that
-% \begin{equation*}
-%   \bar{\alpha}; \env, \rho_1 \leadsto x \vdash_{\mathit{r}} \rho_2 \leadsto E
-% \end{equation*}
-% 
-%   Using rule \mylabel{R-IAbs}, we then get
-% \begin{equation*}
-%   \bar{\alpha}; \env \vdash_{\mathit{r}} \rho_1 \iarrow \rho_2 \leadsto \lambda (x:|\rho_1|).E
-% \end{equation*}
-% 
-% %===============================================================================
-% \item[(\texttt{Alg-Simp})]\quad$\bar{\alpha}; \env \vdash_{\mathit{alg}} \tau \leadsto E[\bar{\omega}/\bar{E}]$ \ \\
-% %===============================================================================
-%   From rule \mylabel{Alg-Simp} and the previous lemma it follows that
-% \begin{equation*}
-%   \elookup{\env}{\tau} = \rho \leadsto x
-% \end{equation*}
-% 
-%   and
-% \begin{equation*}
-%   \bar{\alpha}; \env; \rho \leadsto x \vdash_\downarrow \tau \leadsto E[\bar{\omega}/\bar{E}]
-% \end{equation*}
-% 
-%   Hence, using rule \mylabel{R-Simp}, we conclude
-% \begin{equation*}
-%   \bar{\alpha}; \env \vturns \tau \leadsto E[\bar{\omega}/\bar{E}]
-% \end{equation*}
-% 
-% \end{description}
-% \end{proof}
-% 
-% %-------------------------------------------------------------------------------
-% % \subsection{Completeness of the Resolution Algorithm}
-% % 
-% % %###############################################################################
-% % {\centering
-% % \fbox{
-% % \begin{minipage}{0.95\columnwidth}
-% % \begin{lemma}\label{lemma:sa:2}
-% %   If 
-% % \begin{equation*}
-% %    \rho \lhd \tau
-% % \end{equation*}
-% % 
-% %   then for all $\rho^*, \bar{\rho}, \bar{\alpha}, \bar{\omega}, E, \theta$ such that
-% % \begin{equation*}
-% %   \rho = \rho^*\theta
-% % \end{equation*}
-% % 
-% %   where $\mathit{dom}(\theta) \subseteq \bar{\alpha}$, we have that
-% %   there exist $\bar{\rho}', \bar{\omega}', E'$ such that
-% % 
-% % \begin{equation*}
-% %   \rho^*; \bar{\rho}; \bar{\alpha}; \bar{\omega}; E \vdash_\mathit{match} \tau \hookrightarrow \bar{\rho}'; \bar{\omega}'; E'
-% % \end{equation*}
-% % \end{lemma}
-% % \end{minipage}
-% % }}
-% % 
-% % \begin{proof}
-% % The proof proceeds by induction on the derivation.
-% % \begin{description}
-% % %===============================================================================
-% % \item[(\texttt{M-Simp})]\quad$\tau \lhd \tau$ \ \\
-% % %===============================================================================
-% %   From the assumption and the definition of $\mathit{mgu}_{\bar{\alpha}}$, it follows that
-% % \begin{equation*}
-% %   \theta = \mathit{mgu}_{\bar{\alpha}}(\tau^*,\tau)
-% % \end{equation*}
-% % 
-% %   Hence, by rule \mylabel{MTC-Simp}, we conclude
-% % \begin{equation*}
-% %   \tau^*; \bar{\rho}; \bar{\alpha}; \bar{\omega}; E \vdash_\mathit{match} \tau \hookrightarrow \bar{\rho}\theta; \bar{\omega}; E\theta
-% % \end{equation*}
-% % 
-% % %===============================================================================
-% % \item[(\texttt{M-IApp})]\quad$\rho_1 \iarrow \rho_2 \lhd \tau$ \ \\
-% % %===============================================================================
-% %   From rule \mylabel{MTC-IAbs} and the induction hypothesis, we have that
-% % \begin{equation*}
-% %   \rho^*_2; \bar{\rho},\rho^*_1; \bar{\alpha}; \bar{\omega},\omega; E \vdash_\mathit{match} \tau \hookrightarrow \bar{\rho}'; \bar{\omega}'; E'
-% % \end{equation*}
-% % 
-% %   Hence, by rule \mylabel{MTC-IAbs}, we conclude
-% % \begin{equation*}
-% %   \rho^*_1 \iarrow \rho^*_2; \bar{\rho}; \bar{\alpha}; \bar{\omega}; E \vdash_\mathit{match} \tau \hookrightarrow \bar{\rho}'; \bar{\omega}'; E'
-% % \end{equation*}
-% % \end{description}
-% % \end{proof}
-% 
-%-------------------------------------------------------------------------------
 \subsection{Deterministic Resolution is Deterministic}\label{proof:determinism}
 As shown in Figure~\ref{fig:unambenv}, a typing environment is unambiguous when all its type
 variables and implicit entries have unambiguous types. This definition will be used thoughout
@@ -791,22 +362,18 @@ result follows
   If 
 \begin{equation*}
   \unambig{}{\tenv}
-%  \unamb \tenv
 \end{equation*}
   and
 \begin{equation*}
   \unambig{}{\rulet}
-%  \unamb \rulet
 \end{equation*}
   and
 \begin{equation*}
   \drres{\bar{\alpha}}{\tenv}{\rulet}{E_1}
-%  \bar{\alpha};\tenv \ivturns \rulet \leadsto E_1
 \end{equation*}
 and
 \begin{equation*}
   \drres{\bar{\alpha}}{\tenv}{\rulet}{E_2}
-%  \bar{\alpha};\tenv \ivturns \rulet \leadsto E_2
 \end{equation*}
 then
 \begin{equation*}
@@ -823,19 +390,16 @@ The proof proceeds by induction on the derivation of the third hypothesis.
 %===============================================================================
 \item[\fbox{\rref{R-IAbs}}]
 \quad$\drres{\bar{\alpha}}{\tenv}{\rulet_1 \iarrow \rulet_2}{\abs{x}{\etrans{\rulet_1}}{E_1}}$ \\
-%$\bar{\alpha};\tenv \ivturns \rulet_1 \iarrow \rulet_2 \leadsto \lambda\relation{x}{||\rulet_1||}.E_1$ \ \\
 %===============================================================================
 
 It follows that the lemma's fourth hypothesis is also derived by rule
 \rref{R-IAbs}. It follows from the lemma's second hypothesis that 
 \begin{equation*}
   \unambig{}{\rulet_1}\quad\wedge\quad \unambig{}{\rulet_2}
-  %\unamb \rulet_1 \quad\wedge\quad \unamb \rulet_2
 \end{equation*}
 From this and lemma's first hypothesis, it follows that
 \begin{equation*}
-  \unambig{}{\tenv,\ie{\rulet_1}{x}}
-%  \unamb \tenv,\rulet_1 \leadsto x
+  \unambig{}{\tenv,\envi{\rulet_1}{x}}
 \end{equation*}
 From the rule's hypothesis and the induction hypothesis, it follows that
 \begin{equation*}
@@ -844,24 +408,24 @@ From the rule's hypothesis and the induction hypothesis, it follows that
 Hence, we may conclude
 \begin{equation*}
   \abs{x}{|\rulet_1|}{E_1} =  \abs{x}{|\rulet_1|}{E_2}
-%  \lambda x:|\rulet_1|.E_1 = \lambda x:|\rulet_1|.E_2
 \end{equation*}
 
 %===============================================================================
 \item[\fbox{\rref{R-TAbs}}]\quad$\drres{\bar{\alpha}}{\tenv}{\tall{\alpha}{\rulet}}{\Abs{\alpha}{E_1}}$ \\
-%$\bar{\alpha};\tenv \ivturns \forall \alpha. \rho \leadsto \Lambda\alpha.E_1$ \ \\
 %===============================================================================
 
 It follows that the lemma's fourth hypothesis is also derived by rule
 \rref{R-TAbs}. It follows from the lemma's second hypothesis that 
 \begin{equation*}
+  \unambig{\alpha}{\rulet}
+\end{equation*}
+The unambiguity judgment enjoys a weakening property which we use here to obtain
+\begin{equation*}
   \unambig{}{\rulet}
-%  \unamb \rulet
 \end{equation*}
 From the lemma's first hypothesis, it follows that
 \begin{equation*}
   \unambig{}{\tenv, \alpha}
-%  \unamb \tenv, \alpha
 \end{equation*}
 From the rule's hypothesis and the induction hypothesis, it follows that
 \begin{equation*}
