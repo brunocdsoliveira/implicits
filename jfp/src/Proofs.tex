@@ -390,19 +390,16 @@ The proof proceeds by induction on the derivation of the third hypothesis.
 %===============================================================================
 \item[\fbox{\rref{R-IAbs}}]
 \quad$\drres{\bar{\alpha}}{\tenv}{\rulet_1 \iarrow \rulet_2}{\abs{x}{\etrans{\rulet_1}}{E_1}}$ \\
-%$\bar{\alpha};\tenv \ivturns \rulet_1 \iarrow \rulet_2 \leadsto \lambda\relation{x}{||\rulet_1||}.E_1$ \ \\
 %===============================================================================
 
 It follows that the lemma's fourth hypothesis is also derived by rule
 \rref{R-IAbs}. It follows from the lemma's second hypothesis that 
 \begin{equation*}
   \unambig{}{\rulet_1}\quad\wedge\quad \unambig{}{\rulet_2}
-  %\unamb \rulet_1 \quad\wedge\quad \unamb \rulet_2
 \end{equation*}
 From this and lemma's first hypothesis, it follows that
 \begin{equation*}
-  \unambig{}{\tenv,\ie{\rulet_1}{x}}
-%  \unamb \tenv,\rulet_1 \leadsto x
+  \unambig{}{\tenv,\envi{\rulet_1}{x}}
 \end{equation*}
 From the rule's hypothesis and the induction hypothesis, it follows that
 \begin{equation*}
@@ -411,24 +408,24 @@ From the rule's hypothesis and the induction hypothesis, it follows that
 Hence, we may conclude
 \begin{equation*}
   \abs{x}{|\rulet_1|}{E_1} =  \abs{x}{|\rulet_1|}{E_2}
-%  \lambda x:|\rulet_1|.E_1 = \lambda x:|\rulet_1|.E_2
 \end{equation*}
 
 %===============================================================================
 \item[\fbox{\rref{R-TAbs}}]\quad$\drres{\bar{\alpha}}{\tenv}{\tall{\alpha}{\rulet}}{\Abs{\alpha}{E_1}}$ \\
-%$\bar{\alpha};\tenv \ivturns \forall \alpha. \rho \leadsto \Lambda\alpha.E_1$ \ \\
 %===============================================================================
 
 It follows that the lemma's fourth hypothesis is also derived by rule
 \rref{R-TAbs}. It follows from the lemma's second hypothesis that 
 \begin{equation*}
+  \unambig{\alpha}{\rulet}
+\end{equation*}
+The unambiguity judgment enjoys a weakening property which we use here to obtain
+\begin{equation*}
   \unambig{}{\rulet}
-%  \unamb \rulet
 \end{equation*}
 From the lemma's first hypothesis, it follows that
 \begin{equation*}
   \unambig{}{\tenv, \alpha}
-%  \unamb \tenv, \alpha
 \end{equation*}
 From the rule's hypothesis and the induction hypothesis, it follows that
 \begin{equation*}
