@@ -1741,7 +1741,6 @@ $\admress{\bar\alpha}{\tenv}{\tall{\alpha}{\rulet}}{E}{\Sigma}{\type}{E'}{\Sigma
   \dmres{\theta(\tenv)}{\theta(\tall{\alpha}{\rulet})}{\etrans\theta(E)}{\theta(\type)}{E'}{\Sigma'}
 %  \theta(\tenv); \theta(\forall \alpha.\rulet) \leadsto |\theta|(E) \ivturns \theta(\type) \leadsto E'; \Sigma'
 \end{equation*}
-
 \end{description}
 \end{proof}
 
@@ -1753,11 +1752,13 @@ $\admress{\bar\alpha}{\tenv}{\tall{\alpha}{\rulet}}{E}{\Sigma}{\type}{E'}{\Sigma
 \begin{lemma}\label{lemma:asoundness:5}
   If 
 \begin{equation*}
-  \bar{\alpha};\tenv;\rulet \leadsto E; \Sigma \alg \type \leadsto E'; \Sigma'
+  \admres{\bar\alpha}{\tenv}{\rulet}{E}{\Sigma}{\type}{E'}{\Sigma'}
+%  \bar{\alpha};\tenv;\rulet \leadsto E; \Sigma \alg \type \leadsto E'; \Sigma'
 \end{equation*}
   then
 \begin{equation*}
-  \bar{\alpha}; \tenv; \rulet \coh \type
+  \coherent{\bar\alpha}{\tenv}{\rulet}{\type}
+%  \bar{\alpha}; \tenv; \rulet \coh \type
 \end{equation*}
 \end{lemma}
 \end{minipage}
@@ -1805,11 +1806,13 @@ Straightforward induction on the derivation.
 \begin{lemma}\label{lemma:acompleteness:0}
   If 
 \begin{equation*}
-  \tenv \ivturns \rulet \leadsto E
+\dres{\tenv}{\rulet}{E}
+%  \tenv \ivturns \rulet \leadsto E
 \end{equation*}
   then
 \begin{equation*}
-  \tenv \alg \rulet \leadsto E
+  \adres{\tenv}{\rulet}{E}
+%  \tenv \alg \rulet \leadsto E
 \end{equation*}
 \end{lemma}
 \end{minipage}
@@ -1818,11 +1821,13 @@ Straightforward induction on the derivation.
 \begin{proof}
   From the hypothesis it follows that 
 \begin{equation*}
-  \mathit{tyvars}(\tenv);\tenv \ivturns \rulet \leadsto E
+\drres{\tyvars{\tenv}}{\tenv}{\rulet}{E}
+%  \mathit{tyvars}(\tenv);\tenv \ivturns \rulet \leadsto E
 \end{equation*}
   Hence, by Lemma~\ref{lemma:acompleteness:1} and rule \mylabel{Alg-R-Main} the desired conclusion follows
 \begin{equation*}
-  \tenv \alg \rulet \leadsto E
+\adres{\tenv}{\rulet}{E}
+%  \tenv \alg \rulet \leadsto E
 \end{equation*}
 \end{proof}
 
@@ -1833,11 +1838,13 @@ Straightforward induction on the derivation.
 \begin{lemma}\label{lemma:acompleteness:1}
   If 
 \begin{equation*}
-  \bar{\alpha};\tenv \ivturns \rulet \leadsto E
+  \drres{\bar\alpha}{\tenv}{\rulet}{E}
+%  \bar{\alpha};\tenv \ivturns \rulet \leadsto E
 \end{equation*}
   then
 \begin{equation*}
-  \bar{\alpha};\tenv \alg \rulet \leadsto E
+  \adrres{\bar\alpha}{\tenv}{\rulet}{E}
+%  \bar{\alpha};\tenv \alg \rulet \leadsto E
 \end{equation*}
 \end{lemma}
 \end{minipage}
@@ -1855,11 +1862,13 @@ rule sets of the two judgements and from Lemma~\ref{lemma:acompleteness:2}.
 \begin{lemma}\label{lemma:acompleteness:2}
   If 
 \begin{equation*}
-  \bar{\alpha};\tenv;\tenv' \ivturns \rulet \leadsto E
+  \dlres{\bar\alpha}{\tenv}{\tenv'}{\rulet}{E}
+%  \bar{\alpha};\tenv;\tenv' \ivturns \rulet \leadsto E
 \end{equation*}
   then
 \begin{equation*}
-  \bar{\alpha};\tenv;\tenv' \alg \rulet \leadsto E
+  \adlres{\bar\alpha}{\tenv}{\tenv'}{\rulet}{E}
+%  \bar{\alpha};\tenv;\tenv' \alg \rulet \leadsto E
 \end{equation*}
 \end{lemma}
 \end{minipage}
