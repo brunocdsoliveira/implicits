@@ -285,9 +285,10 @@ See file CochisDet.v, Lemma \tt{DRes\_match\_impl\_vars}.
 \end{proof}
 
 \subsection{Deterministic Resolution is Deterministic}\label{proof:determinism}
-As shown in Figure~\ref{fig:unambenv}, a typing environment is unambiguous when all its type
-variables and implicit entries have unambiguous types. This definition will be used thoughout
-this section.
+
+Figure~\ref{fig:unambenv} defines the judgment $\unambenv{\tenv}$ which states that a typing environment is unambiguous.
+Essentially, the definition requires that all types $\rulet$ in $\tenv$ are unambiguous.
+This definition will be used thoughout this section.
 
 \figtwocol{fig:unambenv}{Unambiguous Type Environment}{
 \begin{center}
@@ -487,25 +488,36 @@ The proof proceeds by induction on the derivation of the third hypothesis.
 \begin{description}
 \setlength{\itemsep}{1em}
 %===============================================================================
-\item[\fbox{\rref{L-RuleMatch}}]\quad$\dlres{\bar{\alpha}}{\tenv}{\tenv',\envi{\rulet}{x}}{\type}{E_1[\bar{E}_1/\bar{x}]}$\\
+\item[\fbox{\rref{L-RuleMatch}}]\quad$\dlres{\bar{\alpha}}{\tenv}{\tenv',\envi{\rulet}{x}}{\type}{E_1[\bar{E}'_1/\bar{x}]}$\\
 %===============================================================================
 
+  The rule's two hypotheses are
+\begin{equation*}
+\dmres{\tenv}{\rulet}{x}{\tau}{E_1}{\Sigma_1}
+\end{equation*}%
+, where $\Sigma_1 = \overline{\rulet'_1~\gbox{\leadsto x}}$ , 
+  and
+\begin{equation*}
+\drres{\bar{\alpha}}{\tenv}{\rulet'_1}{E'_1} \quad (\forall \rulet'_1 \in \overline{\rulet}'_1)
+\end{equation*}%
   Then the fourth hypothesis was either derived from rule \rref{L-RuleMatch},
   or from rule \rref{L-RuleNoMatch}. However, the hypothesis of the latter is
-  not satisfied: $\epsilon;E_1;\Sigma_1$ forms a counter-example. Hence, the fourth
-  hypothesis is also derived using rule \rref{L-RuleMatch}.
+  not satisfied: $\epsilon;E_1;\Sigma_1$ forms a counter-example. Hence, using rule \rref{L-RuleMatch}
+  the fourth hypothesis is also derived.
 
-  Then it follows from the first hypothesis of the rule and Lemma~\ref{lemma:determinism:3} that
+  Then it follows from the first hypothesis of the rule (given above),
+  from the first hypothesis of the lemma, which entails $\unambig{}{\rulet}$,  
+  and from Lemma~\ref{lemma:determinism:3} (with $\bar{\sigma}_1 = \bar{\sigma}_2 = \bar{\sigma}_1' = \bar{\sigma}_2' = \epsilon$) that
 \begin{equation*}
   E_1 = E_2 \quad\wedge\quad \Sigma_1 = \Sigma_2
 \end{equation*}
   From the second hypothesis of the rule and Lemma~\ref{lemma:determinism:1} it also follows that
 \begin{equation*}
-  \bar{E}_1 = \bar{E_2}
+  \bar{E}'_1 = \bar{E}'_2
 \end{equation*}
   Hence, we may conclude
 \begin{equation*}
-  E_1[\bar{E}_1/\bar{x}] = E_2[\bar{E_2}/\bar{x}]
+  E_1[\bar{E}'_1/\bar{x}] = E_2[\bar{E_2}'/\bar{x}]
 \end{equation*}
 
 
@@ -551,7 +563,8 @@ The proof proceeds by induction on the derivation of the third hypothesis.
 \end{description}
 \end{proof}
 
-We annotated the judgement with the sequence of substitution types $\bar{\suty}$
+Before proceeding with the matching judgment, we present a version of it that
+is annotated with the sequence of substitution types $\bar{\suty}$
 used to instantiate the universal quantifiers.
 
 {\centering
@@ -566,7 +579,7 @@ $\ba{c}
 \myrule{M-IApp}
        {\dmresa{\bar{\suty}}{\tenv,\envi{\rulet_1}{x}}{\rulet_2}{E\,x}{\type}{E'}{\Sigma} \\
         \gbox{x~\mathit{fresh}}}
-       {\dmresa{\bar{\suty}}{\tenv}{\rulet_1 \To \rulet_2}{E}{\type}{E'}{\Sigma,\ie{\rulet_1}{x}}}\\\\
+       {\dmresa{\bar{\suty}}{\tenv}{\rulet_1 \To \rulet_2}{E}{\type}{E'}{\ie{\rulet_1}{x},\Sigma}}\\\\
 \myrule{M-TApp}
        {\dmresa{\bar{\suty}}{\tenv}{\rulet[\suty/\alpha]}{E\,|\suty|}{\type}{E'}{\Sigma} \\
         \wfty{\tenv}{\suty}}
@@ -588,7 +601,7 @@ It is not difficult to see that any derivation of the annotated judgement
 is in one to one correspondence with a derivation of the unannotated 
 judgement.
 
-The judgement is deterministic.\\
+Now we are ready to show that the judgement is deterministic.\\
 
 %###############################################################################
 {\centering
