@@ -99,37 +99,76 @@ in the design of a system with full impredicativity.
 
 \subsection{Committed Choice}
 
-\name employs a committed choice for resolution. The motivation for this choice is 
-largely due to the startegy employed by Haskell. Since early on it was decided that Haskell 
-should not use backtracking during resolution. One key motivator for this is reasoning. Another 
-one is performance.
+\name employs a committed choice for resolution. The motivation for
+this choice is largely due to the strategy employed by Haskell. Since
+early on it was decided that Haskell should not use backtracking
+during resolution. When Haskell picks an instance it completely
+ignores the context: only the head of the instance is considered in
+resolution.  For example, consider the following program with
+overlapping instances:
 
-\paragraph{Overlapping Instances}
+%format dots ="\ldots"
 
-Consider the following piece of code:
-
-
-> data IntSet = C a deriving Eq
-> 
 > class C a where
 >   m :: a -> a
 >
 > instance Eq a => C [a] where
-> 
+>   dots
+>
 > instance Ord a => C [a] where
+>   dots
 > 
-> fun :: StablePtr Int -> [StablePtr Int]
-> fun sp = m [sp]
+> f :: StablePtr Int -> [StablePtr Int]
+> f sp = m [sp] -- rejected!
 
-The point here is that StablePtr supports equality but not ordering. That is there 
-is a type class instance |Eq (StablePtr a)|, but no type class instance |Ord (StablePtr a)|. 
 
-The question is should the above code type-check or not? In GHC Haskell the answer is no. 
-Even though for this program there is no ambiguity: the only choice is to pick the first 
-type class instance, the program is nevertheless rejected. 
+\bruno{Is this a good example?}
+In this piece of code we have a type class |C a| and two
+instances. The first instance requires |Eq a|, whereas the second
+instance requires |Ord a|. The function |f| takes a stable pointer
+(|StablePointer|)
+and returns a list of stable pointers. Notably |StablePointer| is a type
+that supports equality, but not ordering. That is, there is an
+instance |Eq (StablePointer a)| but not one for |Ord (StablePointer a)|. 
 
-This is because Haskell's resolution does not consider the contexts in the resolution process:
-it only considers the head of a type class instance. 
+The question is should the above code type-check or not? In GHC
+Haskell the answer is no.  Even though for this program there is no
+ambiguity: the only choice is to pick the first type class instance,
+the program is nevertheless rejected. The reason is that when
+overlapping instances are used in Haskell, resolution only looks at
+the head of the instances. In this case there are two equality specific
+heads |C [a]| and therefore the program is rejected.
+
+Although this design choice is not very well documented in the
+research literature, the reason for this choice is folklore among
+Haskell programmers and can be found in domentation and
+emails~\cite{}. In essence there are two argument for not allowing
+backtracking during resolution:
+
+\begin{itemize}
+
+\item {\bf Reasoning:} When reasoning about Haskell code that involves
+type classes, programmers often have to figure out which type class
+instance is used. Essentially this requires recreating the steps
+involved in the resolution algorithm. If only the heads are needed
+to figure out which instances are used, then reasoning is relatively
+simple. However is backtracking is involved then finding the instances
+will require programmers to simulate the backtracking process, which
+can be quite complex.
+
+\item {\bf Performance:} Another strong motivation to disallow
+backtracking is performance.  If backtracking is allowed the compile
+times required to type-check programs involving instances that require
+alot of backtracking could grow exponentially. High compile times are
+not desirable for programmers, therefore by disallowing backtracking
+GHC eliminates a potential source of significant performance penalties
+in type-checking.
+
+\end{itemize}
+
+\paragraph{Alternative Designs} Other implicit programming mechanisms
+allow backtracking~\cite{}, therefore another reasonable choice would
+be 
 
 \subsection{Superclasses}
 
