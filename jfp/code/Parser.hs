@@ -16,7 +16,7 @@ lexer :: Token.TokenParser ()
 lexer = Token.makeTokenParser style
   where style = emptyDef {
           Token.reservedOpNames = ["->","=>","?","\\","\\?","/\\"],
-          Token.reservedNames = ["with","forall","int","bool","true","false"],
+          Token.reservedNames = ["with","forall","int","bool","true","false","implicit","in"],
           Token.commentLine = "#" }
 
 natural :: Parser Integer
@@ -115,9 +115,9 @@ mono_type = mt1
 
 {-
 
-   t ::= λx:ρ.t | λ?ρ.t | t[σ] | t t | t with t | x | (t)
+   t ::= implicit t : ρ in t | λx:ρ.t | λ?ρ.t | t[σ] | t t | t with t | x | (t)
 
-   t0 ::= Λa.t0 | ?ct3 | λ (x : ρ. t0 | ?ρ.t0 ) | 
+   t0 ::= implicit t0 : ρ in t0 | Λa.t0 | ?ct3 | λ (x : ρ. t0 | ?ρ.t0 ) | 
 
         | t1 ( | [σ] | with t0 | t1) 
 
@@ -136,7 +136,8 @@ parseTerm t =
 term :: Parser Term
 term = t0
   where
-    t0 =     tm_tabs 
+    t0 =     implicit_in
+         <|> tm_tabs 
          <|> tm_query 
          <|> (reservedOp "\\?" *> t0a)
          <|> (reservedOp "\\" *> t0b) 
@@ -147,6 +148,10 @@ term = t0
          <|> (TM_False <$ reserved "false")
          <|> (TM_Var <$> identifier) 
          <|> parens t0
+
+    implicit_in = 
+       (\x ct y -> TM_IApp (TM_IAbs ct y) x)
+        <$ reserved "implicit" <*> t0 <* colon <*> context_type <* reserved "in" <*> t0 
 
     tm_tabs = TM_TAbs <$ reservedOp "/\\" <*> identifier <* dot <*> t0
 
