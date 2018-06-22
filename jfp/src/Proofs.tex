@@ -4,53 +4,27 @@
 \framebox{%\scriptsize
 \begin{minipage}{0.969\textwidth}
 \bda{c}
-%\multicolumn{1}{c}{\myruleform{\Gamma \turns T}} \\ \\
-%\myrule{F-WF-VarTy}{
-%           \alpha \in \Gamma
-% }{
-%            \Gamma \turns \alpha
-%} \\ \\
-%\myrule{F-WF-FunTy}{
-%            \Gamma \turns T_1 \quad\quad \Gamma \turns T_2
-% }{
-%            \Gamma \turns T_1 \arrow T_2
-%} \\ \\
-%\myrule{F-WF-UnivTy}{
-%            \Gamma, \alpha \turns T
-% }{
-%            \Gamma \turns \forall \alpha.T
-%} \\ \\
-\multicolumn{1}{c}{\myruleform{\Gamma \turns E : T}} \\ \\
-\myrule{F-Var}{
-           (x : T) \in \Gamma
- }{
-            \Gamma \turns x : T
-} \\ \\
+\multicolumn{1}{c}{\myruleform{\fwte{\tenv}{E}{T}}} \\ \\
+\myrule{F-Var}
+  { (x : T) \in \tenv }
+  { \fwte{\tenv}{x}{T} } \\ \\
 
-\myrule{F-Abs}{
-           \Gamma, x : T_1 \turns E : T_2 %\quad\quad \Gamma \turns T_1
- }{
-           \Gamma \turns \lambda x:T_1.E : T_1 \rightarrow T_2
-} \\ \\
+\myrule{F-Abs}
+  {\fwte{\tenv,\relation{x}{T_1}}{E}{T_2} } 
+  {\fwte{\tenv}{\abs{x}{T_1}{E}}{T_1\to T_2} } \\ \\
 
-\myrule{F-App}{
-  \Gamma \turns E_1 : T_2 \rightarrow T_1 \quad\quad
-           \Gamma \turns E_2 : T_2
-          }{
-           \Gamma \turns E_1 \, E_2 : T_1
-} \\ \\
+\myrule{F-App}
+ { \fwte{\tenv}{E_1}{T_2\to T_1} \quad\quad
+   \fwte{\tenv}{E_2}{T_2} }
+ { \fwte{\tenv}{\mmapp{E_1}{E_2}}{T_1} } \\ \\
 
-\myrule{F-TApp}{
-  \Gamma \turns E : \forall \alpha. T_2 %\quad\quad \Gamma \turns T_1
-           }{
-            \Gamma \turns E \, T_1 : T_2[T_1/\alpha]
-} \\ \\
+\myrule{F-TApp}
+  { \fwte{\tenv}{E}{\tall{\alpha}{T_2}} }
+  { \fwte{\tenv}{\mmapp{E}{T_1}}{T_2[T_1/\alpha]} } \\ \\
 
-\myrule{F-TAbs}{
-   \Gamma, \alpha \turns E : T
-            }{
-             \Gamma \turns \Lambda \alpha.E : \forall \alpha. T 
-} 
+\myrule{F-TAbs}
+  { \fwte{\tenv,\alpha}{E}{T} }
+  { \fwte{\tenv}{\Abs{\alpha}{E}}{\tall{\alpha}{T}} } 
 \eda
 \end{minipage}
 }
