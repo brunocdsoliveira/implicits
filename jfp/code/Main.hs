@@ -17,6 +17,7 @@ topLevel p =
       Right (ct, f) 
         -> do section "Checked Type" ct
               section "System F Elaboration" f
+              section "System F Evaluation" (F.eval f)
               case F.checkTerm f of
                 Left msg -> putStrLn msg
                 Right ty -> do section "System F Checked Type" ty
