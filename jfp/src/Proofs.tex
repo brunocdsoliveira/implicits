@@ -205,12 +205,10 @@ This lemma is proved together with Lemma~\ref{lemma:s23:2} by mutual induction o
   If 
 \begin{equation*}
   \dlres{\bar{\alpha}}{\tenv}{\tenv'}{\type}{E}
-%   \bar{\alpha}; \tenv; \tenv' \ivturns \type \leadsto E
 \end{equation*}
   then
 \begin{equation*}
   \ares{\tenv}{\type}{E}
-%  \tenv' \vturns \type \leadsto E
 \end{equation*}
 \end{lemma}
 \end{minipage}
@@ -783,13 +781,12 @@ Deterministic resolution is stable under substitution.
 %###############################################################################
 
 The next two proofs make use of the auxiliary inductive definition R, shown in
-Figure~\ref{fig:R}. When performing a type substitution $[\suty/\alpha]$ under an environment
-that is represented as the concatenation of two environments, $\tenv = \tenv_1,\tenv_2$,
-this definition separates between the two cases $\alpha\in\tenv_1$ and $\alpha\in\tenv_2$ and
-specifies the resulting environment after the substitution in terms of the $\tenv_1$ and
-$\tenv_2$ environments. The first three arguments of R, when concatenated, represent the
-initial complete environment $\tenv$, while the next two, when concatenated, represente the
-updated environment after the substitution.
+Figure~\ref{fig:R}. When performing a type substitution
+$\vsubst{\tenv_x,\tenv_y}{[\suty/\alpha]}$, this definition separates between the two cases
+$\alpha\in\tenv_x$ and $\alpha\in\tenv_y$. The first case is covered by rule (R-2), where
+$\tenv_x = \tenv,\alpha,\tenv_1'$, and the second by (R-1), with $\tenv_x = \tenv_1$.
+The fourth argument represents $\tenv_x$ and the fifth analayzes the updated $\tenv_x$
+environment that results from performing the substitution.
 
 \figtwocol{fig:R}{Auxiliary Definition R}{
 \begin{center}
