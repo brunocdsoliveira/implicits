@@ -1677,7 +1677,8 @@ for the $\bar{\alpha}$ type variables.
 \begin{lemma}\label{lemma:asoundness:3}
   If 
 \begin{equation*}
-  \bar{\alpha};\tenv;\rulet \leadsto E; \Sigma \alg \type \leadsto E'; \Sigma',\theta(\Sigma); \theta
+\admress{\bar\alpha}{\tenv}{\rulet}{E}{\Sigma}{\type}{E'}{\Sigma',\theta(\Sigma)}{\theta}
+%  \bar{\alpha};\tenv;\rulet \leadsto E; \Sigma \alg \type \leadsto E'; \Sigma',\theta(\Sigma); \theta
 \end{equation*}
   and
 \begin{equation*}
@@ -1685,7 +1686,8 @@ for the $\bar{\alpha}$ type variables.
 \end{equation*}
   then
 \begin{equation*}
-  \theta(\tenv); \theta(\rulet) \leadsto |\theta|(E) \ivturns \theta(\type) \leadsto E'; \Sigma'
+\dmres{\theta(\tenv)}{\theta(\rulet)}{\etrans\theta(E)}{\theta(\type)}{E'}{\Sigma'}
+%  \theta(\tenv); \theta(\rulet) \leadsto |\theta|(E) \ivturns \theta(\type) \leadsto E'; \Sigma'
 \end{equation*}
 \end{lemma}
 \end{minipage}
@@ -1696,37 +1698,48 @@ The proof proceeds by induction on the derivation of the first hypothesis.
 \begin{description}
 \setlength{\itemsep}{1em}
 %===============================================================================
-\item[\fbox{\texttt{(Alg-M-Simp)}}]\quad$\bar{\alpha}; \tenv; \type' \leadsto E; \Sigma \alg \type \leadsto |\theta|(E); \epsilon,\theta(\Sigma);\theta$ \ \\
+\item[\fbox{\rref{Alg-M-Simp}}]\quad
+$\admress{\bar\alpha}{\tenv}{\type'}{E}{\Sigma}{\type}{\etrans\theta(E)}{\epsilon,\theta(\Sigma)}{\theta}$\ \\
+%$\bar{\alpha}; \tenv; \type' \leadsto E; \Sigma \alg \type \leadsto |\theta|(E); \epsilon,\theta(\Sigma);\theta$ \ \\
 %===============================================================================
 From the hypothesis of the rule and Lemma~\ref{lemma:asoundness:6} it follows that
 $\theta(\type') = \theta(\type)$. Hence, the target judgement can be rewritten as
 \begin{equation*}
-  \theta(\tenv); \theta(\type') \leadsto |\theta|(E) \ivturns \theta(\type') \leadsto |\theta|(E); \epsilon
+  \dmres{\theta(\tenv)}{\theta(\type')}{\etrans\theta{E}}{\theta(\type')}{\etrans\theta{E}}{\epsilon}
+%  \theta(\tenv); \theta(\type') \leadsto |\theta|(E) \ivturns \theta(\type') \leadsto |\theta|(E); \epsilon
 \end{equation*}
 This follows from rule \mylabel{M-Simp}.
 
 %===============================================================================
-\item[\fbox{\texttt{(Alg-M-IApp)}}]\quad$\bar{\alpha}; \tenv; \rulet_1 \iarrow \rulet_2~{\leadsto E}; \Sigma \alg \type~{\leadsto E'}; \Sigma',\theta(\rulet_1) \leadsto x, \theta(\Sigma);\theta$ \ \\
+\item[\fbox{\rref{Alg-M-IApp}}]\quad
+$\admress{\bar\alpha}{\tenv}{\rulet_1\To\rulet_2}{E}{\Sigma}{\type}{E'}{\Sigma',\ie{\theta(\rulet_1)}{x}, \theta(\Sigma)}{\theta}$\ \\
+%$\bar{\alpha}; \tenv; \rulet_1 \iarrow \rulet_2~{\leadsto E}; \Sigma \alg \type~{\leadsto E'}; \Sigma',\theta(\rulet_1) \leadsto x, \theta(\Sigma);\theta$ \ \\
 %===============================================================================
   From the hypothesis of the rule and the induction hypothesis, we have that
 \begin{equation*}
- \theta(\tenv,\rulet_1 \leadsto x); \theta(\rulet_2) \leadsto |\theta|(E\,x) \ivturns \theta(\type) \leadsto E'; \Sigma' 
+  \dmres{\tenv,\ie{\rulet_1}{x}}{\theta(\rulet_2)}{\etrans\theta(\mmapp{E}{x})}{\theta(\type)}{E'}{\Sigma'}
+% \theta(\tenv,\rulet_1 \leadsto x); \theta(\rulet_2) \leadsto |\theta|(E\,x) \ivturns \theta(\type) \leadsto E'; \Sigma' 
 \end{equation*}
-  By rule \mylabel{M-IApp} we may then conclude
+  By rule \rref{M-IApp} we may then conclude
 \begin{equation*}
- \theta(\tenv); \theta(\rulet_1 \iarrow \rulet_2) \leadsto |\theta|(E) \ivturns \theta(\type) \leadsto E'; \Sigma',\theta(\rulet_1) \leadsto x
+\dmres{\theta(\tenv)}{\theta(\rulet_1\To\rulet_2)}{\etrans\theta(E)}{\theta(\type)}{E'}{\Sigma',\ie{\theta(\rulet_1)}{x}}
+% \theta(\tenv); \theta(\rulet_1 \iarrow \rulet_2) \leadsto |\theta|(E) \ivturns \theta(\type) \leadsto E'; \Sigma',\theta(\rulet_1) \leadsto x
 \end{equation*} 
 
 %===============================================================================
-\item[\fbox{\texttt{(Alg-M-TApp)}}]\quad$\bar{\alpha}; \tenv; \forall \alpha. \rulet~{\leadsto E}; \Sigma \alg \type~{\leadsto E'}; \Sigma',\theta(\Sigma);\theta$ \ \\
+\item[\fbox{\rref{Alg-M-TApp}}]\quad
+$\admress{\bar\alpha}{\tenv}{\tall{\alpha}{\rulet}}{E}{\Sigma}{\type}{E'}{\Sigma',\theta(\Sigma)}{\theta}$\ \\
+%$\bar{\alpha}; \tenv; \forall \alpha. \rulet~{\leadsto E}; \Sigma \alg \type~{\leadsto E'}; \Sigma',\theta(\Sigma);\theta$ \ \\
 %===============================================================================
   Then it follows from the rule's hypothesis and from the induction hypothesis that
 \begin{equation*}
-  \theta(\tenv); \theta(\rulet) \leadsto |\theta|(E\,\alpha) \ivturns \theta(\type) \leadsto E'; \Sigma'
+\dmres{\theta(\tenv)}{\theta(\rulet)}{\etrans\theta(\mmapp{E}{\alpha})}{\theta(\type)}{E'}{\Sigma'}
+%  \theta(\tenv); \theta(\rulet) \leadsto |\theta|(E\,\alpha) \ivturns \theta(\type) \leadsto E'; \Sigma'
 \end{equation*}
-  Hence, it follows from rule \mylabel{M-TApp} that
+  Hence, it follows from rule \rref{M-TApp} that
 \begin{equation*}
-  \theta(\tenv); \theta(\forall \alpha.\rulet) \leadsto |\theta|(E) \ivturns \theta(\type) \leadsto E'; \Sigma'
+  \dmres{\theta(\tenv)}{\theta(\tall{\alpha}{\rulet})}{\etrans\theta(E)}{\theta(\type)}{E'}{\Sigma'}
+%  \theta(\tenv); \theta(\forall \alpha.\rulet) \leadsto |\theta|(E) \ivturns \theta(\type) \leadsto E'; \Sigma'
 \end{equation*}
 
 \end{description}
