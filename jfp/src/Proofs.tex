@@ -58,11 +58,10 @@ of resolution preserves types.
   If 
 \begin{equation*}
      \wte{\tenv}{e}{\rulet}{E}
-%    \tenv \turns e : \rho \leadsto E
 \end{equation*}
   then
 \begin{equation*}
-    |\tenv| \turns E : |\rho|
+     \fwte{\etrans\tenv}{E}{\etrans\rulet}
 \end{equation*}
 \end{lemma}
 \end{minipage}
@@ -78,12 +77,11 @@ of resolution preserves types.
 \begin{lemma}\label{lemma:resolution}\label{lemma:tp:2}
   If 
 \begin{equation*}
-%    \tenv \vturns \rulet \leadsto E
      \ares{\tenv}{\rulet}{e}
 \end{equation*}
   then
 \begin{equation*}
-    |\tenv| \turns E : |\rulet|
+     \fwte{\etrans\tenv}{E}{\etrans\rulet}
 \end{equation*}
 \end{lemma}
 \end{minipage}
@@ -109,12 +107,10 @@ preserves all the derivations of the original environment.
   If 
 \begin{equation*}
   \ares{\tenv, \tenv'}{\rulet}{E}
-%  \tenv, \tenv' \vturns \rulet \leadsto E 
 \end{equation*}
   then
 \begin{equation*}
   \ares{\tenv, \tenv'', \tenv'}{\rulet}{E}
-%    \tenv, \tenv'', \tenv' \vturns \rulet \leadsto E
 \end{equation*}
 \end{lemma}
 \end{minipage}
@@ -134,17 +130,14 @@ by the remainder of the type environment.
   If 
 \begin{equation*}
   \ares{\tenv, \ie{\rulet}{x}, \tenv'}{\rulet'}{E'}
-%  \tenv, \rulet \leadsto x, \tenv' \vturns \rulet' \leadsto E'
 \end{equation*}
   and
 \begin{equation*}
   \ares{\tenv}{\rulet}{E}
-%  \tenv \vturns \rulet \leadsto E 
 \end{equation*}
   then
 \begin{equation*}
   \ares{\tenv, \tenv'}{\rulet'}{E'[E/x]}
-%    \tenv, \tenv' \vturns \rulet' \leadsto E'[E/x]
 \end{equation*}
 \end{lemma}
 \end{minipage}
@@ -167,12 +160,10 @@ sound with respect to non-deterministic resolution.
   If 
 \begin{equation*}
   \dres{\tenv}{\rulet}{E}
-%  \tenv \ivturns \rulet \leadsto E 
 \end{equation*}
   then
 \begin{equation*}
    \ares{\tenv}{\rulet}{E}
-%    \tenv \vturns \rulet \leadsto E
 \end{equation*}
 \end{lemma}
 \end{minipage}
