@@ -1,3 +1,12 @@
+%include lhs2TeX.fmt
+%include polycode.fmt
+%include forall.fmt
+%include Rule.fmt
+%%include Scala.fmt
+%format new = "\bf{new}"
+
+%format === = "\cong"
+
 \section{Discussion}
 
 In the design of \name we had to take several design decisions. In
