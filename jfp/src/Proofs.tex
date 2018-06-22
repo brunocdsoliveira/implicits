@@ -1879,58 +1879,74 @@ The proof proceeds by induction on the derivation of the hypothesis.
 \begin{description}
 \setlength{\itemsep}{1em}
 %===============================================================================
-\item[\fbox{\texttt{(L-RuleMatch)}}]\quad$\bar{\alpha};\tenv; \tenv', \rulet~{\leadsto x} \ivturns \type~{\leadsto E[\bar{E}/\bar{x}]}$ \ \\
+\item[\fbox{\rref{L-RuleMatch}}]\quad
+$\dlres{\bar\alpha}{\tenv}{\tenv',\envi{\rulet}{x}}{\type}{E[\bar{E}/\bar{x}]}$\ \\
+%$\bar{\alpha};\tenv; \tenv', \rulet~{\leadsto x} \ivturns \type~{\leadsto E[\bar{E}/\bar{x}]}$ \ \\
 %===============================================================================
 From the rule's first hypothesis and Lemma~\ref{lemma:acompleteness:3} we have
 \begin{equation*}
-\epsilon; \tenv; \rulet \leadsto x; \epsilon \alg \type \leadsto E'; \bar{\rulet} \leadsto \bar{x}
+  \admres{\epsilon}{\tenv}{\rulet}{x}{\epsilon}{\type}{E'}{\ie{\bar\rulet}{\bar{x}}}
+%\epsilon; \tenv; \rulet \leadsto x; \epsilon \alg \type \leadsto E'; \bar{\rulet} \leadsto \bar{x}
 \end{equation*}
-Then, using Lemma~\ref{lemma:acompleteness:1} and rule \mylabel{Alg-L-RuleMatch} we conclude
+Then, using Lemma~\ref{lemma:acompleteness:1} and rule \rref{Alg-L-RuleMatch} we conclude
 \begin{equation*}
-\bar{\alpha};\tenv; \tenv', \rulet~{\leadsto x} \alg \type~{\leadsto E[\bar{E}/\bar{x}]}
+  \adlres{\bar\alpha}{\tenv}{\tenv',\envi{\rulet}{x}}{\type}{E[\bar{E}/\bar{x}]}
+%\bar{\alpha};\tenv; \tenv', \rulet~{\leadsto x} \alg \type~{\leadsto E[\bar{E}/\bar{x}]}
 \end{equation*}
 
 %===============================================================================
-\item[\fbox{\texttt{(L-RuleNoMatch)}}]\quad$\bar{\alpha};\tenv;\tenv', \rulet~{\leadsto x}\ivturns \type~{\leadsto E'}$ \ \\
+\item[\fbox{\rref{L-RuleNoMatch}}]\quad
+$\dlres{\bar\alpha}{\tenv}{\tenv',\envi{\rulet}{x}}{\type}{E'}$\ \\
+%$\bar{\alpha};\tenv;\tenv', \rulet~{\leadsto x}\ivturns \type~{\leadsto E'}$ \ \\
 %===============================================================================
   From the rule's second hypothesis and the induction hypothesis we have
 \begin{equation*}
-  \bar{\alpha};\tenv;\tenv' \alg \type~{\leadsto E'}
+  \adlres{\bar\alpha}{\tenv}{\tenv'}{\type}{E'}
+%  \bar{\alpha};\tenv;\tenv' \alg \type~{\leadsto E'}
 \end{equation*}
 
   From the rule's first hypothesis and the negation of Lemma~\ref{lemma:acompleteness:4}, we have:
 \begin{equation*}
-\bar{\alpha}; \rulet \not\coh \type
+\incoherent{\bar\alpha}{\tenv}{\rulet}{\type}
+%\bar{\alpha}; \rulet \not\coh \type
 \end{equation*}
-  Hence with rule \mylabel{Alg-L-RuleNoMatch} we conclude
+  Hence with rule \rref{Alg-L-RuleNoMatch} we conclude
 \begin{equation*}
-  \bar{\alpha};\tenv;\tenv',\rulet \leadsto x \alg \type~{\leadsto E'}
+  \adlres{\bar\alpha}{\tenv}{\tenv',\envi{\rulet}{x}}{\type}{E'}
+%  \bar{\alpha};\tenv;\tenv',\rulet \leadsto x \alg \type~{\leadsto E'}
 \end{equation*}
 
 %===============================================================================
-\item[\fbox{\texttt{(L-Var)}}]\quad$\bar{\alpha};\tenv;\tenv',x:\rulet \ivturns \type~{\leadsto E}$ \ \\
+\item[\fbox{\rref{L-Var}}]\quad
+$\dlres{\bar\alpha}{\tenv}{\tenv',\relation{x}{\rulet}}{\type}{E}$\ \\
+%$\bar{\alpha};\tenv;\tenv',x:\rulet \ivturns \type~{\leadsto E}$ \ \\
 %===============================================================================
 From the rule's hypothesis and the induction hypothesis we obtain
 \begin{equation*}
-  \bar{\alpha};\tenv;\tenv' \alg \type~{\leadsto E}
+  \adlres{\bar\alpha}{\tenv}{\tenv'}{\type}{E}
+%  \bar{\alpha};\tenv;\tenv' \alg \type~{\leadsto E}
 \end{equation*}
-By rule \mylabel{Alg-L-Var} we conclude
+By rule \rref{Alg-L-Var} we conclude
 \begin{equation*}
-  \bar{\alpha};\tenv;\tenv',x:\rulet \alg \type~{\leadsto E}
+  \adlres{\bar\alpha}{\tenv}{\tenv',\relation{x}{\rulet}}{\type}{E}
+%  \bar{\alpha};\tenv;\tenv',x:\rulet \alg \type~{\leadsto E}
 \end{equation*}
 
 %===============================================================================
-\item[\fbox{\texttt{(L-TyVar)}}]\quad$\bar{\alpha};\tenv;\tenv',\alpha \ivturns \type~{\leadsto E}$ \ \\
+\item[\fbox{\rref{L-TyVar}}]\quad
+$\dlres{\bar\alpha}{\tenv}{\tenv',\alpha}{\type}{E}$\ \\
+%$\bar{\alpha};\tenv;\tenv',\alpha \ivturns \type~{\leadsto E}$ \ \\
 %===============================================================================
 From the rule's hypothesis and the induction hypothesis we obtain
 \begin{equation*}
-  \bar{\alpha};\tenv;\tenv' \alg \type~{\leadsto E}
+\adlres{\bar\alpha}{\tenv}{\tenv'}{\type}{E}
+% \bar{\alpha};\tenv;\tenv' \alg \type~{\leadsto E}
 \end{equation*}
-By rule \mylabel{Alg-L-TyVar} we conclude
+By rule \rref{Alg-L-TyVar} we conclude
 \begin{equation*}
-  \bar{\alpha};\tenv;\tenv',\alpha \alg \type~{\leadsto E}
+  \adlres{\bar\alpha}{\tenv}{\tenv',\alpha}{\type}{E}
+%  \bar{\alpha};\tenv;\tenv',\alpha \alg \type~{\leadsto E}
 \end{equation*}
-
 \end{description}
 \end{proof}
 
