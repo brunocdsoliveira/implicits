@@ -1152,10 +1152,6 @@ R(\tenv;\alpha;\tenv';\tenv'',\beta;\tenv,(\tenv_1',\beta)[\suty/\alpha];\suty)
 \begin{equation*}
   \dmres{\tenv,\alpha,\tenv'}{\rulet}{E}{\type}{E'}{\ie{\ruleset}{\bar{x}}}
 \end{equation*}
-  and
-\begin{equation*}
-  \wfty{\tenv}{\suty}
-\end{equation*}
   then
 \begin{equation*}
   \dmres{\tenv,\tenv'[\suty/\alpha]}{\rulet[\suty/\alpha]}{E[|\suty|/\alpha]}{\type[\suty/\alpha]}{E'[|\suty|/\alpha]}{\ie{\ruleset[\suty/\alpha]}{\bar{x}}}
@@ -1165,7 +1161,7 @@ R(\tenv;\alpha;\tenv';\tenv'',\beta;\tenv,(\tenv_1',\beta)[\suty/\alpha];\suty)
 }}
 
 \begin{proof}
-The proof proceeds by induction on the derivation of the first hypothesis.
+The proof proceeds by induction on the derivation of the hypothesis.
 \begin{description}
 \setlength{\itemsep}{1em}
 %===============================================================================
@@ -1183,11 +1179,11 @@ The desired conclusion follows directly from rule \rref{M-Simp}
 
 From the rule's hypothesis and the induction hypothesis we have 
 \begin{equation*}
-\dmres{\tenv,(\tenv',\envi{\rulet_1}{x})[\suty/\alpha]}{\rulet_2[\suty/\alpha]}{(E~x)[|\suty|/\alpha]}{\type[\suty/\alpha]}{E'[|\suty|/\alpha]}{\Sigma[\suty/\alpha]}
+\dmres{\tenv,(\tenv',\envi{\rulet_1}{x})[\suty/\alpha]}{\rulet_2[\suty/\alpha]}{(E~x)[|\suty|/\alpha]}{\type[\suty/\alpha]}{E'[|\suty|/\alpha]}{(\rulet_1~\gbox{\leadsto x},\Sigma)[\suty/\alpha]}
 \end{equation*}
   Then from the definition of substutition and rule \rref{M-IApp} we conclude
 \begin{equation*}
-  \dmres{\tenv,\tenv'[\suty/\alpha]}{(\rulet_1 \To \rulet_2)[\suty/\alpha]}{E[|\suty|/\alpha]}{\type[\suty/\alpha]}{E'[|\suty|/\alpha]}{(\Sigma,\ie{\rulet_1}{x})[\suty/\alpha]}
+  \dmres{\tenv,\tenv'[\suty/\alpha]}{(\rulet_1 \To \rulet_2)[\suty/\alpha]}{E[|\suty|/\alpha]}{\type[\suty/\alpha]}{E'[|\suty|/\alpha]}{\Sigma[\suty/\alpha]}
 %  \tenv,\tenv'[\suty/\alpha]; (\rulet_1 \iarrow \rulet_2)[\suty/\alpha] \leadsto E[|\suty|/\alpha] \ivturns \type[\suty/\alpha] \leadsto E'[|\suty|/\alpha]; (\Sigma,\rulet_1 \leadsto x)[\suty/\alpha]
 \end{equation*}
 
@@ -1196,19 +1192,13 @@ From the rule's hypothesis and the induction hypothesis we have
 %$\tenv,\alpha,\tenv'; \forall\beta.\rulet \leadsto E \ivturns \type \leadsto E'; \Sigma$ \ \\
 %===============================================================================
 
-  From the rule's first hypothesis and the induction hypothesis we have 
+  From the rule's hypothesis and the induction hypothesis we have 
 \begin{equation*}
   \dmres{\tenv,\tenv'[\suty/\alpha]}{\rulet[\suty'/\beta][\suty/\alpha]}{(E |\suty'|)[|\suty|/\alpha]}{\type[\suty/\alpha]}{E'[|\suty|/\alpha]}{\Sigma[\suty/\alpha]}
 %  \tenv,\tenv'[\suty/\alpha]; \rulet[\suty'/\beta][\suty/\alpha] \leadsto (E |\suty'|)[|\suty|/\alpha] \ivturns \type[\suty/\alpha] \leadsto E'[|\suty|/\alpha]; \Sigma[\suty/\alpha]
 \end{equation*}
 
-  From the rule's second hypothesis (and the preservation of well-typing under type-susbstitution) we have
-\begin{equation*}
-\wfty{\tenv,\tenv'[\suty/\alpha]}{\suty'[\suty'/\alpha]}
-%  \tenv,\tenv'[\suty/\alpha] \vdash \suty'[\suty'/\alpha]
-\end{equation*}
-
-  From these two facts we conclude by rule \rref{M-TApp}, reasoning modulo
+  We conclude by rule \rref{M-TApp}, reasoning modulo
   the definition of substitution
 \begin{equation*}
   \dmres{\tenv,\tenv'[\suty/\alpha]}{(\tall{\beta}{\rulet})[\suty/\alpha]}{E[|\suty|/\alpha]}{\type[\suty/\alpha]}{E'[|\suty|/\alpha]}{\Sigma[\suty/\alpha]}
@@ -1426,14 +1416,6 @@ the goal of this case.
 \begin{lemma}\label{lemma:unamb_subst:0}
   If
 \begin{equation*}
-  \wfty{\tenv,\alpha,\tenv'}{\rulet}
-\end{equation*}
-  and
-\begin{equation*}
-  \wfty{\tenv}{\suty}
-\end{equation*}
-  and
-\begin{equation*}
   \unambig{}{\rulet}
 \end{equation*}
   then
@@ -1456,14 +1438,6 @@ $\alpha\notin\epsilon$.
 \begin{lemma}\label{lemma:unamb_subst:1}
   If 
 \begin{equation*}
-  \wfty{\tenv,\alpha,\tenv'}{\rulet}
-\end{equation*}
-  and
-\begin{equation*}
-  \wfty{\tenv}{\suty}
-\end{equation*}
-  and
-\begin{equation*}
   \unambig{\bar{\alpha}}{\rulet}
 \end{equation*}
   and
@@ -1478,7 +1452,7 @@ $\alpha\notin\epsilon$.
 \end{minipage}
 }
 \begin{proof}
-The proof proceeds by induction on the theorem's third hypothesis, mutually with the previous
+The proof proceeds by induction on the theorem's first hypothesis, mutually with the previous
 proof.\\
 
 %===============================================================================
@@ -1508,8 +1482,7 @@ hypothesis of the theorem, we reach the goal:
 %===============================================================================
 \item[\fbox{\rref{UA-TAbs}}]\quad$\unambig{\bar{\alpha}}{\tall{\beta}{\rulet}}$\\
 %===============================================================================
-From the first hypothesis of the theorem, it is clear that $\alpha\neq\beta$, therefore
-$\alpha\notin\bar\alpha,\beta$.
+From the second hypothesis of the theorem and the adopted Barendregt convention, it follows that $\alpha\notin\bar\alpha,\beta$.
 
 From the assumption of the rule and the induction hypothesis, we get
 \begin{equation*}
@@ -1523,14 +1496,8 @@ By using this in rule \rref{UA-TAbs} and from the definition of substitution, we
 %===============================================================================
 \item[\fbox{\rref{UA-IAbs}}]\quad$\unambig{\bar{\alpha},\alpha,\bar{\alpha}'}{\rulet_1\To\rulet_2}$\\
 %===============================================================================
-The first hypothesis of the theorem, adapted to this case, is $\wfty{\tenv,\alpha,\tenv'}{\rulet_1\To\rulet_2}$.
-By case analysis, this well-scoping judgment can only hold as the conclusion of rule \rref{WF-RulTy}. From its premises, we get
-\begin{equation*}
-\wfty{\tenv,\alpha,\tenv'}{\rulet_1}
-\end{equation*}
 
-Passing the first assumption of rule \rref{UA-IAbs}, the obtained well-scoping result above and
-the second hypothesis of the theorem to Lemma~\ref{lemma:unamb_subst:0}, results in
+Passing the first assumption of rule \rref{UA-IAbs} to Lemma~\ref{lemma:unamb_subst:0} results in
 \begin{equation*}
 \unambig{}{\rulet_1[\suty/\alpha]}
 \end{equation*}
