@@ -704,7 +704,7 @@ TODO -> Klara
 > is a slight risk of confusion as the argument type of a rule is also
 > called "context".
 
-TODO
+FIXED
  
 >  - Section A.3: the notation for deterministic resolution judgments is
 > inconsistent w.r.t. that introduced in Fig. 7: all the focusing
@@ -744,15 +744,17 @@ Definition has been added.
 > |-_{unamb} \rho$ and invoking it in Lemma A.10 with $\bar{\alpha} =
 > \epsilon$. I have not checked the details, though.
 
-
 The context-type-unambiguity judgment enjoys a weakening property,
 easy to prove, according to which, if $\bar\alpha |-_{unamb} \rho$,
 then for any subset $\bar\alpha' \subseteq \bar\alpha$ it also holds
-that $\bar\alpha' |-_{unamb} \rho$.
+that $\bar\alpha' |-_{unamb} \rho$. This has been clarified in the 
+proof.
  
 > p. 46, proof of Lemma A.11, case (L-RuleMatch): "construted with" -->
 > "constructed" (or better yet --> "derived using")
-> 
+
+FIXED
+ 
 > p. 48
 > 
 >  - proof of Lemma A.13, case (UA-TAbs): some of the indices of the
