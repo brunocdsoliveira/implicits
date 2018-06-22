@@ -804,7 +804,9 @@ TODO -> Klara: apply the other lemma
 > p. 57, Lemma A.22: the type environment $\Gamma$ is missing in the
 > conclusion of the lemma (should be $\bar{\alpha}; \Gamma; \rho
 > |-_{coh} \tau$).
-> 
+
+FIXED
+
 > p. 58, proof of Lemma A.26, case (L-RuleNoMatch): there is a missing
 > step in this case of the proof, probably involving Lemma A.21.  The
 > issue is similar to that pointed out above for the case
