@@ -780,13 +780,12 @@ Deterministic resolution is stable under substitution.
 \end{proof}
 %###############################################################################
 
-The next two proofs make use of the auxiliary inductive definition R, shown in
-Figure~\ref{fig:R}. When performing a type substitution
-$\vsubst{\tenv_x,\tenv_y}{[\suty/\alpha]}$, this definition separates between the two cases
-$\alpha\in\tenv_x$ and $\alpha\in\tenv_y$. The first case is covered by rule (R-2), where
-$\tenv_x = \tenv,\alpha,\tenv_1'$, and the second by (R-1), with $\tenv_x = \tenv_1$.
-The fourth argument represents $\tenv_x$ and the fifth analayzes the updated $\tenv_x$
-environment that results from performing the substitution.
+The next two proofs make use of the auxiliary definition R, shown in
+Figure~\ref{fig:R}. The relation $R(\tenv;\alpha;\tenv';\tenv'';\tenv''';\suty)$ states that
+when performing a type substitution $\vsubst{\tenv,\alpha,\tenv'}{[\suty/\alpha]}$, then
+any $\tenv'' \subseteq \tenv,\alpha,\tenv'$, results to $\tenv'''$ after the substitution has
+been performed. The two cases of the relation are necessary to separate between
+$\alpha\in\tenv''$ and $\alpha\notin\tenv''$.
 
 \figtwocol{fig:R}{Auxiliary Definition R}{
 \begin{center}
