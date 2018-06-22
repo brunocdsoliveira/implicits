@@ -11,6 +11,8 @@ import Control.Applicative
 
 import qualified SystemF as F
 
+import qualified Data.Set as S
+
 checkTerm :: Term -> Either String (ContextType, F.Term)
 checkTerm t 
  = runReaderT (evalStateT (typeCheck t) 0) E_Empty
@@ -33,6 +35,14 @@ tcFresh =
   do n <- get
      put (n + 1)
      return ("_fresh_" ++ show n)
+
+tcGuard :: Bool -> String -> TC ()
+tcGuard b msg
+  | b
+  = return ()
+  | otherwise
+  = tcError msg
+  
 
 -- ENVIRONMENT --------------------------------------
 
@@ -114,7 +124,8 @@ typeCheck (TM_TApp t st)
           -> tcError ("Expected universal type, found: " ++ show ct)
          
 typeCheck (TM_IAbs ct1 t)
- = do x <- tcFresh
+ = do tcGuard (unambigCT ct1) ("Implicit abstraction type should be unambiguous: " ++ show ct1)
+      x <- tcFresh
       (ct2, f) <- inEnv (E_Imp ct1 x) (typeCheck t)
       return (CT_Rule ct1 ct2, F.Abs x (elabCT ct1) f)
 typeCheck (TM_IApp t1 t2)
@@ -130,7 +141,9 @@ typeCheck (TM_IApp t1 t2)
           -> tcError ("Expected rule type, found: " ++ show ct1)
       
 typeCheck (TM_Query ct)
- = do f <- resolve ct
+ = do 
+      tcGuard (unambigCT ct) ("Query type is ambiguous: " ++ show ct)
+      f <- resolve ct
       return (ct, f)
 typeCheck (TM_Int n)
  = return (CT_Simp ST_Int, F.Int n)
@@ -203,6 +216,8 @@ unify st1 st2 tvars =
                return []
     go1 (ST_TVar tv1) st2@(ST_Fun ct1 ct2)
       = do guard (tv1 `elem` tvars)
+           guard (not (occursST tv1 st2))
+           guard (isMonoTypeST st2)
            return [(tv1,st2)]
     go1 (ST_Fun ct1 ct2) (ST_TVar tv2)
       = empty
@@ -233,3 +248,18 @@ unify st1 st2 tvars =
       = go1 st1 st2
     go2 _ _
       = empty 
+
+    occursST :: TVar -> SimpleType -> Bool
+    occursST tv st = tv `S.member` freeTVarsST st
+
+
+unambigCT :: ContextType -> Bool
+unambigCT = go S.empty
+  where
+    go :: S.Set TVar -> ContextType -> Bool
+    go tvars (CT_Univ tv ct)
+      = go (S.insert tv tvars) ct
+    go tvars (CT_Rule ct1 ct2)
+      = go S.empty ct1 && go tvars ct2
+    go tvars (CT_Simp st)
+      = tvars `S.isSubsetOf` freeTVarsST st

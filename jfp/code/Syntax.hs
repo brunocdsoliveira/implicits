@@ -2,6 +2,9 @@ module Syntax where
 
 import Text.PrettyPrint.HughesPJ
 
+import Data.Set (Set)
+import qualified Data.Set as S
+
 -- TYPES ----------------------
 
 type TVar = String
@@ -18,6 +21,40 @@ data SimpleType
  | ST_Int
  | ST_Bool
  deriving Eq
+
+isMonoTypeCT :: ContextType -> Bool
+isMonoTypeCT (CT_Simp st)
+  = isMonoTypeST st
+isMonoTypeCT _
+  = False
+
+isMonoTypeST :: SimpleType -> Bool
+isMonoTypeST (ST_TVar _)
+  = True
+isMonoTypeST (ST_Fun ct1 ct2)
+  = isMonoTypeCT ct1 && isMonoTypeCT ct2
+isMonoTypeST ST_Int
+  = True
+isMonoTypeST ST_Bool
+  = True
+
+freeTVarsCT :: ContextType -> Set TVar
+freeTVarsCT (CT_Univ tv ct)
+  = S.delete tv (freeTVarsCT ct)
+freeTVarsCT (CT_Rule ct1 ct2)
+  = freeTVarsCT ct1 `S.union` freeTVarsCT ct2
+freeTVarsCT (CT_Simp st)
+  = freeTVarsST st
+
+freeTVarsST :: SimpleType -> Set TVar
+freeTVarsST (ST_TVar tv)
+  = S.singleton tv
+freeTVarsST (ST_Fun ct1 ct2)
+  = freeTVarsCT ct1 `S.union` freeTVarsCT ct2
+freeTVarsST ST_Int
+  = S.empty
+freeTVarsST ST_Bool
+  = S.empty
 
 -- Substitution
 
