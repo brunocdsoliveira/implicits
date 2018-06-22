@@ -2,6 +2,10 @@ module SystemF where
 
 import Text.PrettyPrint.HughesPJ
 
+import Control.Monad.Except
+import Control.Monad.Reader
+import Control.Applicative
+
 -- TYPES ----------------------
 
 type TVar = String
@@ -158,3 +162,82 @@ instance Show Type where
 
 instance Show Term where
   show = render . pretty
+
+-- TYPE CHECKING --------------
+
+
+checkTerm :: Term -> Either String Type
+checkTerm t 
+ = runReaderT (typeCheck t) E_Empty
+
+-- TYPE CHECKER MONAD --------------------------------
+
+type TC = ReaderT Env (Either String)
+
+tcAbort :: TC a
+tcAbort = lift (throwError "Abort!")
+
+tcError :: String -> TC a
+tcError msg = throwError msg
+
+tcEnv :: TC Env
+tcEnv = ask
+
+-- ENVIRONMENT --------------------------------------
+
+data Env
+  = E_Empty
+  | E_Var Var Type Env
+  | E_TVar TVar Env
+
+inEnv :: (Env -> Env) -> TC a -> TC a
+inEnv = local 
+
+tcLookupVar :: Var -> TC Type
+tcLookupVar v = 
+  do env <- tcEnv 
+     go env
+  where
+    go E_Empty 
+      = tcError ("Variable not found: " ++ v)
+    go (E_Var w r env) 
+      | w == v     = return r
+      | otherwise  = go env
+    go (E_TVar _ env)
+      = go env
+
+-- TYPE CHECKER --------------------------------------
+
+typeCheck :: Term -> TC Type
+typeCheck (Var v)
+ = tcLookupVar v
+typeCheck (Abs v ty1 t)
+ = do ty2 <- inEnv (E_Var v ty1) (typeCheck t)
+      return (Fun ty1 ty2)
+typeCheck (App t1 t2)
+ = do ty1 <- typeCheck t1
+      case ty1 of
+        Fun ty11 ty12 
+          -> do ty2 <- typeCheck t2
+                if ty11 == ty2
+                  then return ty12
+                  else tcError ("Function argument type mismatch, expected: " ++ show ty11 ++ ", found: " ++ show ty2)
+        _ 
+          -> tcError ("Expected function type, found: " ++ show ty1)
+typeCheck (TAbs tv t)
+ = do ty <- inEnv (E_TVar tv) (typeCheck t)
+      return (Univ tv ty)
+typeCheck (TApp t ty2) 
+ = do ty1 <- typeCheck t
+      case ty1 of
+        Univ tv ty1'
+          ->
+             return (substTVar tv ty2 ty1')
+        _ 
+          -> tcError ("Expected universal type, found: " ++ show ty1)
+typeCheck (Int n)
+ = return IntTy
+typeCheck SystemF.True
+ = return BoolTy
+typeCheck SystemF.False 
+ = return BoolTy
