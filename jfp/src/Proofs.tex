@@ -316,6 +316,21 @@ This definition will be used thoughout this section.
 \end{center}
 }
 
+\begin{center}
+\begin{tikzpicture}[node distance=1cm, auto,]
+%nodes
+\node[punkt] (DR) {Lemma~\ref{lemma:determinism:0}};
+\node[punkt, right=0.8cm of DR] (DFR) {Lemma~\ref{lemma:determinism:1}};
+\node[punkt, right=0.8cm of DFR] (DLR) {Lemma~\ref{lemma:determinism:2}};
+\node[punkt, right=0.8cm of DLR] (DMR) {Lemma~\ref{lemma:determinism:3}};
+%edges
+\draw[pil] (DR.north) to [out=30,in=150] (DFR.north);
+\draw[pil] (DFR.north) to [out=30,in=150] (DLR.north);
+\draw[pil] (DLR.south) to [out=210,in=330] (DFR.south);
+\draw[pil] (DLR.north) to [out=30,in=150] (DMR.north);
+\end{tikzpicture}
+\end{center}
+
 %###############################################################################
 {\centering
 \fbox{
