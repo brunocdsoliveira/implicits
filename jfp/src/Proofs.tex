@@ -316,13 +316,20 @@ This definition will be used thoughout this section.
 \end{center}
 }
 
+The proofs of this section are split into subproofs for each sub-judgment (focusing, lookup and
+matching) of the deterministic resolution judgment. Their dependencies, depicted in the diagram below, follow those of the sub-judgments that constitute the main deterministic resolution
+judgment.
 \begin{center}
 \begin{tikzpicture}[node distance=1cm, auto,]
 %nodes
-\node[punkt] (DR) {Lemma~\ref{lemma:determinism:0}};
-\node[punkt, right=0.8cm of DR] (DFR) {Lemma~\ref{lemma:determinism:1}};
-\node[punkt, right=0.8cm of DFR] (DLR) {Lemma~\ref{lemma:determinism:2}};
-\node[punkt, right=0.8cm of DLR] (DMR) {Lemma~\ref{lemma:determinism:3}};
+\node[punkt] (DR) {Lemma~\ref{lemma:determinism:0}: \\
+             \it Deterministic resolution judgment is deterministic};
+\node[punkt, right=0.8cm of DR] (DFR) {Lemma~\ref{lemma:determinism:1}: \\
+             \it Focusing judgment is deterministic};
+\node[punkt, right=0.8cm of DFR] (DLR) {Lemma~\ref{lemma:determinism:2}: \\
+             \it Lookup judgment is deterministic};
+\node[punkt, right=0.8cm of DLR] (DMR) {Lemma~\ref{lemma:determinism:3}: \\
+             \it Matching judgment is deterministic};
 %edges
 \draw[pil] (DR.north) to [out=30,in=150] (DFR.north);
 \draw[pil] (DFR.north) to [out=30,in=150] (DLR.north);
