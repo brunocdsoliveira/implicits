@@ -516,7 +516,7 @@ The proof proceeds by induction on the derivation of the third hypothesis.
 \begin{equation*}
 \dmres{\tenv}{\rulet}{x}{\tau}{E_1}{\Sigma_1}
 \end{equation*}%
-, where $\Sigma_1 = \overline{\rulet'_1~\gbox{\leadsto x}}$ , 
+where $\Sigma_1 = \overline{\rulet'_1~\gbox{\leadsto x}}$ , 
   and
 \begin{equation*}
 \drres{\bar{\alpha}}{\tenv}{\rulet'_1}{E'_1} \quad (\forall \rulet'_1 \in \overline{\rulet}'_1)
@@ -1430,7 +1430,8 @@ the goal of this case.
 \end{proof}
 
 %###############################################################################
-\fbox{ \centering
+{\centering
+\fbox{
 \begin{minipage}{0.95\columnwidth}
 \begin{lemma}\label{lemma:unamb_subst:0}
   If
@@ -1443,7 +1444,7 @@ the goal of this case.
 \end{equation*}
 \end{lemma}
 \end{minipage}
-}
+}}
 \begin{proof}
 The proof proceeds by induction on the theorem's third hypothesis, mutually with the next proof.
 The only induction case of this proof, \rref{UA-Main}, is proved as a special case
@@ -1452,7 +1453,8 @@ $\alpha\notin\epsilon$.
 \end{proof}
 
 %###############################################################################
-\fbox{ \centering
+{\centering
+\fbox{
 \begin{minipage}{0.95\columnwidth}
 \begin{lemma}\label{lemma:unamb_subst:1}
   If 
@@ -1469,7 +1471,7 @@ $\alpha\notin\epsilon$.
 \end{equation*}
 \end{lemma}
 \end{minipage}
-}
+}}
 \begin{proof}
 The proof proceeds by induction on the theorem's first hypothesis, mutually with the previous
 proof.\\
@@ -1566,7 +1568,9 @@ By the definition of substitution and the last two obtained results used with ru
 \end{proof}
 
 %###############################################################################
-\fbox{ \centering
+
+{\centering
+\fbox{
 \begin{minipage}{0.95\columnwidth}
 \begin{lemma}\label{lemma:asoundness:1}
   If 
@@ -1581,7 +1585,7 @@ By the definition of substitution and the last two obtained results used with ru
 \end{equation*}
 \end{lemma}
 \end{minipage}
-}
+}}
 
 \begin{proof}
 The lemma follows from the isomorphism between the 
@@ -1589,6 +1593,7 @@ rule sets of the two judgements and from Lemma~\ref{lemma:asoundness:2}.
 \end{proof}
 
 %###############################################################################
+
 {\centering
 \fbox{
 \begin{minipage}{0.95\columnwidth}
