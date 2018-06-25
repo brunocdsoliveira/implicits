@@ -1721,7 +1721,7 @@ By rule \rref{L-Var} we conclude
 
 %===============================================================================
 \item[\fbox{\rref{Alg-L-TyVar}}]\quad
-$\adlres{\bar{\alpha}}{\tenv}{\tenv',\alpha}{\type}{E}$\ \\
+$\adlres{\bar{\alpha}}{\tenv}{\tenv',\alpha}{\type}{E}$ \ \\
 %$\bar{\alpha};\tenv;\tenv',\alpha \alg \type~{\leadsto E}$ \ \\
 %===============================================================================
 From the rule's hypothesis and the induction hypothesis we obtain
@@ -1793,7 +1793,7 @@ we have that
 \end{equation*}
   By rule \rref{M-IApp} we may then conclude
 \begin{equation*}
-\dmres{\theta(\tenv)}{\theta(\rulet_1\To\rulet_2)}{\etrans\theta(E)}{\theta(\type)}{E'}{\Sigma',\ie{\theta(\rulet_1)}{x}}
+\dmres{\theta(\tenv)}{\theta(\rulet_1\To\rulet_2)}{\etrans\theta(E)}{\theta(\type)}{E'}{\ie{\theta(\rulet_1)}{x},\Sigma'}
 % \theta(\tenv); \theta(\rulet_1 \iarrow \rulet_2) \leadsto |\theta|(E) \ivturns \theta(\type) \leadsto E'; \Sigma',\theta(\rulet_1) \leadsto x
 \end{equation*} 
 
@@ -2043,7 +2043,7 @@ $\theta_2\sqsubseteq\theta_1$, iff there is a $\theta'$ such that $\theta_2\cdot
 \end{equation*}
   then
 \begin{equation*}
-  \admres{\bar\alpha}{\tenv}{\rulet}{E}{\Sigma}{\type}{\etrans{\theta_2}(E')}{\theta_2(\Sigma',\Sigma)}
+  \admres{\bar\alpha}{\tenv}{\rulet}{E}{\Sigma}{\type}{\etrans{\theta_2}(E')}{\theta_2(\Sigma,\Sigma')}
 %  \bar{\alpha};\tenv;\rulet \leadsto E; \Sigma \alg \type \leadsto |\theta_2|(E'); \theta_2(\Sigma',\Sigma)
 \end{equation*}
   and
@@ -2081,18 +2081,18 @@ $\dmres{\theta_1(\tenv)}{\theta_1(\rulet_1\To\rulet_2)}{\etrans{\theta_1}(E)}{\t
 %===============================================================================
   From the hypothesis of the rule and the induction hypothesis, we have that
 \begin{equation*}
-\forall\Sigma,~\admres{\bar\alpha}{\tenv,\envi{\rulet_1}{x}}{\rulet_2}{\mmapp{E}{x}}{\Sigma}{\type}{\etrans{\theta_2}(E')}{\theta_2(\Sigma',\Sigma)}
+\forall\Sigma,~\admres{\bar\alpha}{\tenv,\envi{\rulet_1}{x}}{\rulet_2}{\mmapp{E}{x}}{\Sigma}{\type}{\etrans{\theta_2}(E')}{\theta_2(\Sigma,\Sigma')}
 %\admres{\bar\alpha}{\tenv,\envi{\rulet_1}{x}}{\rulet_2}{\mmapp{E}{x}}{\Sigma,\ie{\rulet_1}{x}}{\type}{\etrans{\theta_2}(E')}{\theta_2(\ie{\rulet_1}{x},\Sigma',\Sigma)}
 % \bar{\alpha};\tenv,\rulet_1 \leadsto x;\rulet_2 \leadsto E\,x; \rulet_1 \leadsto x, \Sigma \alg \type \leadsto |\theta_2|(E'); \theta_2(\Sigma',\rulet_1 \leadsto x, \Sigma) 
 \end{equation*}
 Then, for $\Sigma = \Sigma'',\ie{\rulet_1}{x}$, the above is refined to
 \begin{equation*}
-\forall \Sigma'',~\admres{\bar\alpha}{\tenv,\envi{\rulet_1}{x}}{\rulet_2}{\mmapp{E}{x}}{\Sigma'',\ie{\rulet_1}{x}}{\type}{\etrans{\theta_2}(E')}{\theta_2(\Sigma',\Sigma'',\ie{\rulet_1}{x})}
+\forall \Sigma'',~\admres{\bar\alpha}{\tenv,\envi{\rulet_1}{x}}{\rulet_2}{\mmapp{E}{x}}{\Sigma'',\ie{\rulet_1}{x}}{\type}{\etrans{\theta_2}(E')}{\theta_2(\Sigma'',\ie{\rulet_1}{x},\Sigma')}
 \end{equation*}
 
   By rule \rref{Alg-M-IApp} we may then conclude
 \begin{equation*}
-\forall\Sigma'',~\admres{\bar\alpha}{\tenv}{\rulet_1\To\rulet_2}{E}{\Sigma''}{\type}{\etrans{\theta_2}(E')}{\theta_2(\Sigma',\Sigma'',\ie{\rulet_1}{x})}
+\forall\Sigma'',~\admres{\bar\alpha}{\tenv}{\rulet_1\To\rulet_2}{E}{\Sigma''}{\type}{\etrans{\theta_2}(E')}{\theta_2(\Sigma'',\ie{\rulet_1}{x},\Sigma')}
 % \bar{\alpha};\tenv;\rulet_1 \iarrow \rulet_2 \leadsto E; \Sigma \alg \type \leadsto |\theta_2|(E'); \theta_2(\Sigma',\rulet_1 \leadsto x, \Sigma)
 \end{equation*} 
 
@@ -2103,13 +2103,11 @@ $\dmres{\theta_1(\tenv)}{\theta_1(\tall{\alpha}{\rulet}}{\etrans{\theta_1}(E)}{\
 %===============================================================================
   From the hypothesis of the rule and the induction hypothesis, we have that
 \begin{equation*}
-  \admres{\bar\alpha,\alpha}{\tenv}{\rulet}{\mmapp{E}{\alpha}}{\Sigma}{\type}{\etrans{\theta_2}(E')}{\theta_2(\Sigma',\Sigma)}
-% \bar{\alpha},\alpha;\tenv;\rulet \leadsto E\,\alpha; \Sigma \alg \type \leadsto |\theta_2|(E'); \theta_2(\Sigma',\Sigma) 
-\end{equation*}
+  \admres{\bar\alpha,\alpha}{\tenv}{\rulet}{\mmapp{E}{\alpha}}{\Sigma}{\type}{\etrans{\theta_2}(E')}{\theta_2(\Sigma,\Sigma')}
+,\end{equation*}
   Hence, it follows from rule \rref{Alg-M-TApp} that
 \begin{equation*}
-\admres{\bar\alpha}{\tenv}{\tall{\alpha}{\rulet}}{E}{\Sigma}{\type}{\etrans{\theta_2}(E')}{\theta_2(\Sigma',\Sigma)}
-% \bar{\alpha};\tenv;\forall \alpha.\rulet \leadsto E; \Sigma \alg \type \leadsto |\theta_2|(E'); \theta_2(\Sigma',\Sigma)
+\admres{\bar\alpha}{\tenv}{\tall{\alpha}{\rulet}}{E}{\Sigma}{\type}{\etrans{\theta_2}(E')}{\theta_2(\Sigma,\Sigma')}
 \end{equation*}
 \end{description}
 \end{proof}
