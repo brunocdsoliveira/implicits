@@ -22,6 +22,14 @@ data SimpleType
  | ST_Bool
  deriving Eq
 
+headCT :: ContextType -> SimpleType
+headCT (CT_Univ tv ct)
+  = headCT ct
+headCT (CT_Rule ct1 ct2)
+  = headCT ct2
+headCT (CT_Simp st)
+  = st
+
 isMonoTypeCT :: ContextType -> Bool
 isMonoTypeCT (CT_Simp st)
   = isMonoTypeST st
@@ -55,6 +63,24 @@ freeTVarsST ST_Int
   = S.empty
 freeTVarsST ST_Bool
   = S.empty
+
+occsCT :: ContextType -> TVar -> Int
+occsCT (CT_Univ tv ct)
+  = \tv' -> if tv == tv' then 0 else occsCT ct tv'
+occsCT (CT_Rule ct1 ct2)
+  = \tv -> occsCT ct1 tv + occsCT ct2 tv
+occsCT (CT_Simp st)
+  = occsST st
+
+occsST :: SimpleType -> TVar -> Int
+occsST (ST_TVar tv)
+  = \tv' -> if tv == tv' then 1 else 0
+occsST (ST_Fun ct1 ct2)
+  = \tv -> occsCT ct1 tv + occsCT ct2 tv
+occsST ST_Int
+  = \tv -> 0
+occsST ST_Bool
+  = \tv -> 0
 
 -- Substitution
 
