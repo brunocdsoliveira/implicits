@@ -308,3 +308,36 @@ termCT (CT_Rule ct1 ct2)
 
 termCT (CT_Simp st)
   = True
+
+beforeTVar :: TVar -> TVar -> TC Bool
+beforeTVar tv1 tv2 =
+  tcEnv >>= go1
+  where
+    go1 :: Env -> TC Bool
+    go1 E_Empty
+      = tcError ("Type variables not found in environment: " ++ show tv1 ++ ", " ++ show tv2)
+    go1 (E_Var _ _ env)
+      = go1 env
+    go1 (E_TVar tv env)
+      | tv == tv1
+      = go2 env
+      | tv == tv2
+      = return False
+      | otherwise
+      = go1 env
+    go1 (E_Imp _ _ env)
+      = go1 env
+
+    go2 E_Empty
+      = tcError ("Type variable not found in environment: " ++ show tv2)
+    go2 (E_Var _ _ env)
+      = go2 env
+    go2 (E_TVar tv env)
+      | tv == tv2
+      = return True
+      | otherwise
+      = go2 env
+    go2 (E_Imp _ _ env)
+      = go2 env
+    
+
