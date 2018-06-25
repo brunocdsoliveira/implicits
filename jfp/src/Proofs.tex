@@ -1663,6 +1663,7 @@ The proof proceeds by induction on the derivation of the hypothesis.
 \item[\fbox{\rref{Alg-L-RuleMatch}}]\quad$\adlres{\bar\alpha}{\tenv}{\tenv',\envi{\rulet}{x}}{\type}{E[\bar{E}/\bar{x}]}$\ \\
 %$\bar{\alpha};\tenv; \tenv', \rulet~{\leadsto x} \alg \type~{\leadsto E[\bar{E}/\bar{x}]}$ \ \\
 %===============================================================================
+
 From the rule's first hypothesis and Lemma~\ref{lemma:asoundness:3} we have
 \begin{equation*}
 \dmres{\tenv}{\rulet}{E}{\type}{E'}{\ie{\ruleset}{\bar{x}}}
@@ -1679,19 +1680,25 @@ Then, using Lemma~\ref{lemma:asoundness:1} and rule \rref{L-RuleMatch} we conclu
 $\adlres{\bar\alpha}{\tenv}{\tenv',\envi{\rulet}{x}}{\type}{E'}$\ \\
 %$\bar{\alpha};\tenv;\tenv', \rulet~{\leadsto x}\alg \type~{\leadsto E'}$ \ \\
 %===============================================================================
-  From the rule's second hypothesis and the induction hypothesis we have
+
+  From the rule's second premise and the induction hypothesis we have
 \begin{equation*}
   \dlres{\bar\alpha}{\tenv}{\tenv'}{\type}{E'}
 %  \bar{\alpha};\tenv;\tenv' \ivturns \type~{\leadsto E'}
 \end{equation*}
 
-  Then from the rule's first hypothesis and the negation of Lemma~\ref{lemma:asoundness:5}, we have:
+  Then from the rule's first premise and the negation of Lemma~\ref{lemma:asoundness:5}, we have:
 \begin{equation*}
 \not\exists E, \Sigma:
 \admres{\bar\alpha}{\tenv}{\rulet}{x}{\epsilon}{\type}{E}{\Sigma}
 %\bar{\alpha};\tenv;\rulet \leadsto x; \epsilon \alg \type \leadsto E; \Sigma
 \end{equation*}
-  By Lemma~\ref{lemma:asoundness:3} we thus have
+or equivaltenly,
+\begin{equation*}
+\not\exists \theta, E, \Sigma:
+\admres{\bar\alpha}{\tenv}{\rulet}{x}{\epsilon}{\type}{\etrans{\theta}(E)}{\theta(\Sigma)}
+\end{equation*}
+From the negation of Lemma~\ref{lemma:acompleteness:3} we thus have
 \begin{equation*}
 \not\exists \theta, E, \Sigma, \dom(\theta) \subseteq \bar{\alpha}:
 \dmres{\theta(\tenv)}{\theta(\rulet)}{x}{\type}{E}{\Sigma}
@@ -1708,6 +1715,7 @@ $\adlres{\bar\alpha}{\tenv}{\tenv',\envi{\rulet}{x}}{\type}{E'}$\ \\
 $\adlres{\bar\alpha}{\tenv}{\tenv',\relation{x}{\rulet}}{\type}{E}$\ \\
 %$\bar{\alpha};\tenv;\tenv',x:\rulet \alg \type~{\leadsto E}$ \ \\
 %===============================================================================
+
 From the rule's hypothesis and the induction hypothesis we obtain
 \begin{equation*}
   \dlres{\bar\alpha}{\tenv}{\tenv'}{\type}{E}
@@ -1724,6 +1732,7 @@ By rule \rref{L-Var} we conclude
 $\adlres{\bar{\alpha}}{\tenv}{\tenv',\alpha}{\type}{E}$ \ \\
 %$\bar{\alpha};\tenv;\tenv',\alpha \alg \type~{\leadsto E}$ \ \\
 %===============================================================================
+
 From the rule's hypothesis and the induction hypothesis we obtain
 \begin{equation*}
   \dlres{\bar{\alpha}}{\tenv}{\tenv'}{\type}{E}
@@ -1747,8 +1756,7 @@ for the $\bar{\alpha}$ type variables.
 \begin{lemma}\label{lemma:asoundness:3}
   If 
 \begin{equation*}
-\admress{\bar\alpha}{\tenv}{\rulet}{E}{\Sigma}{\type}{E'}{\Sigma',\theta(\Sigma)}{\theta}
-%  \bar{\alpha};\tenv;\rulet \leadsto E; \Sigma \alg \type \leadsto E'; \Sigma',\theta(\Sigma); \theta
+\admress{\bar\alpha}{\tenv}{\rulet}{E}{\Sigma}{\type}{E'}{\theta(\Sigma),\Sigma'}{\theta}
 \end{equation*}
   and
 \begin{equation*}
@@ -1756,8 +1764,7 @@ for the $\bar{\alpha}$ type variables.
 \end{equation*}
   then
 \begin{equation*}
-\dmres{\theta(\tenv)}{\theta(\rulet)}{\etrans\theta(E)}{\theta(\type)}{E'}{\Sigma'}
-%  \theta(\tenv); \theta(\rulet) \leadsto |\theta|(E) \ivturns \theta(\type) \leadsto E'; \Sigma'
+\dmres{\theta(\tenv)}{\theta(\rulet)}{\etrans\theta(E)}{\theta(\type)}{\etrans{\theta}(E')}{\theta(\Sigma')}
 \end{equation*}
 \end{lemma}
 \end{minipage}
@@ -1769,48 +1776,43 @@ The proof proceeds by induction on the derivation of the first hypothesis.
 \setlength{\itemsep}{1em}
 %===============================================================================
 \item[\fbox{\rref{Alg-M-Simp}}]\quad
-$\admress{\bar\alpha}{\tenv}{\type'}{E}{\Sigma}{\type}{\etrans\theta(E)}{\epsilon,\theta(\Sigma)}{\theta}$\ \\
-%$\bar{\alpha}; \tenv; \type' \leadsto E; \Sigma \alg \type \leadsto |\theta|(E); \epsilon,\theta(\Sigma);\theta$ \ \\
+$\admress{\bar\alpha}{\tenv}{\type'}{E}{\Sigma}{\type}{\etrans\theta(E)}{\theta(\Sigma),\epsilon}{\theta}$\ \\
 %===============================================================================
+
 From the hypothesis of the rule and Lemma~\ref{lemma:asoundness:6} it follows that
-$\theta(\type') = \theta(\type)$. Hence, the target judgement can be rewritten as
+$\theta(\type') = \theta(\type)$. Hence, the target judgment can be rewritten as
 \begin{equation*}
   \dmres{\theta(\tenv)}{\theta(\type')}{\etrans\theta{E}}{\theta(\type')}{\etrans\theta{E}}{\epsilon}
-%  \theta(\tenv); \theta(\type') \leadsto |\theta|(E) \ivturns \theta(\type') \leadsto |\theta|(E); \epsilon
 \end{equation*}
-This follows from rule \mylabel{M-Simp}.
+This follows from rule \rref{M-Simp}.
 
 %===============================================================================
 \item[\fbox{\rref{Alg-M-IApp}}]\quad
-$\admress{\bar\alpha}{\tenv}{\rulet_1\To\rulet_2}{E}{\Sigma}{\type}{E'}{\Sigma', \theta(\Sigma)}{\theta}$\ \\
-%$\bar{\alpha}; \tenv; \rulet_1 \iarrow \rulet_2~{\leadsto E}; \Sigma \alg \type~{\leadsto E'}; \Sigma',\theta(\rulet_1) \leadsto x, \theta(\Sigma);\theta$ \ \\
+$\admress{\bar\alpha}{\tenv}{\rulet_1\To\rulet_2}{E}{\Sigma}{\type}{E'}{\theta(\Sigma),\Sigma'}{\theta}$\ \\
 %===============================================================================
-  From the hypothesis of the rule, the induction hypothesis and the definition of substitution,
+
+  From the premise of the rule, the induction hypothesis and the definition of substitution,
 we have that
 \begin{equation*}
-  \dmres{\theta(\tenv),\envi{\theta(\rulet_1)}{x}}{\theta(\rulet_2)}{\etrans\theta(\mmapp{E}{x})}{\theta(\type)}{E'}{\Sigma'}
-% \theta(\tenv,\rulet_1 \leadsto x); \theta(\rulet_2) \leadsto |\theta|(E\,x) \ivturns \theta(\type) \leadsto E'; \Sigma' 
+  \dmres{\theta(\tenv),\envi{\theta(\rulet_1)}{x}}{\theta(\rulet_2)}{\etrans\theta(\mmapp{E}{x})}{\theta(\type)}{\etrans{\theta}(E')}{\theta(\Sigma')}
 \end{equation*}
   By rule \rref{M-IApp} we may then conclude
 \begin{equation*}
-\dmres{\theta(\tenv)}{\theta(\rulet_1\To\rulet_2)}{\etrans\theta(E)}{\theta(\type)}{E'}{\ie{\theta(\rulet_1)}{x},\Sigma'}
-% \theta(\tenv); \theta(\rulet_1 \iarrow \rulet_2) \leadsto |\theta|(E) \ivturns \theta(\type) \leadsto E'; \Sigma',\theta(\rulet_1) \leadsto x
+\dmres{\theta(\tenv)}{\theta(\rulet_1\To\rulet_2)}{\etrans\theta(E)}{\theta(\type)}{\etrans{\theta}(E')}{\theta(\ie{\rulet_1}{x},\Sigma')}
 \end{equation*} 
 
 %===============================================================================
 \item[\fbox{\rref{Alg-M-TApp}}]\quad
-$\admress{\bar\alpha}{\tenv}{\tall{\alpha}{\rulet}}{E}{\Sigma}{\type}{E'}{\Sigma',\theta(\Sigma)}{\theta}$\ \\
-%$\bar{\alpha}; \tenv; \forall \alpha. \rulet~{\leadsto E}; \Sigma \alg \type~{\leadsto E'}; \Sigma',\theta(\Sigma);\theta$ \ \\
+$\admress{\bar\alpha}{\tenv}{\tall{\alpha}{\rulet}}{E}{\Sigma}{\type}{E'}{\theta(\Sigma),\Sigma'}{\theta}$\ \\
 %===============================================================================
-  Then it follows from the rule's hypothesis and from the induction hypothesis that
+
+  Then it follows from the rule's premise and from the induction hypothesis that
 \begin{equation*}
-\dmres{\theta(\tenv)}{\theta(\rulet)}{\etrans\theta(\mmapp{E}{\alpha})}{\theta(\type)}{E'}{\Sigma'}
-%  \theta(\tenv); \theta(\rulet) \leadsto |\theta|(E\,\alpha) \ivturns \theta(\type) \leadsto E'; \Sigma'
+\dmres{\theta(\tenv)}{\theta(\rulet)}{\etrans\theta(\mmapp{E}{\alpha})}{\theta(\type)}{\etrans{\theta}(E')}{\theta(\Sigma')}
 \end{equation*}
   Hence, it follows from rule \rref{M-TApp} that
 \begin{equation*}
-  \dmres{\theta(\tenv)}{\theta(\tall{\alpha}{\rulet})}{\etrans\theta(E)}{\theta(\type)}{E'}{\Sigma'}
-%  \theta(\tenv); \theta(\forall \alpha.\rulet) \leadsto |\theta|(E) \ivturns \theta(\type) \leadsto E'; \Sigma'
+  \dmres{\theta(\tenv)}{\theta(\tall{\alpha}{\rulet})}{\etrans\theta(E)}{\theta(\type)}{\etrans{\theta}(E')}{\theta(\Sigma')}
 \end{equation*}
 \end{description}
 \end{proof}
@@ -1824,12 +1826,10 @@ $\admress{\bar\alpha}{\tenv}{\tall{\alpha}{\rulet}}{E}{\Sigma}{\type}{E'}{\Sigma
   If 
 \begin{equation*}
   \admres{\bar\alpha}{\tenv}{\rulet}{E}{\Sigma}{\type}{E'}{\Sigma'}
-%  \bar{\alpha};\tenv;\rulet \leadsto E; \Sigma \alg \type \leadsto E'; \Sigma'
 \end{equation*}
   then
 \begin{equation*}
   \coherent{\bar\alpha}{\tenv}{\rulet}{\type}
-%  \bar{\alpha}; \tenv; \rulet \coh \type
 \end{equation*}
 \end{lemma}
 \end{minipage}
@@ -1954,6 +1954,7 @@ The proof proceeds by induction on the derivation of the hypothesis.
 $\dlres{\bar\alpha}{\tenv}{\tenv',\envi{\rulet}{x}}{\type}{E[\bar{E}/\bar{x}]}$\ \\
 %$\bar{\alpha};\tenv; \tenv', \rulet~{\leadsto x} \ivturns \type~{\leadsto E[\bar{E}/\bar{x}]}$ \ \\
 %===============================================================================
+
 From the rule's first hypothesis and Lemma~\ref{lemma:acompleteness:3} we have
 \begin{equation*}
   \admres{\epsilon}{\tenv}{\rulet}{x}{\epsilon}{\type}{E'}{\ie{\bar\rulet}{\bar{x}}}
@@ -1970,13 +1971,14 @@ Then, using Lemma~\ref{lemma:acompleteness:1} and rule \rref{Alg-L-RuleMatch} we
 $\dlres{\bar\alpha}{\tenv}{\tenv',\envi{\rulet}{x}}{\type}{E'}$\ \\
 %$\bar{\alpha};\tenv;\tenv', \rulet~{\leadsto x}\ivturns \type~{\leadsto E'}$ \ \\
 %===============================================================================
+
   From the rule's second hypothesis and the induction hypothesis we have
 \begin{equation*}
   \adlres{\bar\alpha}{\tenv}{\tenv'}{\type}{E'}
 %  \bar{\alpha};\tenv;\tenv' \alg \type~{\leadsto E'}
 \end{equation*}
 
-  From the rule's first hypothesis and the negation of Lemma~\ref{lemma:acompleteness:4}, we have:
+  From the rule's first hypothesis and the negation of Lemma~\ref{lemma:asoundness:3}, we have:
 \begin{equation*}
 \incoherent{\bar\alpha}{\tenv}{\rulet}{\type}
 %\bar{\alpha}; \rulet \not\coh \type
@@ -1992,6 +1994,7 @@ $\dlres{\bar\alpha}{\tenv}{\tenv',\envi{\rulet}{x}}{\type}{E'}$\ \\
 $\dlres{\bar\alpha}{\tenv}{\tenv',\relation{x}{\rulet}}{\type}{E}$\ \\
 %$\bar{\alpha};\tenv;\tenv',x:\rulet \ivturns \type~{\leadsto E}$ \ \\
 %===============================================================================
+
 From the rule's hypothesis and the induction hypothesis we obtain
 \begin{equation*}
   \adlres{\bar\alpha}{\tenv}{\tenv'}{\type}{E}
@@ -2008,6 +2011,7 @@ By rule \rref{Alg-L-Var} we conclude
 $\dlres{\bar\alpha}{\tenv}{\tenv',\alpha}{\type}{E}$\ \\
 %$\bar{\alpha};\tenv;\tenv',\alpha \ivturns \type~{\leadsto E}$ \ \\
 %===============================================================================
+
 From the rule's hypothesis and the induction hypothesis we obtain
 \begin{equation*}
 \adlres{\bar\alpha}{\tenv}{\tenv'}{\type}{E}
@@ -2079,6 +2083,7 @@ From Lemma~\ref{lemma:acompleteness:5} and rule \rref{Alg-M-Simp} we then have
 $\dmres{\theta_1(\tenv)}{\theta_1(\rulet_1\To\rulet_2)}{\etrans{\theta_1}(E)}{\theta_1(\type)}{\etrans{\theta_1}(E')}{\theta_1(\ie{\rulet_1}{x},\Sigma')}$\ \\
 %$\theta_1(\tenv); \theta_1(\rulet_1 \iarrow \rulet_2)~{\leadsto |\theta_1|(E)}\ivturns \theta_1(\type)~{\leadsto |\theta_1|(E')}; \theta_1(\Sigma',\rulet_1 \leadsto x)$ \ \\
 %===============================================================================
+
   From the hypothesis of the rule and the induction hypothesis, we have that
 \begin{equation*}
 \forall\Sigma,~\admres{\bar\alpha}{\tenv,\envi{\rulet_1}{x}}{\rulet_2}{\mmapp{E}{x}}{\Sigma}{\type}{\etrans{\theta_2}(E')}{\theta_2(\Sigma,\Sigma')}
@@ -2101,6 +2106,7 @@ Then, for $\Sigma = \Sigma'',\ie{\rulet_1}{x}$, the above is refined to
 $\dmres{\theta_1(\tenv)}{\theta_1(\tall{\alpha}{\rulet}}{\etrans{\theta_1}(E)}{\theta_1(\type)}{\etrans{\theta_1}(E')}{\theta_1(\Sigma')}$\ \\
 %$\theta_1(\tenv); \theta_1(\forall\alpha.\rulet) \leadsto |\theta_1|(E) \ivturns \theta_1(\type) \leadsto |\theta_1|(E'); \theta_1(\Sigma')$ \ \\
 %===============================================================================
+
   From the hypothesis of the rule and the induction hypothesis, we have that
 \begin{equation*}
   \admres{\bar\alpha,\alpha}{\tenv}{\rulet}{\mmapp{E}{\alpha}}{\Sigma}{\type}{\etrans{\theta_2}(E')}{\theta_2(\Sigma,\Sigma')}
