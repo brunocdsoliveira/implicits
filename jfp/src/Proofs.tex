@@ -1856,7 +1856,7 @@ $\admress{\bar\alpha}{\tenv}{\tall{\alpha}{\rulet}}{E}{\Sigma}{\type}{E'}{\Sigma
 \end{equation*}
   and
 \begin{equation*}
-  \mathit{dom}(\theta) \subseteq \bar{\alpha}
+  \dom{(\theta)} \subseteq \bar{\alpha}
 \end{equation*}
 
 \end{lemma}
@@ -2086,17 +2086,20 @@ $\dmres{\theta_1(\tenv)}{\theta_1(\rulet_1\To\rulet_2)}{\etrans{\theta_1}(E)}{\t
 \end{equation*} 
 
 %===============================================================================
-\item[\fbox{\texttt{(M-TApp)}}]\quad$\theta_1(\tenv); \theta_1(\forall\alpha.\rulet) \leadsto |\theta_1|(E) \ivturns \theta_1(\type) \leadsto |\theta_1|(E'); \theta_1(\Sigma')$ \ \\
+\item[\fbox{\rref{M-TApp}}]\quad
+$\dmres{\theta_1(\tenv)}{\theta_1(\tall{\alpha}{\rulet}}{\etrans{\theta_1}(E)}{\theta_1(\type)}{\etrans{\theta_1}(E')}{\theta_1(\Sigma')}$\ \\
+%$\theta_1(\tenv); \theta_1(\forall\alpha.\rulet) \leadsto |\theta_1|(E) \ivturns \theta_1(\type) \leadsto |\theta_1|(E'); \theta_1(\Sigma')$ \ \\
 %===============================================================================
   From the hypothesis of the rule and the induction hypothesis, we have that
 \begin{equation*}
- \bar{\alpha},\alpha;\tenv;\rulet \leadsto E\,\alpha; \Sigma \alg \type \leadsto |\theta_2|(E'); \theta_2(\Sigma',\Sigma) 
+  \admres{\bar\alpha,\alpha}{\tenv}{\rulet}{\mmapp{E}{\alpha}}{\Sigma}{\type}{\etrans{\theta_2}(E')}{\theta_2(\Sigma',\Sigma)}
+% \bar{\alpha},\alpha;\tenv;\rulet \leadsto E\,\alpha; \Sigma \alg \type \leadsto |\theta_2|(E'); \theta_2(\Sigma',\Sigma) 
 \end{equation*}
-  Hence, it follows from rule \mylabel{Alg-M-TApp} that
+  Hence, it follows from rule \rref{Alg-M-TApp} that
 \begin{equation*}
- \bar{\alpha};\tenv;\forall \alpha.\rulet \leadsto E; \Sigma \alg \type \leadsto |\theta_2|(E'); \theta_2(\Sigma',\Sigma) 
+\admres{\bar\alpha}{\tenv}{\tall{\alpha}{\rulet}}{E}{\Sigma}{\type}{\etrans{\theta_2}(E')}{\theta_2(\Sigma',\Sigma)}
+% \bar{\alpha};\tenv;\forall \alpha.\rulet \leadsto E; \Sigma \alg \type \leadsto |\theta_2|(E'); \theta_2(\Sigma',\Sigma)
 \end{equation*}
-
 \end{description}
 \end{proof}
 
@@ -2107,11 +2110,13 @@ $\dmres{\theta_1(\tenv)}{\theta_1(\rulet_1\To\rulet_2)}{\etrans{\theta_1}(E)}{\t
 \begin{lemma}\label{lemma:acompleteness:4}
   If 
 \begin{equation*}
-  \bar{\alpha}; \rulet \coh \type
+  \coherent{\bar\alpha}{\tenv}{\rulet}{\type}
+%  \bar{\alpha}; \rulet \coh \type
 \end{equation*}
-  then for all $E, \tenv, \Sigma$ there exist $E', \Sigma'$ such that
+  then for all $E, \Sigma$ there exist $E', \Sigma'$ such that
 \begin{equation*}
-  \bar{\alpha};\tenv;\rulet \leadsto E; \Sigma \alg \type \leadsto E'; \Sigma'
+  \admres{\bar\alpha}{\tenv}{\rulet}{E}{\Sigma}{\type}{E'}{\Sigma'}
+%  \bar{\alpha};\tenv;\rulet \leadsto E; \Sigma \alg \type \leadsto E'; \Sigma'
 \end{equation*}
 \end{lemma}
 \end{minipage}
@@ -2121,6 +2126,8 @@ $\dmres{\theta_1(\tenv)}{\theta_1(\rulet_1\To\rulet_2)}{\etrans{\theta_1}(E)}{\t
   The proof is straightforward induction on the derivation. The conclusion's judgement
   is an annotated version of the hypothesis' judgement.
 \end{proof}
+
+The lemma below states that $\mgu{\type}{\type'}$ is the most general unifier for $\type$ and $\type'$.
 
 %###############################################################################
 {\centering
@@ -2133,19 +2140,20 @@ $\dmres{\theta_1(\tenv)}{\theta_1(\rulet_1\To\rulet_2)}{\etrans{\theta_1}(E)}{\t
 \end{equation*}
   and
 \begin{equation*}
-  \mathit{dom}(\theta) \subseteq \bar{\alpha}
+  \dom{(\theta)} \subseteq \bar{\alpha}
 \end{equation*}
   then
+%\begin{equation*}
+%  \theta' = \mgu{\type}{\type'}
+%\end{equation*}
+%  and
+%\begin{equation*}
+%  \dom{(\theta')} \subseteq \bar{\alpha}
+%\end{equation*}
+%  and
 \begin{equation*}
-  \theta' = \mgu{\type}{\type'}
-\end{equation*}
-  and
-\begin{equation*}
-  \mathit{dom}(\theta') \subseteq \bar{\alpha}
-\end{equation*}
-  and
-\begin{equation*}
-  \theta \sqsubseteq \theta'
+  \theta \sqsubseteq \mgu{\type}{\type'}
+%  \theta \sqsubseteq \theta'
 \end{equation*}
 \end{lemma}
 \end{minipage}
