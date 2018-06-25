@@ -1291,7 +1291,9 @@ TODO: consistent terminology for rules
 > "G |- \rho_1"). And similarly for rule Ty-IAbs, so that the side
 > condition would only be needed for Rule Ty-Tapp.
 
-TODO: add definition of well-formedness for environments
+Following a suggestion of Review 1, we have omitted well-scoping constraints
+as they are not directly necessary for the meta-theoretical results.
+Hence, the well-formedness of environments has also been omitted.
 
 > ## Typography and notation
 > - The notation [\rho] for focusing is superfluous as the information is
