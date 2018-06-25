@@ -783,6 +783,10 @@ The dependencies of the proofs of this section are depicted in the diagram below
              \it Typing preservation under type substitution};
 \node[punkt, below=of DFR] (TR) {Lemma~\ref{lemma:tapp_reduction}: \\
              \it Typing is stable under type application reduction};
+\node[punkt, below=of DLR] (US) {Lemma~\ref{lemma:unamb_subst:0}: \\
+             \it Unambiguity preservation under type substitution};
+\node[punkt, below=of DMR] (UAS) {Lemma~\ref{lemma:unamb_subst:1}: \\
+             \it Unambiguity preservation under type substitution};
 %edges
 \draw[pil] (DR.north) to [out=30,in=150] (DFR.north);
 \draw[pil] (DFR.north) to [out=30,in=150] (DLR.north);
@@ -790,6 +794,8 @@ The dependencies of the proofs of this section are depicted in the diagram below
 \draw[pil] (DLR.north) to [out=30,in=150] (DMR.north);
 \draw[pil] (TR.north) to [out=150,in=30] (TP.north);
 \draw[pil] (TP.north) to (DR.south);
+\draw[pil] (TR.north) to [out=30,in=150] (US.north);
+\draw[pil] (US.north) to [out=30,in=150] (UAS.north);
 \end{tikzpicture}
 \end{center}\vspace{0.7cm}
 \end{minipage}
