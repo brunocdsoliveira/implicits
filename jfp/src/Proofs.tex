@@ -1341,6 +1341,7 @@ The proof proceeds by induction on the first hypothesis.\\
 %===============================================================================
 \item[\fbox{\rref{Ty-Var}}]\quad$\wte{\tenv,\alpha,\tenv'}{x}{\rulet}{x}$\\
 %===============================================================================
+
 From the rule's premise, we know that $(\relation{x}{\rulet}) \in \tenv,\alpha, \tenv'$.
 Hence, it also holds that
 $(\relation{x}{\rulet[\suty/\alpha]}) \in \tenv,\tenv'[\suty/\alpha]$. Rule \rref{Ty-Var} can then be instantiated with the latter, to conclude
@@ -1349,6 +1350,7 @@ $\wte{\tenv,\tenv'[\suty/\alpha]}{x}{\rulet[\suty/\alpha]}{x}$.\\
 %===============================================================================
 \item[\fbox{\rref{Ty-Abs}}]\quad$\wte{\tenv,\alpha,\tenv'}{\abs{x}{\rulet_1}{e}}{\rulet_1\to\rulet_2}{\abs{x}{\etrans{\rulet_1}}{E}}$\\
 %===============================================================================
+
 From the rule's premise, we get
 $\wte{\tenv,\alpha,\tenv',\relation{x}{\rulet_1}}{e}{\rulet_2}{E}$. By passing this to the
 induction hypothesis, we obtain
@@ -1361,6 +1363,7 @@ the goal.\\
 %===============================================================================
 \item[\fbox{\rref{Ty-App}}]\quad$\wte{\tenv,\alpha,\tenv'}{\mmapp{e_1}{e_2}}{\rulet_2}{\mmapp{E_1}{E_2}}$\\
 %===============================================================================
+
 From the assumptions of rule \rref{Ty-App}, the induction hypothesis and the definition of
 substitution, we obtain
 \begin{equation*}
@@ -1375,6 +1378,7 @@ By instantiating rule \rref{Ty-App} with the two judgments above, we obtain our 
 %===============================================================================
 \item[\fbox{\rref{Ty-TAbs}}]\quad$\wte{\tenv,\alpha,\tenv'}{\Abs{\alpha'}{e}}{\tall{\alpha'}{\rulet}}{\Abs{\alpha'}{E}}$\\
 %===============================================================================
+
 From the assumptions of rule \rref{Ty-TAbs} and the induction hypothesis, we obtain
 \begin{equation*}
 \wte{\tenv,(\tenv',\alpha')[\suty/\alpha]}{e[\suty/\alpha]}{\rulet}{E\etrans{\suty}/\alpha]}
@@ -1386,6 +1390,7 @@ $(\tenv',\alpha')[\suty/\alpha] = \tenv'[\suty/\alpha],\alpha'$. Using this equa
 \item[\fbox{\rref{Ty-TApp}}]\quad
 $\wte{\tenv,\alpha,\tenv'}{\mmapp{e}{\rulet_1}}{\rulet_2[\rulet_1/\alpha']}{\mmapp{E}{\etrans{\rulet_1}}}$\\
 %===============================================================================
+
 %Note that $\alpha \neq \alpha'$.
 The first assumption of rule \rref{Ty-TApp} is
 \begin{equation*}
@@ -1419,6 +1424,7 @@ translation and from the commutativity-like property of substitution composition
 %===============================================================================
 \item[\fbox{\rref{Ty-IAbs}}]\quad$\wte{\tenv,\alpha,\tenv'}{\ruleabs{\rulet_1}{e}}{\rulet_1 \iarrow \rulet_2}{\abs{x}{\etrans{\rulet_1}}{E}}$\\
 %===============================================================================
+
 From the first assumption of rule \rref{Ty-IAbs} and the induction hypothesis, we get
 \begin{equation*}
 \wte{\tenv,\tenv'[\suty/\alpha],\envi{\rulet_1[\suty/\alpha]}{x}}{e[\suty/\alpha]}{\rulet_2[\suty/\alpha]}{E[\etrans{\suty}/\alpha]}
@@ -1437,6 +1443,7 @@ to instantiate a new \rref{Ty-IAbs} rule, we reach the goal.\\
 %===============================================================================
 \item[\fbox{\rref{Ty-IApp}}]\quad$\wte{\tenv,\alpha,\tenv'}{\ruleapp{e_1}{e_2}}{\rulet_1}{\mmapp{E_1}{E_2}}$\\
 %===============================================================================
+
 From the two assumptions of rule \rref{Ty-IApp}, the induction hypothesis and the definition of
 substitution, we obtain
 \begin{equation*}
@@ -1450,6 +1457,7 @@ By passing the two judgments above to rule \rref{Ty-IAbs}, we obtain the desired
 %===============================================================================
 \item[\fbox{\rref{Ty-Query}}]\quad$\wte{\tenv,\alpha,\tenv'}{?\rulet}{\rulet}{E}$\\
 %===============================================================================
+
 From the first assumption of rule \rref{Ty-Query}, where we consider deterministic
 resolution, and Lemma~\ref{lemma:coherence:0} we get
 \begin{equation*}
@@ -1631,8 +1639,9 @@ By the definition of substitution and the last two obtained results used with ru
 }}
 
 \begin{proof}
-The lemma follows from the isomorphism between the 
-rule sets of the two judgements and from Lemma~\ref{lemma:asoundness:2}.
+The proof proceeds by induction on the derivation of the hypothesis. Each case follows
+from the isomorphism between the rule sets of the two judgements and from
+Lemma~\ref{lemma:asoundness:2}.
 \end{proof}
 
 %###############################################################################
