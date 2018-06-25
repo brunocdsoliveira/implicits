@@ -1468,7 +1468,6 @@ $\alpha\notin\epsilon$.
 \end{minipage}
 }}
 \begin{proof}
-\klara{Update to not use well-scoping.}
 The proof proceeds by induction on the theorem's first hypothesis, mutually with the previous
 proof.\\
 
@@ -1477,24 +1476,27 @@ proof.\\
 %===============================================================================
 We need to show that $\unambig{\bar\alpha}{\tau[\suty/\alpha]}$, which can be satisfied only
 by (an appropriate instance of) rule \rref{UA-Simp}. Therefore, it suffices to show that
-$\bar\alpha\subseteq\ftv{\tau[\suty/\alpha]}$.
+$\bar\alpha\subseteq\ftv{\type[\suty/\alpha]}$, where
+$\ftv{\type[\suty/\alpha]} = (\ftv{\type}\setminus\{\alpha\})\cup\ftv{\suty}$.
 
-From the first two hypotheses of the theorem, we know that $\alpha\notin\ftv{\suty}$. Using this,
-we can conclude
-\begin{equation*}
-\arraycolsep=1.4pt\def\arraystretch{1}
-\begin{array}{rl}
-\ftv{\tau[\suty/\alpha]}&=(\ftv{\tau}\setminus\{\alpha\})\cup\ftv{\suty}\\
-                        &=(\ftv{\tau}\cup\ftv{\suty})\setminus\{\alpha\}
-\end{array}
-\end{equation*}
+%From the first two hypotheses of the theorem, we know that $\alpha\notin\ftv{\suty}$. Using this,
+%we can conclude
+%\begin{equation*}
+%\arraycolsep=1.4pt\def\arraystretch{1}
+%\begin{array}{rl}
+%\ftv{\tau[\suty/\alpha]}&=(\ftv{\tau}\setminus\{\alpha\})\cup\ftv{\suty}\\
+%                        &=(\ftv{\tau}\cup\ftv{\suty})\setminus\{\alpha\}
+%\end{array}
+%\end{equation*}
 
-From the assumption of rule \rref{UA-Main}, we have that $\bar\alpha\subseteq\ftv{\tau}$.
-Then, it holds also that $\bar\alpha\subseteq\ftv{\tau}\cup\ftv{\suty}$ and from the fourth
-hypothesis of the theorem, we reach the goal:
-\begin{equation*}
-\bar\alpha\subseteq(\ftv{\tau}\cup\ftv{\suty})\setminus\{\alpha\}
-\end{equation*}
+From the assumption of rule \rref{UA-Main} and the second hypothesis of the theorem,
+we have that $\bar\alpha\subseteq\ftv{\type}\setminus\{\alpha\}$. Then trivially it also
+holds that $\bar\alpha\subseteq(\ftv{\type}\setminus\{\alpha\})\cup\ftv{\suty}$.\\
+%Then, it holds also that $\bar\alpha\subseteq\ftv{\tau}\cup\ftv{\suty}$ and from the fourth
+%hypothesis of the theorem, we reach the goal:
+%\begin{equation*}
+%\bar\alpha\subseteq(\ftv{\tau}\cup\ftv{\suty})\setminus\{\alpha\}
+%\end{equation*}
 
 %===============================================================================
 \item[\fbox{\rref{UA-TAbs}}]\quad$\unambig{\bar{\alpha}}{\tall{\beta}{\rulet}}$\\
