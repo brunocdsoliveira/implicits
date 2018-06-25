@@ -806,11 +806,10 @@ Deterministic resolution is stable under substitution.
   \dres{\tenv,\alpha,\tenv'}{\rulet}{E}
 %   \tenv,\alpha,\tenv' \ivturns \rulet\leadsto E
 \end{equation*}
-  and
-\begin{equation*}
-  \wfty{\tenv}{\suty}
-%  \tenv \turns \suty
-\end{equation*}
+%  and
+%\begin{equation*}
+%  \wfty{\tenv}{\suty}
+%\end{equation*}
   then
 \begin{equation*}
   \dres{\tenv,\tenv'[\suty/\alpha]}{\rulet[\suty/\alpha]}{E[|\suty|/\alpha]}
@@ -874,10 +873,10 @@ $\alpha\in\tenv''$ and $\alpha\notin\tenv''$.
 \begin{equation*}
   \drres{\bar{\alpha},\alpha,\bar{\alpha}}{\tenv,\alpha,\tenv'}{\rulet}{E}
 \end{equation*}
-  and
-\begin{equation*}
-  \wfty{\tenv}{\suty}
-\end{equation*}
+%  and
+%\begin{equation*}
+%  \wfty{\tenv}{\suty}
+%\end{equation*}
   then
 \begin{equation*}
   \drres{\bar{\alpha},\bar{\alpha}'}{\tenv,\tenv'[\suty/\alpha]}{\rulet[\suty/\alpha]}{E[|\suty|/\alpha]}
@@ -954,10 +953,10 @@ With this fact we can conclude by rule \rref{R-Simp}
 \begin{equation*}
   \tenv'' \subseteq \tenv,\alpha,\tenv'
 \end{equation*}
-  and
-\begin{equation*}
-\wfty{\tenv}{\suty}
-\end{equation*}
+%  and
+%\begin{equation*}
+%\wfty{\tenv}{\suty}
+%\end{equation*}
   then
 \begin{equation*}
 \dlres{\bar{\alpha},\bar{\alpha}'}{\tenv,\tenv'[\suty/\alpha]}{\tenv'''}{\type[\suty/\alpha]}{E[|\suty|/\alpha]}
