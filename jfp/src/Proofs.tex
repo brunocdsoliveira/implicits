@@ -2027,19 +2027,22 @@ By rule \rref{Alg-L-TyVar} we conclude
 \begin{lemma}\label{lemma:acompleteness:3}
   If 
 \begin{equation*}
-  \theta_1(\tenv); \theta_1(\rulet) \leadsto |\theta_1|(E) \ivturns \theta_1(\type) \leadsto |\theta_1|(E'); \theta_1(\Sigma')
+\dmres{\theta_1(\tenv)}{\theta_1(\rulet)}{\etrans{\theta_1}(E)}{\theta_1(\type)}{\etrans{\theta_1}(E')}{\theta_1(\Sigma')}
+%  \theta_1(\tenv); \theta_1(\rulet) \leadsto |\theta_1|(E) \ivturns \theta_1(\type) \leadsto |\theta_1|(E'); \theta_1(\Sigma')
 \end{equation*}
   and
 \begin{equation*}
-  \mathit{dom}(\theta_1) \subseteq \bar{\alpha}
+  \dom{(\theta_1)}\subseteq\bar\alpha
+%  \mathit{dom}(\theta_1) \subseteq \bar{\alpha}
 \end{equation*}
   then
 \begin{equation*}
-  \bar{\alpha};\tenv;\rulet \leadsto E; \Sigma \alg \type \leadsto |\theta_2|(E'); \theta_2(\Sigma',\Sigma)
+  \admres{\bar\alpha}{\tenv}{\rulet}{E}{\Sigma}{\type}{\etrans{\theta_2}(E')}{\theta_2(\Sigma',\Sigma)}
+%  \bar{\alpha};\tenv;\rulet \leadsto E; \Sigma \alg \type \leadsto |\theta_2|(E'); \theta_2(\Sigma',\Sigma)
 \end{equation*}
   and
 \begin{equation*}
-  \mathit{dom}(\theta_2) \subseteq \bar{\alpha}
+  \dom{(\theta_2)} \subseteq \bar{\alpha}
 \end{equation*}
   and
 \begin{equation*}
@@ -2054,24 +2057,31 @@ The proof proceeds by induction on the derivation of the first hypothesis.
 \begin{description}
 \setlength{\itemsep}{1em}
 %===============================================================================
-\item[\fbox{\texttt{(M-Simp)}}]\quad$\theta_1(\tenv); \theta_1(\type') \leadsto |\theta_1|(E) \ivturns \theta_1(\type) \leadsto |\theta_1|(E); \theta_1(\epsilon)$ \hfill where $\theta_1(\tenv) = \theta_1(\type')$. \\
+\item[\fbox{\rref{M-Simp}}]\quad
+$\dmres{\theta_1(\tenv)}{\theta_1(\type')}{\etrans{\theta_1}(E)}{\theta_1(\type)}{\etrans{\theta_1}(E)}{\theta_1(\epsilon)}$ \hfill with $\theta_1(\type) = \theta_1(\type')$ \\
+%$\theta_1(\tenv); \theta_1(\type') \leadsto |\theta_1|(E) \ivturns \theta_1(\type) \leadsto |\theta_1|(E); \theta_1(\epsilon)$ \hfill where $\theta_1(\tenv) = \theta_1(\type')$. \\
 %===============================================================================
 
-From Lemma~\ref{lemma:acompleteness:5} and rule \mylabel{Alg-M-Simp} we then have
+From Lemma~\ref{lemma:acompleteness:5} and rule \rref{Alg-M-Simp} we then have
 \begin{equation*}
-  \bar{\alpha}; \tenv; \type' \leadsto E; \Sigma \alg \type \leadsto \theta_2(E); \theta_2(\Sigma)
+  \admres{\bar\alpha}{\tenv}{\type'}{E}{\Sigma}{\type}{\etrans{\theta_2}(E)}{\theta_2(\Sigma)}
+%  \bar{\alpha}; \tenv; \type' \leadsto E; \Sigma \alg \type \leadsto \theta_2(E); \theta_2(\Sigma)
 \end{equation*}
 
 %===============================================================================
-\item[\fbox{\texttt{(M-IApp)}}]\quad$\theta_1(\tenv); \theta_1(\rulet_1 \iarrow \rulet_2)~{\leadsto |\theta_1|(E)}\ivturns \theta_1(\type)~{\leadsto |\theta_1|(E')}; \theta_1(\Sigma',\rulet_1 \leadsto x)$ \ \\
+\item[\fbox{\rref{M-IApp}}]\quad
+$\dmres{\theta_1(\tenv)}{\theta_1(\rulet_1\To\rulet_2)}{\etrans{\theta_1}(E)}{\theta_1(\type)}{\etrans{\theta_1}(E')}{\theta_1(\ie{\rulet_1}{x},\Sigma')}$\ \\
+%$\theta_1(\tenv); \theta_1(\rulet_1 \iarrow \rulet_2)~{\leadsto |\theta_1|(E)}\ivturns \theta_1(\type)~{\leadsto |\theta_1|(E')}; \theta_1(\Sigma',\rulet_1 \leadsto x)$ \ \\
 %===============================================================================
   From the hypothesis of the rule and the induction hypothesis, we have that
 \begin{equation*}
- \bar{\alpha};\tenv,\rulet_1 \leadsto x;\rulet_2 \leadsto E\,x; \rulet_1 \leadsto x, \Sigma \alg \type \leadsto |\theta_2|(E'); \theta_2(\Sigma',\rulet_1 \leadsto x, \Sigma) 
+\admres{\bar\alpha}{\tenv,\envi{\rulet_1}{x}}{\rulet_2}{\mmapp{E}{x}}{\Sigma,\ie{\rulet_1}{x}}{\type}{\etrans{\theta_2}(E')}{\theta_2(\ie{\rulet_1}{x},\Sigma',\Sigma)}
+% \bar{\alpha};\tenv,\rulet_1 \leadsto x;\rulet_2 \leadsto E\,x; \rulet_1 \leadsto x, \Sigma \alg \type \leadsto |\theta_2|(E'); \theta_2(\Sigma',\rulet_1 \leadsto x, \Sigma) 
 \end{equation*}
-  By rule \mylabel{Alg-M-IApp} we may then conclude
+  By rule \rref{Alg-M-IApp} we may then conclude
 \begin{equation*}
- \bar{\alpha};\tenv;\rulet_1 \iarrow \rulet_2 \leadsto E; \Sigma \alg \type \leadsto |\theta_2|(E'); \theta_2(\Sigma',\rulet_1 \leadsto x, \Sigma) 
+  \admres{\bar\alpha}{\tenv}{\rulet_1\To\rulet_2}{E}{\Sigma}{\type}{\etrans{\theta_2}(E')}{\theta_2(\ie{\rulet_1}{x}, \Sigma', \Sigma)}
+% \bar{\alpha};\tenv;\rulet_1 \iarrow \rulet_2 \leadsto E; \Sigma \alg \type \leadsto |\theta_2|(E'); \theta_2(\Sigma',\rulet_1 \leadsto x, \Sigma)
 \end{equation*} 
 
 %===============================================================================
