@@ -140,8 +140,8 @@ the head of the instances. In this case there are two equality specific
 heads |C [a]| and therefore the program is rejected.
 
 Although this design choice is not very well documented in the
-research literature, the reason for this choice is folklore among
-Haskell programmers and can be found in domentation and
+research literature, the reason for not allowing backtracking is folklore among
+Haskell programmers and can be found in documentation and
 emails~\cite{}. In essence there are two argument for not allowing
 backtracking during resolution:
 
@@ -152,12 +152,12 @@ type classes, programmers often have to figure out which type class
 instance is used. Essentially this requires recreating the steps
 involved in the resolution algorithm. If only the heads are needed
 to figure out which instances are used, then reasoning is relatively
-simple. However is backtracking is involved then finding the instances
+simple. However when backtracking is involved then finding the instances
 will require programmers to simulate the backtracking process, which
 can be quite complex.
 
 \item {\bf Performance:} Another strong motivation to disallow
-backtracking is performance.  If backtracking is allowed the compile
+backtracking is performance. If backtracking is allowed the compile
 times required to type-check programs involving instances that require
 alot of backtracking could grow exponentially. High compile times are
 not desirable for programmers, therefore by disallowing backtracking
@@ -167,19 +167,97 @@ in type-checking.
 \end{itemize}
 
 \paragraph{Alternative Designs} Other implicit programming mechanisms
-allow backtracking~\cite{}, therefore another reasonable choice would
-be 
+allow backtracking~\cite{}. Therefore another reasonable choice would
+be to employ an algorithm that would perform backtracking as well. Allowing
+backtracking has some advantages. For example more queries
+would be accepted, and it would be possible to have a sound and complete
+algorithm (instead of just a sound one) with respect to Figure~\ref{}.
+In our work we opted by an algorithm that follows some of the practical considerations
+that were discussed before in the Haskell community. The nearly 30 years
+of experience with Haskell type classes indicate that such a choice works
+reasonably well in practice. Nonetheless allowing backtracting does have
+better properties in theory, and despite the practical disadvantages with
+respect to committed choice, we think it is still a reasonable and worthwhile
+design to explore in the context of programming languages. Indeed designs such as
+Ocaml implicits~\cite{} are representative of such algorithms in practice.
+
+In the context of theorem proving where
+proof irrelevance is often in play having backtracking seems to be a better choice.
+If type classes are building evidence for proofs, then proof irrelevance means
+that it does not matter which concrete proof is found. What matters is that
+some proof exists. In other words in this context coherence is not relevant,
+and the objections about the difficulty of reasoning about which
+instance is used is also not relevant. Then the only question is performance.
+In theorem proving the expressiveness of search is often more important than
+having a very fast search method, and thus performance is also not a big
+drawback in such a setting.
 
 \subsection{Superclasses}
 
-Superclasses are not supported by \name. Here \name follows the design of Scala implicits, which 
-do not have a concept similar to superclasses. In Scala a similar mechanism to 
-superclasses can often be achieved with OO Subtyping and class hierarchies, although there are situations 
-that don't work well. \bruno{Should I really go into this?} 
+Superclasses are not supported by \name. Here \name follows the design
+of Scala implicits, which do not have a concept similar to
+superclasses\footnote{Note that, in Scala, superclasses are often
+simulated with OO Subtyping and class hierarchies, although there
+is not one-to-one correspondence between superclasses and OO hierarchies.}.
+At first sight superclasses seem to rely on the ability
+to backtrack. Therefore an important question is whether the choice
+of committed choice precludes superclasses. 
 
-Superclasses look alot like overlapping instances, for example:
+As we have argued in Section~\ref{}, Haskell does not support
+backtracking either, and yet it supports superclasses. Although we do
+not cover superclasses in our work, and in particular in the
+(informally presented) encoding in Section~\ref{}, it is possible to
+model superclasses even when the search strategy employs committed
+choice. Here we discuss superclasses in some more detail.
 
+\paragraph{Superclasses in Haskell}
+Since the inception of type classes in Haskell that superclasses have
+been supported.  A familiar example of superclasses is illustrated by
+the classes |Eq| and |Ord| in Haskell, where |Eq| is a superclass of
+|Ord|. The following simplified piece of code shows the two classes,
+together with instances for integers:
+
+> class Eq a where
+>   (==) :: a -> a -> Bool
 >
+> class Eq a => Ord a where
+>   (<) :: a -> a -> Bool
+>
+> instance Eq Int where
+>   dots
+>
+> instance Ord Int where
+>   dots
+
+\noindent In the definition of the class |Ord| the type class constraint |Eq a| specifies
+that |Eq a| is a superclass of |Ord a|.
+Superclasses allow the use of methods from the superclasses, even if only a subclass
+is part of the type class context. For example:
+
+> p :: Ord a => a -> a -> Bool
+> p = (==)     -- accepted because |Eq a| is a supertype of |Ord a|
+
+\noindent In this case the type of the function |p| assummes that an
+instance for |Ord a| exists. In the body of |p|, the method |==| (of the class |Eq a|)
+is used. This code is accepted in Haskell because |Eq a| is a superclass
+of |Ord a|. 
+
+\paragraph{Superclasses and Overlapping} Consider the following variant of |p|, defined
+only for integers:
+
+> p' :: Int -> Int -> Bool
+> p' = (==)     
+
+\noindent This program is also accepted in Haskell. However, 
+one important point about this example is that when finding the implementation
+of |==| in |p| there are actually two possible ways to do so.
+One option is to get the implementation of |Eq Int| directly from
+the |Eq Int| instance. The other option is to get an implementation
+of |Eq Int| from |Ord Int| via the superclass.
+In essence we have a situation where we have a context
+$\tenv =$ |forall a. Ord a => Eq a, Eq Int, Ord Int|, and we have
+to resolve the query |?(Eq Int)|.
+
 
 But resolution in the presence of superclasses behaves differently from overlapping instances. 
 
