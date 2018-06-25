@@ -759,14 +759,16 @@ Then the second and third hypothesis of the lemma must have been formed by rule 
 %-------------------------------------------------------------------------------
 \subsection{Resolution and Typing Stability}\label{proof:coherence}
 
-\begin{minipage}[t]{\textwidth}
-The proofs of this section regard stability of the deterministic resolution judgment and
-stability of the typing judgment of \name. The first part, similarly to
-Section~\ref{proof:determinism}, is split into subproofs for each sub-judgment (focusing,
-lookup and matching) of the deterministic resolution judgment and follows their dependencies.
-The second part uses the main result of the first part to establish stability of typing under
-type application reduction. %, as stated in
-%Lemma~\ref{lem:stability_tapp_red} of the paper.
+%\begin{minipage}[t]{\textwidth}
+The proofs of this section regard stability of the deterministic resolution judgment, as well
+as stability of typing. The first part, similarly to Section~\ref{proof:determinism}, is split
+into subproofs for each sub-judgment (focusing, lookup and matching) of the deterministic
+resolution judgment and follows their dependencies. The second part uses the main result of the
+first part to establish stability of typing under type application reduction. In addition, it
+uses the preservation-under-type-substitution properties of typing and of the unambiguity
+judgment.
+%depends on the auxiliary lemma that the type-unambiguity judgment is preserved under type
+%substitution.
 The dependencies of the proofs of this section are depicted in the diagram below.
 \begin{center}
 \begin{tikzpicture}[node distance=1.3cm, auto,]
@@ -798,7 +800,7 @@ The dependencies of the proofs of this section are depicted in the diagram below
 \draw[pil] (US.north) to [out=30,in=150] (UAS.north);
 \end{tikzpicture}
 \end{center}\vspace{0.7cm}
-\end{minipage}
+%\end{minipage}
 
 Deterministic resolution is stable under substitution.
 
