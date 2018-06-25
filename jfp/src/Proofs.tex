@@ -1252,8 +1252,8 @@ instances of \rref{Ty-TAbs} and \rref{Ty-TApp}, as shown below.
   {
     {\inferrule*[Left=\textsc{Ty-TAbs}]
       {\wte{\tenv,\alpha}{e}{\rulet}{E}}
-      {\wte{\tenv}{\Abs{\alpha}{e}}{\forall\alpha.\rulet}{\Abs{\alpha}{E}}}} \and
-      \wfty{\tenv}{\suty}
+      {\wte{\tenv}{\Abs{\alpha}{e}}{\forall\alpha.\rulet}{\Abs{\alpha}{E}}}}
+%       \and \wfty{\tenv}{\suty}
   }
   {
     \wte{\tenv}{\mmapp{(\Abs{\alpha}{e})}{\suty}}{\rulet[\suty/\alpha]}{\mmapp{(\Abs{\alpha}{E})}{\etrans{\suty}}}
@@ -1263,7 +1263,7 @@ Therefore, it suffices to show that
 \begin{equation*}
 \begin{array}{r l}
 \text{If}&\wte{\tenv,\alpha}{e}{\rulet}{E}\\
-\text{and}&\wfty{\tenv}{\suty},\\
+%\text{and}&\wfty{\tenv}{\suty},\\
 \text{then}&\wte{\tenv}{e[\suty/\alpha]}{\rulet[\suty/\alpha]}{E[\etrans{\suty}/\alpha]}
 \end{array}
 \end{equation*}
@@ -1278,10 +1278,10 @@ This can be proven as a special case ($\tenv' = \epsilon$) of the following theo
 \begin{equation*}
   \wte{\tenv,\alpha,\tenv'}{e}{\rulet}{E}
 \end{equation*}
-  and
-\begin{equation*}
-  \wfty{\tenv}{\suty}
-\end{equation*}
+%  and
+%\begin{equation*}
+%  \wfty{\tenv}{\suty}
+%\end{equation*}
   then
 \begin{equation*}
   \wte{\tenv,\tenv'[\suty/\alpha]}{e[\suty/\alpha]}{\rulet[\suty/\alpha]}{E[\ttrans[\suty]/\alpha]}
@@ -1291,14 +1291,13 @@ This can be proven as a special case ($\tenv' = \epsilon$) of the following theo
 }
 
 \begin{proof}
-\klara{Don't forget to update with changes in the typing relation!}\\
 The proof proceeds by induction on the first hypothesis.\\
 
 %===============================================================================
 \item[\fbox{\rref{Ty-Var}}]\quad$\wte{\tenv,\alpha,\tenv'}{x}{\rulet}{x}$\\
 %===============================================================================
 From the rule's premise, we know that $(\relation{x}{\rulet}) \in \tenv,\alpha, \tenv'$.
-In combination with the theorem's second hypothesis, we obtain
+Hence, it also holds that
 $(\relation{x}{\rulet[\suty/\alpha]}) \in \tenv,\tenv'[\suty/\alpha]$. Rule \rref{Ty-Var} can then be instantiated with the latter, to conclude
 $\wte{\tenv,\tenv'[\suty/\alpha]}{x}{\rulet[\suty/\alpha]}{x}$.\\
 
@@ -1339,24 +1338,25 @@ where, from the definition of substitution, we have
 $(\tenv',\alpha')[\suty/\alpha] = \tenv'[\suty/\alpha],\alpha'$. Using this equation in the judgment above, we reach the goal by applying rule \rref{Ty-TAbs} on it.\\
 
 %===============================================================================
-\item[\fbox{\rref{Ty-TApp}}]\quad$\wte{\tenv,\alpha,\tenv'}{\mmapp{e}{\rulet_1}}{\rulet_2[\rulet_1/\alpha']}{\mmapp{E}{\etrans{\rulet_1}}}$\\
+\item[\fbox{\rref{Ty-TApp}}]\quad
+$\wte{\tenv,\alpha,\tenv'}{\mmapp{e}{\rulet_1}}{\rulet_2[\rulet_1/\alpha']}{\mmapp{E}{\etrans{\rulet_1}}}$\\
 %===============================================================================
-Note that $\alpha \neq \alpha'$.
+%Note that $\alpha \neq \alpha'$.
 The first assumption of rule \rref{Ty-TApp} is
 \begin{equation*}
 \wte{\tenv,\alpha,\tenv'}{e}{\tall{\alpha'}{\rulet_2}}{E}
 \end{equation*}
-Then, by the induction hypothesis and the definition of substitution, we get
+Then, from the induction hypothesis and the definition of substitution, we get
 \begin{equation*}
 \wte{\tenv,\tenv'[\suty/\alpha]}{e[\suty/\alpha]}{\tall{\alpha'}{(\rulet_2[\suty/\alpha])}}{E[\etrans{\suty}/\alpha]}
 \end{equation*}
-From the second hypothesis of rule \rref{Ty-TApp} and by presevation of type well-scoping
-under type substitution (straight-forward to prove) we get
-\begin{equation*}
-\wfty{\tenv,\tenv'[\suty/\alpha]}{\rulet_1[\suty/\alpha]}
-\end{equation*}
+%From the second hypothesis of rule \rref{Ty-TApp} and by presevation of type well-scoping
+%under type substitution (straight-forward to prove) we get
+%\begin{equation*}
+%\wfty{\tenv,\tenv'[\suty/\alpha]}{\rulet_1[\suty/\alpha]}
+%\end{equation*}
 
-Using the two obtained results in rule \rref{Ty-TApp}, we get
+Using this in rule \rref{Ty-TApp}, we get
 \begin{equation*}
 \wte{\tenv,\tenv'[\suty/\alpha]}{\mmapp{(e[\suty/\alpha])}{(\rulet_1[\suty/\alpha])}}{(\rulet_2[\suty/\alpha])[\rulet_1[\suty/\alpha] /\alpha']}{\mmapp{E[\etrans{\suty}/\alpha]}{\etrans{\rulet_1[\suty/\alpha]}}}
 \end{equation*}
@@ -1378,18 +1378,16 @@ From the first assumption of rule \rref{Ty-IAbs} and the induction hypothesis, w
 \begin{equation*}
 \wte{\tenv,\tenv'[\suty/\alpha],\envi{\rulet_1[\suty/\alpha]}{x}}{e[\suty/\alpha]}{\rulet_2[\suty/\alpha]}{E[\etrans{\suty}/\alpha]}
 \end{equation*}
-Passing the second and third assumption of rule \rref{Ty-IAbs} together with the second
-hypothesis of this theorem to Lemma~\ref{lemma:unamb_subst:0}, we get
+Passing the second assumption of rule \rref{Ty-IAbs} to Lemma~\ref{lemma:unamb_subst:0}, we get
 \begin{equation*}
 \unambig{}{\rulet_1[\suty/\alpha]}
 \end{equation*}
-By preservation of type well-scoping under type substitution, it also holds that
-\begin{equation*}
-\wfty{\tenv,\tenv'[\suty/\alpha]}{\rulet_1[\suty/\alpha]}
-\end{equation*}
-
-By using the three obtained results and the freshness assumption of rule \rref{Ty-IAbs}
-to instantiate a new \rref{Ty-IAbs} rule, we reach the goal.
+%By preservation of type well-scoping under type substitution, it also holds that
+%\begin{equation*}
+%\wfty{\tenv,\tenv'[\suty/\alpha]}{\rulet_1[\suty/\alpha]}
+%\end{equation*}
+By using the two obtained results and the freshness assumption of rule \rref{Ty-IAbs}
+to instantiate a new \rref{Ty-IAbs} rule, we reach the goal.\\
 
 %===============================================================================
 \item[\fbox{\rref{Ty-IApp}}]\quad$\wte{\tenv,\alpha,\tenv'}{\ruleapp{e_1}{e_2}}{\rulet_1}{\mmapp{E_1}{E_2}}$\\
@@ -1402,31 +1400,28 @@ substitution, we obtain
 \text{and}\quad\wte{\tenv,\tenv'[\suty/\alpha]}{e_2[\suty/\alpha]}{\rulet_2[\suty/\alpha]}{E_2[\etrans{\suty}/\alpha]}
 \end{array}
 \end{equation*}
-
-By passing the two judgments above to rule \rref{Ty-IAbs}, we obtain the desired result.
+By passing the two judgments above to rule \rref{Ty-IAbs}, we obtain the desired result.\\
 
 %===============================================================================
 \item[\fbox{\rref{Ty-Query}}]\quad$\wte{\tenv,\alpha,\tenv'}{?\rulet}{\rulet}{E}$\\
 %===============================================================================
-From the first assumption of rule \rref{Ty-Query}, the second hypothesis of this theorem and
-Lemma~\ref{lemma:coherence:0} \klara{It is unclear to the reader why I use
-Lemma~\ref{lemma:coherence:0} and not Lemma~\ref{lemma:substitution}.}
-we get
+From the first assumption of rule \rref{Ty-Query}, where we consider deterministic
+resolution, and Lemma~\ref{lemma:coherence:0} we get
 \begin{equation*}
 \dres{\tenv,\tenv'[\suty/\alpha]}{\rulet[\suty/\alpha]}{E[\etrans{\suty}/\alpha]}
 \end{equation*}
-From the second assumption of rule \rref{Ty-Query}, the second hypothesis of this theorem and
-the property of type well-scoping under substitution, we have
-\begin{equation*}
-\wfty{\tenv,\tenv'[\suty/\alpha]}{\rulet[\suty/\alpha]}
-\end{equation*}
-Finally, passing the second and third assumptions of rule \rref{Ty-Query} and the second
-hypothesis of this theorem to Lemma~\ref{lemma:unamb_subst:0}, results in
+%From the second assumption of rule \rref{Ty-Query}, the second hypothesis of this theorem and
+%the property of type well-scoping under substitution, we have
+%\begin{equation*}
+%\wfty{\tenv,\tenv'[\suty/\alpha]}{\rulet[\suty/\alpha]}
+%\end{equation*}
+Passing the second assumption of rule \rref{Ty-Query} to Lemma~\ref{lemma:unamb_subst:0}
+results in
 \begin{equation*}
 \unambig{}{\rulet[\suty/\alpha]}
 \end{equation*}
-Then, we can instantiate rule \rref{Ty-Query} with the above three obtained results to reach
-the goal of this case.
+Then, we can instantiate rule \rref{Ty-Query} with the two obtained results above,
+to reach the goal of this case.
 \end{proof}
 
 %###############################################################################
@@ -1473,6 +1468,7 @@ $\alpha\notin\epsilon$.
 \end{minipage}
 }}
 \begin{proof}
+\klara{Update to not use well-scoping.}
 The proof proceeds by induction on the theorem's first hypothesis, mutually with the previous
 proof.\\
 
