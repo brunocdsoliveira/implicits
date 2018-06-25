@@ -760,14 +760,18 @@ FIXED
 >  - proof of Lemma A.13, case (UA-TAbs): some of the indices of the
 > various $\sigma$ do not seem to align.  E.g. $\sigma'_{1,2}$ should
 > probably be $\sigma'_{2,2}$ or vice-versa.
+
+FIXED
+
 > 
 >  - Section A.5: "Resolution coherence" --> "Resolution stability" (?)
-> 
+
+FIXED
+ 
 >  - Proofs of Lemmas A.14, A.15 and A.16: please state the induction
 > strategy of these proofs.  By induction on which judgments, terms,
 > etc. are these proofs performed?  Are they performed mutually or
 > independently?
-
 
 FIXED
  
@@ -831,7 +835,7 @@ TODO -> Klara
 >  - where/how is the substitution order $\theta_1 \sqsubseteq \theta_2$
 > defined?
 
-TODO -> Klara: define
+Definition has been added.
  
 >  - only the first conclusion of this lemma is proven, what about the
 > second and third conclusions?
