@@ -1782,12 +1782,13 @@ This follows from rule \mylabel{M-Simp}.
 
 %===============================================================================
 \item[\fbox{\rref{Alg-M-IApp}}]\quad
-$\admress{\bar\alpha}{\tenv}{\rulet_1\To\rulet_2}{E}{\Sigma}{\type}{E'}{\Sigma',\ie{\theta(\rulet_1)}{x}, \theta(\Sigma)}{\theta}$\ \\
+$\admress{\bar\alpha}{\tenv}{\rulet_1\To\rulet_2}{E}{\Sigma}{\type}{E'}{\Sigma', \theta(\Sigma)}{\theta}$\ \\
 %$\bar{\alpha}; \tenv; \rulet_1 \iarrow \rulet_2~{\leadsto E}; \Sigma \alg \type~{\leadsto E'}; \Sigma',\theta(\rulet_1) \leadsto x, \theta(\Sigma);\theta$ \ \\
 %===============================================================================
-  From the hypothesis of the rule and the induction hypothesis, we have that
+  From the hypothesis of the rule, the induction hypothesis and the definition of substitution,
+we have that
 \begin{equation*}
-  \dmres{\tenv,\ie{\rulet_1}{x}}{\theta(\rulet_2)}{\etrans\theta(\mmapp{E}{x})}{\theta(\type)}{E'}{\Sigma'}
+  \dmres{\theta(\tenv),\envi{\theta(\rulet_1)}{x}}{\theta(\rulet_2)}{\etrans\theta(\mmapp{E}{x})}{\theta(\type)}{E'}{\Sigma'}
 % \theta(\tenv,\rulet_1 \leadsto x); \theta(\rulet_2) \leadsto |\theta|(E\,x) \ivturns \theta(\type) \leadsto E'; \Sigma' 
 \end{equation*}
   By rule \rref{M-IApp} we may then conclude
