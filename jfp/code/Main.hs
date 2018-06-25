@@ -14,8 +14,9 @@ topLevel p =
     case mct of
       Left msg 
         -> putStrLn msg
-      Right (ct, f) 
-        -> do section "Checked Type" ct
+      Right ((ct, f), msgs)
+        -> do mapM_ putStrLn msgs
+              section "Checked Type" ct
               section "System F Elaboration" f
               section "System F Evaluation" (F.eval f)
               case F.checkTerm f of

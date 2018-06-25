@@ -7,19 +7,20 @@ import Debug.Trace
 import Control.Monad.Except
 import Control.Monad.Reader
 import Control.Monad.State
+import Control.Monad.Writer
 import Control.Applicative
 
 import qualified SystemF as F
 
 import qualified Data.Set as S
 
-checkTerm :: Term -> Either String (ContextType, F.Term)
+checkTerm :: Term -> Either String ((ContextType, F.Term),[String])
 checkTerm t 
- = runReaderT (evalStateT (typeCheck t) 0) E_Empty
+ = runWriterT (runReaderT (evalStateT (typeCheck t) 0) E_Empty)
 
 -- TYPE CHECKER MONAD --------------------------------
 
-type TC = StateT Int (ReaderT Env (Either String))
+type TC = StateT Int (ReaderT Env (WriterT [String] (Either String)))
 
 tcAbort :: TC a
 tcAbort = lift (throwError "Abort!")
@@ -42,7 +43,14 @@ tcGuard b msg
   = return ()
   | otherwise
   = tcError msg
-  
+
+tcWarn :: Bool -> String -> TC ()
+tcWarn b msg
+  | b
+  = return ()
+  | otherwise
+  = tell ["Warning: " ++ msg]
+    
 
 -- ENVIRONMENT --------------------------------------
 
@@ -125,6 +133,7 @@ typeCheck (TM_TApp t st)
          
 typeCheck (TM_IAbs ct1 t)
  = do tcGuard (unambigCT ct1) ("Implicit abstraction type should be unambiguous: " ++ show ct1)
+      tcWarn (termCT ct1) ("Termination check violated for " ++ show ct1 ++ ". It's up to you.")
       x <- tcFresh
       (ct2, f) <- inEnv (E_Imp ct1 x) (typeCheck t)
       return (CT_Rule ct1 ct2, F.Abs x (elabCT ct1) f)
@@ -143,6 +152,7 @@ typeCheck (TM_IApp t1 t2)
 typeCheck (TM_Query ct)
  = do 
       tcGuard (unambigCT ct) ("Query type is ambiguous: " ++ show ct)
+      tcWarn (termCT ct) ("Termination check violated for " ++ show ct ++ ". It's up to you.")
       f <- resolve ct
       return (ct, f)
 typeCheck (TM_Int n)
@@ -263,3 +273,38 @@ unambigCT = go S.empty
       = go S.empty ct1 && go tvars ct2
     go tvars (CT_Simp st)
       = tvars `S.isSubsetOf` freeTVarsST st
+
+termCT :: ContextType -> Bool
+termCT (CT_Univ tv ct)
+  = termCT ct
+termCT (CT_Rule ct1 ct2)
+  =    termCT ct1 
+    && termCT ct2
+    && normST st1 < normST st2
+    && all 
+         (\tv -> occsST st1 tv <= occsST st2 tv) 
+         (freeTVarsCT ct1 `S.union` freeTVarsCT ct2)
+    where
+      st1 = headCT ct1
+      st2 = headCT ct2
+
+      normCT :: ContextType -> Int
+      normCT (CT_Univ tv ct)
+        = normCT ct
+      normCT (CT_Rule ct1 ct2)
+        = 1 + normCT ct1 + normCT ct2
+      normCT (CT_Simp st)
+        = normST st
+
+      normST :: SimpleType -> Int
+      normST (ST_TVar tv)
+        = 1
+      normST (ST_Fun ct1 ct2)
+        = 1 + normCT ct1 + normCT ct2
+      normST ST_Int
+        = 1
+      normST ST_Bool
+        = 1 
+
+termCT (CT_Simp st)
+  = True
