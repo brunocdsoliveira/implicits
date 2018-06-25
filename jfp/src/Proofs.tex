@@ -2021,6 +2021,10 @@ By rule \rref{Alg-L-TyVar} we conclude
 \end{description}
 \end{proof}
 
+%\begin{definition}[Partial ordering over type substitutions]
+%
+%\end{definition}
+
 %###############################################################################
 {\centering
 \fbox{
@@ -2076,12 +2080,18 @@ $\dmres{\theta_1(\tenv)}{\theta_1(\rulet_1\To\rulet_2)}{\etrans{\theta_1}(E)}{\t
 %===============================================================================
   From the hypothesis of the rule and the induction hypothesis, we have that
 \begin{equation*}
-\admres{\bar\alpha}{\tenv,\envi{\rulet_1}{x}}{\rulet_2}{\mmapp{E}{x}}{\Sigma,\ie{\rulet_1}{x}}{\type}{\etrans{\theta_2}(E')}{\theta_2(\ie{\rulet_1}{x},\Sigma',\Sigma)}
+\forall\Sigma,~\admres{\bar\alpha}{\tenv,\envi{\rulet_1}{x}}{\rulet_2}{\mmapp{E}{x}}{\Sigma}{\type}{\etrans{\theta_2}(E')}{\theta_2(\Sigma',\Sigma)}
+%\admres{\bar\alpha}{\tenv,\envi{\rulet_1}{x}}{\rulet_2}{\mmapp{E}{x}}{\Sigma,\ie{\rulet_1}{x}}{\type}{\etrans{\theta_2}(E')}{\theta_2(\ie{\rulet_1}{x},\Sigma',\Sigma)}
 % \bar{\alpha};\tenv,\rulet_1 \leadsto x;\rulet_2 \leadsto E\,x; \rulet_1 \leadsto x, \Sigma \alg \type \leadsto |\theta_2|(E'); \theta_2(\Sigma',\rulet_1 \leadsto x, \Sigma) 
 \end{equation*}
+Then, for $\Sigma = \Sigma'',\ie{\rulet_1}{x}$, the above is refined to
+\begin{equation*}
+\forall \Sigma'',~\admres{\bar\alpha}{\tenv,\envi{\rulet_1}{x}}{\rulet_2}{\mmapp{E}{x}}{\Sigma'',\ie{\rulet_1}{x}}{\type}{\etrans{\theta_2}(E')}{\theta_2(\Sigma',\Sigma'',\ie{\rulet_1}{x})}
+\end{equation*}
+
   By rule \rref{Alg-M-IApp} we may then conclude
 \begin{equation*}
-  \admres{\bar\alpha}{\tenv}{\rulet_1\To\rulet_2}{E}{\Sigma}{\type}{\etrans{\theta_2}(E')}{\theta_2(\ie{\rulet_1}{x}, \Sigma', \Sigma)}
+\forall\Sigma'',~\admres{\bar\alpha}{\tenv}{\rulet_1\To\rulet_2}{E}{\Sigma''}{\type}{\etrans{\theta_2}(E')}{\theta_2(\Sigma',\Sigma'',\ie{\rulet_1}{x})}
 % \bar{\alpha};\tenv;\rulet_1 \iarrow \rulet_2 \leadsto E; \Sigma \alg \type \leadsto |\theta_2|(E'); \theta_2(\Sigma',\rulet_1 \leadsto x, \Sigma)
 \end{equation*} 
 
