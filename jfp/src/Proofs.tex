@@ -323,7 +323,7 @@ judgment.
 \begin{center}
 \begin{tikzpicture}[node distance=1cm, auto,]
 %nodes
-\node[punkt] (DR) {Lemma~\ref{lemma:determinism:0}: \\
+\node[punkt, mainres] (DR) {Lemma~\ref{lemma:determinism:0}: \\
              \it Deterministic resolution judgment is deterministic};
 \node[punkt, right=0.8cm of DR] (DFR) {Lemma~\ref{lemma:determinism:1}: \\
              \it Focusing judgment is deterministic};
@@ -773,7 +773,7 @@ The dependencies of the proofs of this section are depicted in the diagram below
 \begin{center}
 \begin{tikzpicture}[node distance=1.3cm, auto,]
 %nodes
-\node[punkt] (DR) {Lemma~\ref{lemma:coherence:0}: \\
+\node[punkt, mainres] (DR) {Lemma~\ref{lemma:coherence:0}: \\
              \it Deterministic resolution is stable};
 \node[punkt, right=0.8cm of DR] (DFR) {Lemma~\ref{lemma:coherence:1}: \\
              \it Focusing judgment is stable};
@@ -783,7 +783,7 @@ The dependencies of the proofs of this section are depicted in the diagram below
              \it Matching judgment is stasble};
 \node[punkt, below=of DR] (TP) {Lemma~\ref{lemma:typing_stability}: \\
              \it Typing preservation under type substitution};
-\node[punkt, below=of DFR] (TR) {Lemma~\ref{lemma:tapp_reduction}: \\
+\node[punkt, mainres, below=of DFR] (TR) {Lemma~\ref{lemma:tapp_reduction}: \\
              \it Typing is stable under type application reduction};
 \node[punkt, below=of DLR] (US) {Lemma~\ref{lemma:unamb_subst:0}: \\
              \it Unambiguity preservation under type substitution};
@@ -1591,7 +1591,7 @@ By the definition of substitution and the last two obtained results used with ru
 \begin{center}
 \begin{tikzpicture}[node distance=1.3cm, auto,]
 %nodes
-\node[punkt] (AR) {Lemma~\ref{lemma:asoundness:0}:\\
+\node[punkt, mainres] (AR) {Lemma~\ref{lemma:asoundness:0}:\\
              \it Algorithmic resolution is sound wrt det. resolution};
 \node[punkt, below=of AR] (AF) {Lemma~\ref{lemma:asoundness:1}: \\
              \it Algorithmic focusing is sound wrt to det. focusing};
