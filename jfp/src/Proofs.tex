@@ -1,3 +1,7 @@
+% Nodes for the dependecy diagrams
+\newcommand{\dnode}[4]
+{\node[punkt, #2] (#1) {Lemma~\ref{#3} \nodepart{second}\it #4};}
+
 %\stopcontents
 \figtwocol{fig:ftype1}{System F Type System}{
 \begin{center}
@@ -285,6 +289,26 @@ See file CochisDet.v, Lemma \tt{DRes\_match\_impl\_vars}.
 
 \subsection{Deterministic Resolution is Deterministic}\label{proof:determinism}
 
+\begin{minipage}[t]{\textwidth}
+The proofs of this section are split into subproofs for each sub-judgment (focusing, lookup and
+matching) of the deterministic resolution judgment. Their dependencies, depicted in the diagram below, follow those of the sub-judgments that constitute the main deterministic resolution
+judgment.
+\begin{center}
+\begin{tikzpicture}[node distance=1cm, auto,]
+%nodes
+\dnode{DR}{mainres}{lemma:determinism:0}{Deterministic resolution judgment is deterministic}
+\dnode{DFR}{right=0.8cm of DR}{lemma:determinism:1}{Focusing judgment is deterministic}
+\dnode{DLR}{right=0.8cm of DFR}{lemma:determinism:2}{Lookup judgment is deterministic}
+\dnode{DMR}{right=0.8cm of DLR}{lemma:determinism:3}{Matching judgment is deterministic}
+%edges
+\draw[pil] (DR.north) to [out=30,in=150] (DFR.north);
+\draw[pil] (DFR.north) to [out=30,in=150] (DLR.north);
+\draw[pil] (DLR.south) to [out=210,in=330] (DFR.south);
+\draw[pil] (DLR.north) to [out=30,in=150] (DMR.north);
+\end{tikzpicture}
+\end{center}\vspace{0.3cm}
+\end{minipage}
+
 Figure~\ref{fig:unambenv} defines the judgment $\unambenv{\tenv}$ which states that a typing environment is unambiguous.
 Essentially, the definition requires that all types $\rulet$ in $\tenv$ are unambiguous.
 This definition will be used thoughout this section.
@@ -315,31 +339,6 @@ This definition will be used thoughout this section.
 }
 \end{center}
 }
-
-\begin{minipage}[t]{\textwidth}
-The proofs of this section are split into subproofs for each sub-judgment (focusing, lookup and
-matching) of the deterministic resolution judgment. Their dependencies, depicted in the diagram below, follow those of the sub-judgments that constitute the main deterministic resolution
-judgment.
-\begin{center}
-\begin{tikzpicture}[node distance=1cm, auto,]
-%nodes
-\node[punkt, mainres] (DR) {Lemma~\ref{lemma:determinism:0}: \\
-             \it Deterministic resolution judgment is deterministic};
-\node[punkt, right=0.8cm of DR] (DFR) {Lemma~\ref{lemma:determinism:1}: \\
-             \it Focusing judgment is deterministic};
-\node[punkt, right=0.8cm of DFR] (DLR) {Lemma~\ref{lemma:determinism:2}: \\
-             \it Lookup judgment is deterministic};
-\node[punkt, right=0.8cm of DLR] (DMR) {Lemma~\ref{lemma:determinism:3}: \\
-             \it Matching judgment is deterministic};
-%edges
-\draw[pil] (DR.north) to [out=30,in=150] (DFR.north);
-\draw[pil] (DFR.north) to [out=30,in=150] (DLR.north);
-\draw[pil] (DLR.south) to [out=210,in=330] (DFR.south);
-\draw[pil] (DLR.north) to [out=30,in=150] (DMR.north);
-\end{tikzpicture}
-\end{center}\vspace{0.7cm}
-\end{minipage}
-
 
 %###############################################################################
 {\centering
@@ -767,37 +766,29 @@ resolution judgment and follows their dependencies. The second part uses the mai
 first part to establish stability of typing under type application reduction. In addition, it
 uses the preservation-under-type-substitution properties of typing and of the unambiguity
 judgment.
-%depends on the auxiliary lemma that the type-unambiguity judgment is preserved under type
-%substitution.
-The dependencies of the proofs of this section are depicted in the diagram below.
+The dependencies of the proofs of this section are depicted in the diagram below, where
+main results are indicated with double borders.
 \begin{center}
 \begin{tikzpicture}[node distance=1.3cm, auto,]
 %nodes
-\node[punkt, mainres] (DR) {Lemma~\ref{lemma:coherence:0}: \\
-             \it Deterministic resolution is stable};
-\node[punkt, right=0.8cm of DR] (DFR) {Lemma~\ref{lemma:coherence:1}: \\
-             \it Focusing judgment is stable};
-\node[punkt, right=0.8cm of DFR] (DLR) {Lemma~\ref{lemma:coherence:2}: \\
-             \it Lookup judgment is stable};
-\node[punkt, right=0.8cm of DLR] (DMR) {Lemma~\ref{lemma:coherence:3}: \\
-             \it Matching judgment is stasble};
-\node[punkt, below=of DR] (TP) {Lemma~\ref{lemma:typing_stability}: \\
-             \it Typing preservation under type substitution};
-\node[punkt, mainres, below=of DFR] (TR) {Lemma~\ref{lemma:tapp_reduction}: \\
-             \it Typing is stable under type application reduction};
-\node[punkt, below=of DLR] (US) {Lemma~\ref{lemma:unamb_subst:0}: \\
-             \it Unambiguity preservation under type substitution};
-\node[punkt, below=of DMR] (UAS) {Lemma~\ref{lemma:unamb_subst:1}: \\
-             \it Unambiguity preservation under type substitution};
+\dnode{DR}{mainres}{lemma:coherence:0}{Deterministic resolution is stable}
+\dnode{DFR}{right=0.8cm of DR}{lemma:coherence:1}{Focusing judgment is stable}
+\dnode{DLR}{right=0.8cm of DFR}{lemma:coherence:2}{Lookup judgment is stable}
+\dnode{DMR}{right=0.8cm of DLR}{lemma:coherence:3}{Matching judgment is stasble}
+\dnode{TP}{below=of DR}{lemma:typing_stability}{Typing preservation under type substitution}
+\dnode{TR}{mainres, below=of DFR}{lemma:tapp_reduction}{Typing is stable under type application reduction}
+\dnode{US}{below=of DLR}{lemma:unamb_subst:0}{Unambiguity preservation under type substitution}
+\dnode{UAS}{below=of DMR}{lemma:unamb_subst:1}{Unambiguity preservation under type substitution}
 %edges
-\draw[pil] (DR.north) to [out=30,in=150] (DFR.north);
-\draw[pil] (DFR.north) to [out=30,in=150] (DLR.north);
+\draw[pil] (DR.north)  to [out=30,in=150]  (DFR.north);
+\draw[pil] (DFR.north) to [out=30,in=150]  (DLR.north);
 \draw[pil] (DLR.south) to [out=210,in=330] (DFR.south);
-\draw[pil] (DLR.north) to [out=30,in=150] (DMR.north);
-\draw[pil] (TR.north) to [out=150,in=30] (TP.north);
-\draw[pil] (TP.north) to (DR.south);
-\draw[pil] (TR.north) to [out=30,in=150] (US.north);
-\draw[pil] (US.north) to [out=30,in=150] (UAS.north);
+\draw[pil] (DLR.north) to [out=30,in=150]  (DMR.north);
+\draw[pil] (TR.north)  to [out=150,in=30]  (TP.north);
+\draw[pil] (TP.north)  to                  (DR.south);
+\draw[pil] (TR.north)  to [out=30,in=150]  (US.north);
+\draw[pil] (US.north)  to [out=30,in=150]  (UAS.north);
+\draw[pil] (UAS.south) to [out=210,in=330] (US.south);
 \end{tikzpicture}
 \end{center}\vspace{0.7cm}
 %\end{minipage}
@@ -1527,6 +1518,7 @@ proof.\\
 %===============================================================================
 \item[\fbox{\rref{UA-Simp}}]\quad$\unambig{\bar{\alpha}}{\tau}$\\
 %===============================================================================
+
 We need to show that $\unambig{\bar\alpha}{\tau[\suty/\alpha]}$, which can be satisfied only
 by (an appropriate instance of) rule \rref{UA-Simp}. Therefore, it suffices to show that
 $\bar\alpha\subseteq\ftv{\type[\suty/\alpha]}$, where
@@ -1554,6 +1546,7 @@ holds that $\bar\alpha\subseteq(\ftv{\type}\setminus\{\alpha\})\cup\ftv{\suty}$.
 %===============================================================================
 \item[\fbox{\rref{UA-TAbs}}]\quad$\unambig{\bar{\alpha}}{\tall{\beta}{\rulet}}$\\
 %===============================================================================
+
 From the second hypothesis of the theorem and the adopted Barendregt convention, it follows that $\alpha\notin\bar\alpha,\beta$.
 
 From the assumption of the rule and the induction hypothesis, we get
@@ -1584,27 +1577,19 @@ By the definition of substitution and the last two obtained results used with ru
 \end{equation*}
 \end{proof}
 %-------------------------------------------------------------------------------
-\subsection{Soundness of the Algorithm wrt Deterministic Resolution}
 
-%###############################################################################
+\subsection{Soundness of the Algorithm wrt Deterministic Resolution}
 
 \begin{center}
 \begin{tikzpicture}[node distance=1.3cm, auto,]
 %nodes
-\node[punkt, mainres] (AR) {Lemma~\ref{lemma:asoundness:0}:\\
-             \it Algorithmic resolution is sound wrt det. resolution};
-\node[punkt, below=of AR] (AF) {Lemma~\ref{lemma:asoundness:1}: \\
-             \it Algorithmic focusing is sound wrt to det. focusing};
-\node[punkt, right=of AF] (AL) {Lemma~\ref{lemma:asoundness:2}: \\
-             \it Algorithmic lookup is sound wrt to det. lookup};
-\node[punkt, above=of AL] (AM) {Lemma~\ref{lemma:asoundness:3}: \\
-             \it Algorithmic matching is sound wrt to det. matching};
-\node[punkt, below=of AL] (AMC) {Lemma~\ref{lemma:acompleteness:3}: \\
-             \it Algorithmic matching is complete wrt to det. matching};
-\node[punkt, right=of AL] (MIS) {Lemma~\ref{lemma:asoundness:5}: \\
-             \it Algorithmic matching implies alg. stability};
-\node[punkt, right=of AM] (UAC) {Lemma~\ref{lemma:asoundness:6}: \\
-             \it Unification algorithm unifies};
+\dnode{AR}{mainres}{lemma:asoundness:0}{Algorithmic resolution is sound wrt det. resolution}
+\dnode{AF}{below=of AR}{lemma:asoundness:1}{Algorithmic focusing is sound wrt to det. focusing}
+\dnode{AL}{right=of AF}{lemma:asoundness:2}{Algorithmic lookup is sound wrt to det. lookup}
+\dnode{AM}{above=of AL}{lemma:asoundness:3}{Algorithmic matching is sound wrt to det. matching}
+\dnode{AMC}{below=of AL}{lemma:acompleteness:3}{Algorithmic matching is complete wrt to det. matching}
+\dnode{MIS}{right=of AL}{lemma:asoundness:5}{Algorithmic matching implies alg. stability}
+\dnode{UAC}{right=of AM}{lemma:asoundness:6}{Unification algorithm unifies}
 %edges
 \draw[pil] (AR.south) to                  (AF.north);
 \draw[pil] (AF.north) to [out=30,in=150]  (AL.north);
@@ -1613,10 +1598,10 @@ By the definition of substitution and the last two obtained results used with ru
 \draw[pil] (AM.east)  to                  (UAC.west);
 \draw[pil] (AL.east)  to                  (MIS.west);
 \draw[pil] (AL.south) to                  (AMC.north);
-%\draw[pil] (US.north) to [out=30,in=150] (UAS.north);
 \end{tikzpicture}
 \end{center}\vspace{0.5cm}
 
+%###############################################################################
 \fbox{ \centering
 \begin{minipage}{0.95\columnwidth}
 \begin{lemma}\label{lemma:asoundness:0}
@@ -1913,20 +1898,12 @@ Straightforward induction on the derivation.
 \begin{center}
 \begin{tikzpicture}[node distance=1.3cm, auto,]
 %nodes
-\node[punkt, mainres] (AR) {Lemma~\ref{lemma:acompleteness:0}:\\
-             \it Algorithmic resolution is complete wrt det. resolution};
-\node[punkt, right=0.8cm of AR] (AF) {Lemma~\ref{lemma:acompleteness:1}: \\
-             \it Algorithmic focusing is complete wrt to det. focusing};
-\node[punkt, right=0.8cm of AF] (AL) {Lemma~\ref{lemma:acompleteness:2}: \\
-             \it Algorithmic lookup is complete wrt to det. lookup};
-\node[punkt, right=0.8cm of AL] (AM) {Lemma~\ref{lemma:acompleteness:3}: \\
-             \it Algorithmic matching is complete wrt to det. matching};
-\node[punkt, below=of AL] (AMC) {Lemma~\ref{lemma:asoundness:3}: \\
-             \it Algorithmic matching is sound wrt to det. matching};
-\node[punkt, below=of AM] (MIS) {Lemma~\ref{lemma:acompleteness:5}: \\
-             \it Unification algorithm produces most general unifier};
-%\node[punkt, right=of AM] (UAC) {Lemma~\ref{lemma:asoundness:6}: \\
-%             \it Unification algorithm unifies};
+\dnode{AR}{mainres}{lemma:acompleteness:0}{Algorithmic resolution is complete wrt det. resolution}
+\dnode{AF}{right=0.8cm of AR}{lemma:acompleteness:1}{Algorithmic focusing is complete wrt to det. focusing}
+\dnode{AL}{right=0.8cm of AF}{lemma:acompleteness:2}{Algorithmic lookup is complete wrt to det. lookup}
+\dnode{AM}{right=0.8cm of AL}{lemma:acompleteness:3}{Algorithmic matching is complete wrt to det. matching}
+\dnode{AMC}{below=of AL}{lemma:asoundness:3}{Algorithmic matching is sound wrt to det. matching}
+\dnode{MIS}{below=of AM}{lemma:acompleteness:5}{Unification algorithm produces most general unifier}
 %edges
 \draw[pil] (AR.north) to [out=30,in=150]  (AF.north);
 \draw[pil] (AF.north) to [out=30,in=150]  (AL.north);
@@ -1945,12 +1922,10 @@ Straightforward induction on the derivation.
   If 
 \begin{equation*}
 \dres{\tenv}{\rulet}{E}
-%  \tenv \ivturns \rulet \leadsto E
 \end{equation*}
   then
 \begin{equation*}
   \adres{\tenv}{\rulet}{E}
-%  \tenv \alg \rulet \leadsto E
 \end{equation*}
 \end{lemma}
 \end{minipage}
@@ -1960,12 +1935,10 @@ Straightforward induction on the derivation.
   From the hypothesis it follows that 
 \begin{equation*}
 \drres{\tyvars{\tenv}}{\tenv}{\rulet}{E}
-%  \mathit{tyvars}(\tenv);\tenv \ivturns \rulet \leadsto E
 \end{equation*}
   Hence, by Lemma~\ref{lemma:acompleteness:1} and rule \rref{Alg-R-Main} the desired conclusion follows
 \begin{equation*}
 \adres{\tenv}{\rulet}{E}
-%  \tenv \alg \rulet \leadsto E
 \end{equation*}
 \end{proof}
 
@@ -2100,7 +2073,7 @@ By rule \rref{Alg-L-TyVar} we conclude
 
 \begin{definition}[Partial Order over Substitutions]
 A substitution $\theta_1$ is more general than a substitution $\theta_2$, denoted with
-$\theta_2\sqsubseteq\theta_1$, iff there is a $\theta'$ such that $\theta_2\cdot\theta' = \theta_1$.
+$\theta_2\sqsubseteq\theta_1$, iff there is a $\theta'$ such that $\theta_2 = \theta_1\cdot\theta'$.
 \end{definition}
 
 %###############################################################################

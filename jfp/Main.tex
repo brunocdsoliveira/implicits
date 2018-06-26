@@ -49,7 +49,7 @@
 % =====================
 % for the proof dependency diagrams
 \usepackage{tikz}
-\usetikzlibrary{arrows,positioning,decorations.markings}
+\usetikzlibrary{arrows,positioning,shapes}
 \tikzset{
     %Define standard arrow tip
     >=stealth',
@@ -57,10 +57,13 @@
     punkt/.style={
            rectangle,
            rounded corners,
-           draw=black, %thick,
+           draw=black,
            text width=6.5em,
            minimum height=2em,
-           text centered},
+           text centered,
+           rectangle split,
+           rectangle split parts=2
+    },
     % Define arrow style
     pil/.style={
            ->,
