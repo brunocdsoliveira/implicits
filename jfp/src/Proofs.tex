@@ -1588,6 +1588,35 @@ By the definition of substitution and the last two obtained results used with ru
 
 %###############################################################################
 
+\begin{center}
+\begin{tikzpicture}[node distance=1.3cm, auto,]
+%nodes
+\node[punkt] (AR) {Lemma~\ref{lemma:asoundness:0}:\\
+             \it Algorithmic resolution is sound wrt det. resolution};
+\node[punkt, below=of AR] (AF) {Lemma~\ref{lemma:asoundness:1}: \\
+             \it Algorithmic focusing is sound wrt to det. focusing};
+\node[punkt, right=of AF] (AL) {Lemma~\ref{lemma:asoundness:2}: \\
+             \it Algorithmic lookup is sound wrt to det. lookup};
+\node[punkt, above=of AL] (AM) {Lemma~\ref{lemma:asoundness:3}: \\
+             \it Algorithmic matching is sound wrt to det. matching};
+\node[punkt, below=of AL] (AMC) {Lemma~\ref{lemma:acompleteness:3}: \\
+             \it Algorithmic matching is complete wrt to det. matching};
+\node[punkt, right=of AL] (MIS) {Lemma~\ref{lemma:asoundness:5}: \\
+             \it Algorithmic matching implies alg. stability};
+\node[punkt, right=of AM] (UAC) {Lemma~\ref{lemma:asoundness:6}: \\
+             \it Unification algorithm unifies};
+%edges
+\draw[pil] (AR.south) to                  (AF.north);
+\draw[pil] (AF.north) to [out=30,in=150]  (AL.north);
+\draw[pil] (AL.south) to [out=210,in=330] (AF.south);
+\draw[pil] (AL.north) to                  (AM.south);
+\draw[pil] (AM.east)  to                  (UAC.west);
+\draw[pil] (AL.east)  to                  (MIS.west);
+\draw[pil] (AL.south) to                  (AMC.north);
+%\draw[pil] (US.north) to [out=30,in=150] (UAS.north);
+\end{tikzpicture}
+\end{center}\vspace{0.7cm}
+
 \fbox{ \centering
 \begin{minipage}{0.95\columnwidth}
 \begin{lemma}\label{lemma:asoundness:0}
