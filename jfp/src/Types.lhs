@@ -1533,7 +1533,7 @@ E}{\Sigma}{\type}{E'}{\Sigma'}$.
 There are two differences. Firstly, since the judgement is only concerned with
 matchability, no recursive resolvents $\Sigma$ are collected nor are any
 elaborations tracked.
-Secondly, since the coherence check considers the substitution of the type
+Secondly, since the stability check considers the substitution of the type
 variables $\bar{\alpha}$ that occur in the environment at the point of the
 query, rule \rref{Alg-L-RuleNoMatch} pre-populates the substitutable
 variables of the $\coh$ judgement with them. Contrast this with the matching
@@ -1708,7 +1708,7 @@ unification problems derived for their subterms.
         {\admres{\bar{\alpha}}{\tenv}{\forall \alpha. \rulet}{E}{\Sigma}{\type}{E'}{\Sigma'}} 
 \\ \\
 %------------------------------------------------------------------------------%
-\hfill \myruleform{\coherent{\bar{\alpha}}{\tenv}{\rulet}{\type}} \hfill \llap{\it Coherence} \\ \\
+\hfill \myruleform{\coherent{\bar{\alpha}}{\tenv}{\rulet}{\type}} \hfill \llap{\it Stability} \\ \\
 %------------------------------------------------------------------------------%
 \myrule{Coh-TApp}{\coherent{\bar{\alpha},\alpha}{\tenv,\alpha}{\rulet}{\type}}
         {\coherent{\bar{\alpha}}{\tenv}{\forall \alpha. \rulet}{\type}}  
