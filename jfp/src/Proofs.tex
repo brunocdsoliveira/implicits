@@ -936,7 +936,7 @@ From the rule's hypothesis and Lemma~\ref{lemma:coherence:2} we conclude
 \begin{equation*}
   R(\tenv;\alpha;\tenv';\tenv,\alpha,\tenv';\tenv''';\suty)
 \end{equation*}
-  The latter could only have been obtained by rule \mylabel{R-2}. 
+  The latter could only have been obtained by rule \rref{R-2}. 
   Hence, we know that $\tenv''' = \tenv,\tenv'[\suty/\alpha]$ and the former is equivalent to
 \begin{equation*}
 \dlres{\bar{\alpha},\bar{\alpha}'}{\tenv,\tenv'[\suty/\alpha]}{\tenv,\tenv'[\suty/\alpha]}{\type[\suty/\alpha]}{E[|\suty|/\alpha]}
@@ -1004,7 +1004,7 @@ The proof proceeds by induction on the derivation of the first hypothesis, mutua
   We obtain the second desired result by case analysis on $\tenv'' \subseteq \tenv,\alpha,\tenv'$:
   \begin{enumerate}
   \item $\tenv = \tenv_1,\envi{\rulet}{x},\tenv_2 \quad\wedge\quad \tenv'' = \tenv_1$: \\
-  In this case we can use rule \mylabel{R-1} to establish:
+  In this case we can use rule \rref{R-1} to establish:
 \begin{equation*}
   R((\tenv_1,\envi{\rulet}{x}),\tenv_2;\alpha;\tenv';\tenv_1,\envi{\rulet}{x};\tenv_1,\envi{\rulet}{x};\sigma)
 \end{equation*}
@@ -1014,7 +1014,7 @@ The proof proceeds by induction on the derivation of the first hypothesis, mutua
 \end{equation*}
 
   \item $\tenv' = \tenv_1',\envi{\rulet}{x}, \tenv_2' \andl \tenv'' = \tenv,\alpha,\tenv_1'$: \\
-  In this case we can use rule \mylabel{R-2} to establish:
+  In this case we can use rule \rref{R-2} to establish:
 \begin{equation*}
   R(\tenv;\alpha;(\tenv_1',\envi{\rulet}{x}),\tenv_2';\tenv,\alpha,(\tenv_1',\envi{\rulet}{x});
   \tenv,(\tenv_1',\envi{\rulet}{x})[\suty/\alpha];\sigma)
@@ -1056,11 +1056,11 @@ $\theta' \cdot [\suty/\alpha]$. In this case, the above simplifies to
 
   We do a case analysis on the derivation of this judgement.
   \begin{enumerate}
-  \item \mylabel{R-1}: \\ Then we have
+  \item \rref{R-1}: \\ Then we have
 \begin{equation*}
   \tenv = \tenv_1,x:\rulet,\tenv_2  \andl \tenv'' = \tenv_1 \andl \tenv''' = \tenv_1
 \end{equation*}
-       By rule \mylabel{R-2} we then have
+       By rule \rref{R-2} we then have
 \begin{equation*}
 R((\tenv_1,x:\rulet),\tenv_2;\alpha;\tenv';\tenv_1,\envi{\rulet}{x};\tenv_1,\envi{\rulet}{x};\suty)
 \end{equation*}
@@ -1069,14 +1069,14 @@ R((\tenv_1,x:\rulet),\tenv_2;\alpha;\tenv';\tenv_1,\envi{\rulet}{x};\tenv_1,\env
 R(\tenv;\alpha;\tenv';\tenv'',\envi{\rulet}{x};\tenv'',\envi{\rulet}{x};\suty)
 \end{equation*}
 
-  \item \mylabel{R-2}: \\
+  \item \rref{R-2}: \\
    Then we have
 \begin{equation*}
   \tenv' = \tenv_1',\tenv_2'  \andl \tenv'' = \tenv,\alpha,\tenv_1' \andl 
       \tenv''' = \tenv,\tenv_1'[\suty/\alpha]
 \end{equation*}
   Since $\tenv'',\envi{\rulet}{x} \subseteq \tenv,\alpha,\tenv'$, it follows that $\tenv_2' = \envi{\rulet}{x},\tenv_{2,2}'$.
-  Hence, by rule $\mylabel{R-2}$ we can establish
+  Hence, by rule \rref{R-2} we can establish
 \begin{equation*}
 R(\tenv;\alpha;(\tenv_1',\envi{\rulet}{x}),\tenv_2';\tenv,\alpha,(\tenv_1',\envi{\rulet}{x});\tenv,(\tenv_1',\envi{\rulet}{x})[\suty/\alpha];\suty)
 \end{equation*}
@@ -1107,11 +1107,11 @@ Then following the rule's hypothesis and the induction hypothesis we have:
 
   We do a case analysis on the derivation of this judgement.
   \begin{enumerate}
-  \item \mylabel{R-1}: \\ Then we have
+  \item \rref{R-1}: \\ Then we have
 \begin{equation*}
   \tenv = \tenv_1,\relation{x}{\rulet},\tenv_2  \andl \tenv'' = \tenv_1 \andl \tenv''' = \tenv_1
 \end{equation*}
-       By rule \mylabel{R-2} we then have
+       By rule \rref{R-2} we then have
 \begin{equation*}
 R((\tenv_1,\relation{x}{\rulet}),\tenv_2;\alpha;\tenv';\tenv_1,\relation{x}{\rulet};\tenv_1,\relation{x}{\rulet};\suty)
 \end{equation*}
@@ -1120,7 +1120,7 @@ R((\tenv_1,\relation{x}{\rulet}),\tenv_2;\alpha;\tenv';\tenv_1,\relation{x}{\rul
 R(\tenv;\alpha;\tenv';\tenv'',\relation{x}{\rulet};\tenv'',\relation{x}{\rulet};\suty)
 \end{equation*}
 
-  \item \mylabel{R-2}: \\
+  \item \rref{R-2}: \\
    Then we have
 \begin{equation*}
   \tenv' = \tenv_1',\tenv_2' \andl \tenv'' = \tenv,\alpha,\tenv_1' \andl
@@ -1128,7 +1128,7 @@ R(\tenv;\alpha;\tenv';\tenv'',\relation{x}{\rulet};\tenv'',\relation{x}{\rulet};
 \end{equation*}
 
   Since $\tenv'',\relation{x}{\rulet} \subseteq \tenv,\alpha,\tenv'$, it follows that $\tenv_2' = \relation{x}{\rulet},\tenv_{2,2}'$.
-  Hence, by rule $\mylabel{R-2}$ we can establish
+  Hence, by rule \rref{R-2} we can establish
 \begin{equation*}
 R(\tenv;\alpha;(\tenv_1',\relation{x}{\rulet}),\tenv_2';\tenv,\alpha,(\tenv_1',\relation{x}{\rulet});\tenv,(\tenv_1',\relation{x}{\rulet})[\suty/\alpha];\suty)
 \end{equation*}
@@ -1160,14 +1160,14 @@ R(\tenv;\alpha;\tenv';\tenv'',\relation{x}{\rulet};\tenv,(\tenv_1',\relation{x}{
 
   We do a case analysis on the derivation of this judgement.
   \begin{enumerate}
-  \item \mylabel{R-1}: \\ Then we have
+  \item \rref{R-1}: \\ Then we have
 \begin{equation*}
   \tenv = \tenv_1,\tenv_2 \andl \tenv'' = \tenv_1 \andl \tenv''' = \tenv_1
 \end{equation*}
   We further distinguish between two mutually exclusive cases:
   \begin{enumerate}
   \item $\tenv_2 = \epsilon$ \\
-        It follows that $\alpha = \beta$ and we can establish by means of \mylabel{R-2} that
+        It follows that $\alpha = \beta$ and we can establish by means of \rref{R-2} that
 \begin{equation*}
 R(\tenv_1,\tenv_2;\alpha;\epsilon,\tenv';\tenv_1,\tenv_2,\alpha;\tenv_1,\tenv_2,\epsilon[\suty/\alpha];\suty)
 \end{equation*}
@@ -1177,7 +1177,7 @@ R(\tenv;\alpha;\tenv';\tenv'',\beta;\tenv;\suty)
 \end{equation*}
 
   \item $\tenv_2 \neq \epsilon$ \\
-       Then it follows that $\tenv_2 = \beta,\tenv_{2,2}$ and by rule \mylabel{R-2} we have
+       Then it follows that $\tenv_2 = \beta,\tenv_{2,2}$ and by rule \rref{R-2} we have
 \begin{equation*}
 R((\tenv_1,\beta),\tenv_{2,2};\alpha;\tenv';\tenv_1,\beta;\tenv_1,\beta;\suty)
 \end{equation*}
@@ -1187,7 +1187,7 @@ R(\tenv;\alpha;\tenv';\tenv'',\beta;\tenv_1,\beta;\suty)
 \end{equation*}
   \end{enumerate}
 
-  \item \mylabel{R-2}: \\
+  \item \rref{R-2}: \\
    Then we have
 \begin{equation*}
   \tenv' = \tenv_1',\tenv_2' \andl \tenv'' = \tenv,\alpha,\tenv_1' \andl
@@ -1195,7 +1195,7 @@ R(\tenv;\alpha;\tenv';\tenv'',\beta;\tenv_1,\beta;\suty)
 \end{equation*}
 
   Since $\tenv'',\beta \subseteq \tenv,\alpha,\tenv'$, it follows that $\tenv_2' = \beta,\tenv_{2,2}'$.
-  Hence, by rule $\mylabel{R-2}$ we can establish
+  Hence, by rule \rref{R-2} we can establish
 \begin{equation*}
 R(\tenv;\alpha;(\tenv_1',\beta),\tenv_2';\tenv,\alpha,(\tenv_1',\beta);\tenv,(\tenv_1',\beta)[\suty/\alpha];\suty)
 \end{equation*}
@@ -1615,7 +1615,7 @@ By the definition of substitution and the last two obtained results used with ru
 \draw[pil] (AL.south) to                  (AMC.north);
 %\draw[pil] (US.north) to [out=30,in=150] (UAS.north);
 \end{tikzpicture}
-\end{center}\vspace{0.7cm}
+\end{center}\vspace{0.5cm}
 
 \fbox{ \centering
 \begin{minipage}{0.95\columnwidth}
@@ -1668,9 +1668,11 @@ By the definition of substitution and the last two obtained results used with ru
 }}
 
 \begin{proof}
-The proof proceeds by induction on the derivation of the hypothesis. Each case follows
-from the isomorphism between the rule sets of the two judgements and from
-Lemma~\ref{lemma:asoundness:2}.
+The proof proceeds by induction on the derivation of the hypothesis.
+
+Cases \rref{Alg-R-IAbs} and \rref{Alg-R-TAbs} follow from the isomorphism
+between the rule sets of the two judgements. Case \rref{Alg-R-Simp} follows
+from Lemma~\ref{lemma:asoundness:2}.\\
 \end{proof}
 
 %###############################################################################
@@ -1933,7 +1935,7 @@ Straightforward induction on the derivation.
 \drres{\tyvars{\tenv}}{\tenv}{\rulet}{E}
 %  \mathit{tyvars}(\tenv);\tenv \ivturns \rulet \leadsto E
 \end{equation*}
-  Hence, by Lemma~\ref{lemma:acompleteness:1} and rule \mylabel{Alg-R-Main} the desired conclusion follows
+  Hence, by Lemma~\ref{lemma:acompleteness:1} and rule \rref{Alg-R-Main} the desired conclusion follows
 \begin{equation*}
 \adres{\tenv}{\rulet}{E}
 %  \tenv \alg \rulet \leadsto E
