@@ -222,10 +222,24 @@ In summary, our contributions are as follows:
   principles of logic and the idea of propositions as types~\cite{propsastypes}; and is related 
   to the idea of focussing in proof search.  
 
-\item We provide a semantics in the form of a translation from \name
-   to System F. We prove our translation to be type-safe, and
-   coherent. The proofs, partly mechanized in Coq, are available at \url{https://bitbucket.org/KlaraMar/cochiscoq}. 
+\item \name comes with a semantics in the form of a type-directed elaboration
+   to System~F. 
 
+\item We provide a unification-based algorithm as an executable form
+      of the declarative specification of resolution. A prototype implementation
+      of this algorithm and of \name is available at \url{https://bitbucket.org/tom_schrijvers/cochis/}.
+
+\item 
+   We establish key meta-theoretic properties of our system:
+   \begin{itemize}
+   \item The elaboration is type-preserving.
+   \item Resolution is deterministic and thus coherent.
+   \item Resolution is stable under type substitution, as is elaboration under
+         reduction of type application. 
+   \item Our algorithm is sound and complete with respect to its declarative specification.
+   \end{itemize}
+   The proofs are available in the appendix and at \url{https://bitbucket.org/KlaraMar/cochiscoq} 
+ 
 \end{itemize}
 
 
