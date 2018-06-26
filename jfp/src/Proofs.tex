@@ -1588,8 +1588,6 @@ corresponding judgments. Interestingly, the proof for algorithmic lookup soundne
 completeness of the algorithmic matching judgment. Two additional auxiliary lemmata are required
 for the algorithmic lookup and matching soundness.
 
-
-
 \begin{center}
 \begin{tikzpicture}[node distance=1.3cm, auto,]
 %nodes
@@ -1904,6 +1902,15 @@ Straightforward induction on the derivation.
 
 %-------------------------------------------------------------------------------
 \subsection{Completeness of the Algorithm wrt Deterministic Resolution}
+
+This section proves completeness of the resolution algorithm with respect to its declarative
+counterpart. As summarized in the diagram below, the main lemma depends on three more
+soundness lemmata, one for each of the focusing, lookup and matching judgments.
+The dependencies of these proofs follow those of the definitions of the
+corresponding declarative judgments. In symmetry with the case of algorithmic soundness,
+the proof for algorithmic lookup completeness also uses soundness of the algorithmic matching
+judgment, resulting in mutually dependent soundness and completeness proofs. Additionally,
+an auxiliary judgment for the correctness of the unification algorithm is necessary.
 
 \begin{center}
 \begin{tikzpicture}[node distance=1.3cm, auto,]
