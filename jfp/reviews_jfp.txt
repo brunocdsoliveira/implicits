@@ -435,9 +435,7 @@ TODO
 > been very helpful (at least to me) in understanding what is meant by
 > "committed choice".
 
-TODO: Tom, should we consider adding the example above? It could be helpful.
-
-TOM: A similar example appears in textual form in the No Backtracking paragraph 
+A similar example now appears in textual form in the No Backtracking paragraph
 of the Comitted Choice subsection.
 
 > 
@@ -726,7 +724,7 @@ TODO -> Klara
 >  - Lemma A.10, A.11: the unambiguity judgment $|-_{unamb} \Gamma$ for
 > type environments has not been defined.
 
-Definition has been added.
+The definition has been added.
 
 > p. 45, proof of Lemma A.11, case (R-TAbs): there seems to be an error
 > in this case of the proof: the IH cannot be applied as described.  The
@@ -782,7 +780,7 @@ FIXED
 > statement of Lemma A.16, or better yet, introduce and explain the role
 > of that predicate before using it in the proof of Lemma A.15.
 
-The definition of R is has been moved before Lemma A.15 and explained.
+The definition of R has been moved before Lemma A.15 and explained.
  
 > p. 56, proof of Lemma A.20, case (Alg-L-RuleNoMatch): there is an
 > error in this case of the proof: Lemma A.21 cannot be applied as
@@ -805,7 +803,7 @@ The definition of R is has been moved before Lemma A.15 and explained.
 > details.  Note that this creates an additional dependency of
 > the proof on Lemma A.27.
 
-FIXED
+You are right. This has been fixed now following your suggestion.
  
 > p. 57, Lemma A.22: the type environment $\Gamma$ is missing in the
 > conclusion of the lemma (should be $\bar{\alpha}; \Gamma; \rho
@@ -828,14 +826,14 @@ FIXED
 > checked the details.  Note that this would add an extra dependency of
 > Lemma A.26 on Lemma A.21.
 
-FIXED
+You are right. This has been fixed now.
 
 > p. 59, Lemma A.27:
 > 
 >  - where/how is the substitution order $\theta_1 \sqsubseteq \theta_2$
 > defined?
 
-Definition has been added.
+Definition A.1 has been added.
  
 >  - only the first conclusion of this lemma is proven, what about the
 > second and third conclusions?
@@ -942,7 +940,6 @@ bit on both
 
 Split first bullet into a few: functionality vs properties.
 
-> 
 > p15 "We explain this concept in Section 3.5" - there's been a few forward
 > references at this point, for example also the notion of "stability of
 > resolution" and these notions seem to me to be crucial to the calculus,
@@ -1009,7 +1006,7 @@ and features only covariant rules. We now point out the connection.
 > would also be nice to present the desirable properties of the translation
 > (the ones you prove later) up front.
 
-TODO
+The hyper references should help with jumping back.
  
 > p36 "It should be easy enough" - this needs backing up, I'm not sure how easy
 > it would be! I would find this more convincing with a sketch of Set in COCHIS
@@ -1082,7 +1079,6 @@ Haskell. This work, inspired by Cochis, enforces unique global instances.
 >   the day, we are lacking a precise technical comparison based on larger
 >   real-life examples, between (what would a language based on) COCHIS and
 >   Haskell.  The comparison is not so obvious, as basic examples in Haskell
-
 >   seems to be problematic in COCHIS.
 > - Finally, the authors seem to ignore some closely related work on modular
 >   implicits (see [1]).
@@ -1219,10 +1215,7 @@ TODO: discuss relation to other languages
 > or middle-size practical examples could be tried.  Altogether, this makes
 > the practical usefulness of the proposal hard to evaluate.
 
-TODO: create prototype implementation?
-
-BRUNO: We have an old prototype implementation, which can probably be
-used with minor modifications.
+We have created and made available a prototype implementation.
 
 > ## Missed related works
 > Modular implicits (published in [1]) extend the OCaml language with some
@@ -1610,8 +1603,8 @@ FIXED
 >   I would not say this is a strong form of coherence, since here coherence
 >   is obtained the easy by just avoiding multiple paths...
 
-We have reformulated and distinguished a determinacy theorem from
-a coherence corollary.
+We have reformulated and now distinguish a determinacy theorem from
+a separate coherence corollary.
 
 > - Page 33, Lemma 5.4: "Stable under [<-type] substitution"
 
