@@ -710,7 +710,7 @@ FIXED
 > inconsistent w.r.t. that introduced in Fig. 7: all the focusing
 > brackets have been dropped.
 
-TODO -> Klara introduces the macros
+FIXED
 
 > p. 44:
 > 
@@ -744,7 +744,7 @@ Definition has been added.
 > |-_{unamb} \rho$ and invoking it in Lemma A.10 with $\bar{\alpha} =
 > \epsilon$. I have not checked the details, though.
 
-The context-type-unambiguity judgment enjoys a weakening property,
+The unambiguity judgment enjoys a weakening property,
 easy to prove, according to which, if $\bar\alpha |-_{unamb} \rho$,
 then for any subset $\bar\alpha' \subseteq \bar\alpha$ it also holds
 that $\bar\alpha' |-_{unamb} \rho$. This has been clarified in the 
@@ -805,7 +805,7 @@ The definition of R is has been moved before Lemma A.15 and explained.
 > details.  Note that this creates an additional dependency of
 > the proof on Lemma A.27.
 
-TODO -> Klara: apply the other lemma
+FIXED
  
 > p. 57, Lemma A.22: the type environment $\Gamma$ is missing in the
 > conclusion of the lemma (should be $\bar{\alpha}; \Gamma; \rho
@@ -828,8 +828,8 @@ FIXED
 > checked the details.  Note that this would add an extra dependency of
 > Lemma A.26 on Lemma A.21.
 
-TODO -> Klara
- 
+FIXED
+
 > p. 59, Lemma A.27:
 > 
 >  - where/how is the substitution order $\theta_1 \sqsubseteq \theta_2$

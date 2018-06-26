@@ -323,7 +323,7 @@ judgment.
 \begin{center}
 \begin{tikzpicture}[node distance=1cm, auto,]
 %nodes
-\node[punkt] (DR) {Lemma~\ref{lemma:determinism:0}: \\
+\node[punkt, mainres] (DR) {Lemma~\ref{lemma:determinism:0}: \\
              \it Deterministic resolution judgment is deterministic};
 \node[punkt, right=0.8cm of DR] (DFR) {Lemma~\ref{lemma:determinism:1}: \\
              \it Focusing judgment is deterministic};
@@ -773,7 +773,7 @@ The dependencies of the proofs of this section are depicted in the diagram below
 \begin{center}
 \begin{tikzpicture}[node distance=1.3cm, auto,]
 %nodes
-\node[punkt] (DR) {Lemma~\ref{lemma:coherence:0}: \\
+\node[punkt, mainres] (DR) {Lemma~\ref{lemma:coherence:0}: \\
              \it Deterministic resolution is stable};
 \node[punkt, right=0.8cm of DR] (DFR) {Lemma~\ref{lemma:coherence:1}: \\
              \it Focusing judgment is stable};
@@ -783,7 +783,7 @@ The dependencies of the proofs of this section are depicted in the diagram below
              \it Matching judgment is stasble};
 \node[punkt, below=of DR] (TP) {Lemma~\ref{lemma:typing_stability}: \\
              \it Typing preservation under type substitution};
-\node[punkt, below=of DFR] (TR) {Lemma~\ref{lemma:tapp_reduction}: \\
+\node[punkt, mainres, below=of DFR] (TR) {Lemma~\ref{lemma:tapp_reduction}: \\
              \it Typing is stable under type application reduction};
 \node[punkt, below=of DLR] (US) {Lemma~\ref{lemma:unamb_subst:0}: \\
              \it Unambiguity preservation under type substitution};
@@ -936,7 +936,7 @@ From the rule's hypothesis and Lemma~\ref{lemma:coherence:2} we conclude
 \begin{equation*}
   R(\tenv;\alpha;\tenv';\tenv,\alpha,\tenv';\tenv''';\suty)
 \end{equation*}
-  The latter could only have been obtained by rule \mylabel{R-2}. 
+  The latter could only have been obtained by rule \rref{R-2}. 
   Hence, we know that $\tenv''' = \tenv,\tenv'[\suty/\alpha]$ and the former is equivalent to
 \begin{equation*}
 \dlres{\bar{\alpha},\bar{\alpha}'}{\tenv,\tenv'[\suty/\alpha]}{\tenv,\tenv'[\suty/\alpha]}{\type[\suty/\alpha]}{E[|\suty|/\alpha]}
@@ -1004,7 +1004,7 @@ The proof proceeds by induction on the derivation of the first hypothesis, mutua
   We obtain the second desired result by case analysis on $\tenv'' \subseteq \tenv,\alpha,\tenv'$:
   \begin{enumerate}
   \item $\tenv = \tenv_1,\envi{\rulet}{x},\tenv_2 \quad\wedge\quad \tenv'' = \tenv_1$: \\
-  In this case we can use rule \mylabel{R-1} to establish:
+  In this case we can use rule \rref{R-1} to establish:
 \begin{equation*}
   R((\tenv_1,\envi{\rulet}{x}),\tenv_2;\alpha;\tenv';\tenv_1,\envi{\rulet}{x};\tenv_1,\envi{\rulet}{x};\sigma)
 \end{equation*}
@@ -1014,7 +1014,7 @@ The proof proceeds by induction on the derivation of the first hypothesis, mutua
 \end{equation*}
 
   \item $\tenv' = \tenv_1',\envi{\rulet}{x}, \tenv_2' \andl \tenv'' = \tenv,\alpha,\tenv_1'$: \\
-  In this case we can use rule \mylabel{R-2} to establish:
+  In this case we can use rule \rref{R-2} to establish:
 \begin{equation*}
   R(\tenv;\alpha;(\tenv_1',\envi{\rulet}{x}),\tenv_2';\tenv,\alpha,(\tenv_1',\envi{\rulet}{x});
   \tenv,(\tenv_1',\envi{\rulet}{x})[\suty/\alpha];\sigma)
@@ -1056,11 +1056,11 @@ $\theta' \cdot [\suty/\alpha]$. In this case, the above simplifies to
 
   We do a case analysis on the derivation of this judgement.
   \begin{enumerate}
-  \item \mylabel{R-1}: \\ Then we have
+  \item \rref{R-1}: \\ Then we have
 \begin{equation*}
   \tenv = \tenv_1,x:\rulet,\tenv_2  \andl \tenv'' = \tenv_1 \andl \tenv''' = \tenv_1
 \end{equation*}
-       By rule \mylabel{R-2} we then have
+       By rule \rref{R-2} we then have
 \begin{equation*}
 R((\tenv_1,x:\rulet),\tenv_2;\alpha;\tenv';\tenv_1,\envi{\rulet}{x};\tenv_1,\envi{\rulet}{x};\suty)
 \end{equation*}
@@ -1069,14 +1069,14 @@ R((\tenv_1,x:\rulet),\tenv_2;\alpha;\tenv';\tenv_1,\envi{\rulet}{x};\tenv_1,\env
 R(\tenv;\alpha;\tenv';\tenv'',\envi{\rulet}{x};\tenv'',\envi{\rulet}{x};\suty)
 \end{equation*}
 
-  \item \mylabel{R-2}: \\
+  \item \rref{R-2}: \\
    Then we have
 \begin{equation*}
   \tenv' = \tenv_1',\tenv_2'  \andl \tenv'' = \tenv,\alpha,\tenv_1' \andl 
       \tenv''' = \tenv,\tenv_1'[\suty/\alpha]
 \end{equation*}
   Since $\tenv'',\envi{\rulet}{x} \subseteq \tenv,\alpha,\tenv'$, it follows that $\tenv_2' = \envi{\rulet}{x},\tenv_{2,2}'$.
-  Hence, by rule $\mylabel{R-2}$ we can establish
+  Hence, by rule \rref{R-2} we can establish
 \begin{equation*}
 R(\tenv;\alpha;(\tenv_1',\envi{\rulet}{x}),\tenv_2';\tenv,\alpha,(\tenv_1',\envi{\rulet}{x});\tenv,(\tenv_1',\envi{\rulet}{x})[\suty/\alpha];\suty)
 \end{equation*}
@@ -1107,11 +1107,11 @@ Then following the rule's hypothesis and the induction hypothesis we have:
 
   We do a case analysis on the derivation of this judgement.
   \begin{enumerate}
-  \item \mylabel{R-1}: \\ Then we have
+  \item \rref{R-1}: \\ Then we have
 \begin{equation*}
   \tenv = \tenv_1,\relation{x}{\rulet},\tenv_2  \andl \tenv'' = \tenv_1 \andl \tenv''' = \tenv_1
 \end{equation*}
-       By rule \mylabel{R-2} we then have
+       By rule \rref{R-2} we then have
 \begin{equation*}
 R((\tenv_1,\relation{x}{\rulet}),\tenv_2;\alpha;\tenv';\tenv_1,\relation{x}{\rulet};\tenv_1,\relation{x}{\rulet};\suty)
 \end{equation*}
@@ -1120,7 +1120,7 @@ R((\tenv_1,\relation{x}{\rulet}),\tenv_2;\alpha;\tenv';\tenv_1,\relation{x}{\rul
 R(\tenv;\alpha;\tenv';\tenv'',\relation{x}{\rulet};\tenv'',\relation{x}{\rulet};\suty)
 \end{equation*}
 
-  \item \mylabel{R-2}: \\
+  \item \rref{R-2}: \\
    Then we have
 \begin{equation*}
   \tenv' = \tenv_1',\tenv_2' \andl \tenv'' = \tenv,\alpha,\tenv_1' \andl
@@ -1128,7 +1128,7 @@ R(\tenv;\alpha;\tenv';\tenv'',\relation{x}{\rulet};\tenv'',\relation{x}{\rulet};
 \end{equation*}
 
   Since $\tenv'',\relation{x}{\rulet} \subseteq \tenv,\alpha,\tenv'$, it follows that $\tenv_2' = \relation{x}{\rulet},\tenv_{2,2}'$.
-  Hence, by rule $\mylabel{R-2}$ we can establish
+  Hence, by rule \rref{R-2} we can establish
 \begin{equation*}
 R(\tenv;\alpha;(\tenv_1',\relation{x}{\rulet}),\tenv_2';\tenv,\alpha,(\tenv_1',\relation{x}{\rulet});\tenv,(\tenv_1',\relation{x}{\rulet})[\suty/\alpha];\suty)
 \end{equation*}
@@ -1160,14 +1160,14 @@ R(\tenv;\alpha;\tenv';\tenv'',\relation{x}{\rulet};\tenv,(\tenv_1',\relation{x}{
 
   We do a case analysis on the derivation of this judgement.
   \begin{enumerate}
-  \item \mylabel{R-1}: \\ Then we have
+  \item \rref{R-1}: \\ Then we have
 \begin{equation*}
   \tenv = \tenv_1,\tenv_2 \andl \tenv'' = \tenv_1 \andl \tenv''' = \tenv_1
 \end{equation*}
   We further distinguish between two mutually exclusive cases:
   \begin{enumerate}
   \item $\tenv_2 = \epsilon$ \\
-        It follows that $\alpha = \beta$ and we can establish by means of \mylabel{R-2} that
+        It follows that $\alpha = \beta$ and we can establish by means of \rref{R-2} that
 \begin{equation*}
 R(\tenv_1,\tenv_2;\alpha;\epsilon,\tenv';\tenv_1,\tenv_2,\alpha;\tenv_1,\tenv_2,\epsilon[\suty/\alpha];\suty)
 \end{equation*}
@@ -1177,7 +1177,7 @@ R(\tenv;\alpha;\tenv';\tenv'',\beta;\tenv;\suty)
 \end{equation*}
 
   \item $\tenv_2 \neq \epsilon$ \\
-       Then it follows that $\tenv_2 = \beta,\tenv_{2,2}$ and by rule \mylabel{R-2} we have
+       Then it follows that $\tenv_2 = \beta,\tenv_{2,2}$ and by rule \rref{R-2} we have
 \begin{equation*}
 R((\tenv_1,\beta),\tenv_{2,2};\alpha;\tenv';\tenv_1,\beta;\tenv_1,\beta;\suty)
 \end{equation*}
@@ -1187,7 +1187,7 @@ R(\tenv;\alpha;\tenv';\tenv'',\beta;\tenv_1,\beta;\suty)
 \end{equation*}
   \end{enumerate}
 
-  \item \mylabel{R-2}: \\
+  \item \rref{R-2}: \\
    Then we have
 \begin{equation*}
   \tenv' = \tenv_1',\tenv_2' \andl \tenv'' = \tenv,\alpha,\tenv_1' \andl
@@ -1195,7 +1195,7 @@ R(\tenv;\alpha;\tenv';\tenv'',\beta;\tenv_1,\beta;\suty)
 \end{equation*}
 
   Since $\tenv'',\beta \subseteq \tenv,\alpha,\tenv'$, it follows that $\tenv_2' = \beta,\tenv_{2,2}'$.
-  Hence, by rule $\mylabel{R-2}$ we can establish
+  Hence, by rule \rref{R-2} we can establish
 \begin{equation*}
 R(\tenv;\alpha;(\tenv_1',\beta),\tenv_2';\tenv,\alpha,(\tenv_1',\beta);\tenv,(\tenv_1',\beta)[\suty/\alpha];\suty)
 \end{equation*}
@@ -1341,6 +1341,7 @@ The proof proceeds by induction on the first hypothesis.\\
 %===============================================================================
 \item[\fbox{\rref{Ty-Var}}]\quad$\wte{\tenv,\alpha,\tenv'}{x}{\rulet}{x}$\\
 %===============================================================================
+
 From the rule's premise, we know that $(\relation{x}{\rulet}) \in \tenv,\alpha, \tenv'$.
 Hence, it also holds that
 $(\relation{x}{\rulet[\suty/\alpha]}) \in \tenv,\tenv'[\suty/\alpha]$. Rule \rref{Ty-Var} can then be instantiated with the latter, to conclude
@@ -1349,6 +1350,7 @@ $\wte{\tenv,\tenv'[\suty/\alpha]}{x}{\rulet[\suty/\alpha]}{x}$.\\
 %===============================================================================
 \item[\fbox{\rref{Ty-Abs}}]\quad$\wte{\tenv,\alpha,\tenv'}{\abs{x}{\rulet_1}{e}}{\rulet_1\to\rulet_2}{\abs{x}{\etrans{\rulet_1}}{E}}$\\
 %===============================================================================
+
 From the rule's premise, we get
 $\wte{\tenv,\alpha,\tenv',\relation{x}{\rulet_1}}{e}{\rulet_2}{E}$. By passing this to the
 induction hypothesis, we obtain
@@ -1361,6 +1363,7 @@ the goal.\\
 %===============================================================================
 \item[\fbox{\rref{Ty-App}}]\quad$\wte{\tenv,\alpha,\tenv'}{\mmapp{e_1}{e_2}}{\rulet_2}{\mmapp{E_1}{E_2}}$\\
 %===============================================================================
+
 From the assumptions of rule \rref{Ty-App}, the induction hypothesis and the definition of
 substitution, we obtain
 \begin{equation*}
@@ -1375,6 +1378,7 @@ By instantiating rule \rref{Ty-App} with the two judgments above, we obtain our 
 %===============================================================================
 \item[\fbox{\rref{Ty-TAbs}}]\quad$\wte{\tenv,\alpha,\tenv'}{\Abs{\alpha'}{e}}{\tall{\alpha'}{\rulet}}{\Abs{\alpha'}{E}}$\\
 %===============================================================================
+
 From the assumptions of rule \rref{Ty-TAbs} and the induction hypothesis, we obtain
 \begin{equation*}
 \wte{\tenv,(\tenv',\alpha')[\suty/\alpha]}{e[\suty/\alpha]}{\rulet}{E\etrans{\suty}/\alpha]}
@@ -1386,6 +1390,7 @@ $(\tenv',\alpha')[\suty/\alpha] = \tenv'[\suty/\alpha],\alpha'$. Using this equa
 \item[\fbox{\rref{Ty-TApp}}]\quad
 $\wte{\tenv,\alpha,\tenv'}{\mmapp{e}{\rulet_1}}{\rulet_2[\rulet_1/\alpha']}{\mmapp{E}{\etrans{\rulet_1}}}$\\
 %===============================================================================
+
 %Note that $\alpha \neq \alpha'$.
 The first assumption of rule \rref{Ty-TApp} is
 \begin{equation*}
@@ -1419,6 +1424,7 @@ translation and from the commutativity-like property of substitution composition
 %===============================================================================
 \item[\fbox{\rref{Ty-IAbs}}]\quad$\wte{\tenv,\alpha,\tenv'}{\ruleabs{\rulet_1}{e}}{\rulet_1 \iarrow \rulet_2}{\abs{x}{\etrans{\rulet_1}}{E}}$\\
 %===============================================================================
+
 From the first assumption of rule \rref{Ty-IAbs} and the induction hypothesis, we get
 \begin{equation*}
 \wte{\tenv,\tenv'[\suty/\alpha],\envi{\rulet_1[\suty/\alpha]}{x}}{e[\suty/\alpha]}{\rulet_2[\suty/\alpha]}{E[\etrans{\suty}/\alpha]}
@@ -1437,6 +1443,7 @@ to instantiate a new \rref{Ty-IAbs} rule, we reach the goal.\\
 %===============================================================================
 \item[\fbox{\rref{Ty-IApp}}]\quad$\wte{\tenv,\alpha,\tenv'}{\ruleapp{e_1}{e_2}}{\rulet_1}{\mmapp{E_1}{E_2}}$\\
 %===============================================================================
+
 From the two assumptions of rule \rref{Ty-IApp}, the induction hypothesis and the definition of
 substitution, we obtain
 \begin{equation*}
@@ -1450,6 +1457,7 @@ By passing the two judgments above to rule \rref{Ty-IAbs}, we obtain the desired
 %===============================================================================
 \item[\fbox{\rref{Ty-Query}}]\quad$\wte{\tenv,\alpha,\tenv'}{?\rulet}{\rulet}{E}$\\
 %===============================================================================
+
 From the first assumption of rule \rref{Ty-Query}, where we consider deterministic
 resolution, and Lemma~\ref{lemma:coherence:0} we get
 \begin{equation*}
@@ -1580,6 +1588,35 @@ By the definition of substitution and the last two obtained results used with ru
 
 %###############################################################################
 
+\begin{center}
+\begin{tikzpicture}[node distance=1.3cm, auto,]
+%nodes
+\node[punkt, mainres] (AR) {Lemma~\ref{lemma:asoundness:0}:\\
+             \it Algorithmic resolution is sound wrt det. resolution};
+\node[punkt, below=of AR] (AF) {Lemma~\ref{lemma:asoundness:1}: \\
+             \it Algorithmic focusing is sound wrt to det. focusing};
+\node[punkt, right=of AF] (AL) {Lemma~\ref{lemma:asoundness:2}: \\
+             \it Algorithmic lookup is sound wrt to det. lookup};
+\node[punkt, above=of AL] (AM) {Lemma~\ref{lemma:asoundness:3}: \\
+             \it Algorithmic matching is sound wrt to det. matching};
+\node[punkt, below=of AL] (AMC) {Lemma~\ref{lemma:acompleteness:3}: \\
+             \it Algorithmic matching is complete wrt to det. matching};
+\node[punkt, right=of AL] (MIS) {Lemma~\ref{lemma:asoundness:5}: \\
+             \it Algorithmic matching implies alg. stability};
+\node[punkt, right=of AM] (UAC) {Lemma~\ref{lemma:asoundness:6}: \\
+             \it Unification algorithm unifies};
+%edges
+\draw[pil] (AR.south) to                  (AF.north);
+\draw[pil] (AF.north) to [out=30,in=150]  (AL.north);
+\draw[pil] (AL.south) to [out=210,in=330] (AF.south);
+\draw[pil] (AL.north) to                  (AM.south);
+\draw[pil] (AM.east)  to                  (UAC.west);
+\draw[pil] (AL.east)  to                  (MIS.west);
+\draw[pil] (AL.south) to                  (AMC.north);
+%\draw[pil] (US.north) to [out=30,in=150] (UAS.north);
+\end{tikzpicture}
+\end{center}\vspace{0.5cm}
+
 \fbox{ \centering
 \begin{minipage}{0.95\columnwidth}
 \begin{lemma}\label{lemma:asoundness:0}
@@ -1631,8 +1668,11 @@ By the definition of substitution and the last two obtained results used with ru
 }}
 
 \begin{proof}
-The lemma follows from the isomorphism between the 
-rule sets of the two judgements and from Lemma~\ref{lemma:asoundness:2}.
+The proof proceeds by induction on the derivation of the hypothesis.
+
+Cases \rref{Alg-R-IAbs} and \rref{Alg-R-TAbs} follow from the isomorphism
+between the rule sets of the two judgements. Case \rref{Alg-R-Simp} follows
+from Lemma~\ref{lemma:asoundness:2}.\\
 \end{proof}
 
 %###############################################################################
@@ -1663,6 +1703,7 @@ The proof proceeds by induction on the derivation of the hypothesis.
 \item[\fbox{\rref{Alg-L-RuleMatch}}]\quad$\adlres{\bar\alpha}{\tenv}{\tenv',\envi{\rulet}{x}}{\type}{E[\bar{E}/\bar{x}]}$\ \\
 %$\bar{\alpha};\tenv; \tenv', \rulet~{\leadsto x} \alg \type~{\leadsto E[\bar{E}/\bar{x}]}$ \ \\
 %===============================================================================
+
 From the rule's first hypothesis and Lemma~\ref{lemma:asoundness:3} we have
 \begin{equation*}
 \dmres{\tenv}{\rulet}{E}{\type}{E'}{\ie{\ruleset}{\bar{x}}}
@@ -1679,19 +1720,25 @@ Then, using Lemma~\ref{lemma:asoundness:1} and rule \rref{L-RuleMatch} we conclu
 $\adlres{\bar\alpha}{\tenv}{\tenv',\envi{\rulet}{x}}{\type}{E'}$\ \\
 %$\bar{\alpha};\tenv;\tenv', \rulet~{\leadsto x}\alg \type~{\leadsto E'}$ \ \\
 %===============================================================================
-  From the rule's second hypothesis and the induction hypothesis we have
+
+  From the rule's second premise and the induction hypothesis we have
 \begin{equation*}
   \dlres{\bar\alpha}{\tenv}{\tenv'}{\type}{E'}
 %  \bar{\alpha};\tenv;\tenv' \ivturns \type~{\leadsto E'}
 \end{equation*}
 
-  Then from the rule's first hypothesis and the negation of Lemma~\ref{lemma:asoundness:5}, we have:
+  Then from the rule's first premise and the negation of Lemma~\ref{lemma:asoundness:5}, we have:
 \begin{equation*}
 \not\exists E, \Sigma:
 \admres{\bar\alpha}{\tenv}{\rulet}{x}{\epsilon}{\type}{E}{\Sigma}
 %\bar{\alpha};\tenv;\rulet \leadsto x; \epsilon \alg \type \leadsto E; \Sigma
 \end{equation*}
-  By Lemma~\ref{lemma:asoundness:3} we thus have
+or equivaltenly,
+\begin{equation*}
+\not\exists \theta, E, \Sigma:
+\admres{\bar\alpha}{\tenv}{\rulet}{x}{\epsilon}{\type}{\etrans{\theta}(E)}{\theta(\Sigma)}
+\end{equation*}
+From the negation of Lemma~\ref{lemma:acompleteness:3} we thus have
 \begin{equation*}
 \not\exists \theta, E, \Sigma, \dom(\theta) \subseteq \bar{\alpha}:
 \dmres{\theta(\tenv)}{\theta(\rulet)}{x}{\type}{E}{\Sigma}
@@ -1708,6 +1755,7 @@ $\adlres{\bar\alpha}{\tenv}{\tenv',\envi{\rulet}{x}}{\type}{E'}$\ \\
 $\adlres{\bar\alpha}{\tenv}{\tenv',\relation{x}{\rulet}}{\type}{E}$\ \\
 %$\bar{\alpha};\tenv;\tenv',x:\rulet \alg \type~{\leadsto E}$ \ \\
 %===============================================================================
+
 From the rule's hypothesis and the induction hypothesis we obtain
 \begin{equation*}
   \dlres{\bar\alpha}{\tenv}{\tenv'}{\type}{E}
@@ -1721,9 +1769,10 @@ By rule \rref{L-Var} we conclude
 
 %===============================================================================
 \item[\fbox{\rref{Alg-L-TyVar}}]\quad
-$\adlres{\bar{\alpha}}{\tenv}{\tenv',\alpha}{\type}{E}$\ \\
+$\adlres{\bar{\alpha}}{\tenv}{\tenv',\alpha}{\type}{E}$ \ \\
 %$\bar{\alpha};\tenv;\tenv',\alpha \alg \type~{\leadsto E}$ \ \\
 %===============================================================================
+
 From the rule's hypothesis and the induction hypothesis we obtain
 \begin{equation*}
   \dlres{\bar{\alpha}}{\tenv}{\tenv'}{\type}{E}
@@ -1747,8 +1796,7 @@ for the $\bar{\alpha}$ type variables.
 \begin{lemma}\label{lemma:asoundness:3}
   If 
 \begin{equation*}
-\admress{\bar\alpha}{\tenv}{\rulet}{E}{\Sigma}{\type}{E'}{\Sigma',\theta(\Sigma)}{\theta}
-%  \bar{\alpha};\tenv;\rulet \leadsto E; \Sigma \alg \type \leadsto E'; \Sigma',\theta(\Sigma); \theta
+\admress{\bar\alpha}{\tenv}{\rulet}{E}{\Sigma}{\type}{E'}{\theta(\Sigma),\Sigma'}{\theta}
 \end{equation*}
   and
 \begin{equation*}
@@ -1756,8 +1804,7 @@ for the $\bar{\alpha}$ type variables.
 \end{equation*}
   then
 \begin{equation*}
-\dmres{\theta(\tenv)}{\theta(\rulet)}{\etrans\theta(E)}{\theta(\type)}{E'}{\Sigma'}
-%  \theta(\tenv); \theta(\rulet) \leadsto |\theta|(E) \ivturns \theta(\type) \leadsto E'; \Sigma'
+\dmres{\theta(\tenv)}{\theta(\rulet)}{\etrans\theta(E)}{\theta(\type)}{\etrans{\theta}(E')}{\theta(\Sigma')}
 \end{equation*}
 \end{lemma}
 \end{minipage}
@@ -1769,48 +1816,43 @@ The proof proceeds by induction on the derivation of the first hypothesis.
 \setlength{\itemsep}{1em}
 %===============================================================================
 \item[\fbox{\rref{Alg-M-Simp}}]\quad
-$\admress{\bar\alpha}{\tenv}{\type'}{E}{\Sigma}{\type}{\etrans\theta(E)}{\epsilon,\theta(\Sigma)}{\theta}$\ \\
-%$\bar{\alpha}; \tenv; \type' \leadsto E; \Sigma \alg \type \leadsto |\theta|(E); \epsilon,\theta(\Sigma);\theta$ \ \\
+$\admress{\bar\alpha}{\tenv}{\type'}{E}{\Sigma}{\type}{\etrans\theta(E)}{\theta(\Sigma),\epsilon}{\theta}$\ \\
 %===============================================================================
+
 From the hypothesis of the rule and Lemma~\ref{lemma:asoundness:6} it follows that
-$\theta(\type') = \theta(\type)$. Hence, the target judgement can be rewritten as
+$\theta(\type') = \theta(\type)$. Hence, the target judgment can be rewritten as
 \begin{equation*}
   \dmres{\theta(\tenv)}{\theta(\type')}{\etrans\theta{E}}{\theta(\type')}{\etrans\theta{E}}{\epsilon}
-%  \theta(\tenv); \theta(\type') \leadsto |\theta|(E) \ivturns \theta(\type') \leadsto |\theta|(E); \epsilon
 \end{equation*}
-This follows from rule \mylabel{M-Simp}.
+This follows from rule \rref{M-Simp}.
 
 %===============================================================================
 \item[\fbox{\rref{Alg-M-IApp}}]\quad
-$\admress{\bar\alpha}{\tenv}{\rulet_1\To\rulet_2}{E}{\Sigma}{\type}{E'}{\Sigma', \theta(\Sigma)}{\theta}$\ \\
-%$\bar{\alpha}; \tenv; \rulet_1 \iarrow \rulet_2~{\leadsto E}; \Sigma \alg \type~{\leadsto E'}; \Sigma',\theta(\rulet_1) \leadsto x, \theta(\Sigma);\theta$ \ \\
+$\admress{\bar\alpha}{\tenv}{\rulet_1\To\rulet_2}{E}{\Sigma}{\type}{E'}{\theta(\Sigma),\Sigma'}{\theta}$\ \\
 %===============================================================================
-  From the hypothesis of the rule, the induction hypothesis and the definition of substitution,
+
+  From the premise of the rule, the induction hypothesis and the definition of substitution,
 we have that
 \begin{equation*}
-  \dmres{\theta(\tenv),\envi{\theta(\rulet_1)}{x}}{\theta(\rulet_2)}{\etrans\theta(\mmapp{E}{x})}{\theta(\type)}{E'}{\Sigma'}
-% \theta(\tenv,\rulet_1 \leadsto x); \theta(\rulet_2) \leadsto |\theta|(E\,x) \ivturns \theta(\type) \leadsto E'; \Sigma' 
+  \dmres{\theta(\tenv),\envi{\theta(\rulet_1)}{x}}{\theta(\rulet_2)}{\etrans\theta(\mmapp{E}{x})}{\theta(\type)}{\etrans{\theta}(E')}{\theta(\Sigma')}
 \end{equation*}
   By rule \rref{M-IApp} we may then conclude
 \begin{equation*}
-\dmres{\theta(\tenv)}{\theta(\rulet_1\To\rulet_2)}{\etrans\theta(E)}{\theta(\type)}{E'}{\Sigma',\ie{\theta(\rulet_1)}{x}}
-% \theta(\tenv); \theta(\rulet_1 \iarrow \rulet_2) \leadsto |\theta|(E) \ivturns \theta(\type) \leadsto E'; \Sigma',\theta(\rulet_1) \leadsto x
+\dmres{\theta(\tenv)}{\theta(\rulet_1\To\rulet_2)}{\etrans\theta(E)}{\theta(\type)}{\etrans{\theta}(E')}{\theta(\ie{\rulet_1}{x},\Sigma')}
 \end{equation*} 
 
 %===============================================================================
 \item[\fbox{\rref{Alg-M-TApp}}]\quad
-$\admress{\bar\alpha}{\tenv}{\tall{\alpha}{\rulet}}{E}{\Sigma}{\type}{E'}{\Sigma',\theta(\Sigma)}{\theta}$\ \\
-%$\bar{\alpha}; \tenv; \forall \alpha. \rulet~{\leadsto E}; \Sigma \alg \type~{\leadsto E'}; \Sigma',\theta(\Sigma);\theta$ \ \\
+$\admress{\bar\alpha}{\tenv}{\tall{\alpha}{\rulet}}{E}{\Sigma}{\type}{E'}{\theta(\Sigma),\Sigma'}{\theta}$\ \\
 %===============================================================================
-  Then it follows from the rule's hypothesis and from the induction hypothesis that
+
+  Then it follows from the rule's premise and from the induction hypothesis that
 \begin{equation*}
-\dmres{\theta(\tenv)}{\theta(\rulet)}{\etrans\theta(\mmapp{E}{\alpha})}{\theta(\type)}{E'}{\Sigma'}
-%  \theta(\tenv); \theta(\rulet) \leadsto |\theta|(E\,\alpha) \ivturns \theta(\type) \leadsto E'; \Sigma'
+\dmres{\theta(\tenv)}{\theta(\rulet)}{\etrans\theta(\mmapp{E}{\alpha})}{\theta(\type)}{\etrans{\theta}(E')}{\theta(\Sigma')}
 \end{equation*}
   Hence, it follows from rule \rref{M-TApp} that
 \begin{equation*}
-  \dmres{\theta(\tenv)}{\theta(\tall{\alpha}{\rulet})}{\etrans\theta(E)}{\theta(\type)}{E'}{\Sigma'}
-%  \theta(\tenv); \theta(\forall \alpha.\rulet) \leadsto |\theta|(E) \ivturns \theta(\type) \leadsto E'; \Sigma'
+  \dmres{\theta(\tenv)}{\theta(\tall{\alpha}{\rulet})}{\etrans\theta(E)}{\theta(\type)}{\etrans{\theta}(E')}{\theta(\Sigma')}
 \end{equation*}
 \end{description}
 \end{proof}
@@ -1824,12 +1866,10 @@ $\admress{\bar\alpha}{\tenv}{\tall{\alpha}{\rulet}}{E}{\Sigma}{\type}{E'}{\Sigma
   If 
 \begin{equation*}
   \admres{\bar\alpha}{\tenv}{\rulet}{E}{\Sigma}{\type}{E'}{\Sigma'}
-%  \bar{\alpha};\tenv;\rulet \leadsto E; \Sigma \alg \type \leadsto E'; \Sigma'
 \end{equation*}
   then
 \begin{equation*}
   \coherent{\bar\alpha}{\tenv}{\rulet}{\type}
-%  \bar{\alpha}; \tenv; \rulet \coh \type
 \end{equation*}
 \end{lemma}
 \end{minipage}
@@ -1870,6 +1910,33 @@ Straightforward induction on the derivation.
 %-------------------------------------------------------------------------------
 \subsection{Completeness of the Algorithm wrt Deterministic Resolution}
 
+\begin{center}
+\begin{tikzpicture}[node distance=1.3cm, auto,]
+%nodes
+\node[punkt, mainres] (AR) {Lemma~\ref{lemma:acompleteness:0}:\\
+             \it Algorithmic resolution is complete wrt det. resolution};
+\node[punkt, right=0.8cm of AR] (AF) {Lemma~\ref{lemma:acompleteness:1}: \\
+             \it Algorithmic focusing is complete wrt to det. focusing};
+\node[punkt, right=0.8cm of AF] (AL) {Lemma~\ref{lemma:acompleteness:2}: \\
+             \it Algorithmic lookup is complete wrt to det. lookup};
+\node[punkt, right=0.8cm of AL] (AM) {Lemma~\ref{lemma:acompleteness:3}: \\
+             \it Algorithmic matching is complete wrt to det. matching};
+\node[punkt, below=of AL] (AMC) {Lemma~\ref{lemma:asoundness:3}: \\
+             \it Algorithmic matching is sound wrt to det. matching};
+\node[punkt, below=of AM] (MIS) {Lemma~\ref{lemma:acompleteness:5}: \\
+             \it Unification algorithm produces most general unifier};
+%\node[punkt, right=of AM] (UAC) {Lemma~\ref{lemma:asoundness:6}: \\
+%             \it Unification algorithm unifies};
+%edges
+\draw[pil] (AR.north) to [out=30,in=150]  (AF.north);
+\draw[pil] (AF.north) to [out=30,in=150]  (AL.north);
+\draw[pil] (AL.south) to [out=210,in=330] (AF.south);
+\draw[pil] (AL.north) to [out=30,in=150]  (AM.north);
+\draw[pil] (AM.south)  to                 (MIS.north);
+\draw[pil] (AL.south) to                  (AMC.north);
+\end{tikzpicture}
+\end{center}\vspace{0.5cm}
+
 %###############################################################################
 {\centering
 \fbox{
@@ -1895,7 +1962,7 @@ Straightforward induction on the derivation.
 \drres{\tyvars{\tenv}}{\tenv}{\rulet}{E}
 %  \mathit{tyvars}(\tenv);\tenv \ivturns \rulet \leadsto E
 \end{equation*}
-  Hence, by Lemma~\ref{lemma:acompleteness:1} and rule \mylabel{Alg-R-Main} the desired conclusion follows
+  Hence, by Lemma~\ref{lemma:acompleteness:1} and rule \rref{Alg-R-Main} the desired conclusion follows
 \begin{equation*}
 \adres{\tenv}{\rulet}{E}
 %  \tenv \alg \rulet \leadsto E
@@ -1922,8 +1989,14 @@ Straightforward induction on the derivation.
 }}
 
 \begin{proof}
-The lemma follows from the isomorphism between the 
-rule sets of the two judgements and from Lemma~\ref{lemma:acompleteness:2}.
+The proof proceeds by induction on the derivation of the hypothesis.
+
+Cases \rref{IAbs} and \rref{R-TAbs} follow from the isomorphism
+between the rule sets of the two judgements. Case \rref{R-Simp} follows
+from Lemma~\ref{lemma:acompleteness:2}.\\
+
+%The lemma follows from the isomorphism between the 
+%rule sets of the two judgements and from Lemma~\ref{lemma:acompleteness:2}.
 \end{proof}
 
 %###############################################################################
@@ -1954,6 +2027,7 @@ The proof proceeds by induction on the derivation of the hypothesis.
 $\dlres{\bar\alpha}{\tenv}{\tenv',\envi{\rulet}{x}}{\type}{E[\bar{E}/\bar{x}]}$\ \\
 %$\bar{\alpha};\tenv; \tenv', \rulet~{\leadsto x} \ivturns \type~{\leadsto E[\bar{E}/\bar{x}]}$ \ \\
 %===============================================================================
+
 From the rule's first hypothesis and Lemma~\ref{lemma:acompleteness:3} we have
 \begin{equation*}
   \admres{\epsilon}{\tenv}{\rulet}{x}{\epsilon}{\type}{E'}{\ie{\bar\rulet}{\bar{x}}}
@@ -1970,13 +2044,14 @@ Then, using Lemma~\ref{lemma:acompleteness:1} and rule \rref{Alg-L-RuleMatch} we
 $\dlres{\bar\alpha}{\tenv}{\tenv',\envi{\rulet}{x}}{\type}{E'}$\ \\
 %$\bar{\alpha};\tenv;\tenv', \rulet~{\leadsto x}\ivturns \type~{\leadsto E'}$ \ \\
 %===============================================================================
+
   From the rule's second hypothesis and the induction hypothesis we have
 \begin{equation*}
   \adlres{\bar\alpha}{\tenv}{\tenv'}{\type}{E'}
 %  \bar{\alpha};\tenv;\tenv' \alg \type~{\leadsto E'}
 \end{equation*}
 
-  From the rule's first hypothesis and the negation of Lemma~\ref{lemma:acompleteness:4}, we have:
+  From the rule's first hypothesis and the negation of Lemma~\ref{lemma:asoundness:3}, we have:
 \begin{equation*}
 \incoherent{\bar\alpha}{\tenv}{\rulet}{\type}
 %\bar{\alpha}; \rulet \not\coh \type
@@ -1992,6 +2067,7 @@ $\dlres{\bar\alpha}{\tenv}{\tenv',\envi{\rulet}{x}}{\type}{E'}$\ \\
 $\dlres{\bar\alpha}{\tenv}{\tenv',\relation{x}{\rulet}}{\type}{E}$\ \\
 %$\bar{\alpha};\tenv;\tenv',x:\rulet \ivturns \type~{\leadsto E}$ \ \\
 %===============================================================================
+
 From the rule's hypothesis and the induction hypothesis we obtain
 \begin{equation*}
   \adlres{\bar\alpha}{\tenv}{\tenv'}{\type}{E}
@@ -2008,6 +2084,7 @@ By rule \rref{Alg-L-Var} we conclude
 $\dlres{\bar\alpha}{\tenv}{\tenv',\alpha}{\type}{E}$\ \\
 %$\bar{\alpha};\tenv;\tenv',\alpha \ivturns \type~{\leadsto E}$ \ \\
 %===============================================================================
+
 From the rule's hypothesis and the induction hypothesis we obtain
 \begin{equation*}
 \adlres{\bar\alpha}{\tenv}{\tenv'}{\type}{E}
@@ -2043,7 +2120,7 @@ $\theta_2\sqsubseteq\theta_1$, iff there is a $\theta'$ such that $\theta_2\cdot
 \end{equation*}
   then
 \begin{equation*}
-  \admres{\bar\alpha}{\tenv}{\rulet}{E}{\Sigma}{\type}{\etrans{\theta_2}(E')}{\theta_2(\Sigma',\Sigma)}
+  \admres{\bar\alpha}{\tenv}{\rulet}{E}{\Sigma}{\type}{\etrans{\theta_2}(E')}{\theta_2(\Sigma,\Sigma')}
 %  \bar{\alpha};\tenv;\rulet \leadsto E; \Sigma \alg \type \leadsto |\theta_2|(E'); \theta_2(\Sigma',\Sigma)
 \end{equation*}
   and
@@ -2079,20 +2156,21 @@ From Lemma~\ref{lemma:acompleteness:5} and rule \rref{Alg-M-Simp} we then have
 $\dmres{\theta_1(\tenv)}{\theta_1(\rulet_1\To\rulet_2)}{\etrans{\theta_1}(E)}{\theta_1(\type)}{\etrans{\theta_1}(E')}{\theta_1(\ie{\rulet_1}{x},\Sigma')}$\ \\
 %$\theta_1(\tenv); \theta_1(\rulet_1 \iarrow \rulet_2)~{\leadsto |\theta_1|(E)}\ivturns \theta_1(\type)~{\leadsto |\theta_1|(E')}; \theta_1(\Sigma',\rulet_1 \leadsto x)$ \ \\
 %===============================================================================
+
   From the hypothesis of the rule and the induction hypothesis, we have that
 \begin{equation*}
-\forall\Sigma,~\admres{\bar\alpha}{\tenv,\envi{\rulet_1}{x}}{\rulet_2}{\mmapp{E}{x}}{\Sigma}{\type}{\etrans{\theta_2}(E')}{\theta_2(\Sigma',\Sigma)}
+\forall\Sigma,~\admres{\bar\alpha}{\tenv,\envi{\rulet_1}{x}}{\rulet_2}{\mmapp{E}{x}}{\Sigma}{\type}{\etrans{\theta_2}(E')}{\theta_2(\Sigma,\Sigma')}
 %\admres{\bar\alpha}{\tenv,\envi{\rulet_1}{x}}{\rulet_2}{\mmapp{E}{x}}{\Sigma,\ie{\rulet_1}{x}}{\type}{\etrans{\theta_2}(E')}{\theta_2(\ie{\rulet_1}{x},\Sigma',\Sigma)}
 % \bar{\alpha};\tenv,\rulet_1 \leadsto x;\rulet_2 \leadsto E\,x; \rulet_1 \leadsto x, \Sigma \alg \type \leadsto |\theta_2|(E'); \theta_2(\Sigma',\rulet_1 \leadsto x, \Sigma) 
 \end{equation*}
 Then, for $\Sigma = \Sigma'',\ie{\rulet_1}{x}$, the above is refined to
 \begin{equation*}
-\forall \Sigma'',~\admres{\bar\alpha}{\tenv,\envi{\rulet_1}{x}}{\rulet_2}{\mmapp{E}{x}}{\Sigma'',\ie{\rulet_1}{x}}{\type}{\etrans{\theta_2}(E')}{\theta_2(\Sigma',\Sigma'',\ie{\rulet_1}{x})}
+\forall \Sigma'',~\admres{\bar\alpha}{\tenv,\envi{\rulet_1}{x}}{\rulet_2}{\mmapp{E}{x}}{\Sigma'',\ie{\rulet_1}{x}}{\type}{\etrans{\theta_2}(E')}{\theta_2(\Sigma'',\ie{\rulet_1}{x},\Sigma')}
 \end{equation*}
 
   By rule \rref{Alg-M-IApp} we may then conclude
 \begin{equation*}
-\forall\Sigma'',~\admres{\bar\alpha}{\tenv}{\rulet_1\To\rulet_2}{E}{\Sigma''}{\type}{\etrans{\theta_2}(E')}{\theta_2(\Sigma',\Sigma'',\ie{\rulet_1}{x})}
+\forall\Sigma'',~\admres{\bar\alpha}{\tenv}{\rulet_1\To\rulet_2}{E}{\Sigma''}{\type}{\etrans{\theta_2}(E')}{\theta_2(\Sigma'',\ie{\rulet_1}{x},\Sigma')}
 % \bar{\alpha};\tenv;\rulet_1 \iarrow \rulet_2 \leadsto E; \Sigma \alg \type \leadsto |\theta_2|(E'); \theta_2(\Sigma',\rulet_1 \leadsto x, \Sigma)
 \end{equation*} 
 
@@ -2101,15 +2179,14 @@ Then, for $\Sigma = \Sigma'',\ie{\rulet_1}{x}$, the above is refined to
 $\dmres{\theta_1(\tenv)}{\theta_1(\tall{\alpha}{\rulet}}{\etrans{\theta_1}(E)}{\theta_1(\type)}{\etrans{\theta_1}(E')}{\theta_1(\Sigma')}$\ \\
 %$\theta_1(\tenv); \theta_1(\forall\alpha.\rulet) \leadsto |\theta_1|(E) \ivturns \theta_1(\type) \leadsto |\theta_1|(E'); \theta_1(\Sigma')$ \ \\
 %===============================================================================
+
   From the hypothesis of the rule and the induction hypothesis, we have that
 \begin{equation*}
-  \admres{\bar\alpha,\alpha}{\tenv}{\rulet}{\mmapp{E}{\alpha}}{\Sigma}{\type}{\etrans{\theta_2}(E')}{\theta_2(\Sigma',\Sigma)}
-% \bar{\alpha},\alpha;\tenv;\rulet \leadsto E\,\alpha; \Sigma \alg \type \leadsto |\theta_2|(E'); \theta_2(\Sigma',\Sigma) 
-\end{equation*}
+  \admres{\bar\alpha,\alpha}{\tenv}{\rulet}{\mmapp{E}{\alpha}}{\Sigma}{\type}{\etrans{\theta_2}(E')}{\theta_2(\Sigma,\Sigma')}
+,\end{equation*}
   Hence, it follows from rule \rref{Alg-M-TApp} that
 \begin{equation*}
-\admres{\bar\alpha}{\tenv}{\tall{\alpha}{\rulet}}{E}{\Sigma}{\type}{\etrans{\theta_2}(E')}{\theta_2(\Sigma',\Sigma)}
-% \bar{\alpha};\tenv;\forall \alpha.\rulet \leadsto E; \Sigma \alg \type \leadsto |\theta_2|(E'); \theta_2(\Sigma',\Sigma)
+\admres{\bar\alpha}{\tenv}{\tall{\alpha}{\rulet}}{E}{\Sigma}{\type}{\etrans{\theta_2}(E')}{\theta_2(\Sigma,\Sigma')}
 \end{equation*}
 \end{description}
 \end{proof}

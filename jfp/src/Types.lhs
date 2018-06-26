@@ -1008,7 +1008,7 @@ variables $\bar{\alpha},\bar{\alpha}'$ and the type environment after substituti
   \myrule{Stable}{\not\exists \theta, E, \Sigma: \enskip 
            \validsubst{\bar{\alpha}}{\tenv}{\theta}
            \quad 
-           \dmres{\theta(\tenv)}{\theta(\rulet)}{x}{\theta(\tau)}{E}{\Sigma}}
+           \dmres{\theta(\tenv)}{\theta(\rulet)}{x}{\theta(\tau)}{\etrans{\theta}(E)}{\theta(\Sigma)}}
           {\dstable{\bar{\alpha}}{\tenv}{\rulet}{x}{\type}}
 \eda
 \end{minipage}
