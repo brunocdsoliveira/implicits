@@ -719,7 +719,9 @@ FIXED
 > of the various lemmas/proofs beforehand: which lemmas are proved by
 > mutual induction, which are auxiliary lemmas?
 
-TODO -> Klara
+Summaries and proof dependency diagrams have been added in the beginning 
+of each section.
+
  
 >  - Lemma A.10, A.11: the unambiguity judgment $|-_{unamb} \Gamma$ for
 > type environments has not been defined.
