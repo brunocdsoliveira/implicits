@@ -312,6 +312,9 @@ TODO
 
 TODO? Maybe no need to mention strong reduction.
 IGNORE?
+
+Instead of considering strong reduction in general, we only consider
+reduction of type application, which is the critical case for stability.
  
 >  - Since COCHIS has first-class rules, it might be nice to also
 > discuss the possibility of querying for (possibly polymorphic) rule
@@ -939,6 +942,8 @@ We could separate the functionality from the properties and expand a
 bit on both
 
 Split first bullet into a few: functionality vs properties.
+
+TOM: I have expanded the list of contributions.
 
 > p15 "We explain this concept in Section 3.5" - there's been a few forward
 > references at this point, for example also the notion of "stability of
