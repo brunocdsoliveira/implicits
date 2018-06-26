@@ -2173,15 +2173,44 @@ The last two conditions of the conclusion follow from the induction hypothesis.
 
 %===============================================================================
 \item[\fbox{\rref{M-TApp}}]\quad
-$\dmres{\theta_1(\tenv)}{\theta_1(\tall{\alpha}{\rulet}}{\etrans{\theta_1}(E)}{\theta_1(\type)}{\etrans{\theta_1}(E')}{\theta_1(\Sigma')}$\ \\
+$\dmres{\theta_1(\tenv)}{\theta_1(\tall{\alpha}{\rulet})}{\etrans{\theta_1}(E)}{\theta_1(\type)}{\etrans{\theta_1}(E')}{\theta_1(\Sigma')}$\ \\
 %$\theta_1(\tenv); \theta_1(\forall\alpha.\rulet) \leadsto |\theta_1|(E) \ivturns \theta_1(\type) \leadsto |\theta_1|(E'); \theta_1(\Sigma')$ \ \\
 %===============================================================================
 
-  From the hypothesis of the rule and the induction hypothesis, we have that
+From the definition of substitution and the premise of the rule, we have
+\begin{equation*}
+  \dmres{\theta_1(\tenv)}{\theta_1(\rulet)[\suty/\alpha]}{\etrans{\theta_1}(\mmapp{E}{\etrans{\suty}})}{\theta_1(\Sigma')}{\theta_1(\type)}{\etrans{\theta_1}(E')}
+\end{equation*}
+
+The Barendregt convention allows us to asses that $\alpha\notin\theta_1(\tenv)$. Thus, we can
+consider $\theta'=\theta_1\cdot[\suty/\alpha]$, for which it follows that
+$\dom{(\theta')}\subseteq\bar\alpha,\alpha$. From the definition of substitution,
+\begin{equation*}
+  \theta'(\rulet) = \theta_1(\rulet)[\suty/\alpha]\quad\text{and}\quad
+  \theta'(\tenv,\alpha) = \theta_1(\tenv)
+\end{equation*}
+In addition, since $\alpha$ does not appear free in the terms $\etrans{\theta_1}(E)$ and
+$\etrans{\theta_1}(E')$, the type $\theta_1(\type)$ and the types in $\theta_1(\Sigma')$,
+it follows that applying also the substitution $[\suty/\alpha]$ on them does not affect them.
+%\begin{equation*}
+%  \begin{array}{c}
+%    \theta'(\rulet) = \theta_1(\rulet)[\suty/\alpha]\\
+%    \theta'(\tenv,\alpha) = \theta_1(\tenv)\\
+%    \etrans{\theta'}(E) = \etrans{\theta_1}(E)\\
+%    \theta'(\Sigma') = \theta_1(\Sigma')\\
+%    \theta'(\type) = \theta_1(\type)
+%  \end{array}
+%\end{equation*}
+The premise of the rule can, then, be rewritten as
+\begin{equation*}
+  \dmres{\theta'(\tenv,\alpha)}{\theta'(\rulet)}{\etrans{\theta'}(\mmapp{E}{\alpha})}{\theta'(\Sigma')}{\theta'(\type)}{\etrans{\theta'}(E')}
+\end{equation*}
+  
+From the induction hypothesis, we have that
 \begin{equation*}
   \admres{\bar\alpha,\alpha}{\tenv}{\rulet}{\mmapp{E}{\alpha}}{\Sigma}{\type}{\etrans{\theta_2}(E')}{\theta_2(\Sigma,\Sigma')}
 ,\end{equation*}
-  Hence, it follows from rule \rref{Alg-M-TApp} that
+Hence, it follows from rule \rref{Alg-M-TApp} that
 \begin{equation*}
 \admres{\bar\alpha}{\tenv}{\tall{\alpha}{\rulet}}{E}{\Sigma}{\type}{\etrans{\theta_2}(E')}{\theta_2(\Sigma,\Sigma')}
 \end{equation*}
