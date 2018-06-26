@@ -406,7 +406,10 @@ in square brackets.
 > monotypes?  Is there a reason to think of $\alpha => \alpha$ as
 > polymorphic?  Please elaborate.
 
-TODO
+The syntax of monotypes is modelled after Haskell's notion of monotypes;
+we now mention this already when the grammar for types is first introduced.
+In addition, we now provide an example that illustrates how instantiation with
+rule types can give rise to additional resolution derivations.
  
 > p. 21:
 > 
