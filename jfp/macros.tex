@@ -48,6 +48,8 @@
 \newcommand{\myrule}[3]{\inferrule*[left={\hypertarget{rule:#1}{\scriptsize\mylabel{#1}}}]{#2}{#3}\label{rule:#1}}
 \newcommand{\myexrule}[3]{\inferrule*[left={\hyperlink{rule:#1}{\scriptsize\mylabel{#1}}}]{#2}{#3}\label{rule:#1}}
 \newcommand{\myexruleL}[3]{\inferrule*[Left={\hyperlink{rule:#1}{\scriptsize\mylabel{#1}}}]{#2}{#3}\label{rule:#1}}
+\newcommand{\myexruleR}[3]{\inferrule*[Right={\hyperlink{rule:#1}{\scriptsize\mylabel{#1}}}]{#2}{#3}\label{rule:#1}}
+\newcommand{\myexruleT}[3]{\inferrule*[lab={\hyperlink{rule:#1}{\scriptsize\mylabel{#1}}}]{#2}{#3}\label{rule:#1}}
 \newcommand{\myirule}[2]{\inferrule*{#1}{#2}}
 %\newcommand{\myirule}[2]{{\renewcommand{\arraystretch}{1.2}\ba{c} #1
 %                      \\ \hline #2 \ea}}

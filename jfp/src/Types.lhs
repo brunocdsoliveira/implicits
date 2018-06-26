@@ -560,6 +560,57 @@ instantiation of $\alpha$ with $\forall \beta. \beta \iarrow \beta$.
 We have adopted the standard solution from the outset, which only allows predicative
 instantiation and thus only accepts the first of the two derivations above.
 
+Observe that we not only forbid instantiation with universally quantified types
+$\forall \alpha.\rulet$, but also with rule types $\rulet_1 \To \rulet_2$. The
+latter are also a source of ambiguity. Consider for instance resolving $\tyint$
+in the environment $\tenv_2 = ?(\forall \alpha.(\alpha\to\alpha)\To\alpha),
+?\tybool, ?((\tybool \To \tyint) \to (\tybool \to \tyint)), ?(\tyint \to
+\tyint)$. There is one derivation that involves instantiating the first entry's $\alpha$ with
+a monotype, namely with $\tyint$:
+\begin{equation*}
+\myexrule{AR-IApp}
+  { \myexrule{AR-TApp} 
+      { \myexruleL{AR-IVar}
+          { ?(\forall \alpha. (\alpha \to \alpha) \To \alpha) \in \tenv_2 }
+          { \aresp{\tenv_2}{\forall \alpha. (\alpha \to \alpha) \To \alpha} }
+      }
+      { \aresp{\tenv_2}{(\tyint \to \tyint) \To \tyint} } 
+    \\
+    \myexrule{AR-IVar}
+      { ?(\tyint \to \tyint) \in \tenv_2 }
+      { \aresp{\tenv_2}{\tyint \to \tyint} }
+  }
+  { \aresp{\tenv_2}{\tyint} }
+\end{equation*}%
+However, instantiation with the non-monotype $\tybool \To \tyint$ also yields a derivation;
+for the sake of conciseness, we have abbreviated $\tybool$ and $\tyint$ to $B$ and $I$ respectively.
+{\renewcommand{\tyint}{I}
+ \renewcommand{\tybool}{B}
+\begin{equation*}
+\myexruleL{AR-IApp}
+  { \myexruleL{AR-IApp} 
+      { \myexruleL{AR-TApp}
+          { \myexruleT{AR-IVar}
+              { ?(\forall \alpha. (\alpha \to \alpha) \To \alpha) \in \tenv_2 }
+              { \aresp{\tenv_2}{\forall \alpha. (\alpha \to \alpha) \To \alpha} }
+          }
+          { \aresp{\tenv_2}{((\tybool \To \tyint) \to (\tybool \To \tyint)) \To (\tybool \To \tyint)} } \quad
+        \myexruleT{AR-IVar}
+          { ?((\tybool \To \tyint) \to (\tybool \To \tyint)) \in \tenv_2 }
+          { \aresp{\tenv_2}{(\tybool \To \tyint) \to (\tybool \To \tyint)}}
+      }
+      { \aresp{\tenv_2}{\tybool \To \tyint} } 
+    \quad
+    \myexruleT{AR-IVar}
+      { ?\tybool \in \tenv_2 }
+      { \aresp{\tenv_2}{\tybool} }
+  }
+  { \aresp{\tenv_2}{\tyint} }
+\end{equation*}
+}%
+By restricting ourselves to instantiation with monotypes, we disallow the
+second derivation and thus avoid source of ambiguity.
+
 % \begin{equation*}
 % \myexruleL{AR-IApp}
 %   { \myexruleL{AR-IApp}
