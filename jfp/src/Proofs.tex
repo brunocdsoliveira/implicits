@@ -766,9 +766,8 @@ resolution judgment and follows their dependencies. The second part uses the mai
 first part to establish stability of typing under type application reduction. In addition, it
 uses the preservation-under-type-substitution properties of typing and of the unambiguity
 judgment.
-%depends on the auxiliary lemma that the type-unambiguity judgment is preserved under type
-%substitution.
-The dependencies of the proofs of this section are depicted in the diagram below.
+The dependencies of the proofs of this section are depicted in the diagram below, where
+main results are indicated with double borders.
 \begin{center}
 \begin{tikzpicture}[node distance=1.3cm, auto,]
 %nodes
@@ -1518,6 +1517,7 @@ proof.\\
 %===============================================================================
 \item[\fbox{\rref{UA-Simp}}]\quad$\unambig{\bar{\alpha}}{\tau}$\\
 %===============================================================================
+
 We need to show that $\unambig{\bar\alpha}{\tau[\suty/\alpha]}$, which can be satisfied only
 by (an appropriate instance of) rule \rref{UA-Simp}. Therefore, it suffices to show that
 $\bar\alpha\subseteq\ftv{\type[\suty/\alpha]}$, where
@@ -1545,6 +1545,7 @@ holds that $\bar\alpha\subseteq(\ftv{\type}\setminus\{\alpha\})\cup\ftv{\suty}$.
 %===============================================================================
 \item[\fbox{\rref{UA-TAbs}}]\quad$\unambig{\bar{\alpha}}{\tall{\beta}{\rulet}}$\\
 %===============================================================================
+
 From the second hypothesis of the theorem and the adopted Barendregt convention, it follows that $\alpha\notin\bar\alpha,\beta$.
 
 From the assumption of the rule and the induction hypothesis, we get
@@ -1577,8 +1578,6 @@ By the definition of substitution and the last two obtained results used with ru
 %-------------------------------------------------------------------------------
 \subsection{Soundness of the Algorithm wrt Deterministic Resolution}
 
-%###############################################################################
-
 \begin{center}
 \begin{tikzpicture}[node distance=1.3cm, auto,]
 %nodes
@@ -1601,6 +1600,7 @@ By the definition of substitution and the last two obtained results used with ru
 \end{tikzpicture}
 \end{center}\vspace{0.5cm}
 
+%###############################################################################
 \fbox{ \centering
 \begin{minipage}{0.95\columnwidth}
 \begin{lemma}\label{lemma:asoundness:0}
