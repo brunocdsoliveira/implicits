@@ -2101,17 +2101,14 @@ $\theta_2\sqsubseteq\theta_1$, iff there is a $\theta'$ such that $\theta_2 = \t
   If 
 \begin{equation*}
 \dmres{\theta_1(\tenv)}{\theta_1(\rulet)}{\etrans{\theta_1}(E)}{\theta_1(\type)}{\etrans{\theta_1}(E')}{\theta_1(\Sigma')}
-%  \theta_1(\tenv); \theta_1(\rulet) \leadsto |\theta_1|(E) \ivturns \theta_1(\type) \leadsto |\theta_1|(E'); \theta_1(\Sigma')
 \end{equation*}
   and
 \begin{equation*}
   \dom{(\theta_1)}\subseteq\bar\alpha
-%  \mathit{dom}(\theta_1) \subseteq \bar{\alpha}
 \end{equation*}
   then
 \begin{equation*}
   \admres{\bar\alpha}{\tenv}{\rulet}{E}{\Sigma}{\type}{\etrans{\theta_2}(E')}{\theta_2(\Sigma,\Sigma')}
-%  \bar{\alpha};\tenv;\rulet \leadsto E; \Sigma \alg \type \leadsto |\theta_2|(E'); \theta_2(\Sigma',\Sigma)
 \end{equation*}
   and
 \begin{equation*}
@@ -2135,11 +2132,19 @@ $\dmres{\theta_1(\tenv)}{\theta_1(\type')}{\etrans{\theta_1}(E)}{\theta_1(\type)
 %$\theta_1(\tenv); \theta_1(\type') \leadsto |\theta_1|(E) \ivturns \theta_1(\type) \leadsto |\theta_1|(E); \theta_1(\epsilon)$ \hfill where $\theta_1(\tenv) = \theta_1(\type')$. \\
 %===============================================================================
 
-From Lemma~\ref{lemma:acompleteness:5} and rule \rref{Alg-M-Simp} we then have
+By Lemma~\ref{lemma:acompleteness:5} applied on the second hypothesis of the theorem
+and the side condition that $\theta_1(\type) = \theta_1(\type')$, we get
+\begin{equation*}
+  \theta_1\sqsubseteq\mgu{\type}{\type'}
+\end{equation*}
+Trivially, from rule \rref{Alg-M-Simp} we have
 \begin{equation*}
   \admres{\bar\alpha}{\tenv}{\type'}{E}{\Sigma}{\type}{\etrans{\theta_2}(E)}{\theta_2(\Sigma)}
 %  \bar{\alpha}; \tenv; \type' \leadsto E; \Sigma \alg \type \leadsto \theta_2(E); \theta_2(\Sigma)
 \end{equation*}
+where $\theta_2 = \mgu{\type}{\type'}$.
+
+From Lemma~\ref{lemma:asoundness:6}, we also get that $\dom{(\theta_2)}\subseteq\bar\alpha$.
 
 %===============================================================================
 \item[\fbox{\rref{M-IApp}}]\quad
@@ -2162,7 +2167,9 @@ Then, for $\Sigma = \Sigma'',\ie{\rulet_1}{x}$, the above is refined to
 \begin{equation*}
 \forall\Sigma'',~\admres{\bar\alpha}{\tenv}{\rulet_1\To\rulet_2}{E}{\Sigma''}{\type}{\etrans{\theta_2}(E')}{\theta_2(\Sigma'',\ie{\rulet_1}{x},\Sigma')}
 % \bar{\alpha};\tenv;\rulet_1 \iarrow \rulet_2 \leadsto E; \Sigma \alg \type \leadsto |\theta_2|(E'); \theta_2(\Sigma',\rulet_1 \leadsto x, \Sigma)
-\end{equation*} 
+\end{equation*}
+
+The last two conditions of the conclusion follow from the induction hypothesis.
 
 %===============================================================================
 \item[\fbox{\rref{M-TApp}}]\quad
