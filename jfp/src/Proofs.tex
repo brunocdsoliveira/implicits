@@ -1910,6 +1910,33 @@ Straightforward induction on the derivation.
 %-------------------------------------------------------------------------------
 \subsection{Completeness of the Algorithm wrt Deterministic Resolution}
 
+\begin{center}
+\begin{tikzpicture}[node distance=1.3cm, auto,]
+%nodes
+\node[punkt, mainres] (AR) {Lemma~\ref{lemma:acompleteness:0}:\\
+             \it Algorithmic resolution is complete wrt det. resolution};
+\node[punkt, right=0.8cm of AR] (AF) {Lemma~\ref{lemma:acompleteness:1}: \\
+             \it Algorithmic focusing is complete wrt to det. focusing};
+\node[punkt, right=0.8cm of AF] (AL) {Lemma~\ref{lemma:acompleteness:2}: \\
+             \it Algorithmic lookup is complete wrt to det. lookup};
+\node[punkt, right=0.8cm of AL] (AM) {Lemma~\ref{lemma:acompleteness:3}: \\
+             \it Algorithmic matching is complete wrt to det. matching};
+\node[punkt, below=of AL] (AMC) {Lemma~\ref{lemma:asoundness:3}: \\
+             \it Algorithmic matching is sound wrt to det. matching};
+\node[punkt, below=of AM] (MIS) {Lemma~\ref{lemma:acompleteness:5}: \\
+             \it Unification algorithm produces most general unifier};
+%\node[punkt, right=of AM] (UAC) {Lemma~\ref{lemma:asoundness:6}: \\
+%             \it Unification algorithm unifies};
+%edges
+\draw[pil] (AR.north) to [out=30,in=150]  (AF.north);
+\draw[pil] (AF.north) to [out=30,in=150]  (AL.north);
+\draw[pil] (AL.south) to [out=210,in=330] (AF.south);
+\draw[pil] (AL.north) to [out=30,in=150]  (AM.north);
+\draw[pil] (AM.south)  to                 (MIS.north);
+\draw[pil] (AL.south) to                  (AMC.north);
+\end{tikzpicture}
+\end{center}\vspace{0.5cm}
+
 %###############################################################################
 {\centering
 \fbox{
