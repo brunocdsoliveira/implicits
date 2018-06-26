@@ -50,7 +50,10 @@ tcWarn b msg
   = return ()
   | otherwise
   = tell ["Warning: " ++ msg]
-    
+
+tcNot :: TC a -> TC ()
+tcNot p
+  =  join ((p >> return (tcError "not")) <|> (return (return ())))
 
 -- ENVIRONMENT --------------------------------------
 
@@ -77,6 +80,20 @@ tcLookupVar v =
       = go env
     go (E_Imp _ _ env)
       = go env
+
+freeTVarsEnv :: TC [TVar]
+freeTVarsEnv
+  = do env <- tcEnv
+       return (go env)
+    where
+      go E_Empty
+        = []
+      go (E_Var _ _ env)
+        = go env
+      go (E_TVar tv env)
+        = tv : go env
+      go (E_Imp _ _ env)
+        = go env
 
 -- TYPE CHECKER --------------------------------------
 elabCT :: ContextType -> F.Type
@@ -164,8 +181,13 @@ typeCheck TM_False
 
 
 resolve :: ContextType -> TC (F.Term)
-resolve ct = res ct
-  where
+resolve ct = do tvars <- freeTVarsEnv 
+                main tvars ct
+ where
+
+  main inittvars ct = res ct
+
+   where
 
     res :: ContextType -> TC (F.Term)
     res (CT_Univ tv ct)
@@ -193,10 +215,10 @@ resolve ct = res ct
                         )
              ) 
          <|> 
-             (do f <- lkp env st
+             (do tcNot (sta ct st inittvars)
+                 f <- lkp env st
                  return (return f))
         ) >>= \c -> c
-        -- TODO: test for stability
  
     mtc :: ContextType -> F.Term -> SimpleType -> [(Var,ContextType)] -> [TVar] 
         -> TC (F.Term, [(Var,ContextType)])
@@ -209,28 +231,59 @@ resolve ct = res ct
     mtc (CT_Univ tv ct) f st cts tvars
       = mtc ct (F.TApp f (F.TVar tv)) st cts (tv:tvars)
 
+    sta :: ContextType -> SimpleType -> [TVar] -> TC Bool
+    sta (CT_Simp st') st tvars
+      = do s <- unify st' st tvars
+           return True
+    sta (CT_Rule ct1 ct2) st tvars
+      = sta ct2 st tvars
+    sta (CT_Univ tv ct) st tvars
+      = sta ct st (tv:tvars)
+
 unify :: SimpleType -> SimpleType -> [TVar] -> TC TSubst
 unify st1 st2 tvars = 
      trace ("unify " ++ show st1 ++ " " ++ show st2 ++ " " ++ show tvars) $
-     go1 st1 st2
+     let ss = go1 st1 st2
+     in do env <- tcEnv
+           case [s | s <- ss, validTSubst env s]  of
+            []    -> empty
+            (s:_) -> return s
   where
+    validTSubst :: Env -> TSubst -> Bool
+    validTSubst env s = all (\(tv1,st) -> 
+                           all (\tv2 -> (tv2 `elem` tvars) || (beforeTVar env tv2 tv1)
+                               ) (freeTVarsST st)
+                        ) s
+      
+
+    go1 :: SimpleType -> SimpleType -> [TSubst]
     go1 st1 st2
       | trace ("go1 " ++ show st1 ++ " " ++ show st2) $ False
       = error "UNREACHABLE"
-    go1 (ST_TVar tv1) st2@(ST_TVar tv2)
-      = if tv1 `elem` tvars
-          then
-            return [(tv1,st2)]
-          else
-            do guard (tv1 == tv2)
+    go1 st1@(ST_TVar tv1) st2@(ST_TVar tv2)
+      =    (do guard (tv1 `elem` tvars)
+               guard (tv1 /= tv2)
+               return [(tv1,st2)]
+           )
+        <|>
+           (do guard (tv2 `elem` tvars)
+               guard (tv1 /= tv2)
+               return [(tv2,st1)]
+           )
+        <|>
+           (do guard (tv1 == tv2)
                return []
+           )
     go1 (ST_TVar tv1) st2@(ST_Fun ct1 ct2)
       = do guard (tv1 `elem` tvars)
            guard (not (occursST tv1 st2))
            guard (isMonoTypeST st2)
            return [(tv1,st2)]
-    go1 (ST_Fun ct1 ct2) (ST_TVar tv2)
-      = empty
+    go1 st1@(ST_Fun ct1 ct2) (ST_TVar tv2)
+      = do guard (tv2 `elem` tvars)
+           guard (not (occursST tv2 st1))
+           guard (isMonoTypeST st1)
+           return [(tv2,st1)]
     go1 (ST_Fun ct11 ct12) (ST_Fun ct21 ct22)
       = do s1 <- go2 ct11 ct21
            s2 <- go2 (substTVars s1 ct12) (substTVars s1 ct22)
@@ -240,20 +293,28 @@ unify st1 st2 tvars =
     go1 (ST_TVar tv1) ST_Int
       | tv1 `elem` tvars
       = return [(tv1,ST_Int)]
+    go1 ST_Int (ST_TVar tv2)
+      | tv2 `elem` tvars
+      = return [(tv2,ST_Int)]
     go1 ST_Bool ST_Bool
       = return []
     go1 (ST_TVar tv1) ST_Bool
       | tv1 `elem` tvars
       = return [(tv1,ST_Bool)]
+    go1 ST_Bool (ST_TVar tv2)
+      | tv2 `elem` tvars
+      = return [(tv2,ST_Bool)]
     go1 _ _
       = empty
 
+    go2 :: ContextType -> ContextType -> [TSubst]
     go2 (CT_Univ tv1 ct1) (CT_Univ tv2 ct2)
       | tv1 == tv2
       = go2 ct1 ct2
     go2 (CT_Rule ct11 ct12) (CT_Rule ct21 ct22)
-      = do go2 ct11 ct21
-           go2 ct12 ct22
+      = do s1 <- go2 ct11 ct21
+           s2 <- go2 (substTVars s1 ct12) (substTVars s1 ct22)
+           return (s2 ++ s1)
     go2 (CT_Simp st1) (CT_Simp st2)
       = go1 st1 st2
     go2 _ _
@@ -309,35 +370,34 @@ termCT (CT_Rule ct1 ct2)
 termCT (CT_Simp st)
   = True
 
-beforeTVar :: TVar -> TVar -> TC Bool
-beforeTVar tv1 tv2 =
-  tcEnv >>= go1
+beforeTVar :: Env -> TVar -> TVar -> Bool
+beforeTVar env tv1 tv2 =
+  go1 env
   where
-    go1 :: Env -> TC Bool
+    go1 :: Env -> Bool
     go1 E_Empty
-      = tcError ("Type variables not found in environment: " ++ show tv1 ++ ", " ++ show tv2)
+      = error ("Type variables not found in environment: " ++ show tv1 ++ ", " ++ show tv2)
     go1 (E_Var _ _ env)
       = go1 env
     go1 (E_TVar tv env)
       | tv == tv1
       = go2 env
       | tv == tv2
-      = return False
+      = False
       | otherwise
       = go1 env
     go1 (E_Imp _ _ env)
       = go1 env
 
     go2 E_Empty
-      = tcError ("Type variable not found in environment: " ++ show tv2)
+      = error ("Type variable not found in environment: " ++ show tv2)
     go2 (E_Var _ _ env)
       = go2 env
     go2 (E_TVar tv env)
       | tv == tv2
-      = return True
+      = True
       | otherwise
       = go2 env
     go2 (E_Imp _ _ env)
       = go2 env
     
-
