@@ -780,14 +780,15 @@ main results are indicated with double borders.
 \dnode{US}{below=of DLR}{lemma:unamb_subst:0}{Unambiguity preservation under type substitution}
 \dnode{UAS}{below=of DMR}{lemma:unamb_subst:1}{Unambiguity preservation under type substitution}
 %edges
-\draw[pil] (DR.north) to [out=30,in=150] (DFR.north);
-\draw[pil] (DFR.north) to [out=30,in=150] (DLR.north);
+\draw[pil] (DR.north)  to [out=30,in=150]  (DFR.north);
+\draw[pil] (DFR.north) to [out=30,in=150]  (DLR.north);
 \draw[pil] (DLR.south) to [out=210,in=330] (DFR.south);
-\draw[pil] (DLR.north) to [out=30,in=150] (DMR.north);
-\draw[pil] (TR.north) to [out=150,in=30] (TP.north);
-\draw[pil] (TP.north) to (DR.south);
-\draw[pil] (TR.north) to [out=30,in=150] (US.north);
-\draw[pil] (US.north) to [out=30,in=150] (UAS.north);
+\draw[pil] (DLR.north) to [out=30,in=150]  (DMR.north);
+\draw[pil] (TR.north)  to [out=150,in=30]  (TP.north);
+\draw[pil] (TP.north)  to                  (DR.south);
+\draw[pil] (TR.north)  to [out=30,in=150]  (US.north);
+\draw[pil] (US.north)  to [out=30,in=150]  (UAS.north);
+\draw[pil] (UAS.south) to [out=210,in=330] (US.south);
 \end{tikzpicture}
 \end{center}\vspace{0.7cm}
 %\end{minipage}
@@ -1576,6 +1577,7 @@ By the definition of substitution and the last two obtained results used with ru
 \end{equation*}
 \end{proof}
 %-------------------------------------------------------------------------------
+
 \subsection{Soundness of the Algorithm wrt Deterministic Resolution}
 
 \begin{center}
@@ -1596,7 +1598,6 @@ By the definition of substitution and the last two obtained results used with ru
 \draw[pil] (AM.east)  to                  (UAC.west);
 \draw[pil] (AL.east)  to                  (MIS.west);
 \draw[pil] (AL.south) to                  (AMC.north);
-%\draw[pil] (US.north) to [out=30,in=150] (UAS.north);
 \end{tikzpicture}
 \end{center}\vspace{0.5cm}
 
