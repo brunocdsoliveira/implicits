@@ -289,6 +289,26 @@ See file CochisDet.v, Lemma \tt{DRes\_match\_impl\_vars}.
 
 \subsection{Deterministic Resolution is Deterministic}\label{proof:determinism}
 
+\begin{minipage}[t]{\textwidth}
+The proofs of this section are split into subproofs for each sub-judgment (focusing, lookup and
+matching) of the deterministic resolution judgment. Their dependencies, depicted in the diagram below, follow those of the sub-judgments that constitute the main deterministic resolution
+judgment.
+\begin{center}
+\begin{tikzpicture}[node distance=1cm, auto,]
+%nodes
+\dnode{DR}{mainres}{lemma:determinism:0}{Deterministic resolution judgment is deterministic}
+\dnode{DFR}{right=0.8cm of DR}{lemma:determinism:1}{Focusing judgment is deterministic}
+\dnode{DLR}{right=0.8cm of DFR}{lemma:determinism:2}{Lookup judgment is deterministic}
+\dnode{DMR}{right=0.8cm of DLR}{lemma:determinism:3}{Matching judgment is deterministic}
+%edges
+\draw[pil] (DR.north) to [out=30,in=150] (DFR.north);
+\draw[pil] (DFR.north) to [out=30,in=150] (DLR.north);
+\draw[pil] (DLR.south) to [out=210,in=330] (DFR.south);
+\draw[pil] (DLR.north) to [out=30,in=150] (DMR.north);
+\end{tikzpicture}
+\end{center}\vspace{0.3cm}
+\end{minipage}
+
 Figure~\ref{fig:unambenv} defines the judgment $\unambenv{\tenv}$ which states that a typing environment is unambiguous.
 Essentially, the definition requires that all types $\rulet$ in $\tenv$ are unambiguous.
 This definition will be used thoughout this section.
@@ -319,27 +339,6 @@ This definition will be used thoughout this section.
 }
 \end{center}
 }
-
-\begin{minipage}[t]{\textwidth}
-The proofs of this section are split into subproofs for each sub-judgment (focusing, lookup and
-matching) of the deterministic resolution judgment. Their dependencies, depicted in the diagram below, follow those of the sub-judgments that constitute the main deterministic resolution
-judgment.
-\begin{center}
-\begin{tikzpicture}[node distance=1cm, auto,]
-%nodes
-\dnode{DR}{mainres}{lemma:determinism:0}{Deterministic resolution judgment is deterministic}
-\dnode{DFR}{right=0.8cm of DR}{lemma:determinism:1}{Focusing judgment is deterministic}
-\dnode{DLR}{right=0.8cm of DFR}{lemma:determinism:2}{Lookup judgment is deterministic}
-\dnode{DMR}{right=0.8cm of DLR}{lemma:determinism:3}{Matching judgment is deterministic}
-%edges
-\draw[pil] (DR.north) to [out=30,in=150] (DFR.north);
-\draw[pil] (DFR.north) to [out=30,in=150] (DLR.north);
-\draw[pil] (DLR.south) to [out=210,in=330] (DFR.south);
-\draw[pil] (DLR.north) to [out=30,in=150] (DMR.north);
-\end{tikzpicture}
-\end{center}\vspace{0.7cm}
-\end{minipage}
-
 
 %###############################################################################
 {\centering
