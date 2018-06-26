@@ -1584,11 +1584,9 @@ This section proves soundness of the resolution algorithm with respect to its de
 counterpart. As summarized in the diagram below, the main lemma depends on three more
 soundness lemmata, one for each of the algorithmic focusing, lookup and matching judgments.
 The dependencies of these proofs follow those of the definitions of the
-corresponding judgments. Interestingly, the algorithmic lookup judgment also uses completeness
-of the algorithmic matching judgment. Two additional auxiliary lemmata are required for the
-algorithmic lookup and matching soundness.
-
-
+corresponding judgments. Interestingly, the proof for algorithmic lookup soundness also uses
+completeness of the algorithmic matching judgment. Two additional auxiliary lemmata are required
+for the algorithmic lookup and matching soundness.
 
 \begin{center}
 \begin{tikzpicture}[node distance=1.3cm, auto,]
@@ -1596,7 +1594,7 @@ algorithmic lookup and matching soundness.
 \dnode{AR}{mainres}{lemma:asoundness:0}{Algorithmic resolution is sound wrt det. resolution}
 \dnode{AF}{below=of AR}{lemma:asoundness:1}{Algorithmic focusing is sound wrt det. focusing}
 \dnode{AL}{right=of AF}{lemma:asoundness:2}{Algorithmic lookup is sound wrt det. lookup}
-\dnode{AM}{above=of AL}{lemma:asoundness:3}{Algorithmic matching is sound wrt det. matching}
+\dnode{AM}{right=of AR}{lemma:asoundness:3}{Algorithmic matching is sound wrt det. matching}
 \dnode{AMC}{below=of AL}{lemma:acompleteness:3}{Algorithmic matching is complete wrt det. matching}
 \dnode{MIS}{right=of AL}{lemma:asoundness:5}{Algorithmic matching implies alg. stability}
 \dnode{UAC}{right=of AM}{lemma:asoundness:6}{Unification algorithm unifies}
@@ -1904,6 +1902,15 @@ Straightforward induction on the derivation.
 
 %-------------------------------------------------------------------------------
 \subsection{Completeness of the Algorithm wrt Deterministic Resolution}
+
+This section proves completeness of the resolution algorithm with respect to its declarative
+counterpart. As summarized in the diagram below, the main lemma depends on three more
+soundness lemmata, one for each of the focusing, lookup and matching judgments.
+The dependencies of these proofs follow those of the definitions of the
+corresponding declarative judgments. In symmetry with the case of algorithmic soundness,
+the proof for algorithmic lookup completeness also uses soundness of the algorithmic matching
+judgment, resulting in mutually dependent soundness and completeness proofs. Additionally,
+an auxiliary judgment for the correctness of the unification algorithm is necessary.
 
 \begin{center}
 \begin{tikzpicture}[node distance=1.3cm, auto,]
