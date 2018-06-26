@@ -135,23 +135,23 @@ The generated evidence of resolution is uniquely determined.
      \dres{\tenv}{\rulet}{E_2} \quad\Rightarrow\quad E_1 = E_2 \]
 \end{theorem}
 It follows immediately that deterministic resolution is also coherent,
-which is formulated as follows for our elaboration-based setting.
+which for our elaboration-based setting is formulated, following Biernacki and Polesiuk~\shortcite{dariusz}, in
+terms of \emph{contextual equivalence}~\cite{morris}.
 \begin{corollary}[Coherence]
 \[\forall \tenv, \rulet, E_1, E_2: \quad\quad 
      \dres{\tenv}{\rulet}{E_1} ~\wedge~ 
      \dres{\tenv}{\rulet}{E_2} \quad\Rightarrow\quad 
      \fctx{\etrans{\tenv}}{E_1}{E_2}{\ttrans[\rulet]} \]
 \end{corollary}
-Here the judgment $\fctx{\tenv}{E_1}{E_2}{T}$
-denotes \emph{contextual equivalence}~\cite{reynolds?}, which captures that
-$E_1$ and $E_2$ behave the same in any well-typed program context. We do not give the
-formal definition here as it is not required to prove the corollary; we only
-need to know that it is an equivalence relation, and, more spefically, that
-it is reflexive, i.e., any well-typed System~F term is contextually equivalent
-to itself. 
-\bruno{Should we not mention that contextual equivalence for System F
-  is well-studied, thus interested readers can consult the definition
-  in other works?}
+Here the contextual equivalence judgment $\fctx{\tenv}{E_1}{E_2}{T}$ captures
+that $E_1$ and $E_2$ behave the same in any well-typed program context. We do
+not give the formal definition here\footnote{A definition can be found at \url{https://www.seas.harvard.edu/courses/cs252/2017fa/lectures/lec02-contextual-equiv.pdf}} as it is not required to prove the
+corollary; we only need to know that it is an equivalence relation, and, more
+spefically, that it is reflexive, i.e., any well-typed System~F term is
+contextually equivalent to itself. 
+% \bruno{Should we not mention that contextual equivalence for System F
+%   is well-studied, thus interested readers can consult the definition
+%   in other works?}
 
 Thirdly, on top of the immediate coherence of deterministic resolution, 
 an additional stability property holds.  
