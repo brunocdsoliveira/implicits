@@ -1,0 +1,5 @@
+# Innermost matching implicit is used
+
+implicit (/\a.\x:a.x) : (forall a. a -> a) in
+implicit (\x:int. ((plus x) 1)) : int -> int in
+((?(int->int)) 3)
