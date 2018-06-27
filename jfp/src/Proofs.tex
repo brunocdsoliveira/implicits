@@ -1578,6 +1578,110 @@ By the definition of substitution and the last two obtained results used with ru
 \end{proof}
 %-------------------------------------------------------------------------------
 
+\subsection{Auxiliary Lemmas About the Unification Algorithm}
+
+Lemma~\ref{lemma:mgu_property:1} states that the unification algorithm produces
+a substitution that unifies the two simple types of its input.\\
+
+%###############################################################################
+{\centering
+\fbox{
+\begin{minipage}{0.95\columnwidth}
+\begin{lemma}\label{lemma:mgu_property:1}
+  If 
+\begin{equation*}
+  \theta = \mgu{\type}{\type'}
+\end{equation*}
+  then
+\begin{equation*}
+  \theta(\type) = \theta(\type')
+\end{equation*}
+  and
+\begin{equation*}
+  \dom{(\theta)} \subseteq \bar{\alpha}
+\end{equation*}
+
+\end{lemma}
+\end{minipage}
+}}
+
+\begin{proof}
+Straightforward induction on the derivation.
+\end{proof}
+
+We assume the following two properties of unification as givens.\\
+
+%###############################################################################
+{\centering
+\fbox{
+\begin{minipage}{0.95\columnwidth}
+\begin{axiom}\label{axiom:mgu_property:2}
+  If 
+\begin{equation*}
+  \theta(\type) = \type'
+\end{equation*}
+  and
+\begin{equation*}
+  \dom{(\theta)} \subseteq \bar{\alpha}
+\end{equation*}
+  and
+\begin{equation*}
+  \bar{\alpha} \subseteq \ftv{\type}
+\end{equation*}
+  and
+\begin{equation*}
+  \forall \alpha \in \bar{\alpha}, \forall \beta \in \ftv{\type'}, \quad \before{\beta}{\alpha}
+\end{equation*}
+  then
+%\begin{equation*}
+%  \theta' = \mgu{\type}{\type'}
+%\end{equation*}
+%  and
+%\begin{equation*}
+%  \dom{(\theta')} \subseteq \bar{\alpha}
+%\end{equation*}
+%  and
+\begin{equation*}
+  \theta = \mgu{\type}{\type'}
+\end{equation*}
+\end{axiom}
+\end{minipage}
+}}
+ \\ \\
+Assumption~\ref{axiom:mgu_property:3} states that $\mgu{\type}{\type'}$ is the most general unifier for $\type$ and $\type'$.\\
+
+%###############################################################################
+{\centering
+\fbox{
+\begin{minipage}{0.95\columnwidth}
+\begin{axiom}\label{axiom:mgu_property:3}%\label{axiom:acompleteness:5}
+  If 
+\begin{equation*}
+  \theta(\type) = \theta(\type')
+\end{equation*}
+  and
+\begin{equation*}
+  \dom{(\theta)} \subseteq \bar{\alpha}
+\end{equation*}
+  then
+%\begin{equation*}
+%  \theta' = \mgu{\type}{\type'}
+%\end{equation*}
+%  and
+%\begin{equation*}
+%  \dom{(\theta')} \subseteq \bar{\alpha}
+%\end{equation*}
+%  and
+\begin{equation*}
+  \theta \sqsubseteq \mgu{\type}{\type'}
+%  \theta \sqsubseteq \theta'
+\end{equation*}
+\end{axiom}
+\end{minipage}
+}}
+
+%-------------------------------------------------------------------------------
+
 \subsection{Soundness of the Algorithmic wrt Deterministic Resolution}
 
 This section proves soundness of the resolution algorithm with respect to its declarative
@@ -1597,7 +1701,7 @@ for the algorithmic lookup and matching soundness.
 \dnode{AM}{right=of AR}{lemma:asoundness:3}{Algorithmic matching is sound wrt det. matching}
 \dnode{AMC}{below=of AL}{lemma:acompleteness:3}{Algorithmic matching is complete wrt det. matching}
 \dnode{MIS}{right=of AL}{lemma:asoundness:5}{Algorithmic matching implies alg. stability}
-\dnode{UAC}{right=of AM}{lemma:asoundness:6}{Unification algorithm unifies}
+\dnode{UAC}{right=of AM}{lemma:mgu_property:1}{Unification algorithm unifies}
 %edges
 \draw[pil] (AR.south) to                  (AF.north);
 \draw[pil] (AF.north) to [out=30,in=150]  (AL.north);
@@ -1810,7 +1914,7 @@ The proof proceeds by induction on the derivation of the first hypothesis.
 $\admress{\bar\alpha}{\tenv}{\type'}{E}{\Sigma}{\type}{\etrans\theta(E)}{\theta(\Sigma),\epsilon}{\theta}$\ \\
 %===============================================================================
 
-From the hypothesis of the rule and Lemma~\ref{lemma:asoundness:6} it follows that
+From the hypothesis of the rule and Lemma~\ref{lemma:mgu_property:1} it follows that
 $\theta(\type') = \theta(\type)$. Hence, the target judgment can be rewritten as
 \begin{equation*}
   \dmres{\theta(\tenv)}{\theta(\type')}{\etrans\theta{E}}{\theta(\type')}{\etrans\theta{E}}{\epsilon}
@@ -1871,33 +1975,6 @@ $\admress{\bar\alpha}{\tenv}{\tall{\alpha}{\rulet}}{E}{\Sigma}{\type}{E'}{\theta
   from the derivation of the hypothesis.
 \end{proof}
 
-
-%###############################################################################
-{\centering
-\fbox{
-\begin{minipage}{0.95\columnwidth}
-\begin{lemma}\label{lemma:asoundness:6}
-  If 
-\begin{equation*}
-  \theta = \mgu{\type}{\type'}
-\end{equation*}
-  then
-\begin{equation*}
-  \theta(\type) = \theta(\type')
-\end{equation*}
-  and
-\begin{equation*}
-  \dom{(\theta)} \subseteq \bar{\alpha}
-\end{equation*}
-
-\end{lemma}
-\end{minipage}
-}}
-
-\begin{proof}
-Straightforward induction on the derivation.
-\end{proof}
-
 %-------------------------------------------------------------------------------
 \subsection{Completeness of the Algorithm wrt Deterministic Resolution}
 
@@ -1918,7 +1995,7 @@ an auxiliary lemma for the correctness of the unification algorithm is necessary
 \dnode{AL}{right=0.8cm of AF}{lemma:acompleteness:2}{Algorithmic lookup is complete wrt det. lookup}
 \dnode{AM}{right=0.8cm of AL}{lemma:acompleteness:3}{Algorithmic matching is complete wrt det. matching}
 \dnode{AMC}{below=of AL}{lemma:asoundness:3}{Algorithmic matching is sound wrt det. matching}
-\dnode{MIS}{below=of AM}{lemma:acompleteness:5}{Unification algorithm produces most general unifier}
+\dnode{MIS}{below=of AM}{axiom:mgu_property:2}{Unification algorithm produces most general unifier}
 %edges
 \draw[pil] (AR.north) to [out=30,in=150]  (AF.north);
 \draw[pil] (AF.north) to [out=30,in=150]  (AL.north);
@@ -2122,7 +2199,7 @@ $\dmres{\theta(\tenv)}{\theta(\type')}{\etrans{\theta}(E)}{\type}{E}{\epsilon}$ 
 %$\theta_1(\tenv); \theta_1(\type') \leadsto |\theta_1|(E) \ivturns \theta_1(\type) \leadsto |\theta_1|(E); \theta_1(\epsilon)$ \hfill where $\theta_1(\tenv) = \theta_1(\type')$. \\
 %===============================================================================
 
-By Lemma~\ref{lemma:acompleteness:5} \tom{should be new lemma} applied on the second hypothesis of the theorem
+By Lemma~\ref{lemma:mgu_property:2} \tom{should be new lemma} applied on the second hypothesis of the theorem
 and the side condition that $\type = \theta(\type')$, we get
 \begin{equation*}
   \theta = \mgu{\type}{\type'}
@@ -2239,7 +2316,7 @@ $\dmres{\theta_1(\tenv)}{\theta_1(\type')}{E}{\theta_1(\type)}{E}{\epsilon}$ \qu
 %$\theta_1(\tenv); \theta_1(\type') \leadsto |\theta_1|(E) \ivturns \theta_1(\type) \leadsto |\theta_1|(E); \theta_1(\epsilon)$ \hfill where $\theta_1(\tenv) = \theta_1(\type')$. \\
 %===============================================================================
 
-By Lemma~\ref{lemma:acompleteness:5} applied on the second hypothesis of the theorem
+By Lemma~\ref{lemma:mgu_property:2} applied on the second hypothesis of the theorem
 and the side condition that $\theta_1(\type) = \theta_1(\type')$, we get
 \begin{equation*}
   \theta_1\sqsubseteq\mgu{\type}{\type'}
@@ -2339,78 +2416,6 @@ Hence, it follows from rule \rref{Sta-TApp} that
   The proof is straightforward induction on the derivation. The conclusion's judgement
   is an annotated version of the hypothesis' judgement.
 \end{proof}
-
-The lemma below states that $\mgu{\type}{\type'}$ is the most general unifier for $\type$ and $\type'$.
-
-
-We assume the following two properties of unification as givens.
-
-%###############################################################################
-{\centering
-\fbox{
-\begin{minipage}{0.95\columnwidth}
-\begin{axiom}\label{axiom:acompleteness:5}
-  If 
-\begin{equation*}
-  \theta(\type) = \theta(\type')
-\end{equation*}
-  and
-\begin{equation*}
-  \dom{(\theta)} \subseteq \bar{\alpha}
-\end{equation*}
-  then
-%\begin{equation*}
-%  \theta' = \mgu{\type}{\type'}
-%\end{equation*}
-%  and
-%\begin{equation*}
-%  \dom{(\theta')} \subseteq \bar{\alpha}
-%\end{equation*}
-%  and
-\begin{equation*}
-  \theta \sqsubseteq \mgu{\type}{\type'}
-%  \theta \sqsubseteq \theta'
-\end{equation*}
-\end{axiom}
-\end{minipage}
-}}
-
-%###############################################################################
-{\centering
-\fbox{
-\begin{minipage}{0.95\columnwidth}
-\begin{axiom}\label{axiom:acompleteness:8}
-  If 
-\begin{equation*}
-  \theta(\type) = \type'
-\end{equation*}
-  and
-\begin{equation*}
-  \dom{(\theta)} \subseteq \bar{\alpha}
-\end{equation*}
-  and
-\begin{equation*}
-  \bar{\alpha} \subseteq \ftv{\type}
-\end{equation*}
-  and
-\begin{equation*}
-  \forall \alpha \in \bar{\alpha}, \forall \beta \in \ftv{\type'}, \quad \before{\beta}{\alpha}
-\end{equation*}
-  then
-%\begin{equation*}
-%  \theta' = \mgu{\type}{\type'}
-%\end{equation*}
-%  and
-%\begin{equation*}
-%  \dom{(\theta')} \subseteq \bar{\alpha}
-%\end{equation*}
-%  and
-\begin{equation*}
-  \theta = \mgu{\type}{\type'}
-\end{equation*}
-\end{axiom}
-\end{minipage}
-}}
 
 % \newcommand{\vdashr}[4]{#1; #2 \vturns #3 \leadsto #4}
 % 
