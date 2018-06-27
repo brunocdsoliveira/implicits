@@ -53,7 +53,7 @@ tcWarn b msg
 
 tcNot :: TC a -> TC ()
 tcNot p
-  =  join ((p >> return (tcError "not")) <|> (return (return ())))
+  =  join ((p >> return (tcError "not stable")) <|> (return (return ())))
 
 -- ENVIRONMENT --------------------------------------
 
@@ -178,6 +178,8 @@ typeCheck TM_True
  = return (CT_Simp ST_Bool, F.True)
 typeCheck TM_False
  = return (CT_Simp ST_Bool, F.False)
+typeCheck TM_Plus
+ = return (CT_Simp (ST_Fun (CT_Simp ST_Int) (CT_Simp (ST_Fun (CT_Simp ST_Int) (CT_Simp ST_Int)))), F.Plus)
 
 
 resolve :: ContextType -> TC (F.Term)
@@ -242,7 +244,7 @@ resolve ct = do tvars <- freeTVarsEnv
 
 unify :: SimpleType -> SimpleType -> [TVar] -> TC TSubst
 unify st1 st2 tvars = 
-     trace ("unify " ++ show st1 ++ " " ++ show st2 ++ " " ++ show tvars) $
+     -- trace ("unify " ++ show st1 ++ " " ++ show st2 ++ " " ++ show tvars) $
      let ss = go1 st1 st2
      in do env <- tcEnv
            case [s | s <- ss, validTSubst env s]  of
@@ -257,9 +259,9 @@ unify st1 st2 tvars =
       
 
     go1 :: SimpleType -> SimpleType -> [TSubst]
-    go1 st1 st2
-      | trace ("go1 " ++ show st1 ++ " " ++ show st2) $ False
-      = error "UNREACHABLE"
+--     go1 st1 st2
+--       | trace ("go1 " ++ show st1 ++ " " ++ show st2) $ False
+--       = error "UNREACHABLE"
     go1 st1@(ST_TVar tv1) st2@(ST_TVar tv2)
       =    (do guard (tv1 `elem` tvars)
                guard (tv1 /= tv2)
