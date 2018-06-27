@@ -194,21 +194,24 @@ drawback in such a setting.
 
 \subsection{Superclasses}
 
-Superclasses are not supported by \name. Here \name follows the design
+Superclasses are not directly supported by \name. With respect to superclasses \name follows the design
 of Scala implicits, which do not have a concept similar to
-superclasses\footnote{Note that, in Scala, superclasses are often
+superclasses either\footnote{Note that, in Scala, superclasses are often
 simulated with OO Subtyping and class hierarchies, although there
 is not one-to-one correspondence between superclasses and OO hierarchies.}.
+However, while superclasses are not directly supported, this does not mean
+that they cannot be encoded.
+
 At first sight superclasses seem to rely on the ability
 to backtrack. Therefore an important question is whether the choice
 of committed choice precludes superclasses. 
-
 As we have argued in Section~\ref{}, Haskell does not support
 backtracking either, and yet it supports superclasses. Although we do
 not cover superclasses in our work, and in particular in the
 (informally presented) encoding in Section~\ref{}, it is possible to
 model superclasses even when the search strategy employs committed
-choice. Here we discuss superclasses in some more detail.
+choice. Here we discuss superclasses in some more detail, and informaly
+discuss how superclasses can be integrated with a \name-like calculus.
 
 \paragraph{Superclasses in Haskell}
 Since the inception of type classes in Haskell that superclasses have
@@ -254,9 +257,15 @@ of |==| in |p| there are actually two possible ways to do so.
 One option is to get the implementation of |Eq Int| directly from
 the |Eq Int| instance. The other option is to get an implementation
 of |Eq Int| from |Ord Int| via the superclass.
-In essence we have a situation where we have a context
-$\tenv =$ |forall a. Ord a => Eq a, Eq Int, Ord Int|, and we have
-to resolve the query |?(Eq Int)|.
+
+We can try to translate the Haskell program into \name by considering
+the superclass relation as an additional rule of the form |forall a. Ord a => Eq a|.
+However the corresponding \name program would not type-check.
+In essence we appear to have a situation where we have a context similar to
+$\tenv =$ |Eq Int, forall a. Ord a => Eq a, Ord Int|, and we have
+to resolve the query |?(Eq Int)|. In \name however, the stability conditions
+would prevent the program |p'| from type-checking under the context $\tenv$.
+
 
 
 But resolution in the presence of superclasses behaves differently from overlapping instances. 
