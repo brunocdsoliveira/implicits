@@ -1580,6 +1580,15 @@ By the definition of substitution and the last two obtained results used with ru
 
 \subsection{Auxiliary Lemmas About the Unification Algorithm}
 
+This section regards properties of the unification algorithm that are required by the proofs of
+the next sections. For this purpose, a notion of a partial order over substitutions is also
+used.
+
+\begin{definition}[Partial Order over Substitutions]
+A substitution $\theta_1$ is more general than a substitution $\theta_2$, denoted with
+$\theta_2\sqsubseteq\theta_1$, iff there is a $\theta'$ such that $\theta_2 = \theta'\cdot\theta_1$.
+\end{definition}
+
 Lemma~\ref{lemma:mgu_property:1} states that the unification algorithm produces
 a substitution that unifies the two simple types of its input.\\
 
@@ -1610,6 +1619,38 @@ Straightforward induction on the derivation.
 \end{proof}
 
 We assume the following two properties of unification as givens.\\
+
+Assumption~\ref{axiom:mgu_property:3} states that $\mgu{\type}{\type'}$ is the most general unifier for $\type$ and $\type'$.\\
+
+%###############################################################################
+{\centering
+\fbox{
+\begin{minipage}{0.95\columnwidth}
+\begin{axiom}\label{axiom:mgu_property:3}%\label{axiom:acompleteness:5}
+  If 
+\begin{equation*}
+  \theta(\type) = \theta(\type')
+\end{equation*}
+  and
+\begin{equation*}
+  \dom{(\theta)} \subseteq \bar{\alpha}
+\end{equation*}
+  then
+%\begin{equation*}
+%  \theta' = \mgu{\type}{\type'}
+%\end{equation*}
+%  and
+%\begin{equation*}
+%  \dom{(\theta')} \subseteq \bar{\alpha}
+%\end{equation*}
+%  and
+\begin{equation*}
+  \theta \sqsubseteq \mgu{\type}{\type'}
+%  \theta \sqsubseteq \theta'
+\end{equation*}
+\end{axiom}
+\end{minipage}
+}}
 
 %###############################################################################
 {\centering
@@ -1643,38 +1684,6 @@ We assume the following two properties of unification as givens.\\
 %  and
 \begin{equation*}
   \theta = \mgu{\type}{\type'}
-\end{equation*}
-\end{axiom}
-\end{minipage}
-}}
- \\ \\
-Assumption~\ref{axiom:mgu_property:3} states that $\mgu{\type}{\type'}$ is the most general unifier for $\type$ and $\type'$.\\
-
-%###############################################################################
-{\centering
-\fbox{
-\begin{minipage}{0.95\columnwidth}
-\begin{axiom}\label{axiom:mgu_property:3}%\label{axiom:acompleteness:5}
-  If 
-\begin{equation*}
-  \theta(\type) = \theta(\type')
-\end{equation*}
-  and
-\begin{equation*}
-  \dom{(\theta)} \subseteq \bar{\alpha}
-\end{equation*}
-  then
-%\begin{equation*}
-%  \theta' = \mgu{\type}{\type'}
-%\end{equation*}
-%  and
-%\begin{equation*}
-%  \dom{(\theta')} \subseteq \bar{\alpha}
-%\end{equation*}
-%  and
-\begin{equation*}
-  \theta \sqsubseteq \mgu{\type}{\type'}
-%  \theta \sqsubseteq \theta'
 \end{equation*}
 \end{axiom}
 \end{minipage}
@@ -2163,11 +2172,6 @@ By rule \rref{Alg-L-TyVar} we conclude
 \end{description}
 \end{proof}
 
-\begin{definition}[Partial Order over Substitutions]
-A substitution $\theta_1$ is more general than a substitution $\theta_2$, denoted with
-$\theta_2\sqsubseteq\theta_1$, iff there is a $\theta'$ such that $\theta_2 = \theta_1\cdot\theta'$.
-\end{definition}
-
 %###############################################################################
 {\centering
 \fbox{
@@ -2179,11 +2183,20 @@ $\theta_2\sqsubseteq\theta_1$, iff there is a $\theta'$ such that $\theta_2 = \t
 \end{equation*}
   and
 \begin{equation*}
+  \unambig{}{\rulet}
+\end{equation*}
+  and
+\begin{equation*}
   \dom{(\theta)}\subseteq\bar\alpha
 \end{equation*}
-  then
+  and
 \begin{equation*}
-  \forall \Sigma, \exists \theta', \quad \admres{\bar\alpha}{\tenv}{\rulet}{E}{\Sigma}{\type}{E'}{\theta'(\Sigma),\Sigma'}
+  \forall \alpha \in \bar{\alpha}, \forall \beta \in \ftv{\type}, \quad \before{\beta}{\alpha}
+\end{equation*}
+  then, for all $\Sigma$, there is a $\theta$ such that
+\begin{equation*}
+%\forall \Sigma, \exists \theta', \quad
+  \admres{\bar\alpha}{\tenv}{\rulet}{E}{\Sigma}{\type}{E'}{\theta'(\Sigma),\Sigma'}
 \end{equation*}
 \end{lemma}
 \end{minipage}
@@ -2199,7 +2212,7 @@ $\dmres{\theta(\tenv)}{\theta(\type')}{\etrans{\theta}(E)}{\type}{E}{\epsilon}$ 
 %$\theta_1(\tenv); \theta_1(\type') \leadsto |\theta_1|(E) \ivturns \theta_1(\type) \leadsto |\theta_1|(E); \theta_1(\epsilon)$ \hfill where $\theta_1(\tenv) = \theta_1(\type')$. \\
 %===============================================================================
 
-By Lemma~\ref{lemma:mgu_property:2} \tom{should be new lemma} applied on the second hypothesis of the theorem
+By Assumption~\ref{axiom:mgu_property:3} %applied on the second hypothesis of the theorem
 and the side condition that $\type = \theta(\type')$, we get
 \begin{equation*}
   \theta = \mgu{\type}{\type'}
