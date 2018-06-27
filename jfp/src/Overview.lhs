@@ -905,18 +905,18 @@ argument of the call |sort [(3,'a'), (2,'c'), (3,'b')]| automatically inferred:
 \label{sec:overview:incoherence}
 
 As previously shown, the lexical scope imposes a natural precedence
-on rules that ensures coherence. This precedence means that the lexically
-nearest rule is used to resolve a query, and not necessarily the most specific
-rule.  For instance, the following $\ourlang$ variation on the running |trans|
+on implicits that ensures coherence. This precedence means that the lexically
+nearest implicit is used to resolve a query, and not necessarily the most specific
+implicit.  For instance, the following $\ourlang$ variation on the running |trans|
 example from Section~\ref{sec:overview-coherence}
 
 > implicit (fun (n) (n + 1) : Int -> Int)  in 
 >    implicit (fun (x) (x) : forall a. a -> a)  in 
 >       query (Int -> Int) 3
 
-yields the result |3| as the inner identity rule has precedence over the
-more specific incrementation rule in the outer scope. Yet, it is not always
-possible to statically select the nearest matching rule.
+yields the result |3| as the inner identity implicit has precedence over the
+more specific incrementation implicit in the outer scope. Yet, it is not always
+possible to statically select the nearest matching implicit.
 Consider the program fragment
 
 > let bad : forall b.b -> b =
@@ -928,7 +928,7 @@ Here we cannot statically decide whether |Int -> Int| matches |b -> b|: it
 depends on whether |b| is instantiated to |Int| or not.
 
 One might consider to force the matter by picking the lexically
-nearest rule that matches all possible instantiations of the query, e.g.,
+nearest implicit that matches all possible instantiations of the query, e.g.,
 |forall a. a -> a| in the example. While this poses no threat to type
 soundness, this approach is nevertheless undesirable for two reasons.
 Firstly, it makes the behaviour of programs harder to predict, and, secondly,
@@ -958,13 +958,15 @@ Resolution is stable under substitution.
 \tenv,\tenv'[\sigma/\alpha] \ivturns \rulet[\sigma/\alpha] \leadsto E[|\sigma|/\alpha] \]
 \end{lemma}
 \end{comment}
-Essentially this property ensures that type instantiation does not affect the 
-resolution of queries. That is, after instantiation any polymorphic query will be resolved using 
-the same rules as before. If it cannot be statically guaranteed 
-that resolution behaves in the same way for \emph{every} instantiation, then 
-the program is rejected. The benefit of rejecting such potentially unstable programs 
-is that the principle of substituting equals for equals is not affected by the interaction 
-between resolution and instantiation. This makes reasoning about programs and code 
+Essentially this property ensures that type instantiation does not affect the
+resolution of queries. That is, if some type variables appear free in a query
+that resolves, then, after instantiating any or all of those type variables,
+the query still resolves in the same way, i.e., using the same implicits. If it
+cannot be statically guaranteed that resolution behaves in the same way for
+\emph{every} instantiation, then the program is rejected. The benefit of
+rejecting such potentially unstable programs is that the principle of
+substituting equals for equals is not affected by the interaction between
+resolution and instantiation. This makes reasoning about programs and code
 refactoring more predictable.
 
 

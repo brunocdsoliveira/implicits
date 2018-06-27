@@ -1463,7 +1463,7 @@ FIXED
 >   "That is any query that is polymorphic before instantiation will be resolved
 >   using the same rule after instantiation."
 
-TODO
+We have reformulated the sentence to make it clearer.
 
 > - Page 14, line -4: ", and refers to the bound value with variable x."  This
 >   compact formulation is difficult to understand, and formally incorrect:
