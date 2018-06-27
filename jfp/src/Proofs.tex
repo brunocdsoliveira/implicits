@@ -2183,7 +2183,7 @@ By rule \rref{Alg-L-TyVar} we conclude
 \end{equation*}
   and
 \begin{equation*}
-  \unambig{}{\rulet}
+  \unambig{\bar\alpha}{\rulet}
 \end{equation*}
   and
 \begin{equation*}
@@ -2193,10 +2193,10 @@ By rule \rref{Alg-L-TyVar} we conclude
 \begin{equation*}
   \forall \alpha \in \bar{\alpha}, \forall \beta \in \ftv{\type}, \quad \before{\beta}{\alpha}
 \end{equation*}
-  then, for all $\Sigma$, there is a $\theta$ such that
+  then, for all $\Sigma$,
 \begin{equation*}
 %\forall \Sigma, \exists \theta', \quad
-  \admres{\bar\alpha}{\tenv}{\rulet}{E}{\Sigma}{\type}{E'}{\theta'(\Sigma),\Sigma'}
+  \admres{\bar\alpha}{\tenv}{\rulet}{E}{\Sigma}{\type}{E'}{\theta(\Sigma),\Sigma'}
 \end{equation*}
 \end{lemma}
 \end{minipage}
@@ -2212,8 +2212,9 @@ $\dmres{\theta(\tenv)}{\theta(\type')}{\etrans{\theta}(E)}{\type}{E}{\epsilon}$ 
 %$\theta_1(\tenv); \theta_1(\type') \leadsto |\theta_1|(E) \ivturns \theta_1(\type) \leadsto |\theta_1|(E); \theta_1(\epsilon)$ \hfill where $\theta_1(\tenv) = \theta_1(\type')$. \\
 %===============================================================================
 
-By Assumption~\ref{axiom:mgu_property:3} %applied on the second hypothesis of the theorem
-and the side condition that $\type = \theta(\type')$, we get
+From the second hypothesis of the theorem, we have that $\bar\alpha\subseteq\ftv{\type'}$. By
+using this, together with the third and fourth hypotheses of the theorem and the side condition
+that $\type = \theta(\type')$, in Assumption~\ref{axiom:mgu_property:3}, we get
 \begin{equation*}
   \theta = \mgu{\type}{\type'}
 \end{equation*}
@@ -2264,22 +2265,18 @@ $\dom{(\theta')}\subseteq\bar\alpha,\alpha$. From the definition of substitution
   \theta'(\tenv,\alpha) & = & \theta(\tenv)\\
   \etrans{\theta'}(\mmapp{E}{\alpha}) & = & \etrans{\theta}(\mmapp{E}{\etrans{\suty}})
 \end{eqnarray*}
-In addition, since $\alpha$ does not appear free in $\etrans{\theta}(E)$,
-it follows that the substitution $[\suty/\alpha]$ does not affect it.
-%\begin{equation*}
-%  \begin{array}{c}
-%    \theta'(\rulet) = \theta_1(\rulet)[\suty/\alpha]\\
-%    \theta'(\tenv,\alpha) = \theta_1(\tenv)\\
-%    \etrans{\theta'}(E) = \etrans{\theta_1}(E)\\
-%    \theta'(\Sigma') = \theta_1(\Sigma')\\
-%    \theta'(\type) = \theta_1(\type)
-%  \end{array}
-%\end{equation*}
+Also, since $\alpha$ does not appear free in $\etrans{\theta}(E)$, the substitution
+$[\suty/\alpha]$ does not affect it.
 The premise of the rule can, then, be rewritten as
 \begin{equation*}
   \dmres{\theta'(\tenv,\alpha)}{\theta'(\rulet)}{\etrans{\theta'}(\mmapp{E}{\alpha})}{\type}{E'}{\Sigma'}
 \end{equation*}
-From the induction hypothesis, we have that
+From the second hypothesis of the theorem, we have that
+\begin{equation*}
+  \unambig{\bar\alpha,\alpha}{\rulet}
+\end{equation*}
+and since $\alpha$ is fresh, it holds that for any $\beta\in\ftv{\type}$,
+$\before{\beta}{\alpha}$. We can now use the induction hypothesis, to obtain
 \begin{equation*}
   \admres{\bar\alpha,\alpha}{\tenv}{\rulet}{\mmapp{E}{\alpha}}{\Sigma}{\type}{E'}{\theta'(\Sigma),\Sigma'}
 ,\end{equation*}
