@@ -2098,7 +2098,7 @@ $\theta_2\sqsubseteq\theta_1$, iff there is a $\theta'$ such that $\theta_2 = \t
 \begin{lemma}\label{lemma:acompleteness:3}
   If 
 \begin{equation*}
-\dmres{\theta_1(\tenv)}{\theta_1(\rulet)}{\etrans{\theta_1}(E)}{\theta_1(\type)}{\etrans{\theta_1}(E')}{\theta_1(\Sigma')}
+\dmres{\theta_1(\tenv)}{\theta_1(\rulet)}{\etrans{\theta_1}(E)}{\theta_1(\type)}{E'}{\Sigma'}
 \end{equation*}
   and
 \begin{equation*}
@@ -2126,7 +2126,7 @@ The proof proceeds by induction on the derivation of the first hypothesis.
 \setlength{\itemsep}{1em}
 %===============================================================================
 \item[\fbox{\rref{M-Simp}}]\quad
-$\dmres{\theta_1(\tenv)}{\theta_1(\type')}{\etrans{\theta_1}(E)}{\theta_1(\type)}{\etrans{\theta_1}(E)}{\theta_1(\epsilon)}$ \hfill with $\theta_1(\type) = \theta_1(\type')$ \\
+$\dmres{\theta_1(\tenv)}{\theta_1(\type')}{\etrans{\theta_1}(E)}{\theta_1(\type)}{\etrans{\theta_1}(E)}{\epsilon}$ \quad with $\theta_1(\type) = \theta_1(\type')$ \\
 %$\theta_1(\tenv); \theta_1(\type') \leadsto |\theta_1|(E) \ivturns \theta_1(\type) \leadsto |\theta_1|(E); \theta_1(\epsilon)$ \hfill where $\theta_1(\tenv) = \theta_1(\type')$. \\
 %===============================================================================
 
@@ -2146,7 +2146,7 @@ From Lemma~\ref{lemma:asoundness:6}, we also get that $\dom{(\theta_2)}\subseteq
 
 %===============================================================================
 \item[\fbox{\rref{M-IApp}}]\quad
-$\dmres{\theta_1(\tenv)}{\theta_1(\rulet_1\To\rulet_2)}{\etrans{\theta_1}(E)}{\theta_1(\type)}{\etrans{\theta_1}(E')}{\theta_1(\ie{\rulet_1}{x},\Sigma')}$\ \\
+$\dmres{\theta_1(\tenv)}{\theta_1(\rulet_1\To\rulet_2)}{\etrans{\theta_1}(E)}{\theta_1(\type)}{E'}{\ie{\theta_1(\rulet_1)}{x},\Sigma'}$\ \\
 %$\theta_1(\tenv); \theta_1(\rulet_1 \iarrow \rulet_2)~{\leadsto |\theta_1|(E)}\ivturns \theta_1(\type)~{\leadsto |\theta_1|(E')}; \theta_1(\Sigma',\rulet_1 \leadsto x)$ \ \\
 %===============================================================================
 
@@ -2160,7 +2160,6 @@ Then, for $\Sigma = \Sigma'',\ie{\rulet_1}{x}$, the above is refined to
 \begin{equation*}
 \forall \Sigma'',~\admres{\bar\alpha}{\tenv,\envi{\rulet_1}{x}}{\rulet_2}{\mmapp{E}{x}}{\Sigma'',\ie{\rulet_1}{x}}{\type}{\etrans{\theta_2}(E')}{\theta_2(\Sigma'',\ie{\rulet_1}{x},\Sigma')}
 \end{equation*}
-
   By rule \rref{Alg-M-IApp} we may then conclude
 \begin{equation*}
 \forall\Sigma'',~\admres{\bar\alpha}{\tenv}{\rulet_1\To\rulet_2}{E}{\Sigma''}{\type}{\etrans{\theta_2}(E')}{\theta_2(\Sigma'',\ie{\rulet_1}{x},\Sigma')}
@@ -2171,25 +2170,28 @@ The last two conditions of the conclusion follow from the induction hypothesis.
 
 %===============================================================================
 \item[\fbox{\rref{M-TApp}}]\quad
-$\dmres{\theta_1(\tenv)}{\theta_1(\tall{\alpha}{\rulet})}{\etrans{\theta_1}(E)}{\theta_1(\type)}{\etrans{\theta_1}(E')}{\theta_1(\Sigma')}$\ \\
+$\dmres{\theta_1(\tenv)}{\theta_1(\tall{\alpha}{\rulet})}{\etrans{\theta_1}(E)}{\theta_1(\type)}{E'}{\Sigma'}$\ \\
 %$\theta_1(\tenv); \theta_1(\forall\alpha.\rulet) \leadsto |\theta_1|(E) \ivturns \theta_1(\type) \leadsto |\theta_1|(E'); \theta_1(\Sigma')$ \ \\
 %===============================================================================
 
 From the definition of substitution and the premise of the rule, we have
 \begin{equation*}
-  \dmres{\theta_1(\tenv)}{\theta_1(\rulet)[\suty/\alpha]}{\etrans{\theta_1}(\mmapp{E}{\etrans{\suty}})}{\theta_1(\type)}{\etrans{\theta_1}(E')}{\theta_1(\Sigma')}
+  \dmres{\theta_1(\tenv)}{\theta_1(\rulet)[\suty/\alpha]}{\etrans{\theta_1}(\mmapp{E}{\etrans{\suty}})}{\theta_1(\type)}{E'}{\Sigma'}
 \end{equation*}
 
 The Barendregt convention allows us to asses that $\alpha\notin\theta_1(\tenv)$. Thus, we can
 consider $\theta'=\theta_1\cdot[\suty/\alpha]$, for which it follows that
 $\dom{(\theta')}\subseteq\bar\alpha,\alpha$. From the definition of substitution,
 \begin{equation*}
-  \theta'(\rulet) = \theta_1(\rulet)[\suty/\alpha]\quad\text{and}\quad
-  \theta'(\tenv,\alpha) = \theta_1(\tenv)
+  \begin{array}{c}
+  \theta'(\rulet) = \theta_1(\rulet)[\suty/\alpha]\\
+  \theta'(\tenv,\alpha) = \theta_1(\tenv)\\
+  \etrans{\theta'}(\mmapp{E}{\alpha}) = \etrans{\theta_1}(\mmapp{E}{\etrans{\suty}})
+  \end{array}
 \end{equation*}
 In addition, since $\alpha$ does not appear free in the terms $\etrans{\theta_1}(E)$ and
-$\etrans{\theta_1}(E')$, the type $\theta_1(\type)$ and the types in $\theta_1(\Sigma')$,
-it follows that applying also the substitution $[\suty/\alpha]$ on them does not affect them.
+$E'$, the type $\theta_1(\type)$ and the types in $\Sigma'$,
+it follows that the substitution $[\suty/\alpha]$ does not affect them.
 %\begin{equation*}
 %  \begin{array}{c}
 %    \theta'(\rulet) = \theta_1(\rulet)[\suty/\alpha]\\
@@ -2201,7 +2203,7 @@ it follows that applying also the substitution $[\suty/\alpha]$ on them does not
 %\end{equation*}
 The premise of the rule can, then, be rewritten as
 \begin{equation*}
-  \dmres{\theta'(\tenv,\alpha)}{\theta'(\rulet)}{\etrans{\theta'}(\mmapp{E}{\alpha})}{\theta'(\type)}{\etrans{\theta'}(E')}{\theta'(\Sigma')}
+  \dmres{\theta'(\tenv,\alpha)}{\theta'(\rulet)}{\etrans{\theta'}(\mmapp{E}{\alpha})}{\theta'(\type)}{E'}{\Sigma'}
 \end{equation*}
   
 From the induction hypothesis, we have that
