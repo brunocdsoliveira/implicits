@@ -1055,7 +1055,7 @@ variables $\bar{\alpha},\bar{\alpha}'$ and the type environment after substituti
          }
          {\dmres{\tenv}{\forall \alpha. \rulet}{E}{\type}{E'}{\Sigma}} \\ \\ \\
 %---------------------------------------------------------------------%
-\hfill \myruleform{\dstable{\bar{\alpha}}{\tenv}{\rulet}{x}{\type}} \hfill \llap{Stability} \\ \\
+\hfill \myruleform{\dstable{\bar{\alpha}}{\tenv}{\rulet}{x}{\type}} \hfill \llap{\it Stability} \\ \\
 %---------------------------------------------------------------------%
   \myrule{Stable}{\not\exists \theta, E, \Sigma: \enskip 
            \validsubst{\bar{\alpha}}{\tenv}{\theta}
@@ -1642,7 +1642,7 @@ variables and hence the range of the substitution never contains any
 unification variables. As a consequence the above exampe and others like
 it cannot occur.
 \item
-The second use case, in rule~\rref{Coh-Simp}, is
+The second use case, in rule~\rref{Sta-Simp}, is
 only interested in the existence of a valid substitution. We neither care
 which one it is nor whether it is the most general one. Moreover, as
 illustrated above, whenever there is a most general substitution that is invalid
@@ -1762,12 +1762,12 @@ unification problems derived for their subterms.
 %------------------------------------------------------------------------------%
 \hfill \myruleform{\coherent{\bar{\alpha}}{\tenv}{\rulet}{\type}} \hfill \llap{\it Stability} \\ \\
 %------------------------------------------------------------------------------%
-\myrule{Coh-TApp}{\coherent{\bar{\alpha},\alpha}{\tenv,\alpha}{\rulet}{\type}}
+\myrule{Sta-TApp}{\coherent{\bar{\alpha},\alpha}{\tenv,\alpha}{\rulet}{\type}}
         {\coherent{\bar{\alpha}}{\tenv}{\forall \alpha. \rulet}{\type}}  
 \quad\quad\quad
-\myrule{Coh-IApp}{\coherent{\bar{\alpha}}{\tenv}{\rulet_2}{\type}}
+\myrule{Sta-IApp}{\coherent{\bar{\alpha}}{\tenv}{\rulet_2}{\type}}
         {\coherent{\bar{\alpha}}{\tenv}{\rulet_1 \iarrow \rulet_2}{\type}} \\ \\
-\myrule{Coh-Simp}{\theta = \mgu{\type}{\type'}
+\myrule{Sta-Simp}{\theta = \mgu{\type}{\type'}
         }
         {\coherent{\bar{\alpha}}{\tenv}{\type'}{\type}}  
 \eda

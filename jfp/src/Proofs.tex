@@ -2229,6 +2229,114 @@ Hence, it follows from rule \rref{Alg-M-TApp} that
 {\centering
 \fbox{
 \begin{minipage}{0.95\columnwidth}
+\begin{lemma}\label{lemma:acompleteness:3}
+  If 
+\begin{equation*}
+\dmres{\theta_1(\tenv)}{\theta_1(\rulet)}{E}{\theta_1(\type)}{E'}{\Sigma'}
+\end{equation*}
+  and
+\begin{equation*}
+  \dom{(\theta_1)}\subseteq\bar\alpha
+\end{equation*}
+  then
+\begin{equation*}
+  \coherent{\bar\alpha}{\tenv}{\rulet}{\type}
+\end{equation*}
+\end{lemma}
+\end{minipage}
+}}
+
+\begin{proof}
+The proof proceeds by induction on the derivation of the first hypothesis.
+\begin{description}
+\setlength{\itemsep}{1em}
+%===============================================================================
+\item[\fbox{\rref{M-Simp}}]\quad
+$\dmres{\theta_1(\tenv)}{\theta_1(\type')}{E}{\theta_1(\type)}{E}{\epsilon}$ \hfill with $\theta_1(\type) = \theta_1(\type')$ \\
+%$\theta_1(\tenv); \theta_1(\type') \leadsto |\theta_1|(E) \ivturns \theta_1(\type) \leadsto |\theta_1|(E); \theta_1(\epsilon)$ \hfill where $\theta_1(\tenv) = \theta_1(\type')$. \\
+%===============================================================================
+
+By Lemma~\ref{lemma:acompleteness:5} applied on the second hypothesis of the theorem
+and the side condition that $\theta_1(\type) = \theta_1(\type')$, we get
+\begin{equation*}
+  \theta_1\sqsubseteq\mgu{\type}{\type'}
+\end{equation*}
+Trivially, from rule \rref{Sta-Simp} we have
+\begin{equation*}
+  \coherent{\bar\alpha}{\tenv}{\type'}{\type}
+%  \bar{\alpha}; \tenv; \type' \leadsto E; \Sigma \alg \type \leadsto \theta_2(E); \theta_2(\Sigma)
+\end{equation*}
+
+%===============================================================================
+\item[\fbox{\rref{M-IApp}}]\quad
+$\dmres{\theta_1(\tenv)}{\theta_1(\rulet_1\To\rulet_2)}{E}{\theta_1(\type)}{E'}{\ie{\theta_1(\rulet_1)}{x},\Sigma'}$\ \\
+%$\theta_1(\tenv); \theta_1(\rulet_1 \iarrow \rulet_2)~{\leadsto |\theta_1|(E)}\ivturns \theta_1(\type)~{\leadsto |\theta_1|(E')}; \theta_1(\Sigma',\rulet_1 \leadsto x)$ \ \\
+%===============================================================================
+
+  From the hypothesis of the rule and the induction hypothesis, we have that
+\begin{equation*}
+\coherent{\bar{\alpha}}{\tenv,\envi{\rulet_1}{x}}{\rulet_2}{\type}
+% \forall\Sigma,~\admres{\bar\alpha}{\tenv,\envi{\rulet_1}{x}}{\rulet_2}{\mmapp{E}{x}}{\Sigma}{\type}{\etrans{\theta_2}(E')}{\theta_2(\Sigma,\Sigma')}
+%\admres{\bar\alpha}{\tenv,\envi{\rulet_1}{x}}{\rulet_2}{\mmapp{E}{x}}{\Sigma,\ie{\rulet_1}{x}}{\type}{\etrans{\theta_2}(E')}{\theta_2(\ie{\rulet_1}{x},\Sigma',\Sigma)}
+% \bar{\alpha};\tenv,\rulet_1 \leadsto x;\rulet_2 \leadsto E\,x; \rulet_1 \leadsto x, \Sigma \alg \type \leadsto |\theta_2|(E'); \theta_2(\Sigma',\rulet_1 \leadsto x, \Sigma) 
+\end{equation*}
+We can strengthen this---which we use without proof---to obtain:
+\begin{equation*}
+\coherent{\bar{\alpha}}{\tenv}{\rulet_2}{\type}
+\end{equation*}
+Then, by rule~\rref{Sta-IApp} we conclude
+\begin{equation*}
+\coherent{\bar{\alpha}}{\tenv}{\rulet_1 \To \rulet_2}{\type}
+\end{equation*}
+
+%===============================================================================
+\item[\fbox{\rref{M-TApp}}]\quad
+$\dmres{\theta_1(\tenv)}{\theta_1(\tall{\alpha}{\rulet})}{E}{\theta_1(\type)}{E'}{\Sigma'}$\ \\
+%$\theta_1(\tenv); \theta_1(\forall\alpha.\rulet) \leadsto |\theta_1|(E) \ivturns \theta_1(\type) \leadsto |\theta_1|(E'); \theta_1(\Sigma')$ \ \\
+%===============================================================================
+
+From the definition of substitution and the premise of the rule, we have
+\begin{equation*}
+  \dmres{\theta_1(\tenv)}{\theta_1(\rulet)[\suty/\alpha]}{\mmapp{E}{\etrans{\suty}}}{\theta_1(\type)}{E'}{\Sigma'}
+\end{equation*}
+The Barendregt convention allows us to asses that $\alpha\notin\theta_1(\tenv)$. Thus, we can
+consider $\theta'=[\suty/\alpha]\cdot\theta_1$, for which it follows that
+$\dom{(\theta')}\subseteq\bar\alpha,\alpha$. From the definition of substitution,
+\begin{equation*}
+  \theta'(\rulet) = \theta_1(\rulet)[\suty/\alpha]\quad\text{and}\quad
+  \theta'(\tenv,\alpha) = \theta_1(\tenv)
+\end{equation*}
+In addition, since $\alpha$ does not appear free in the type $\theta_1(\type)$,
+it follows that the substitution $[\suty/\alpha]$ does not affect it.
+The premise of the rule can, then, be rewritten as
+\begin{equation*}
+  \dmres{\theta'(\tenv,\alpha)}{\theta'(\rulet)}{\mmapp{E}{\suty}}{\theta'(\type)}{E'}{\Sigma'}
+\end{equation*}
+From the induction hypothesis, we have that
+\begin{equation*}
+  \coherent{\bar\alpha,\alpha}{\tenv,\alpha}{\rulet}{\type}
+  %\admres{\bar\alpha,\alpha}{\tenv}{\rulet}{\mmapp{E}{\alpha}}{\Sigma}{\type}{\etrans{\theta_2}(E')}{\theta_2(\Sigma,\Sigma')}
+,\end{equation*}
+Hence, it follows from rule \rref{Sta-TApp} that
+\begin{equation*}
+  \coherent{\bar\alpha}{\tenv}{\forall \alpha.\rulet}{\type}
+% \admres{\bar\alpha}{\tenv}{\tall{\alpha}{\rulet}}{E}{\Sigma}{\type}{\etrans{\theta_2}(E')}{\theta_2(\Sigma,\Sigma')}
+\end{equation*}
+
+%From the induction hypothesis and the definition of the $\sqsubseteq$ partial order, we also
+%have that there is a substitution $\phi$ such that
+%\begin{equation*}
+%  \theta_1\cdot[\suty/\alpha] = \theta_2\cdot\phi
+%\end{equation*}
+
+%Then $\phi = \phi'[\suty/\alpha]$, for some $\phi$,
+\end{description}
+\end{proof}
+
+%###############################################################################
+{\centering
+\fbox{
+\begin{minipage}{0.95\columnwidth}
 \begin{lemma}\label{lemma:acompleteness:4}
   If 
 \begin{equation*}
