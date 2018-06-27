@@ -1720,22 +1720,20 @@ $\adlres{\bar\alpha}{\tenv}{\tenv',\envi{\rulet}{x}}{\type}{E'}$\ \\
 %  \bar{\alpha};\tenv;\tenv' \ivturns \type~{\leadsto E'}
 \end{equation*}
 
-  Then from the rule's first premise and the negation of Lemma~\ref{lemma:asoundness:5}, we have:
-\begin{equation*}
-\not\exists E, \Sigma:
-\admres{\bar\alpha}{\tenv}{\rulet}{x}{\epsilon}{\type}{E}{\Sigma}
-%\bar{\alpha};\tenv;\rulet \leadsto x; \epsilon \alg \type \leadsto E; \Sigma
-\end{equation*}
-or equivaltenly,
-\begin{equation*}
-\not\exists \theta, E, \Sigma:
-\admres{\bar\alpha}{\tenv}{\rulet}{x}{\epsilon}{\type}{\etrans{\theta}(E)}{\theta(\Sigma)}
-\end{equation*}
-From the negation of Lemma~\ref{lemma:acompleteness:3} we thus have
+From the rule's first premise and the negation of Lemma~\ref{lemma:acompleteness:7}, we have:
+%\begin{equation*}
+%\not\exists E, \Sigma:
+%\admres{\bar\alpha}{\tenv}{\rulet}{x}{\epsilon}{\type}{E}{\Sigma}
+%\end{equation*}
+%or equivaltenly,
+%\begin{equation*}
+%\not\exists \theta, E, \Sigma:
+%\admres{\bar\alpha}{\tenv}{\rulet}{x}{\epsilon}{\type}{\etrans{\theta}(E)}{\theta(\Sigma)}
+%\end{equation*}
+%From the negation of Lemma~\ref{lemma:acompleteness:3} we thus have
 \begin{equation*}
 \not\exists \theta, E, \Sigma, \dom(\theta) \subseteq \bar{\alpha}:
-\dmres{\theta(\tenv)}{\theta(\rulet)}{x}{\type}{E}{\Sigma}
-%\theta(\tenv);\theta(\rulet) \leadsto x \ivturns \type \leadsto E; \Sigma
+\dmres{\theta(\tenv)}{\theta(\rulet)}{x}{\theta(\type)}{E}{\Sigma}
 \end{equation*}
   Hence with rule \rref{L-RuleNoMatch} we conclude
 \begin{equation*}
@@ -2229,7 +2227,7 @@ Hence, it follows from rule \rref{Alg-M-TApp} that
 {\centering
 \fbox{
 \begin{minipage}{0.95\columnwidth}
-\begin{lemma}\label{lemma:acompleteness:3}
+\begin{lemma}\label{lemma:acompleteness:7}
   If 
 \begin{equation*}
 \dmres{\theta_1(\tenv)}{\theta_1(\rulet)}{E}{\theta_1(\type)}{E'}{\Sigma'}
@@ -2252,7 +2250,7 @@ The proof proceeds by induction on the derivation of the first hypothesis.
 \setlength{\itemsep}{1em}
 %===============================================================================
 \item[\fbox{\rref{M-Simp}}]\quad
-$\dmres{\theta_1(\tenv)}{\theta_1(\type')}{E}{\theta_1(\type)}{E}{\epsilon}$ \hfill with $\theta_1(\type) = \theta_1(\type')$ \\
+$\dmres{\theta_1(\tenv)}{\theta_1(\type')}{E}{\theta_1(\type)}{E}{\epsilon}$ \quad where $\theta_1(\type) = \theta_1(\type')$ \\
 %$\theta_1(\tenv); \theta_1(\type') \leadsto |\theta_1|(E) \ivturns \theta_1(\type) \leadsto |\theta_1|(E); \theta_1(\epsilon)$ \hfill where $\theta_1(\tenv) = \theta_1(\type')$. \\
 %===============================================================================
 
