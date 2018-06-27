@@ -129,6 +129,7 @@ data Term
  | TM_Int Integer
  | TM_True
  | TM_False
+ | TM_Plus
 
 -- PRETTY ------------------------
 
@@ -182,6 +183,8 @@ instance Pretty Term where
     = text "true"
   pretty_ p TM_False
     = text "false"
+  pretty_ p TM_Plus
+    = text "plus"
 
 instance Show ContextType where
   show = render . pretty

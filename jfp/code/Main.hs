@@ -6,6 +6,8 @@ import TypeCheck
 
 import qualified SystemF as F
 
+import System.Environment
+
 topLevel :: String -> IO ()
 topLevel p =
  let t  = parseTerm p in
@@ -24,9 +26,18 @@ topLevel p =
                 Right ty -> do section "System F Checked Type" ty
                                section "Type Sanity Check" (elabCT ct == ty)
  
+mainInteractive :: IO ()
+mainInteractive
+ = do putStr "> "
+      getLine >>= topLevel
+      mainInteractive
+
 main :: IO ()
-main
- = getLine >>= topLevel
+main 
+  = do [file] <- getArgs
+       readFile file >>= topLevel
+  
+
 
 section :: Show a => String -> a -> IO ()
 section title x

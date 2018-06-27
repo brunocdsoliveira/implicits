@@ -1,0 +1,4 @@
+# Example of implicit ... in ... syntax
+
+implicit (\x:int. ((plus x) 1)) : int -> int 
+in  ((?(int->int)) 3)

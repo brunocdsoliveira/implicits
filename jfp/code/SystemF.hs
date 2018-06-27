@@ -57,6 +57,7 @@ data Term
  | Int Integer
  | True
  | False
+ | Plus
 
 substVar :: Var -> Term -> Term -> Term
 substVar v t = go
@@ -83,6 +84,8 @@ substVar v t = go
      = SystemF.True
     go SystemF.False
      = SystemF.False
+    go Plus
+     = Plus
 
 
 type Subst = [(Var,Term)]
@@ -112,6 +115,8 @@ substTVarInTerm tv ty = go
      = SystemF.True
     go SystemF.False
      = SystemF.False
+    go Plus
+     = Plus
 
 substTVarsInTerm :: TSubst -> Term -> Term
 substTVarsInTerm s t = foldr (uncurry substTVarInTerm) t s
@@ -156,6 +161,8 @@ instance Pretty Term where
     = text "true"
   pretty_ p SystemF.False
     = text "false"
+  pretty_ p Plus
+    = text "plus"
 
 instance Show Type where
   show = render . pretty
@@ -241,6 +248,8 @@ typeCheck SystemF.True
  = return BoolTy
 typeCheck SystemF.False 
  = return BoolTy
+typeCheck Plus
+ = return (Fun IntTy (Fun IntTy IntTy))
 
 -- Interpreter --------------
 
@@ -251,8 +260,13 @@ eval t@(Abs _ _ _)
  = t
 eval (App t1 t2)
  = case eval t1 of
-     Abs v ty t1' -> eval (substVar v (eval t2) t1')
-     t1'          -> App t1' (eval t2)
+     Abs v ty t1'   -> eval (substVar v (eval t2) t1')
+     (App Plus t11) -> 
+        case (eval t11, eval t2) of
+          (Int n, Int m) -> Int (n + m)
+          _              -> error "CRASH: plus on non-numbers"
+     Plus           -> App Plus (eval t2)
+     t1'            -> App t1' (eval t2)
 eval t@(TAbs _ _)
  = t
 eval (TApp t ty2) 
@@ -265,3 +279,5 @@ eval t@(SystemF.True)
  = t
 eval t@(SystemF.False)
  = t
+eval Plus
+  = Plus
