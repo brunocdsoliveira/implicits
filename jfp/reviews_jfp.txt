@@ -1486,7 +1486,7 @@ Reformulated.
 >                 =def= implicit e_1 : \rho_1. ... implicit e_n : \rho_n in e0
 >   (Note that your definition is ``syntactically'' ill-formed.)
 
-TODO
+Fixed. We have omitted the \vec forms as they are not used.
 
 > - Page 17, line -7: "have overlapping conclusions."
 >   Give an example of overlapping conclusions or a forward pointer.
@@ -1586,7 +1586,7 @@ FIXED
 >   This is a new terminology, not used anywhere else.
 >   What do you mean?
 
-TODO
+This has been replaced by "stability checking".
 
 > - Page 27, 4.2, line 8: "instantiation inst[<-e]ad of"
 

@@ -61,17 +61,18 @@ variables in binders are distinct, throughout this article.
 % and type variables $\alpha$ in binders are distinct. If not, they
 % can be easily renamed apart to be so.
 
-Using rule abstractions and applications we can build the |implicit| 
+Using implicit abstraction and implicit application we can build the |implicit| 
 sugar used in Section~\ref{sec:overview}.
 %{
 %format == = "\defeq"
 %format e1
-\[ | implicit {-"\overline{"-} e : {-"\rulet}"-} in e1 == ({-" \overline{\lambda_? \rulet .} "-} e1) {-"\overline{"-} with e {-"}"-} | \]
+%format e2
+\[ | implicit e1 : {-"\rulet"-} in e2 == ({-" \lambda_? \rulet ."-} e2) with e1 | \]
 %}\bruno{Also introduce let, which is used later, in the translation.}
-Here $\overline{\lambda_? \rho .}$ is a short form for 
-$\lambda_? \rho_1.~\ldots~\lambda_? \rho_n.$, and
-$\overline{|with|~e}$ is a short form for
-|with| $e_1 \ldots $ |with| $e_n$.
+% Here $\overline{\lambda_? \rho .}$ is a short form for 
+% $\lambda_? \rho_1.~\ldots~\lambda_? \rho_n.$, and
+% $\overline{|with|~e}$ is a short form for
+% |with| $e_1 \ldots $ |with| $e_n$.
 
 For brevity we have kept the $\name$ calculus small. Examples
 may use additional syntax such as built-in integers, integer operators, and boolean
