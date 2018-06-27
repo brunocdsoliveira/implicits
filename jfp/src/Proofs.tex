@@ -2022,7 +2022,15 @@ an auxiliary lemma for the correctness of the unification algorithm is necessary
 \begin{lemma}\label{lemma:acompleteness:0}
   If 
 \begin{equation*}
-\dres{\tenv}{\rulet}{E}
+  \unambenv{\tenv}
+\end{equation*}
+  and
+\begin{equation*}
+  \unambig{}{\rulet}
+\end{equation*}
+  and
+\begin{equation*}
+  \dres{\tenv}{\rulet}{E}
 \end{equation*}
   then
 \begin{equation*}
@@ -2033,7 +2041,7 @@ an auxiliary lemma for the correctness of the unification algorithm is necessary
 }}
 
 \begin{proof}
-  From the hypothesis it follows that 
+  From the third hypothesis it follows that 
 \begin{equation*}
 \drres{\tyvars{\tenv}}{\tenv}{\rulet}{E}
 \end{equation*}
@@ -2050,6 +2058,14 @@ an auxiliary lemma for the correctness of the unification algorithm is necessary
 \begin{lemma}\label{lemma:acompleteness:1}
   If 
 \begin{equation*}
+  \unambenv{\tenv}
+\end{equation*}
+  and
+\begin{equation*}
+  \unambig{}{\rulet}
+\end{equation*}
+  and
+\begin{equation*}
   \drres{\bar\alpha}{\tenv}{\rulet}{E}
 %  \bar{\alpha};\tenv \ivturns \rulet \leadsto E
 \end{equation*}
@@ -2063,9 +2079,9 @@ an auxiliary lemma for the correctness of the unification algorithm is necessary
 }}
 
 \begin{proof}
-The proof proceeds by induction on the derivation of the hypothesis.
+The proof proceeds by induction on the derivation of the third hypothesis.
 
-Cases \rref{IAbs} and \rref{R-TAbs} follow from the isomorphism
+Cases \rref{R-IAbs} and \rref{R-TAbs} follow from the isomorphism
 between the rule sets of the two judgements. Case \rref{R-Simp} follows
 from Lemma~\ref{lemma:acompleteness:2}.\\
 
@@ -2080,6 +2096,10 @@ from Lemma~\ref{lemma:acompleteness:2}.\\
 \begin{lemma}\label{lemma:acompleteness:2}
   If 
 \begin{equation*}
+  \unambenv{\tenv}
+\end{equation*}
+  and
+\begin{equation*}
   \dlres{\bar\alpha}{\tenv}{\tenv'}{\rulet}{E}
 %  \bar{\alpha};\tenv;\tenv' \ivturns \rulet \leadsto E
 \end{equation*}
@@ -2093,7 +2113,7 @@ from Lemma~\ref{lemma:acompleteness:2}.\\
 }}
 
 \begin{proof}
-The proof proceeds by induction on the derivation of the hypothesis.
+The proof proceeds by induction on the derivation of the second hypothesis.
 \begin{description}
 \setlength{\itemsep}{1em}
 %===============================================================================
@@ -2102,7 +2122,9 @@ $\dlres{\bar\alpha}{\tenv}{\tenv',\envi{\rulet}{x}}{\type}{E[\bar{E}/\bar{x}]}$\
 %$\bar{\alpha};\tenv; \tenv', \rulet~{\leadsto x} \ivturns \type~{\leadsto E[\bar{E}/\bar{x}]}$ \ \\
 %===============================================================================
 
-From the rule's first hypothesis and Lemma~\ref{lemma:acompleteness:3} we have
+From the rule's first hypothesis, we derive that $\unambig{}{\rulet}$. From the rule's second
+hypothesis and Lemma~\ref{lemma:acompleteness:3}, with $\theta=\epsilon$ and
+$\alpha=\epsilon$, we have
 \begin{equation*}
   \admres{\epsilon}{\tenv}{\rulet}{x}{\epsilon}{\type}{E'}{\ie{\bar\rulet}{\bar{x}}}
 %\epsilon; \tenv; \rulet \leadsto x; \epsilon \alg \type \leadsto E'; \bar{\rulet} \leadsto \bar{x}
