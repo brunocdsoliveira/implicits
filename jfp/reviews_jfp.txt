@@ -846,11 +846,13 @@ Definition A.1 has been added.
 >  - only the first conclusion of this lemma is proven, what about the
 > second and third conclusions?
 
-TODO -> Klara: add explanation
+The structure of the algorithmic completeness proofs has changed.
+This lemma has been replace by lemmata A.31 and A.32, which are proved
+in detail.
 
 > p. 60, Lemma A.29: where is the proof of this lemma?
 
-TODO -> Klara (we assume this without proof?)
+We make two assumptions regarding the unification algorithm.
  
 > Referee: 2
 > 

@@ -314,7 +314,7 @@ judgment.
 
 Figure~\ref{fig:unambenv} defines the judgment $\unambenv{\tenv}$ which states that a typing environment is unambiguous.
 Essentially, the definition requires that all types $\rulet$ in $\tenv$ are unambiguous.
-This definition will be used thoughout this section.
+This definition will be used throughout this section.
 
 \figtwocol{fig:unambenv}{Unambiguous Type Environment}{
 \begin{center}
@@ -1700,7 +1700,9 @@ This section proves soundness of the resolution algorithm with respect to its de
 specification. As summarized in the diagram below, the main lemma depends on three more
 soundness lemmata, one for each of the algorithmic focusing, lookup and matching judgments.
 The dependencies of these proofs follow those of the definitions of the
-corresponding judgments. Interestingly, the proof for algorithmic lookup soundness also uses
+corresponding judgments.
+
+Interestingly, the proof for algorithmic lookup soundness also uses
 completeness of the algorithmic stability judgment. The latter requires a correctness property
 of the unification algorithm. One more auxiliary correctness property is used by the
 algorithmic matching soundness proof.
