@@ -327,7 +327,7 @@ This definition will be used throughout this section.
   { \unambenv{\epsilon} } \quad\quad\quad
   
 \myrule{UE-Var}
-  {\unambenv{\tenv} \\ \unambig{}{\rulet} }
+  {\unambenv{\tenv}} % \\ \unambig{}{\rulet} }
   {\unambenv{\tenv, \relation{x}{\rulet}}}\\ \\
 
 \myrule{UE-TVar}
@@ -1691,9 +1691,7 @@ Assumption~\ref{axiom:mgu_property:3} states that $\mgu{\type}{\type'}$ is the m
 \end{axiom}
 \end{minipage}
 }}
-
 %-------------------------------------------------------------------------------
-
 \subsection{Soundness of the Algorithmic wrt Deterministic Resolution}
 \label{proof:alg_soundness}
 This section proves soundness of the resolution algorithm with respect to its declarative
@@ -1708,7 +1706,7 @@ of the unification algorithm. One more auxiliary correctness property is used by
 algorithmic matching soundness proof.
 
 \begin{center}
-\begin{tikzpicture}[node distance=1.5cm, auto,]
+\begin{tikzpicture}[node distance=1.4cm, auto,]
 %nodes
 \lnode{AR}{mainres}{lemma:asoundness:0}{Algorithmic resolution is sound wrt det. resolution}
 \lnode{AF}{right=0.8cm of AR}{lemma:asoundness:1}{Algorithmic focusing is sound wrt det. focusing}
@@ -1744,22 +1742,18 @@ algorithmic matching soundness proof.
 \end{lemma}
 \end{minipage}
 }
-
 \begin{proof}
   From the hypothesis it follows that 
 \begin{equation*}
   \adrres{\tyvars{\tenv}}{\tenv}{\rulet}{E}
-%  \tyvars{\tenv};\tenv \alg \rulet \leadsto E
 \end{equation*}
-  Hence, by Lemma~\ref{lemma:asoundness:1} and rule \rref{R-Main} the desired conclusion follows
-\begin{equation*}
-  \dres{\tenv}{\rulet}{E}
-%  \tenv \ivturns \rulet \leadsto E
-\end{equation*}
+  Hence, by Lemma~\ref{lemma:asoundness:1} and rule \rref{R-Main} the desired conclusion follows.
+%\begin{equation*}
+%  \dres{\tenv}{\rulet}{E}
+%\end{equation*}
 \end{proof}
 
 %###############################################################################
-
 {\centering
 \fbox{
 \begin{minipage}{0.95\columnwidth}
@@ -1767,12 +1761,10 @@ algorithmic matching soundness proof.
   If 
 \begin{equation*}
   \adrres{\bar\alpha}{\tenv}{\rulet}{E}
-%  \bar{\alpha};\tenv \alg \rulet \leadsto E
 \end{equation*}
   then
 \begin{equation*}
   \drres{\bar\alpha}{\tenv}{\rulet}{E}
-%  \bar{\alpha};\tenv \ivturns \rulet \leadsto E
 \end{equation*}
 \end{lemma}
 \end{minipage}
@@ -1783,8 +1775,8 @@ The proof proceeds by induction on the derivation of the hypothesis.
 
 Cases \rref{Alg-R-IAbs} and \rref{Alg-R-TAbs} follow from the isomorphism
 between the rule sets of the two judgements. Case \rref{Alg-R-Simp} follows
-from Lemma~\ref{lemma:asoundness:2}.\\
-\end{proof}
+from Lemma~\ref{lemma:asoundness:2}.
+\end{proof}\vspace{0.3cm}
 
 %###############################################################################
 
@@ -1837,7 +1829,6 @@ $\adlres{\bar\alpha}{\tenv}{\tenv',\envi{\rulet}{x}}{\type}{E'}$\ \\
   \dlres{\bar\alpha}{\tenv}{\tenv'}{\type}{E'}
 %  \bar{\alpha};\tenv;\tenv' \ivturns \type~{\leadsto E'}
 \end{equation*}
-
 From the rule's first premise and the negation of Lemma~\ref{lemma:acompleteness:7}, we have:
 %\begin{equation*}
 %\not\exists E, \Sigma:
