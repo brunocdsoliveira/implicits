@@ -1950,7 +1950,7 @@ $\theta(\type') = \theta(\type)$. Hence, with rule~\rref{M-Simp}, we obtain the 
 \begin{equation*}
   \dmres{\theta(\tenv)}{\theta(\type')}{\etrans\theta{E}}{\theta(\type')}{\etrans\theta{E}}{\epsilon}
 \end{equation*}
-where the meta-variable $\Sigma''$ from the theorem statement has been instantiated to $\epsilon$.\\
+%where the meta-variable $\Sigma''$ from the theorem statement has been instantiated to $\epsilon$.\\
 
 %===============================================================================
 \item[\fbox{\rref{Alg-M-IApp}}]\quad
@@ -2165,15 +2165,19 @@ $\dlres{\bar\alpha}{\tenv}{\tenv',\envi{\rulet}{x}}{\type}{E'}$ \ \\
   \adlres{\bar\alpha}{\tenv}{\tenv'}{\type}{E'}
 %  \bar{\alpha};\tenv;\tenv' \alg \type~{\leadsto E'}
 \end{equation*}
-  From the rule's first hypothesis and the negation of Lemma~\ref{lemma:asoundness:3}, we have:
+From the rule's first hypothesis, there are no $\theta$, $\Sigma_1$ and $E_1$ such that
+$\dom{(\theta)\subseteq\bar\alpha}$ and
+\begin{equation*}
+  \dmres{\theta(\tenv)}{\theta(\rulet)}{x}{\Sigma_1}{\type}{E_1}
+\end{equation*}
+From the negation of Lemma~\ref{lemma:asoundness:3} and then the negation of
+Lemma~\ref{lemma:acompleteness:4}, we have:
 \begin{equation*}
 \incoherent{\bar\alpha}{\tenv}{\rulet}{\type}
-%\bar{\alpha}; \rulet \not\coh \type
 \end{equation*}
   Hence with rule \rref{Alg-L-RuleNoMatch} we conclude
 \begin{equation*}
   \adlres{\bar\alpha}{\tenv}{\tenv',\envi{\rulet}{x}}{\type}{E'}
-%  \bar{\alpha};\tenv;\tenv',\rulet \leadsto x \alg \type~{\leadsto E'}
 \end{equation*}
 
 %===============================================================================
@@ -2426,28 +2430,27 @@ Hence, it follows from rule \rref{Sta-TApp} that
 \end{description}
 \end{proof}
 
-% Following proof is now an orphan
-%%###############################################################################
-%{\centering
-%\fbox{
-%\begin{minipage}{0.95\columnwidth}
-%\begin{lemma}\label{lemma:acompleteness:4}
-%  If 
-%\begin{equation*}
-%  \coherent{\bar\alpha}{\tenv}{\rulet}{\type}
-%\end{equation*}
-%  then for all $E, \Sigma$ there exist $E', \Sigma'$ such that
-%\begin{equation*}
-%  \admres{\bar\alpha}{\tenv}{\rulet}{E}{\Sigma}{\type}{E'}{\Sigma'}
-%\end{equation*}
-%\end{lemma}
-%\end{minipage}
-%}}
-%
-%\begin{proof}
-%  The proof is straightforward induction on the derivation. The conclusion's judgement
-%  is an annotated version of the hypothesis' judgement.
-%\end{proof}
+%###############################################################################
+{\centering
+\fbox{
+\begin{minipage}{0.95\columnwidth}
+\begin{lemma}\label{lemma:acompleteness:4}
+  If 
+\begin{equation*}
+  \coherent{\bar\alpha}{\tenv}{\rulet}{\type}
+\end{equation*}
+  then for all $E, \Sigma$ there exist $E', \Sigma'$ such that
+\begin{equation*}
+  \admres{\bar\alpha}{\tenv}{\rulet}{E}{\Sigma}{\type}{E'}{\Sigma'}
+\end{equation*}
+\end{lemma}
+\end{minipage}
+}}
+
+\begin{proof}
+  The proof is straightforward induction on the derivation. The conclusion's judgement
+  is an annotated version of the hypothesis' judgement.
+\end{proof}
 
 % \newcommand{\vdashr}[4]{#1; #2 \vturns #3 \leadsto #4}
 % 
