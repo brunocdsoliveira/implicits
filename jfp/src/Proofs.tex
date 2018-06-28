@@ -155,6 +155,32 @@ by the remainder of the type environment.
 
 %-------------------------------------------------------------------------------
 \subsection{Soundness of Deterministic Resolution}
+\label{proof:det_soundness}
+The proofs of this section are split into subproofs for each sub-judgment (focusing, lookup
+and matching) of the deterministic resolution judgment. They all proceed by induction on
+the corresponding deterministic resolution judgment. Therefore, their dependencies, depicted in
+the diagram below, follow those of the sub-judgments that constitute the main deterministic
+resolution judgment. Because the proofs of this section are mechanized, an auxiliary lemma
+is necessary to handle the multiple substitutions that rule \rref{L-RuleMatch} uses.
+
+\begin{center}
+\begin{tikzpicture}[node distance=1cm, auto,]
+%nodes
+\lnode{DR}{mainres}{lemma:s23:4}{Det. resolution soundness}
+\lnode{DFR}{right=0.8cm of DR}{lemma:s23:3}{Det. focusing soundness}
+\lnode{DLR}{right=0.8cm of DFR}{lemma:s23:2}{Det. lookup soundness}
+\lnode{SDMR}{below=of DLR}{lemma:s23:1}{Det. matching soundness under subst.}
+\lnode{DMR}{right=0.8cm of SDMR}{lemma:s23:5}{Det. matching soundness}
+\lnode{SUB}{left= 0.8cm of SDMR}{lemma:substitution}{Substitution}
+%edges
+\draw[pil] (DR.north)  to [out=30,in=150]  (DFR.north);
+\draw[pil] (DFR.north) to [out=30,in=150]  (DLR.north);
+\draw[pil] (DLR.south) to [out=210,in=330] (DFR.south);
+\draw[pil] (DLR.south) to                  (SDMR.north);
+\draw[pil] (SDMR.east) to                  (DMR.west);
+\draw[pil] (SDMR.west) to                  (SUB.east);
+\end{tikzpicture}
+\end{center}\vspace{0.3cm}
 
 Lemma~\ref{lemma:s23:4} states that deterministic resolution is
 sound with respect to non-deterministic resolution. 
@@ -292,8 +318,8 @@ See file CochisDet.v, Lemma \tt{DRes\_match\_impl\_vars}.
 
 \subsection{Deterministic Resolution is Deterministic}\label{proof:determinism}
 
-\begin{minipage}[t]{\textwidth}
-The proofs of this section are split into subproofs for each sub-judgment (focusing, lookup and
+%\begin{minipage}[t]{\textwidth}
+Similarly to Section~\ref{proof:det_soundness}, the proofs of this section are split into subproofs for each sub-judgment (focusing, lookup and
 matching) of the deterministic resolution judgment. Their dependencies, depicted in the diagram below, follow those of the sub-judgments that constitute the main deterministic resolution
 judgment.
 \begin{center}
@@ -310,7 +336,7 @@ judgment.
 \draw[pil] (DLR.north) to [out=30,in=150] (DMR.north);
 \end{tikzpicture}
 \end{center}\vspace{0.3cm}
-\end{minipage}
+%\end{minipage}
 
 Figure~\ref{fig:unambenv} defines the judgment $\unambenv{\tenv}$ which states that a typing environment is unambiguous.
 Essentially, the definition requires that all types $\rulet$ in $\tenv$ are unambiguous.
@@ -762,7 +788,7 @@ Then the second and third hypothesis of the lemma must have been formed by rule 
 \subsection{Resolution and Typing Stability}\label{proof:coherence}
 
 %\begin{minipage}[t]{\textwidth}
-The proofs of this section concerns stability of the deterministic resolution judgment, as well
+The proofs of this section concern stability of the deterministic resolution judgment, as well
 as stability of typing. The first part, similarly to Section~\ref{proof:determinism}, is split
 into subproofs for each auxiliary judgment (focusing, lookup and matching) of the deterministic
 resolution judgment and follows their dependencies. The second part uses the main result of the
