@@ -184,7 +184,7 @@ New here is that it also records instances of implicits $?\rulet$.
 \bda{llrl} 
 \text{Type Environments}     & \tenv & ::= & \epsilon \mid \tenv, \relation{x}{\rulet} \mid \tenv , \alpha \mid \tenv, \envi{\rulet}{x} \\
 \eda
-% Judgement $\wfty{\tenv}{\rulet}$ holds if type $\rulet$ is well-formed 
+% Judgment $\wfty{\tenv}{\rulet}$ holds if type $\rulet$ is well-formed 
 % with respect to type environment $\tenv$, that is, if all free type variables
 % of $\rulet$ occur in $\tenv$.
 
@@ -201,7 +201,7 @@ Secondly, rule \rref{Ty-IApp} eliminates an implicit abstraction by supplying an
 instance of the required type. Finally, rule \rref{Ty-Query} resolves 
 a given type $\rulet$ against the implicit environment.
 Again, a side-condition states that $\rulet$ must be unambiguous.
-Resolution is defined in terms of the auxiliary judgement $\aresp{\tenv}{\rulet}$, which
+Resolution is defined in terms of the auxiliary judgment $\aresp{\tenv}{\rulet}$, which
 is explained next. 
 
 %-------------------------------------------------------------------------------
@@ -249,7 +249,7 @@ is explained next.
 }
 
 Figure~\ref{fig:resolution1} provides a first, ambiguous definition of the
-resolution judgement. Its underlying principle is
+resolution judgment. Its underlying principle is
 resolution in logic. 
 Intuitively, $\aresp{\tenv}{\rulet}$ holds if $\tenv$ entails $\rulet$, where the types in $\tenv$ and
 $\rulet$ are read as propositions, $r$ stands for resolution and $a$ for ambiguous.
@@ -261,7 +261,7 @@ and the twist is that we choose to treat
 only rule types as implications, leaving function types as uninterpreted predicates.
 
 % Figure~\ref{fig:resolution1} provides a first (ambiguous) definition of the
-% resolution judgement $\tenv \vturns \rulet$ that corresponds to the intuition of
+% resolution judgment $\tenv \vturns \rulet$ that corresponds to the intuition of
 % logical implication checking. 
 % 
 Unfortunately, the definition in Figure~\ref{fig:resolution1} suffers from two problems. 
@@ -437,12 +437,12 @@ resolution judgment.
 The definition of resolution with focusing that uses this refined grammar
 is given in 
 Figure~\ref{fig:resolutionf}. The main \emph{focusing} judgment $\frres{\tenv}{\rulet}{E}$ is
-defined with the help of the auxiliary \emph{matching} judgement $\fmres{\tenv}
+defined with the help of the auxiliary \emph{matching} judgment $\fmres{\tenv}
 {\rulet}{E}{\type}{E'}{\Sigma}$. Both definitions are syntax-directed
 on the type $\rulet$ enclosed in square brackets. 
 % with simple types $\type$ as the base case.
 
-The focusing judgement $\frres{\tenv}{\rulet}{E}$ focuses on the
+The focusing judgment $\frres{\tenv}{\rulet}{E}$ focuses on the
 type $\rulet$ that is to be resolved -- we call this type the ``goal''. There
 are three rules, for the three possible syntactic forms of~$\rulet$.
 %
@@ -689,9 +689,9 @@ mentioned anywhere, such as $\alpha$ in $\forall \alpha. \tyint \To \tyint$,
 and instantiate them
 to a dummy type, like GHC's \texttt{GHC.Prim.Any}, which is only used for this
 purpose. As such unused type variables serve little purpose, we have opted
-not to make an exception for them.} This judgement is
+not to make an exception for them.} This judgment is
 defined in Figure~\ref{fig:unamb}
-in terms of the auxiliary judgement $\unambig{\bar{\alpha}}{\rulet}$ which
+in terms of the auxiliary judgment $\unambig{\bar{\alpha}}{\rulet}$ which
 takes an additional sequence of type variables $\alpha$ that is initially
 empty.
 \figtwocol{fig:unamb}{Unambiguous Context Types}{
@@ -724,7 +724,7 @@ empty.
 \end{center}
 }
 
-This auxiliary judgement expresses that all type variables $\bar{\alpha}$ 
+This auxiliary judgment expresses that all type variables $\bar{\alpha}$ 
 are resolved when matching against $\rulet$.
 Its base case, rule \rref{UA-Simp}, expresses
 that fixing the simple type $\type$ fixes its free type variables
@@ -760,10 +760,10 @@ different, i.e., incoherent, elaborations.
 Our solution is to replace the nondeterministic relation $?\rulet \in \tenv$ by
 a deterministic one that selects the first matching implicit in the environment and
 commits to it. In fact, we encapsulate all three hypotheses of rule~\rref{FR-Simp}
-in a new \emph{lookup} judgement $\lres{\tenv}{\tenv'}{\type}{E}$ which resolves
+in a new \emph{lookup} judgment $\lres{\tenv}{\tenv'}{\type}{E}$ which resolves
 $\type$ with the first matching rule in the environment $\tenv'$ and performs
 any recursive resolutions against the environment $\tenv$. Of course, the modified
-rule~\rref{FR-Simp'} invokes this lookup judgement with two copies of the same environment, i.e.,
+rule~\rref{FR-Simp'} invokes this lookup judgment with two copies of the same environment, i.e.,
 $\tenv$ and $\tenv'$ are identical.
 \bda{c}
   \myrule {FR-Simp'}
@@ -771,7 +771,7 @@ $\tenv$ and $\tenv'$ are identical.
           }
           {\frres{\tenv}{\type}{E}}
 \eda
-The (still preliminary) definition of the judgement itself is syntax-directed with respect to the
+The (still preliminary) definition of the judgment itself is syntax-directed with respect to the
 type environment $\tenv'$:
 \bda{c}
 %- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -%
@@ -913,12 +913,12 @@ them make sense. Essentially, there are two groups of substitutions:
 
       Figure~\ref{fig:resolution2}, which puts all the measures together to
       obtain a type-directed, deterministic and stable resolution, addresses the
-      issue as follows. It introduces a top-level \emph{main} judgement $\dres{\tenv}{\rulet}{E}$
-      to handle a query that delegates to the focusing-based judgements we have described above.
-      The only contribution of the main judgement, which is defined by the single rule \rref{R-Main}, is to gather the type variables $\bar{\alpha}$
+      issue as follows. It introduces a top-level \emph{main} judgment $\dres{\tenv}{\rulet}{E}$
+      to handle a query that delegates to the focusing-based judgments we have described above.
+      The only contribution of the main judgment, which is defined by the single rule \rref{R-Main}, is to gather the type variables $\bar{\alpha}$
       that appear in the environment at the point of the query by means of the function $\tyvars{\tenv}$, 
-      and to pass them on through the auxiliary judgements to the point where the stability check is performed.
-      Hence, the auxiliary judgements 
+      and to pass them on through the auxiliary judgments to the point where the stability check is performed.
+      Hence, the auxiliary judgments 
       $\drres{\bar{\alpha}}{\tenv}{\rulet}{E}$, 
       $\dlres{\bar{\alpha}}{\tenv}{\tenv'}{\type}{E}$ and
       $\dstable{\bar{\alpha}}{\tenv}{\rulet}{x}{\type}$ now all feature an additional argument $\bar{\alpha}$ of
@@ -934,7 +934,7 @@ them make sense. Essentially, there are two groups of substitutions:
 \end{itemize}
  
 In summary, Figure~\ref{fig:subst} formalises our notion of valid substitutions
-with the judgement $\validsubst{\bar{\alpha}}{\tenv}{\theta}$. 
+with the judgment $\validsubst{\bar{\alpha}}{\tenv}{\theta}$. 
 % It assumes an inductive
 % syntax for substitutions as sequences of single variable substitutions.
 % {\bda{llrl}
@@ -1126,18 +1126,18 @@ unambiguous, deterministic and stable definition of resolution.
 % % 
 % % \end{enumerate}
 % 
-% Figure~\ref{fig:resolution2} defines judgement $\tenv \ivturns \rulet$, which
+% Figure~\ref{fig:resolution2} defines judgment $\tenv \ivturns \rulet$, which
 % is a syntax-directed deterministic variant of $\tenv \vturns \rulet$. This
 % deterministic variant is sound with respect to the ambiguous definition. In
 % other words, $\tenv \vturns \rulet$ holds if $\tenv \ivturns \rulet$ holds.
-% Yet, the opposite is not true. The deterministic judgement sacrifices some
+% Yet, the opposite is not true. The deterministic judgment sacrifices some
 % expressive power in exchange for better behavedness.
 % 
 % %- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 % \paragraph{Revised Syntax}
 % 
 % To facilitate the definition of the deterministic resolution
-% judgement we split the syntax of types into three different
+% judgment we split the syntax of types into three different
 % sorts: \emph{context} types, \emph{simple} types and \emph{monotypes}.
 % {\bda{llrl}
 %     \text{Context Types} & \rulet \hide{\in 2^\meta{RType}} & ::= & 
@@ -1151,7 +1151,7 @@ unambiguous, deterministic and stable definition of resolution.
 %  \emph{Context types} $\rulet$ correspond to the original types $\rulet$.
 % \emph{Simple types} $\type$ are a restricted form of context types without
 % toplevel quantifiers and toplevel implicit arrows. Singling out this restricted
-% form turns out to be convenient for the type-directed formulation of the judgement.
+% form turns out to be convenient for the type-directed formulation of the judgment.
 % 
 % \emph{Monotypes} $\suty$ are a further refinement of simple types without
 % universal quantifiers and implicit arrows anywhere. They help us to address a
@@ -1298,16 +1298,16 @@ unambiguous, deterministic and stable definition of resolution.
 % \end{center}
 % }
 % 
-% Figure~\ref{fig:resolution2} defines the main judgement $\tenv \ivturns \rulet$ 
-% in terms of three interdependent auxiliary judgements. The first of these
-% auxiliary judgements is $\bar{\alpha};\tenv \ivturns \rulet$, where
+% Figure~\ref{fig:resolution2} defines the main judgment $\tenv \ivturns \rulet$ 
+% in terms of three interdependent auxiliary judgments. The first of these
+% auxiliary judgments is $\bar{\alpha};\tenv \ivturns \rulet$, where
 % the type variables $\bar{\alpha}$ are the free type variables in the
 % original environment at the point of the query. Recall the |bad| example
 % from Section~\ref{sec:overview:incoherence} where there is only one such free
 % type variable: |b|. 
 % Tracking these free variables plays a crucial role in guaranteeing coherence
 % and ensuring that resolution is stable under all type substitutions that instantiate these variables, like $[|b| \mapsto |Int|]$; how we prevent these substitutions is explained below.  The
-% main judgement
+% main judgment
 % retains these free variables in rule \mylabel{R-Main} with 
 % the function $\mathit{tyvars}$:
 % \newcommand{\tyvars}[1]{\mathit{tyvars}(#1)}
@@ -1319,19 +1319,19 @@ unambiguous, deterministic and stable definition of resolution.
 % \tyvars{\tenv,\rulet~\gbox{\leadsto x}} & = & \tyvars{\tenv} 
 % \end{array}
 % \end{equation*}%
-% While the auxiliary judgement $\bar{\alpha};\tenv \ivturns \rulet$ extends the
+% While the auxiliary judgment $\bar{\alpha};\tenv \ivturns \rulet$ extends the
 % type environment $\tenv$, it does not update the type variables $\bar{\alpha}$.
-% This judgement is syntax-directed on the query type $\rulet$.  Its job is to
+% This judgment is syntax-directed on the query type $\rulet$.  Its job is to
 % strip $\rulet$ down to a simple type $\type$ using literal copies of the
 % ambiguous rules \mylabel{AR-TAbs} and \mylabel{AR-IAbs}, and then to hand it
-% off to the second auxiliary judgement in rule \mylabel{R-Simp}.
+% off to the second auxiliary judgment in rule \mylabel{R-Simp}.
 % 
-% The second auxiliary judgement, $\bar{\alpha}; \tenv; \tenv' \ivturns \type$,
+% The second auxiliary judgment, $\bar{\alpha}; \tenv; \tenv' \ivturns \type$,
 % is syntax-directed on $\tenv'$: it traverses $\tenv'$ from right to left until
 % it finds a rule type $\rulet$ that matches the simple type $\type$.  Rules
 % \mylabel{L-Var} and \mylabel{L-TyVar} skip the irrelevant entries in the
 % environment. Rule \mylabel{L-RuleMatch} identifies a matching rule type
-% $\rulet$ -- where matching is determined by with the third auxiliary judgement
+% $\rulet$ -- where matching is determined by with the third auxiliary judgment
 % -- and takes care of recursively resolving its context types; details follow
 % below.  Finally, rule \mylabel{L-RuleNoMatch} skips a rule type in the
 % environment if it does not match. Its condition
@@ -1341,21 +1341,21 @@ unambiguous, deterministic and stable definition of resolution.
 % (We come back to the reason why the condition is stronger than this in
 % Section~\ref{sec:coherence}.)
 % As a consequence, rules \mylabel{L-RuleMatch} and \mylabel{L-RuleNoMatch}
-% are mutually exclusive and \emph{the judgement effectively commits to the
+% are mutually exclusive and \emph{the judgment effectively commits to the
 % right-most matching rule in $\tenv'$}.
 % We maintain the invariant that $\tenv'$ is a prefix of $\tenv$; rule
 % \mylabel{R-Simp} provides $\tenv$ as the initial value for $\tenv'$.
 % Hence, if a matching rule type $\rulet$ is found, we have that
-% $\rulet \in \tenv$. Hence, the second auxiliary judgement
+% $\rulet \in \tenv$. Hence, the second auxiliary judgment
 % plays much the same role as rule
 % \mylabel{AR-IVar} in Figure~\ref{fig:resolution1}, which also selects a rule type $\rulet \in \tenv$. The difference is that rule \mylabel{AR-IVar} makes a non-deterministic
-% choice, while the second auxiliary judgement makes deterministic committed choice
+% choice, while the second auxiliary judgment makes deterministic committed choice
 % that prioritises rule types more to the right in the environment. For instance, $\tyint,\tyint \vturns \tyint$ has two ways to resolve, while $\tyint,\tyint \ivturns \tyint$ has only one because the second $\tyint$ in the environment shadows the first.
 % 
 % 
-% Finally, the third auxiliary judgement, $\tenv;\rulet \ivturns \type; \Sigma$,
+% Finally, the third auxiliary judgment, $\tenv;\rulet \ivturns \type; \Sigma$,
 % determines whether the rule type $\rulet$ matches the simple type~$\type$. The
-% judgement is defined by structural induction on $\rulet$, which is step by step
+% judgment is defined by structural induction on $\rulet$, which is step by step
 % instantiated to $\type$. 
 % Any recursive resolutions are deferred in this process -- the
 % postponed resolvents are captured in the $\Sigma$ argument. This
@@ -1402,8 +1402,8 @@ unambiguous, deterministic and stable definition of resolution.
 % side-condition in rule \mylabel{Ty-IAbs} of Figure~\ref{fig:type}.\footnote{An
 % alternative design to avoid such ambiguity would instantiate unused type
 % variables to a dummy type, like GHC's \texttt{GHC.Prim.Any}, which is only used
-% for this purpose.} This judgement is defined in Figure~\ref{fig:unamb}
-% in terms of the auxiliary judgement $\bar{\alpha} \unamb \rulet$ which
+% for this purpose.} This judgment is defined in Figure~\ref{fig:unamb}
+% in terms of the auxiliary judgment $\bar{\alpha} \unamb \rulet$ which
 % takes an additional sequence of type variables $\alpha$ that is initially
 % empty.
 % \figtwocol{fig:unamb}{Unambiguous Context Types}{
@@ -1443,7 +1443,7 @@ unambiguous, deterministic and stable definition of resolution.
 % \end{center}
 % }
 % 
-% The auxiliary judgement expresses that all type variables $\bar{\alpha}$ 
+% The auxiliary judgment expresses that all type variables $\bar{\alpha}$ 
 % are resolved when matching against $\rulet$.
 % Its base case, rule \mylabel{UA-Simp}, expresses
 % that fixing the simple type $\type$ also fixes the type variables
@@ -1488,8 +1488,8 @@ unambiguous, deterministic and stable definition of resolution.
 % 
 % We clearly identify which type variables $\bar{\alpha}$ are to be considered
 % for substitution by rule \mylabel{L-RuleNoMatch} by parametrising the
-% judgements by this set. These are the type variables that occur in the environment
-% $\tenv$ at the point of the query. The main resolution judgement $\ivturns \rulet$
+% judgments by this set. These are the type variables that occur in the environment
+% $\tenv$ at the point of the query. The main resolution judgment $\ivturns \rulet$
 % grabs them and passes them on to all uses of rule \mylabel{L-RuleNoMatch}.
 
 %===============================================================================
@@ -1506,19 +1506,19 @@ it replaces explicit quantification over all substitutions $\theta$ in rule
 \rref{Stable} with a tractable approach to stability checking.
 
 The definition of the algorithm, in Figure~\ref{fig:algorithm}, is structured in the same way
-as the declarative specification: with one main judgement and three
+as the declarative specification: with one main judgment and three
 auxiliary ones that have similar roles (focusing, lookup, and matching). In fact, since the differences
-are not situated in the main and focusing judgement, these are
+are not situated in the main and focusing judgment, these are
 actually identical.
 
 %- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 \subsection{Deferred Variable Instantiation}
 The first difference is situated in the 
-matching judgement $\admres{\bar{\alpha}}{\tenv}{\rulet}{E}{\Sigma}{\type}{E'}{\Sigma'}$.
+matching judgment $\admres{\bar{\alpha}}{\tenv}{\rulet}{E}{\Sigma}{\type}{E'}{\Sigma'}$.
 While its declarative counterpart immediately instantiates the quantified type
 variable in rule~\rref{M-TApp}, this algorithmic formulation defers the
 instantiation to the point where a deterministic choice can be made. As long as
-the type variables $\bar{\alpha}$ have not been instantiated, the judgement
+the type variables $\bar{\alpha}$ have not been instantiated, the judgment
 keeps track of them in its first argument. The actual instantiation happens in
 the base case, rule \rref{Alg-M-Simp}. This last rule performs the deferred
 instantiation of type variables $\bar{\alpha}$ by computing the \emph{most
@@ -1528,18 +1528,18 @@ $\theta$ that is valid (i.e., $\validsubst{\bar{\alpha}}{\tenv}{\theta}$) and
 that equates the two types (i.e., $\theta(\type) = \theta(\type')$).
 
 In order to subject the recursive goals to this
-substitution, the algorithmic judgement
+substitution, the algorithmic judgment
 makes use of an accumulating parameter $\Sigma$.  This accumulator $\Sigma$
 represents all the goals collected so far in which type variables
 have not been substituted yet. In contrast, $\Sigma'$ denotes all obligations
 with type variables already substituted.
 
 Finally, observe that rule \rref{Alg-L-RuleMatch} invokes the algorithmic
-judgement with an empty set of not-yet-instantiated type variables and an empty
+judgment with an empty set of not-yet-instantiated type variables and an empty
 accumulator $\Sigma$.
 
 The following example illustrates the differences between the declarative
-judgement:
+judgment:
 \bda{c}
   \inferrule*[Right=\rref{M-TApp}]
     {\inferrule*[Right=\rref{M-IApp}]
@@ -1568,9 +1568,9 @@ and its algorithmic counterpart:
 \subsection{Algorithmic Stability Check}
 
 The second difference can be found in \rref{Alg-L-RuleNoMatch} of the lookup judgment. Instead of
-using the $\dstable{\bar{\alpha}}{\tenv}{\rulet}{x}{\type}$ judgement, which quantifies over all valid 
-substitutions, this rule uses the algorithmic judgement
-$\coherent{\bar{\alpha}}{\tenv}{\rulet}{\type}$. This auxiliary judgement checks algorithmically
+using the $\dstable{\bar{\alpha}}{\tenv}{\rulet}{x}{\type}$ judgment, which quantifies over all valid 
+substitutions, this rule uses the algorithmic judgment
+$\coherent{\bar{\alpha}}{\tenv}{\rulet}{\type}$. This auxiliary judgment checks algorithmically
 whether the type $\rulet$ matches $\type$ under any possible instantiation
 of the type variables $\bar{\alpha}$.
 
@@ -1578,18 +1578,18 @@ We apply the same deferred-instantation technique as with the first difference: 
 of applying a substitution first and then checking whether the implicit matches the goal, we 
 defer the instantiation to the end where we can deterministically pick one instantiation instead of considering all valid instantiations. 
 As a consequence of the similarity, 
-the definition of the judgement $\coherent{\bar{\alpha}}{\tenv}{\rulet}{\type}$ is a
+the definition of the judgment $\coherent{\bar{\alpha}}{\tenv}{\rulet}{\type}$ is a
 variation on that of $\admres{\bar{\alpha}}{\tenv}{\rulet}{
 E}{\Sigma}{\type}{E'}{\Sigma'}$.
 
-There are two differences. Firstly, since the judgement is only concerned with
+There are two differences. Firstly, since the judgment is only concerned with
 matchability, no recursive resolvents $\Sigma$ are collected nor are any
 elaborations tracked.
 Secondly, since the stability check considers the substitution of the type
 variables $\bar{\alpha}$ that occur in the environment at the point of the
 query, rule \rref{Alg-L-RuleNoMatch} pre-populates the substitutable
-variables of the $\coh$ judgement with them. Contrast this with the matching
-judgement where only the implicit's quantified variables are instantiated.
+variables of the $\coh$ judgment with them. Contrast this with the matching
+judgment where only the implicit's quantified variables are instantiated.
 
 %-------------------------------------------------------------------------------
 \subsection{Scope-Aware Unification}
@@ -1655,22 +1655,22 @@ unification variables by closed types.
 \paragraph{Definition}
 
 With the above issues in mind we can consider the actual definition in
-Figure~\ref{fig:algorithm}. The main unification judgement $\theta =
+Figure~\ref{fig:algorithm}. The main unification judgment $\theta =
 \mgu{\rulet_1}{\rulet_2}$ is defined by rule~\rref{U-Main}. This rule
-computes the unifier in terms of the auxiliary judgement $\theta =
+computes the unifier in terms of the auxiliary judgment $\theta =
 \mgun{\bar{\alpha}}{\rulet_1}{\rulet_}$, which is essentially standard
 unification, and then checks the above validity concerns.  Indeed, for any type
 variable $\beta$ that appears in the image of a type variable $\alpha$, either
 $\beta$ must appear before $\alpha$ in the environment $\tenv$ (regular
 validity), or $\beta$ must itself be a unification variable (the exceptional
 case). The relative position of variables is checked with 
-the auxiliary judgement $\before{\beta}{\alpha}$ whose one rule verifies
+the auxiliary judgment $\before{\beta}{\alpha}$ whose one rule verifies
 that $\beta$ appears before $\alpha$ in the environment~$\tenv$;\footnote{If
 type variables are represented by de Bruijn indices, this can be done by
 checking whether one index is greater than the other.} a similar check on 
 relative positions can be found in Dunfield and Krishnaswami's algorithm~\cite{dunfield}.
 
-The auxiliary judgement $\mgun{\bar{\alpha}}{\rulet_1}{\rulet_2}$ computes the
+The auxiliary judgment $\mgun{\bar{\alpha}}{\rulet_1}{\rulet_2}$ computes the
 actual unifier. 
 Rule \rref{U-Var} is the standard reflexivity rule for type variables. 
 Rules \rref{U-InstL} and \rref{U-InstR} are two
@@ -1930,7 +1930,7 @@ Figure~\ref{fig:type}.
 
 
 
-The judgement is defined by case analysis on the type $\rulet$. Rule~\rref{T-Simp} states that simple types trivially satisfy the
+The judgment is defined by case analysis on the type $\rulet$. Rule~\rref{T-Simp} states that simple types trivially satisfy the
 condition. Next, rule \rref{T-Forall} is the congruence rule for
 universally quantified types. Finally, rule~\rref{T-Rule} enforces
 the actual condition on rule types $\rulet_1 \iarrow \rulet_2$, which
