@@ -762,9 +762,9 @@ Then the second and third hypothesis of the lemma must have been formed by rule 
 \subsection{Resolution and Typing Stability}\label{proof:coherence}
 
 %\begin{minipage}[t]{\textwidth}
-The proofs of this section regard stability of the deterministic resolution judgment, as well
+The proofs of this section concerns stability of the deterministic resolution judgment, as well
 as stability of typing. The first part, similarly to Section~\ref{proof:determinism}, is split
-into subproofs for each sub-judgment (focusing, lookup and matching) of the deterministic
+into subproofs for each auxiliary judgment (focusing, lookup and matching) of the deterministic
 resolution judgment and follows their dependencies. The second part uses the main result of the
 first part to establish stability of typing under type application reduction. In addition, it
 uses the preservation-under-type-substitution properties of typing and of the unambiguity
@@ -777,7 +777,7 @@ main results are indicated with double borders.
 \lnode{DR}{mainres}{lemma:coherence:0}{Deterministic resolution is stable}
 \lnode{DFR}{right=0.8cm of DR}{lemma:coherence:1}{Focusing judgment is stable}
 \lnode{DLR}{right=0.8cm of DFR}{lemma:coherence:2}{Lookup judgment is stable}
-\lnode{DMR}{right=0.8cm of DLR}{lemma:coherence:3}{Matching judgment is stasble}
+\lnode{DMR}{right=0.8cm of DLR}{lemma:coherence:3}{Matching judgment is stable}
 \lnode{TP}{below=of DR}{lemma:typing_stability}{Typing preservation under type substitution}
 \lnode{TR}{mainres, below=of DFR}{lemma:tapp_reduction}{Typing is stable under type application reduction}
 \lnode{US}{below=of DLR}{lemma:unamb_subst:0}{Unambiguity preservation under type substitution}
@@ -1583,7 +1583,7 @@ By the definition of substitution and the last two obtained results used with ru
 
 \subsection{Auxiliary Lemmas About the Unification Algorithm}
 
-This section regards properties of the unification algorithm that are required by the proofs of
+This section concerns properties of the unification algorithm that are required by the proofs of
 the next sections. For this purpose, a notion of a partial order over substitutions is also
 used.
 
@@ -1695,8 +1695,8 @@ Assumption~\ref{axiom:mgu_property:3} states that $\mgu{\type}{\type'}$ is the m
 \subsection{Soundness of the Algorithmic wrt Deterministic Resolution}
 \label{proof:alg_soundness}
 This section proves soundness of the resolution algorithm with respect to its declarative
-specification. As summarized in the diagram below, the main lemma depends on three more
-soundness lemmata, one for each of the algorithmic focusing, lookup and matching judgments.
+specification. As summarized in the diagram below, the main lemma depends on three auxiliary
+soundness lemmas, one for each of the algorithmic focusing, lookup and matching judgments.
 The dependencies of these proofs follow those of the definitions of the
 corresponding judgments.
 
@@ -1984,16 +1984,16 @@ $\admress{\bar\alpha}{\tenv}{\tall{\alpha}{\rulet}}{E}{\Sigma}{\type}{E'}{\theta
 \subsection{Completeness of the Algorithm wrt Deterministic Resolution}
 
 This section proves completeness of the resolution algorithm with respect to its declarative
-counterpart. Similarly with Section~\ref{proof:alg_soundness}, the main lemma depends on three more
-soundness lemmata, one for each of the focusing, lookup and matching judgments.
+counterpart. Like in Section~\ref{proof:alg_soundness}, the main lemma depends on three auxiliary
+completeness lemmas, one for each of the focusing, lookup and matching judgments.
 The dependencies of these proofs follow those of the definitions of the
 corresponding declarative judgments.
 
-In symmetry with the case of algorithmic soundness,
+In symmetry with the proof of the auxiliary lookup lemma for algorithmic soundness,
 the proof for algorithmic lookup completeness also uses soundness of the algorithmic matching
 judgment, resulting in mutually dependent soundness and completeness proofs. Additionally,
 an auxiliary correctness property of the unification algorithm is necessary for proving
-completeness of algorithimc matching.
+completeness of algorithmic matching.
 
 \begin{center}
 \begin{tikzpicture}[node distance=1.3cm, auto,]
@@ -2003,7 +2003,7 @@ completeness of algorithimc matching.
 \lnode{AL}{right=0.8cm of AF}{lemma:acompleteness:2}{Algorithmic lookup is complete wrt det. lookup}
 \lnode{AM}{right=0.8cm of AL}{lemma:acompleteness:3}{Algorithmic matching is complete wrt det. matching}
 \lnode{AMC}{below=of AL}{lemma:asoundness:3}{Algorithmic matching is sound wrt det. matching}
-\anode{MIS}{below=of AM}{axiom:mgu_property:2}{}
+\anode{MIS}{below=of AM}{axiom:mgu_property:2}{Unification algorithm matches}
 \lnode{UAC}{left= 0.8cm of AMC}{lemma:mgu_property:1}{Unification algorithm unifies}
 %edges
 \draw[pil] (AR.north)  to [out=30,in=150]  (AF.north);
