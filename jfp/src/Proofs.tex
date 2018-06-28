@@ -1933,7 +1933,7 @@ $\theta(\type') = \theta(\type)$. Hence, the target judgment can be rewritten as
 \begin{equation*}
   \dmres{\theta(\tenv)}{\theta(\type')}{\etrans\theta{E}}{\theta(\type')}{\etrans\theta{E}}{\epsilon}
 \end{equation*}
-This follows from rule \rref{M-Simp}.
+The target goal follows from rule \rref{M-Simp}.
 
 %===============================================================================
 \item[\fbox{\rref{Alg-M-IApp}}]\quad
@@ -1966,28 +1966,28 @@ $\admress{\bar\alpha}{\tenv}{\tall{\alpha}{\rulet}}{E}{\Sigma}{\type}{E'}{\theta
 \end{description}
 \end{proof}
 
-
-%###############################################################################
-{\centering
-\fbox{
-\begin{minipage}{0.95\columnwidth}
-\begin{lemma}\label{lemma:asoundness:5}
-  If 
-\begin{equation*}
-  \admres{\bar\alpha}{\tenv}{\rulet}{E}{\Sigma}{\type}{E'}{\Sigma'}
-\end{equation*}
-  then
-\begin{equation*}
-  \coherent{\bar\alpha}{\tenv}{\rulet}{\type}
-\end{equation*}
-\end{lemma}
-\end{minipage}
-}}
-
-\begin{proof}
-  The derivation of the conclusion is obtained by erasing the irrelevant arguments
-  from the derivation of the hypothesis.
-\end{proof}
+% Following lemma is now an orphan
+%%###############################################################################
+%{\centering
+%\fbox{
+%\begin{minipage}{0.95\columnwidth}
+%\begin{lemma}\label{lemma:asoundness:5}
+%  If 
+%\begin{equation*}
+%  \admres{\bar\alpha}{\tenv}{\rulet}{E}{\Sigma}{\type}{E'}{\Sigma'}
+%\end{equation*}
+%  then
+%\begin{equation*}
+%  \coherent{\bar\alpha}{\tenv}{\rulet}{\type}
+%\end{equation*}
+%\end{lemma}
+%\end{minipage}
+%}}
+%
+%\begin{proof}
+%  The derivation of the conclusion is obtained by erasing the irrelevant arguments
+%  from the derivation of the hypothesis.
+%\end{proof}
 
 %-------------------------------------------------------------------------------
 \subsection{Completeness of the Algorithm wrt Deterministic Resolution}
@@ -2156,7 +2156,6 @@ $\dlres{\bar\alpha}{\tenv}{\tenv',\envi{\rulet}{x}}{\type}{E'}$\ \\
   \adlres{\bar\alpha}{\tenv}{\tenv'}{\type}{E'}
 %  \bar{\alpha};\tenv;\tenv' \alg \type~{\leadsto E'}
 \end{equation*}
-
   From the rule's first hypothesis and the negation of Lemma~\ref{lemma:asoundness:3}, we have:
 \begin{equation*}
 \incoherent{\bar\alpha}{\tenv}{\rulet}{\type}
@@ -2418,29 +2417,28 @@ Hence, it follows from rule \rref{Sta-TApp} that
 \end{description}
 \end{proof}
 
-%###############################################################################
-{\centering
-\fbox{
-\begin{minipage}{0.95\columnwidth}
-\begin{lemma}\label{lemma:acompleteness:4}
-  If 
-\begin{equation*}
-  \coherent{\bar\alpha}{\tenv}{\rulet}{\type}
-%  \bar{\alpha}; \rulet \coh \type
-\end{equation*}
-  then for all $E, \Sigma$ there exist $E', \Sigma'$ such that
-\begin{equation*}
-  \admres{\bar\alpha}{\tenv}{\rulet}{E}{\Sigma}{\type}{E'}{\Sigma'}
-%  \bar{\alpha};\tenv;\rulet \leadsto E; \Sigma \alg \type \leadsto E'; \Sigma'
-\end{equation*}
-\end{lemma}
-\end{minipage}
-}}
-
-\begin{proof}
-  The proof is straightforward induction on the derivation. The conclusion's judgement
-  is an annotated version of the hypothesis' judgement.
-\end{proof}
+% Following proof is now an orphan
+%%###############################################################################
+%{\centering
+%\fbox{
+%\begin{minipage}{0.95\columnwidth}
+%\begin{lemma}\label{lemma:acompleteness:4}
+%  If 
+%\begin{equation*}
+%  \coherent{\bar\alpha}{\tenv}{\rulet}{\type}
+%\end{equation*}
+%  then for all $E, \Sigma$ there exist $E', \Sigma'$ such that
+%\begin{equation*}
+%  \admres{\bar\alpha}{\tenv}{\rulet}{E}{\Sigma}{\type}{E'}{\Sigma'}
+%\end{equation*}
+%\end{lemma}
+%\end{minipage}
+%}}
+%
+%\begin{proof}
+%  The proof is straightforward induction on the derivation. The conclusion's judgement
+%  is an annotated version of the hypothesis' judgement.
+%\end{proof}
 
 % \newcommand{\vdashr}[4]{#1; #2 \vturns #3 \leadsto #4}
 % 

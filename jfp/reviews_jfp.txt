@@ -847,7 +847,7 @@ Definition A.1 has been added.
 > second and third conclusions?
 
 The structure of the algorithmic completeness proofs has changed.
-This lemma has been replace by lemmata A.31 and A.32, which are proved
+This lemma has been replace by lemmata A.30 and A.31, which are proved
 in detail.
 
 > p. 60, Lemma A.29: where is the proof of this lemma?
