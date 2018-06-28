@@ -195,7 +195,7 @@ which is less simple but unambiguous and coherent.  Every resolution
 of the second formulation is also a resolution of the first, but not
 conversely.  Parts of the second formulation bear a close resemblance
 to a standard technique for proof search in logic called
-\emph{focussing}~\cite{focusing,Miller91b,Liang:2009}. However, unlike
+\emph{focusing}~\cite{focusing,Miller91b,Liang:2009}. However, unlike
 focused proof search, which is still essentially non-deterministic,
 \name's resolution employs additional techniques to be entirely
 deterministic and coherent.  In particular, unlike focused proof
@@ -220,7 +220,7 @@ In summary, our contributions are as follows:
   existing work on the implicit calculus by Oliveira et al.~\shortcite{oliveira12implicit}. The new design for
   resolution is more powerful and expressive; it is closely based on
   principles of logic and the idea of propositions as types~\cite{propsastypes}; and is related 
-  to the idea of focussing in proof search.  
+  to the idea of focusing in proof search.  
 
 \item \name comes with a semantics in the form of a type-directed elaboration
    to System~F. 

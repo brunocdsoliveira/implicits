@@ -100,7 +100,7 @@ of resolution preserves types.
 %-------------------------------------------------------------------------------
 \subsection{Auxiliary Lemmas About Non-Determistic Resolution}
 
-The non-deterministic resolution judgement enjoys a number of
+The non-deterministic resolution judgment enjoys a number of
 typical binder-related properties.
 
 The first lemma is the weakening lemma: it states that an extended type environment
@@ -623,11 +623,11 @@ $
 \end{minipage}
 }}\\
 
-It is not difficult to see that any derivation of the annotated judgement
+It is not difficult to see that any derivation of the annotated judgment
 is in one to one correspondence with a derivation of the unannotated 
-judgement.
+judgment.
 
-Now we are ready to show that the judgement is deterministic.\\
+Now we are ready to show that the judgment is deterministic.\\
 
 %###############################################################################
 {\centering
@@ -1048,7 +1048,7 @@ $\theta' \cdot [\suty/\alpha]$. In this case, the above simplifies to
   R(\tenv;\alpha;\tenv';\tenv'';\tenv''';\suty)
 \end{equation*}
 
-  We do a case analysis on the derivation of this judgement.
+  We do a case analysis on the derivation of this judgment.
   \begin{enumerate}
   \item \rref{R-1}: \\ Then we have
 \begin{equation*}
@@ -1099,7 +1099,7 @@ Then following the rule's hypothesis and the induction hypothesis we have:
   R(\tenv;\alpha;\tenv';\tenv'';\tenv''';\suty)
 \end{equation*}
 
-  We do a case analysis on the derivation of this judgement.
+  We do a case analysis on the derivation of this judgment.
   \begin{enumerate}
   \item \rref{R-1}: \\ Then we have
 \begin{equation*}
@@ -1152,7 +1152,7 @@ R(\tenv;\alpha;\tenv';\tenv'',\relation{x}{\rulet};\tenv,(\tenv_1',\relation{x}{
   R(\tenv;\alpha;\tenv';\tenv'';\tenv''';\suty)
 \end{equation*}
 
-  We do a case analysis on the derivation of this judgement.
+  We do a case analysis on the derivation of this judgment.
   \begin{enumerate}
   \item \rref{R-1}: \\ Then we have
 \begin{equation*}
@@ -1774,7 +1774,7 @@ algorithmic matching soundness proof.
 The proof proceeds by induction on the derivation of the hypothesis.
 
 Cases \rref{Alg-R-IAbs} and \rref{Alg-R-TAbs} follow from the isomorphism
-between the rule sets of the two judgements. Case \rref{Alg-R-Simp} follows
+between the rule sets of the two judgments. Case \rref{Alg-R-Simp} follows
 from Lemma~\ref{lemma:asoundness:2}.
 \end{proof}\vspace{0.3cm}
 
@@ -1886,7 +1886,7 @@ By rule \rref{L-TyVar} we conclude
 \end{description}
 \end{proof}
 
-We assume that the judgement is decorated with an additional argument, the substitution
+We assume that the judgment is decorated with an additional argument, the substitution
 for the $\bar{\alpha}$ type variables.
 
 %###############################################################################
@@ -2083,7 +2083,7 @@ completeness of algorithmic matching.
 The proof proceeds by induction on the derivation of the third hypothesis.
 
 Cases \rref{R-IAbs} and \rref{R-TAbs} follow from the isomorphism
-between the rule sets of the two judgements. Case \rref{R-Simp} follows
+between the rule sets of the two judgments. Case \rref{R-Simp} follows
 from Lemma~\ref{lemma:acompleteness:2}.
 \end{proof}\vspace{0.3cm}
 

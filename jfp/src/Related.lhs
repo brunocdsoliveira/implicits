@@ -291,9 +291,9 @@ Part of the syntax-directedness of our deterministic resolution is very similar
 to that obtained by \emph{focusing} in proof
 search~\cite{focusing,Miller91b,Liang:2009}. Both approaches alternate a phase
 that
-is syntax directed on a ``query'' formula (our focusing judgement),
+is syntax directed on a ``query'' formula (our focusing judgment),
 with a phase that is syntax directed on a given formula (our matching
-judgement). This is as far as the correspondence goes though, as the choice
+judgment). This is as far as the correspondence goes though, as the choice
 of given formula to focus on is typically not deterministic in focused proof
 search.
 
