@@ -1813,12 +1813,10 @@ from Lemma~\ref{lemma:asoundness:2}.
   If 
 \begin{equation*}
   \adlres{\bar\alpha}{\tenv}{\tenv'}{\rulet}{E}
-%  \bar{\alpha};\tenv;\tenv' \alg \rulet \leadsto E
 \end{equation*}
   then
 \begin{equation*}
   \dlres{\bar\alpha}{\tenv}{\tenv'}{\rulet}{E}
-%  \bar{\alpha};\tenv;\tenv' \ivturns \rulet \leadsto E
 \end{equation*}
 \end{lemma}
 \end{minipage}
@@ -1836,12 +1834,10 @@ The proof proceeds by induction on the derivation of the hypothesis.
 From the rule's first hypothesis and Lemma~\ref{lemma:asoundness:3} we have
 \begin{equation*}
 \dmres{\tenv}{\rulet}{E}{\type}{E'}{\ie{\ruleset}{\bar{x}}}
-%\tenv; \rulet \leadsto E \ivturns \type \leadsto E'; \bar{\rulet} \leadsto \bar{x}
 \end{equation*}
 Then, using Lemma~\ref{lemma:asoundness:1} and rule \rref{L-RuleMatch} we conclude
 \begin{equation*}
 \dlres{\bar\alpha}{\tenv}{\tenv',\envi{\rulet}{x}}{\type}{E[\bar{E}/\bar{x}]}
-%\bar{\alpha};\tenv; \tenv', \rulet~{\leadsto x} \ivturns \type~{\leadsto E[\bar{E}/\bar{x}]}
 \end{equation*}
 
 %===============================================================================
@@ -1922,15 +1918,19 @@ for the $\bar{\alpha}$ type variables.
 \begin{lemma}\label{lemma:asoundness:3}
   If 
 \begin{equation*}
-\admress{\bar\alpha}{\tenv}{\rulet}{E}{\Sigma}{\type}{E'}{\theta(\Sigma),\Sigma'}{\theta}
+\admress{\bar\alpha}{\tenv}{\rulet}{E}{\Sigma}{\type}{E'}{\Sigma'}{\theta}
 \end{equation*}
   and
 \begin{equation*}
   \dom{(\theta)} \subseteq \bar{\alpha}
 \end{equation*}
-  then
+  then,
 \begin{equation*}
-\dmres{\theta(\tenv)}{\theta(\rulet)}{\etrans\theta(E)}{\theta(\type)}{\etrans{\theta}(E')}{\theta(\Sigma')}
+\dmres{\theta(\tenv)}{\theta(\rulet)}{\etrans\theta(E)}{\theta(\type)}{E'}{\Sigma''}
+\end{equation*}
+  for $\Sigma''$ such that
+\begin{equation*}
+  \Sigma' = \theta(\Sigma),\Sigma''
 \end{equation*}
 \end{lemma}
 \end{minipage}
@@ -1942,43 +1942,45 @@ The proof proceeds by induction on the derivation of the first hypothesis.
 \setlength{\itemsep}{1em}
 %===============================================================================
 \item[\fbox{\rref{Alg-M-Simp}}]\quad
-$\admress{\bar\alpha}{\tenv}{\type'}{E}{\Sigma}{\type}{\etrans\theta(E)}{\theta(\Sigma),\epsilon}{\theta}$\ \\
+$\admress{\bar\alpha}{\tenv}{\type'}{E}{\Sigma}{\type}{\etrans\theta(E)}{\theta(\Sigma)}{\theta}$\ \\
 %===============================================================================
 
 From the hypothesis of the rule and Lemma~\ref{lemma:mgu_property:1} it follows that
-$\theta(\type') = \theta(\type)$. Hence, the target judgment can be rewritten as
+$\theta(\type') = \theta(\type)$. Hence, with rule~\rref{M-Simp}, we obtain the goal judgment.
 \begin{equation*}
   \dmres{\theta(\tenv)}{\theta(\type')}{\etrans\theta{E}}{\theta(\type')}{\etrans\theta{E}}{\epsilon}
 \end{equation*}
-The target goal follows from rule \rref{M-Simp}.
+where the meta-variable $\Sigma''$ from the theorem statement has been instantiated to $\epsilon$.\\
 
 %===============================================================================
 \item[\fbox{\rref{Alg-M-IApp}}]\quad
-$\admress{\bar\alpha}{\tenv}{\rulet_1\To\rulet_2}{E}{\Sigma}{\type}{E'}{\theta(\Sigma),\Sigma'}{\theta}$\ \\
+$\admress{\bar\alpha}{\tenv}{\rulet_1\To\rulet_2}{E}{\Sigma}{\type}{E'}{\Sigma'}{\theta}$\ \\
 %===============================================================================
 
   From the premise of the rule, the induction hypothesis and the definition of substitution,
 we have that
 \begin{equation*}
-  \dmres{\theta(\tenv),\envi{\theta(\rulet_1)}{x}}{\theta(\rulet_2)}{\etrans\theta(\mmapp{E}{x})}{\theta(\type)}{\etrans{\theta}(E')}{\theta(\Sigma')}
+  \dmres{\theta(\tenv),\envi{\theta(\rulet_1)}{x}}{\theta(\rulet_2)}{\etrans\theta(\mmapp{E}{x})}{\theta(\type)}{E'}{\Sigma''}
 \end{equation*}
-  By rule \rref{M-IApp} we may then conclude
+where $\Sigma' = \theta(\Sigma,\ie{\rulet_1}{x}),\Sigma''$. By rule \rref{M-IApp} we may then conclude
 \begin{equation*}
-\dmres{\theta(\tenv)}{\theta(\rulet_1\To\rulet_2)}{\etrans\theta(E)}{\theta(\type)}{\etrans{\theta}(E')}{\theta(\ie{\rulet_1}{x},\Sigma')}
-\end{equation*} 
+\dmres{\theta(\tenv)}{\theta(\rulet_1\To\rulet_2)}{\etrans\theta(E)}{\theta(\type)}{E'}{\theta(\ie{\rulet_1}{x}),\Sigma''}
+\end{equation*}
+Trivially, the last condition of the theorem holds, since $\Sigma' = \theta(\Sigma),((\theta(\ie{\rulet_1}{x}),\Sigma'')$.\\
 
 %===============================================================================
 \item[\fbox{\rref{Alg-M-TApp}}]\quad
-$\admress{\bar\alpha}{\tenv}{\tall{\alpha}{\rulet}}{E}{\Sigma}{\type}{E'}{\theta(\Sigma),\Sigma'}{\theta}$\ \\
+$\admress{\bar\alpha}{\tenv}{\tall{\alpha}{\rulet}}{E}{\Sigma}{\type}{E'}{\Sigma'}{\theta}$\ \\
 %===============================================================================
 
   Then it follows from the rule's premise and from the induction hypothesis that
 \begin{equation*}
-\dmres{\theta(\tenv)}{\theta(\rulet)}{\etrans\theta(\mmapp{E}{\alpha})}{\theta(\type)}{\etrans{\theta}(E')}{\theta(\Sigma')}
+\dmres{\theta(\tenv)}{\theta(\rulet)}{\etrans\theta(\mmapp{E}{\alpha})}{\theta(\type)}{E'}{\Sigma''}
 \end{equation*}
+where $\Sigma' = \theta(\Sigma),\Sigma''$.
   Hence, it follows from rule \rref{M-TApp} that
 \begin{equation*}
-  \dmres{\theta(\tenv)}{\theta(\tall{\alpha}{\rulet})}{\etrans\theta(E)}{\theta(\type)}{\etrans{\theta}(E')}{\theta(\Sigma')}
+  \dmres{\theta(\tenv)}{\theta(\tall{\alpha}{\rulet})}{\etrans\theta(E)}{\theta(\type)}{E'}{\Sigma''}
 \end{equation*}
 \end{description}
 \end{proof}
