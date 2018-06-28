@@ -81,7 +81,7 @@ of resolution preserves types.
 {\centering
 \fbox{
 \begin{minipage}{0.95\columnwidth}
-\begin{lemma}\label{lemma:resolution}\label{lemma:tp:2}
+\begin{lemma}\label{lemma:resolution}\label{lemma:tp:2} %two labels?
   If 
 \begin{equation*}
      \ares{\tenv}{\rulet}{e}
@@ -1695,7 +1695,7 @@ Assumption~\ref{axiom:mgu_property:3} states that $\mgu{\type}{\type'}$ is the m
 %-------------------------------------------------------------------------------
 
 \subsection{Soundness of the Algorithmic wrt Deterministic Resolution}
-
+\label{proof:alg_soundness}
 This section proves soundness of the resolution algorithm with respect to its declarative
 specification. As summarized in the diagram below, the main lemma depends on three more
 soundness lemmata, one for each of the algorithmic focusing, lookup and matching judgments.
@@ -1993,13 +1993,16 @@ $\admress{\bar\alpha}{\tenv}{\tall{\alpha}{\rulet}}{E}{\Sigma}{\type}{E'}{\theta
 \subsection{Completeness of the Algorithm wrt Deterministic Resolution}
 
 This section proves completeness of the resolution algorithm with respect to its declarative
-counterpart. As summarized in the diagram below, the main lemma depends on three more
+counterpart. Similarly with Section~\ref{proof:alg_soundness}, the main lemma depends on three more
 soundness lemmata, one for each of the focusing, lookup and matching judgments.
 The dependencies of these proofs follow those of the definitions of the
-corresponding declarative judgments. In symmetry with the case of algorithmic soundness,
+corresponding declarative judgments.
+
+In symmetry with the case of algorithmic soundness,
 the proof for algorithmic lookup completeness also uses soundness of the algorithmic matching
 judgment, resulting in mutually dependent soundness and completeness proofs. Additionally,
-an auxiliary lemma for the correctness of the unification algorithm is necessary.
+an auxiliary correctness property of the unification algorithm is necessary for proving
+completeness of algorithimc matching.
 
 \begin{center}
 \begin{tikzpicture}[node distance=1.3cm, auto,]
