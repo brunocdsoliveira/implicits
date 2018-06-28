@@ -99,7 +99,7 @@ placeholders.
 of desirable properties.
 
 \begin{theorem}[Type-Preserving Translation]\label{thm:type:preservation} Let $e$ be a $\name$
-  expression, $\rulet$ be a type, $\tenv$ be a type environment and $E$ be a System F expression. If
+  expression, $\rulet$ be a type, $\tenv$ a type environment and $E$ a System F expression. If
   $\wte{\tenv}{e}{\rulet}{E}$, then $\fwte{\etrans{\tenv}}{E}{\ttrans[\rulet]}$.
 \end{theorem}
 Here we define the translation of the type environment form $\name$ to System F as:
@@ -129,8 +129,10 @@ incomplete) with respect to Figure~\ref{fig:resolution1}'s definition.
 \end{theorem}
 Secondly, the deterministic resolution is effectively deterministic:
 \begin{theorem}[Determinacy]
-The generated evidence of resolution is uniquely determined.
-\[\forall \tenv, \rulet, E_1, E_2: \quad\quad 
+%The generated evidence of resolution is uniquely determined.
+Let $\tenv$ be a type environment, $\rulet$ be a type and $E_1$, $E_2$ be system F expressions.
+Assume that $\unambig{}{\rulet}$ and $\forall ?\rulet_i\in\tenv$, $\unambig{}{\rulet_i}$. Then
+\[ %\forall \tenv, \rulet, E_1, E_2: \quad\quad 
      \dres{\tenv}{\rulet}{E_1} ~\wedge~ 
      \dres{\tenv}{\rulet}{E_2} \quad\Rightarrow\quad E_1 = E_2 \]
 \end{theorem}
@@ -138,7 +140,9 @@ It follows immediately that deterministic resolution is also coherent,
 which for our elaboration-based setting is formulated, following Biernacki and Polesiuk~\shortcite{dariusz}, in
 terms of \emph{contextual equivalence}~\cite{morris}.
 \begin{corollary}[Coherence]
-\[\forall \tenv, \rulet, E_1, E_2: \quad\quad 
+Let $\tenv$ be a type environment, $\rulet$ be a type and $E_1$, $E_2$ be system F expressions.
+Assume that $\unambig{}{\rulet}$ and $\forall ?\rulet_i\in\tenv$, $\unambig{}{\rulet_i}$. Then
+\[ %\forall \tenv, \rulet, E_1, E_2: \quad\quad 
      \dres{\tenv}{\rulet}{E_1} ~\wedge~ 
      \dres{\tenv}{\rulet}{E_2} \quad\Rightarrow\quad 
      \fctx{\etrans{\tenv}}{E_1}{E_2}{\ttrans[\rulet]} \]
@@ -157,7 +161,7 @@ Thirdly, on top of the immediate coherence of deterministic resolution,
 an additional stability property holds.  
 \begin{lemma}[Stability of Resolution]
 Resolution is stable under type substitution.
-\[\forall \tenv,\alpha,\tenv',\sigma,\rulet, E: \enskip\
+\[\forall \tenv,\alpha,\tenv',\suty,\rulet, E: \enskip\
 \dres{\tenv,\alpha,\tenv'}{\rulet}{E} \enskip\wedge\enskip \tenv \vdash \sigma
 \enskip\Rightarrow\enskip 
 \dres{\tenv,\tenv'[\sigma/\alpha]}{\rulet[\sigma/\alpha]}{E[\ttrans[\sigma]/\alpha]} \]
@@ -220,7 +224,7 @@ With the evidence we can state the correctness of the algorithm.
 
 \begin{theorem}[Partial Correctness]
 Let $\tenv$ be a type environment, $\rulet$ be a type and E be a System F expression.
-Assume that $\unambig{\epsilon}{\rulet}$ and also $\forall \rulet_i \in \tenv: \unambig{\epsilon}{\rulet_i}$.
+Assume that $\unambig{}{\rulet}$ and also $\forall ?\rulet_i \in \tenv: \unambig{}{\rulet_i}$.
 Then $\dres{\tenv}{\rulet}{E}$ if and only if $\adres{\tenv}{\rulet}{E}$.
 \end{theorem}
 
