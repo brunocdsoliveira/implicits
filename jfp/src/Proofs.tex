@@ -2094,12 +2094,10 @@ completeness of algorithmic matching.
   and
 \begin{equation*}
   \drres{\bar\alpha}{\tenv}{\rulet}{E}
-%  \bar{\alpha};\tenv \ivturns \rulet \leadsto E
 \end{equation*}
   then
 \begin{equation*}
   \adrres{\bar\alpha}{\tenv}{\rulet}{E}
-%  \bar{\alpha};\tenv \alg \rulet \leadsto E
 \end{equation*}
 \end{lemma}
 \end{minipage}
@@ -2125,12 +2123,10 @@ from Lemma~\ref{lemma:acompleteness:2}.
   and
 \begin{equation*}
   \dlres{\bar\alpha}{\tenv}{\tenv'}{\rulet}{E}
-%  \bar{\alpha};\tenv;\tenv' \ivturns \rulet \leadsto E
 \end{equation*}
   then
 \begin{equation*}
   \adlres{\bar\alpha}{\tenv}{\tenv'}{\rulet}{E}
-%  \bar{\alpha};\tenv;\tenv' \alg \rulet \leadsto E
 \end{equation*}
 \end{lemma}
 \end{minipage}
@@ -2143,20 +2139,17 @@ The proof proceeds by induction on the derivation of the second hypothesis.
 %===============================================================================
 \item[\fbox{\rref{L-RuleMatch}}]\quad
 $\dlres{\bar\alpha}{\tenv}{\tenv',\envi{\rulet}{x}}{\type}{E[\bar{E}/\bar{x}]}$ \ \\
-%$\bar{\alpha};\tenv; \tenv', \rulet~{\leadsto x} \ivturns \type~{\leadsto E[\bar{E}/\bar{x}]}$ \ \\
 %===============================================================================
 
-From the rule's first hypothesis, we derive that $\unambig{}{\rulet}$. From the rule's second
+From the first hypothesis of the theorem, we derive that $\unambig{}{\rulet}$. From the rule's second
 hypothesis and Lemma~\ref{lemma:acompleteness:3}, with $\theta=\epsilon$ and
 $\alpha=\epsilon$, we have
 \begin{equation*}
   \admres{\epsilon}{\tenv}{\rulet}{x}{\epsilon}{\type}{E'}{\ie{\bar\rulet}{\bar{x}}}
-%\epsilon; \tenv; \rulet \leadsto x; \epsilon \alg \type \leadsto E'; \bar{\rulet} \leadsto \bar{x}
 \end{equation*}
 Then, using Lemma~\ref{lemma:acompleteness:1} and rule \rref{Alg-L-RuleMatch} we conclude
 \begin{equation*}
   \adlres{\bar\alpha}{\tenv}{\tenv',\envi{\rulet}{x}}{\type}{E[\bar{E}/\bar{x}]}
-%\bar{\alpha};\tenv; \tenv', \rulet~{\leadsto x} \alg \type~{\leadsto E[\bar{E}/\bar{x}]}
 \end{equation*}
 
 %===============================================================================
