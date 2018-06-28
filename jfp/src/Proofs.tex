@@ -2009,14 +2009,16 @@ an auxiliary lemma for the correctness of the unification algorithm is necessary
 \lnode{AL}{right=0.8cm of AF}{lemma:acompleteness:2}{Algorithmic lookup is complete wrt det. lookup}
 \lnode{AM}{right=0.8cm of AL}{lemma:acompleteness:3}{Algorithmic matching is complete wrt det. matching}
 \lnode{AMC}{below=of AL}{lemma:asoundness:3}{Algorithmic matching is sound wrt det. matching}
-\lnode{MIS}{below=of AM}{axiom:mgu_property:2}{Unification algorithm produces most general unifier}
+\anode{MIS}{below=of AM}{axiom:mgu_property:2}{}
+\lnode{UAC}{left= 0.8cm of AMC}{lemma:mgu_property:1}{Unification algorithm unifies}
 %edges
-\draw[pil] (AR.north) to [out=30,in=150]  (AF.north);
-\draw[pil] (AF.north) to [out=30,in=150]  (AL.north);
-\draw[pil] (AL.south) to [out=210,in=330] (AF.south);
-\draw[pil] (AL.north) to [out=30,in=150]  (AM.north);
-\draw[pil] (AM.south)  to                 (MIS.north);
-\draw[pil] (AL.south) to                  (AMC.north);
+\draw[pil] (AR.north)  to [out=30,in=150]  (AF.north);
+\draw[pil] (AF.north)  to [out=30,in=150]  (AL.north);
+\draw[pil] (AL.south)  to [out=210,in=330] (AF.south);
+\draw[pil] (AL.north)  to [out=30,in=150]  (AM.north);
+\draw[pil] (AM.south)  to                  (MIS.north);
+\draw[pil] (AL.south)  to                  (AMC.north);
+\draw[pil] (AMC.north) to [out=150,in=30]  (UAC.north);
 \end{tikzpicture}
 \end{center}\vspace{0.5cm}
 
@@ -2241,7 +2243,7 @@ $\dmres{\theta(\tenv)}{\theta(\type')}{\etrans{\theta}(E)}{\type}{E}{\epsilon}$ 
 
 From the second hypothesis of the theorem, we have that $\bar\alpha\subseteq\ftv{\type'}$. By
 using this, together with the third and fourth hypotheses of the theorem and the side condition
-that $\type = \theta(\type')$, in Assumption~\ref{axiom:mgu_property:3}, we get
+that $\type = \theta(\type')$, in Assumption~\ref{axiom:mgu_property:2}, we get
 \begin{equation*}
   \theta = \mgu{\type}{\type'}
 \end{equation*}
