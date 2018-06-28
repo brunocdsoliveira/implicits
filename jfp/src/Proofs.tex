@@ -2093,11 +2093,8 @@ The proof proceeds by induction on the derivation of the third hypothesis.
 
 Cases \rref{R-IAbs} and \rref{R-TAbs} follow from the isomorphism
 between the rule sets of the two judgements. Case \rref{R-Simp} follows
-from Lemma~\ref{lemma:acompleteness:2}.\\
-
-%The lemma follows from the isomorphism between the 
-%rule sets of the two judgements and from Lemma~\ref{lemma:acompleteness:2}.
-\end{proof}
+from Lemma~\ref{lemma:acompleteness:2}.
+\end{proof}\vspace{0.3cm}
 
 %###############################################################################
 {\centering
@@ -2106,7 +2103,7 @@ from Lemma~\ref{lemma:acompleteness:2}.\\
 \begin{lemma}\label{lemma:acompleteness:2}
   If 
 \begin{equation*}
-  \unambenv{\tenv}
+  \unambenv{\tenv'}
 \end{equation*}
   and
 \begin{equation*}
@@ -2128,7 +2125,7 @@ The proof proceeds by induction on the derivation of the second hypothesis.
 \setlength{\itemsep}{1em}
 %===============================================================================
 \item[\fbox{\rref{L-RuleMatch}}]\quad
-$\dlres{\bar\alpha}{\tenv}{\tenv',\envi{\rulet}{x}}{\type}{E[\bar{E}/\bar{x}]}$\ \\
+$\dlres{\bar\alpha}{\tenv}{\tenv',\envi{\rulet}{x}}{\type}{E[\bar{E}/\bar{x}]}$ \ \\
 %$\bar{\alpha};\tenv; \tenv', \rulet~{\leadsto x} \ivturns \type~{\leadsto E[\bar{E}/\bar{x}]}$ \ \\
 %===============================================================================
 
@@ -2147,7 +2144,7 @@ Then, using Lemma~\ref{lemma:acompleteness:1} and rule \rref{Alg-L-RuleMatch} we
 
 %===============================================================================
 \item[\fbox{\rref{L-RuleNoMatch}}]\quad
-$\dlres{\bar\alpha}{\tenv}{\tenv',\envi{\rulet}{x}}{\type}{E'}$\ \\
+$\dlres{\bar\alpha}{\tenv}{\tenv',\envi{\rulet}{x}}{\type}{E'}$ \ \\
 %$\bar{\alpha};\tenv;\tenv', \rulet~{\leadsto x}\ivturns \type~{\leadsto E'}$ \ \\
 %===============================================================================
 
@@ -2169,7 +2166,7 @@ $\dlres{\bar\alpha}{\tenv}{\tenv',\envi{\rulet}{x}}{\type}{E'}$\ \\
 
 %===============================================================================
 \item[\fbox{\rref{L-Var}}]\quad
-$\dlres{\bar\alpha}{\tenv}{\tenv',\relation{x}{\rulet}}{\type}{E}$\ \\
+$\dlres{\bar\alpha}{\tenv}{\tenv',\relation{x}{\rulet}}{\type}{E}$ \ \\
 %$\bar{\alpha};\tenv;\tenv',x:\rulet \ivturns \type~{\leadsto E}$ \ \\
 %===============================================================================
 
