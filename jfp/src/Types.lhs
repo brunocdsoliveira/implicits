@@ -190,7 +190,7 @@ New here is that it also records instances of implicits $?\rulet$.
 % %- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 % \paragraph{Well-Typed Expressions}
 
-Typing judgment ${\wtep{\tenv}{e}{\rulet}}$ holds if
+A typing judgment ${\wtep{\tenv}{e}{\rulet}}$ holds if
 expression $e$ has type $\rulet$ with respect to type environment $\tenv$.
 The first five rules copy the corresponding predicative System F rules; only the last three deserve special attention.
 Firstly, rule \rref{Ty-IAbs} extends the implicit environment with the type of an implicit instance.
@@ -266,7 +266,7 @@ only rule types as implications, leaving function types as uninterpreted predica
 Unfortunately, the definition in Figure~\ref{fig:resolution1} suffers from two problems. 
 % \begin{enumerate}
 % \item 
-Firstly, the definition is \emph{not syntax-directed}; several of the inference
+Firstly, it is \emph{not syntax-directed}; several of the inference
 rules have overlapping conclusions. Hence, a deterministic resolution algorithm
 is non-obvious.
 % \item
@@ -302,7 +302,7 @@ and
 This example illustrates the first issue; in particular the inference rules
 \rref{AR-IVar} and \rref{AR-IApp} overlap as both can be used to conclude
 $\aresp{\Gamma_0}{\tyint}$. It also shows the second issue as there are two
-full different derivation trees for $\aresp{\Gamma_0}{\tyint}$.
+fully different derivation trees for $\aresp{\Gamma_0}{\tyint}$.
 While this may seem harmless at the type-level, at the value-level each
 derivation corresponds to a (possibly) different value. Hence, ambiguous
 resolution renders the meaning of a program ambiguous. In other words, if both
@@ -445,7 +445,7 @@ The focusing judgment $\frres{\tenv}{\rulet}{E}$ focuses on the
 type $\rulet$ that is to be resolved -- we call this type the ``goal''. There
 are three rules, for the three possible syntactic forms of~$\rulet$.
 %
-Rules~\rref{FR-TAbs} and~\rref{FR-IAbs} decompose the goal by
+Rules~\rref{FR-IAbs} and~\rref{FR-TAbs} decompose the goal by
 applying implication and quantifier introductions respectively.  Once the goal
 is stripped down to a simple type $\type$,
 Rule~\rref{FR-Simp} selects an implicit $\rulet$ from the
@@ -474,7 +474,7 @@ expresses the base case
 where the axiom is identical to the goal and there are no new goals.
 
 This type-directed formulation of entailment
-greatly reduces the number of proofs for given goal.
+greatly reduces the number of proofs for a given goal.
 %\footnote{Without loss of expressive power. See for example~\cite{FrankFocusing}.} 
 For instance, for the example above there is only one proof:
 \begin{equation*}
@@ -498,7 +498,7 @@ nondeterminism:
 % 1) the \emph{impredicative} instantiation of type variable $\alpha$
 % with a rule type $\rulet'$ in rule~\rref{FM-TApp}, 
 1) the \emph{ambiguous} instantiation of type variable $\alpha$
-with a rule type $\rulet'$ in rule~\rref{FM-TApp},
+with a monotype $\suty$ in rule~\rref{FM-TApp},
 and 2) nondeterministic selection of a rule type $\rulet$ from the type environment
 $\tenv$ in rule~\rref{FR-Simp}. This section eradicates those two remaining
 sources of nondeterminism to obtain an entirely deterministic formulation
@@ -824,7 +824,7 @@ necessary to dispel nondeterminism. We even commit to a matching rule type, if
 its recursive goals do not resolve. For instance, when resolving $\tychar$
 against the environment $\tenv = ?\tybool, ?(\tybool \To \tychar), ?(\tyint \To
 \tychar)$, we commit to $?(\tyint \To \tychar)$ even though its recursive goal $\tyint$
-cannot be resolve and thus the resolution of $\tychar$ also fails. A more permissive
+cannot be resolved and thus the resolution of $\tychar$ also fails. A more permissive
 approach would be to backtrack when a recursive resolution fails and try the next
 alternative matching rule. That would allow $\tychar$ to resolve. 
 
