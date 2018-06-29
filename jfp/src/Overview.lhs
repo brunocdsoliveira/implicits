@@ -692,7 +692,7 @@ involves applying multiple rules.
 The current environment does not contain
 the required integer pair. It does however contain the integer $3$ and a rule 
 %$\qlam{\tyInt}{\texttt{(\qask{\tyInt},\qask{\tyInt}+1)}}$
-|rule (Int => Pair Int Int) (((query Int), (query Int) + 1))| to compute a
+|rule (Int) (((query Int), (query Int) + 1))| to compute a
 pair from an integer. Hence, the query is resolved with $(3,4)$, the
 result of applying the pair-producing rule to $3$.
 
@@ -825,7 +825,7 @@ returns $2$ and not $1$:
 A simple form of type classes can be encoded in $\ourlang$ similarly 
 to how type classes can be encoded in Scala. In this section we briefly 
 (and informally) illustrate the encoding using examples. 
-The simple encoding presented here is that does not deal with \emph{superclasses}. 
+The simple encoding presented here does not deal with \emph{superclasses}. 
 We discuss superclasses, as well as other important features such as type-inference 
 in Section~\ref{}.\tom{fix reference!}
 \begin{comment} 
