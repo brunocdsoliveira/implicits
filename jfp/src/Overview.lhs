@@ -827,7 +827,7 @@ to how type classes can be encoded in Scala. In this section we briefly
 (and informally) illustrate the encoding using examples. 
 The simple encoding presented here is that does not deal with \emph{superclasses}. 
 We discuss superclasses, as well as other important features such as type-inference 
-in Section~\ref{}.\tom{fix reference!}
+in Section~\ref{sec:discussion}.
 \begin{comment} 
 However it is known that superclasses can be modelled as sugar, by computing a 
 transitive closure of the superclasses~\cite{}. Indeed in recent work 

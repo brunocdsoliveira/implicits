@@ -50,8 +50,7 @@ which can refer to it with variable $x$; the abstraction is eliminated by
 application $e_1\,e_2$.
 Similarly, $\Lambda \alpha.e$ abstracts over a type in expression $e$, which can refer to
 it with type variable $\alpha$; the abstraction is eliminated
-by \emph{predicative} type application $e\,\suty$ \tom{Add forward pointer to where
-the reason for this is explained.}. Finally, $\ilambda \rulet. e$ 
+by \emph{predicative} type application $e\,\suty$ (see Section~\ref{sec:types:predicative}). Finally, $\ilambda \rulet. e$ 
 abstracts over implicit values of type $\rulet$ in expression $e$, which can refer to it
 with implicit query $\query \rulet$; the abstraction is eliminated by
 implicit application $e_1 \with e_2$.
@@ -509,7 +508,7 @@ type substitution. First, though, we point out that our choice for predicative
 instantiation has pre-emptively avoided a further source of nondeterminism.
 
 %- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-\subsubsection{Predicative Instantiation}
+\subsubsection{Predicative Instantiation}\label{sec:types:predicative}
 
 We have restricted $\ourlang$ to predicative instantiation, i.e., type
 variables can only be instantiated with monotypes $\suty$. Impredicativity is a
