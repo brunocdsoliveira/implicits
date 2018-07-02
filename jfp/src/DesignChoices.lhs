@@ -274,8 +274,88 @@ Superclasses have a ad-hoc treatement in GHC.
 
 \subsection{Coherence}
 
-We use coherence as determinism in our paper. But, generally speaking, coherence can be interpreted
-more broadly. 
+There are several ways to enforce coherence in a language design. For
+example, Haskell guarantees coherence by ensuring that there is a
+unique instance of a type class per type. In this way whenever code
+accesses a type class dictionary, it will always return the same
+(equal) dictionary value. This is a very strict way to enforce coherence.
+
+\name's way to achieve coherence is more relaxed than Haskell's. \name
+enforces that the elaboration and resolution are deterministic but,
+under different scopes the same queries can resolve to different
+values (unlike Haskell).
+
+While determinism is sufficient to ensure
+coherence, it is still a fairly strict way to ensure coherence. A
+more relaxed and general notion of coherence is to allow elaboration
+and resolution to have multiple different (but observationality equivalent)
+terms for the same expression. Our Corollary~\ref{} provides a formal
+statement of coherence that is based on contextual equivalence of two
+expressions:
+
+\[\forall \tenv, \rulet, E_1, E_2: \quad\quad 
+     \dres{\tenv}{\rulet}{E_1} ~\wedge~ 
+     \dres{\tenv}{\rulet}{E_2} \quad\Rightarrow\quad 
+     \fctx{\etrans{\tenv}}{E_1}{E_2}{\ttrans[\rulet]} \]
+
+This statement is close to the usual definition of coherence in the
+literature~\cite{}. That is $E_1$ and $E_2$ are not required to be
+syntactically equivalent, but they must be semantically equivalent.
+Many language designs that are coherent are often not necessaraly 
+deterministic~\cite{} (unlike \name).
+
+\begin{comment}
+Finally, another possible alternative design would be not to have coherence
+by construction, but still have some checks 
+to ensure that when resolution happens there is a unique way to build
+the implicit value for the respect query. For example,
+with such an approach we could allow the implicit environment:
+$\tenv =$ |Int, Bool, forall a. Bool => a, Char|, even though 
+the query |?Int| would be ambigous because there are two
+possible possible ways to resolve the query. 
+\end{comment}
+
+\paragraph{Alternative }
+We use determinism to establish coherence in our work, but a more
+relaxed notion of coherence would also be possible. For example if,
+instead of committed choice, we decided to allow for a more powerful
+resolution strategy (for example with backtracking) then a more
+relaxed notion of coherence would be helpful. This could be useful
+to deal with some situations that appear in superclasses.
+For example, consider the context
+$\tenv =$ |Eq Int, forall a. Ord a => Eq a, Ord Int|. In this
+case the query |?(Eq Int)| can be resolved in two possible ways:
+either going via the superclass instance |Ord Int|; or by directly
+using the instance |Eq Int|. Even thought the two elaborations
+are syntactically different, their semantics is the same. 
 
 
+\begin{comment}
+Coherence is indeed a fundamental question that has to be solved one way or
+the other---and there are several ways to address this issue:
+ - The solution chosen in COCHIS is to enforce a single elaboration term, by
+   a deterministic resolution procedure, hence coherence follows by
+   construction.
+ - The Haskell solution is by enforcing uniqueness of dictionary values, so
+   that whatever the code to access a dictionary, it will always return the
+   same (equal) dictionary value.
+ - One may allow multiple elaboration paths and show that all of them are
+   observationally equivalent.  This can be a property holding by
+   construction, as for example in "Inheritance as implicit coercion" by
+   Breazu-Tannen, Coquand, Gunter, and Scedrov published in in Information
+   and computation 93 (1), 172-221, which although in a different context
+   (subtyping) was one of the first works to raise and emphasize the issue
+   of coherence.
+ - Coherence need not hold by construction: one would then check coherence
+   for each implicit argument and reject the program if two possible
+   elaborations cannot be proved observationally equivalent.
+The paper does not sufficiently discuss this design space and in particular
+the last option.  The presentation may even suggest (without explicitly
+saying so) that there is no such option.  For example, the word coherence is
+often used when determinism would be more appropriate.  Determinism implies
+coherence, but not the converse.  Coherence is what is desired.  Determinism
+is not a goal in itself.  On the opposite, more flexibility may be better,
+for instance allowing for compiler optimization; it may also lead to a
+simpler specification.
+\end{comment}
  
