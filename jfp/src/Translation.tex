@@ -113,11 +113,12 @@ Here we define the translation of the type environment form $\name$ to System F 
 
 An important lemma in the theorem's proof is the type preservation of 
 resolution.
-\begin{lemma}[Type-Preserving Resolution]
+\begin{lemma}[Type-Preserving Resolution]\label{lem:type:preservation}
 Let $\tenv$ be a type environment, $\rulet$ be a type and E be a System F expression.
 If $\ares{\tenv}{\rulet}{E}$, then $\fwte{\etrans{\tenv}}{E}{\ttrans[\rulet]}$.
 \end{lemma}
-% Both the theorem and the lemma are proven in Appendix~\ref{proof:preservation}.
+Section~\ref{proof:preservation} of the Appendix points to the mechanized proofs
+of Theorem~\ref{thm:type:preservation} and Lemma~\ref{lem:type:preservation} stated above.
 
 Moreover, we can express three key properties of Figure~\ref{fig:resolution2}'s
 definition of resolution in terms of the generated evidence.
@@ -127,8 +128,10 @@ Figure~\ref{fig:resolution2}'s deterministic definition of resolution is sound (
 incomplete) with respect to Figure~\ref{fig:resolution1}'s ambiguous definition.
 \[\forall \tenv, \rulet, E: \quad\quad \dres{\tenv}{\rulet}{E} \quad\Rightarrow\quad \ares{\tenv}{\rulet}{E} \]
 \end{theorem}
+Section~\ref{proof:det_soundness} of the Appendix points to the mechanized proof of the above
+theorem.
 Secondly, the deterministic resolution is effectively deterministic:
-\begin{theorem}[Determinacy]
+\begin{theorem}[Determinacy]\label{thm:determinacy}
 %The generated evidence of resolution is uniquely determined.
 Let $\tenv$ be a type environment, $\rulet$ be a type and $E_1$, $E_2$ be system F expressions.
 Assume that $\unambig{}{\rulet}$ and $\forall ?\rulet_i\in\tenv$, $\unambig{}{\rulet_i}$. Then
@@ -136,6 +139,9 @@ Assume that $\unambig{}{\rulet}$ and $\forall ?\rulet_i\in\tenv$, $\unambig{}{\r
      \dres{\tenv}{\rulet}{E_1} ~\wedge~ 
      \dres{\tenv}{\rulet}{E_2} \quad\Rightarrow\quad E_1 = E_2 \]
 \end{theorem}
+A full proof of Theorem~\ref{thm:determinacy} can be found in
+Section~\ref{proof:determinism} of the Appendix.
+
 It follows immediately that deterministic resolution is also coherent,
 which for our elaboration-based setting is formulated, following Biernacki and Polesiuk~\shortcite{dariusz}, in
 terms of \emph{contextual equivalence}~\cite{morris}.
@@ -158,8 +164,8 @@ contextually equivalent to itself.
 %   in other works?}
 
 Thirdly, on top of the immediate coherence of deterministic resolution, 
-an additional stability property holds.  
-\begin{lemma}[Stability of Resolution]
+an additional stability property holds.
+\begin{lemma}[Stability of Resolution]\label{lem:stable:resolution}
 Resolution is stable under type substitution.
 \[\forall \tenv,\alpha,\tenv',\suty,\rulet, E: \enskip\
 \dres{\tenv,\alpha,\tenv'}{\rulet}{E} \enskip\wedge\enskip \tenv \vdash \sigma
@@ -169,6 +175,7 @@ Resolution is stable under type substitution.
 This is a key lemma to establish that static reduction of type application 
 preserves typing and elaboration.
 \begin{lemma}[Stability of Typing under Type Application Reduction]
+\label{lem:stable:typing}
 Static reduction of type application preserves typing.
 \[\forall \tenv,\alpha,\sigma,\rulet, E: \enskip\
 \wte{\tenv}{(\Lambda \alpha.e)\,\suty}{\rulet}{(\Lambda \alpha.E)\,\ttrans[\suty]}
@@ -192,7 +199,8 @@ those terms are contextually equivalent.
 \fctx{\etrans{\tenv}}{E_1}{E_2}{\ttrans[\rulet]}
 \end{equation*}
 \end{theorem}
-
+The stability Lemmas~\ref{lem:stable:resolution} and~\ref{lem:stable:typing} are proved in
+Section~\ref{proof:coherence} of the Appendix.
 %-------------------------------------------------------------------------------
 \subsection{Evidence Generation in the Algorithm}
 
@@ -227,6 +235,9 @@ Let $\tenv$ be a type environment, $\rulet$ be a type and E be a System F expres
 Assume that $\unambig{}{\rulet}$ and also $\forall ?\rulet_i \in \tenv: \unambig{}{\rulet_i}$.
 Then $\dres{\tenv}{\rulet}{E}$ if and only if $\adres{\tenv}{\rulet}{E}$.
 \end{theorem}
+The proof is split in two parts, one for each ``direction'' of the theorem.
+Section~\ref{proof:alg_soundness} proves
+soundness of the algorithm with respect to deterministic resolution, while Section~\ref{proof:alg_completeness} proves partial completeness.
 
 %-------------------------------------------------------------------------------
 \subsection{Dynamic Semantics}
