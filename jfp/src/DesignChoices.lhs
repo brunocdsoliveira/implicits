@@ -14,9 +14,6 @@ this section we discuss and justify several of those design decisions.
 Mostly, many of these choices are motivated by the design of Haskell 
 type classes or Scala implicits.
 
-\bruno{Cite some of the papers that discuss various design options for Haskell?}
-
-
 \subsection{Predicative Instantiation}
 
 System F is an impredicative calculus, allowing the instantiation of
