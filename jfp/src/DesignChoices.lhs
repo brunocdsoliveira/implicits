@@ -315,7 +315,7 @@ the query |?Int| would be ambigous because there are two
 possible possible ways to resolve the query. 
 \end{comment}
 
-\paragraph{Alternative }
+\paragraph{Alternative Designs}
 We use determinism to establish coherence in our work, but a more
 relaxed notion of coherence would also be possible. For example if,
 instead of committed choice, we decided to allow for a more powerful
