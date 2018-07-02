@@ -188,7 +188,7 @@ This, together with another property of System~F's contextual equivalence:
      \fwte{\tenv}{(\Lambda \alpha.E)\,T}{T'} \enskip\Rightarrow\enskip 
      \fctx{\tenv}{(\Lambda \alpha.E)\,T}{E[T/\alpha]}{T'}\]
 allows us to conclude the correctness of static reduction of type application.
-\begin{theorem}[Correctness of Type Application Reduction]
+\begin{theorem}[Correctness of Type Application Reduction]\label{lem:stable:correct}
 If a type application and its reduced form elaborate to two System~F terms,
 those terms are contextually equivalent.
 \begin{equation*}

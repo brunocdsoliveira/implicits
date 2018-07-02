@@ -66,7 +66,7 @@ systems with type-inference was firstly put into place.
 Since \name is intended as a target for languages for languages with 
 implicit polymorphism and type-inference, which often have
 predicativity restrictions, restricting the core language to allow
-predicative instantiation only is does not lose expressive power in practice.
+predicative instantiation only does not lose expressive power in practice.
 
 \end{itemize}
 
@@ -79,13 +79,17 @@ design. We decided to also have the predicative instantiation even
 for the explicit type applications of \name for two reasons. Firstly,
 as already mentioned,
 since \name is aimed to be a target for source languages with
-type-inference, which often have predicative restrictions anyway, then 
+type-inference. Such source languages often have predicative restrictions anyway, thus 
 there is not much to be gained by having impredicative instantiation
 in the core. Secondly, and more importantly, some of the meta-theory
 would be more involved if impredicative instantiation on type
-applications was allowed. In particular, Lemma~\ref{}\bruno{fill me} would need 
-to be generalized to account for any types, rather than just
-monotypes.
+applications was allowed. In particular, Lemmas~\ref{lem:stable:resolution}, \ref{lem:stable:typing} and \ref{lem:stable:correct} would need 
+to be generalized to allow any types to be used in the substitution, rather than just
+monotypes. This could be problematic since the impredicative instantiations
+of the type variables could bring back the ambiguity issues discussed
+in Section~\ref{sec:ourlang}. We expect that some additional restrictions
+would need to be in place at type applications to prevent instantiations
+with problematic polymorphic types that would lead to ambiguity.
 
 Allowing full impredicativity (both in type applications and
 resolution) seems more complicated. We expect that such designs 
