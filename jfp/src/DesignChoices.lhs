@@ -48,7 +48,7 @@ is more general than another must perform implicit instantiation.
 Unfortunatelly it is well-known that for \emph{impredicative
   instantiation}, such most-general relation is undecidable~\cite{tiuryn1996subtyping}. 
 However, when only predicative instantiation is allowed, then 
-the most-general relation is decidable~\cite{odersky1996putting,dunfield}. 
+the most-general relation is decidable~\cite{odersky1996putting,dunfield,zhao18formalization}. 
 Resolution in \name is closely related to the most-general relation 
 and we believe that, under impredicative instantiation, resolution is
 indeed undecidable.\bruno{This may actually be a known result. See Rouvet?}
