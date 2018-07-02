@@ -9,7 +9,7 @@
 
 \section{Discussion}
 
-In the design of \name we had to take several design decisions. In
+In the design of \name we had to make several design decisions. In
 this section we discuss and justify several of those design decisions.
 Mostly, many of these choices are motivated by the design of Haskell 
 type classes or Scala implicits.
@@ -28,7 +28,7 @@ traditional System F is due to three factors:
 \begin{itemize}
 
 \item {\bf Impredicative instantiation in resolution leads to additional
-    ambiguity.} As discussed in Section~\ref{}, if instantiations of
+    ambiguity.} As discussed in Section~\ref{sec:ourlang}, if instantiations of
   type variables during resolution are allowed to be impredicative,
   then additional ambiguity is possible. It is not obvious how to
   remove such ambiguity while retaining impredicativity. The
@@ -39,7 +39,8 @@ traditional System F is due to three factors:
 instantiations are explicit) is simple, matters become much more
 complicated when some implicit instantiation is allowed. Indeed the
 design of System F-like calculi with implicit instantiation and/or
-some form of type-inference is much more divided in terms of design
+some form of type-inference~\cite{odersky1996putting,jones2007practical,le2003ml,leijen2008hmf,vytiniotis2008fph} is much
+more divided in terms of design
 choices regarding (im)predicativity. One key complication has todo
 with the most-general relation for implicit
 polymorphism. The most-general relation allows systems with implicit 
@@ -48,9 +49,9 @@ For example the type |Int -> Int| is an instance of the polymorphic
 type |forall a . a -> a|. An algorithm for determining whether a type
 is more general than another must perform implicit instantiation. 
 Unfortunatelly it is well-known that for \emph{impredicative
-  instantiation}, such most-general relation is undecidable~\cite{}. 
+  instantiation}, such most-general relation is undecidable~\cite{tiuryn1996subtyping}. 
 However, when only predicative instantiation is allowed, then 
-the most-general relation is decidable~\cite{}. 
+the most-general relation is decidable~\cite{odersky1996putting,dunfield}. 
 Resolution in \name is closely related to the most-general relation 
 and we believe that, under impredicative instantiation, resolution is
 indeed undecidable.\bruno{This may actually be a known result. See Rouvet?}
@@ -60,10 +61,10 @@ indeed undecidable.\bruno{This may actually be a known result. See Rouvet?}
 Due to the complications brought by impredicativity, many practical 
 languages with type-inference only allow predicative instantiation.
 For example, the key algorithm for type-inference currently employed 
-by the GHC Haskell compiler is predicative~\cite{}. Other languages
-with sophisticated forms of type-inference use similar
-algorithms~\cite{}. Worth noting is that the original Hindley-Milner (HM)
-system is where the predicativity restriction on polymorphic type
+by the GHC Haskell compiler is predicative~\cite{jones2007practical,Vytiniotis}.
+Worth noting is that the original Hindley-Milner (HM)
+type system~\cite{hindley69principal,milner78theory}
+is where the predicativity restriction on polymorphic type
 systems with type-inference was firstly put into place. 
 Since \name is intended as a target for languages for languages with 
 implicit polymorphism and type-inference, which often have
@@ -78,13 +79,14 @@ instantiation in type applications, but still retain the predicativity
 restriction during resolution. This design would be less restrictive
 than the design of \name, and we believe that it is a reasonable
 design. We decided to also have the predicative instantiation even 
-for the explicit type applications of \name for two reasons. Firstly, 
+for the explicit type applications of \name for two reasons. Firstly,
+as already mentioned,
 since \name is aimed to be a target for source languages with
 type-inference, which often have predicative restrictions anyway, then 
 there is not much to be gained by having impredicative instantiation
 in the core. Secondly, and more importantly, some of the meta-theory
 would be more involved if impredicative instantiation on type
-applications was allowed. In particular, Lemma~\ref{} would need 
+applications was allowed. In particular, Lemma~\ref{}\bruno{fill me} would need 
 to be generalized to account for any types, rather than just
 monotypes.
 
@@ -92,10 +94,9 @@ Allowing full impredicativity (both in type applications and
 resolution) seems more complicated. We expect that such designs 
 are possible, but necessaraly more complicated if ambiguity and
 undecidability are to be avoided. We expect that the work on
-impredicative type-inference~\cite{} is relevant, and perhaps some 
+impredicative type-inference~\cite{le2003ml,leijen2008hmf,vytiniotis2008fph} is relevant, and perhaps some 
 of the design choices employed in those works would be helpful 
 in the design of a system with full impredicativity.  
-
 
 \subsection{Committed Choice}
 
