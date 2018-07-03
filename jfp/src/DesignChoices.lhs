@@ -106,8 +106,8 @@ this choice is largely due to the strategy employed by Haskell. Since
 early on it was decided that Haskell should not use backtracking
 during resolution. When Haskell picks an instance it completely
 ignores the context: only the head of the instance is considered in
-resolution.  For example, consider the following program with
-overlapping instances:
+resolution. To illustrate this point,
+consider the following program with overlapping instances:
 
 %format dots ="\ldots"
 
@@ -121,10 +121,8 @@ overlapping instances:
 >   dots
 > 
 > f :: StablePtr Int -> [StablePtr Int]
-> f sp = m [sp] -- rejected!
+> f sp = m [sp] 
 
-
-\bruno{Is this a good example?}
 In this piece of code we have a type class |C a| and two
 instances. The first instance requires |Eq a|, whereas the second
 instance requires |Ord a|. The function |f| takes a stable pointer
