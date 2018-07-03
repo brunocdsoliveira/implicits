@@ -7,7 +7,7 @@
 
 %format === = "\cong"
 
-\section{Discussion}
+\section{Discussion}\label{sec:discussion}
 
 In the design of \name we had to take several design decisions. In
 this section we discuss and justify several of those design decisions.
