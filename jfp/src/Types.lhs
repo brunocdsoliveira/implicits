@@ -1657,7 +1657,7 @@ With the above issues in mind we can consider the actual definition in
 Figure~\ref{fig:algorithm}. The main unification judgment $\theta =
 \mgu{\rulet_1}{\rulet_2}$ is defined by rule~\rref{U-Main}. This rule
 computes the unifier in terms of the auxiliary judgment $\theta =
-\mgun{\bar{\alpha}}{\rulet_1}{\rulet_}$, which is essentially standard
+\mgun{\bar{\alpha}}{\rulet_1}{\rulet_2}$, which is essentially standard
 unification, and then checks the above validity concerns.  Indeed, for any type
 variable $\beta$ that appears in the image of a type variable $\alpha$, either
 $\beta$ must appear before $\alpha$ in the environment $\tenv$ (regular
@@ -1676,7 +1676,7 @@ Rules \rref{U-InstL} and \rref{U-InstR} are two
 symmetric base cases; they only create a substitution $[\suty/\alpha]$ if
 $\alpha$ is one of the unification variables and if $\alpha$ does not occur in $\suty$, which is
 the well-known occurs-check.
-Rules \rref{U-Fun}
+Rules \rref{U-Fun},
 \rref{U-Rul} and \rref{U-Univ} are standard congruence rules that combine the
 unification problems derived for their subterms.
 
