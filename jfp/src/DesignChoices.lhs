@@ -7,93 +7,98 @@
 
 %format === = "\cong"
 
-\section{Discussion}
+\section{Discussion}\label{sec:discussion}
 
-In the design of \name we had to make several design decisions. In
-this section we discuss and justify several of those design decisions.
-Mostly, many of these choices are motivated by the design of Haskell 
-type classes or Scala implicits.
+In this section we discuss and justify several of the design decisions made
+during the creation of \name. Mostly, these choices are motivated by the design
+of Haskell type classes or Scala implicits.
 
 \subsection{Predicative Instantiation}
 
-System F is an impredicative calculus, allowing the instantiation of
-type variables with arbitrary (polymorphic) types. In contrast \name 
-is predicative: instantiation of type
-variables only allows \emph{monotypes}. The reason to depart from
-traditional System F is due to three factors:
+System F is an impredicative calculus, allowing the instantiation of type
+variables with arbitrary (polymorphic) types. In contrast \name is predicative:
+instantiation of type variables only allows \emph{monotypes}. Our reasons for
+departing from System F are threefold:
 
 \begin{itemize}
 
 \item {\bf Impredicative instantiation in resolution leads to additional
-    ambiguity.} As discussed in Section~\ref{sec:ourlang}, if instantiations of
-  type variables during resolution are allowed to be impredicative,
-  then additional ambiguity is possible. It is not obvious how to
-  remove such ambiguity while retaining impredicativity. The
-  restriction to predicative instantiation removes such ambiguity.
+ambiguity.} As discussed in Section~\ref{sec:ourlang}, impredicative
+instantiations of type variables during resolution can lead to ambiguity. The
+restriction to predicative instantiation removes this ambiguity, and we see no
+way that preserves impredicativity to achieve the same. 
 
-\item {\bf Impredicativity is complex when some implicit instantiation
-  is allowed.} While traditional System F (where all type
-instantiations are explicit) is simple, matters become much more
-complicated when some implicit instantiation is allowed. Indeed the
-design of System F-like calculi with implicit instantiation and/or
-some form of type-inference~\cite{odersky1996putting,jones2007practical,le2003ml,leijen2008hmf,vytiniotis2008fph} is much
+\item {\bf Impredicativity is complex for implicit instantiation.} While System F (where all type instantiations are
+explicit) is simple, matters become much more complicated when some implicit
+instantiation is allowed. Indeed, the design of System F-like calculi with
+implicit instantiation and/or some form of
+type-inference~\cite{odersky1996putting,jones2007practical,le2003ml,leijen2008hmf,vytiniotis2008fph}
+is much
 more divided in terms of design
-choices regarding (im)predicativity. One key complication has todo
-with the most-general relation for implicit
-polymorphism. The most-general relation allows systems with implicit 
-polymorphism to decide whether a type is an instance of another type. 
-For example the type |Int -> Int| is an instance of the polymorphic 
-type |forall a . a -> a|. An algorithm for determining whether a type
-is more general than another must perform implicit instantiation. 
-Unfortunatelly it is well-known that for \emph{impredicative
-  instantiation}, such most-general relation is undecidable~\cite{tiuryn1996subtyping}. 
-However, when only predicative instantiation is allowed, then 
-the most-general relation is decidable~\cite{odersky1996putting,dunfield,zhao18formalization}. 
-Resolution in \name is closely related to the most-general relation 
-and we believe that, under impredicative instantiation, resolution is
-indeed undecidable.\bruno{This may actually be a known result. See Rouvet?}
+choices regarding (im)predicativity. Notably, Rouvoet~\shortcite{Rouvoet} has shown that
+the ambiguous resolution from the implicit calculus~\cite{oliveira12implicit}, which is the impredicative
+variant of our Figure~\ref{fig:resolution1}, is undecidable. His proof proceeds by showing
+that the problem is equivalent to the System F type inhabitation problem, which is 
+known to be undecidable~\cite{lambdacalculus}.
+
+% TOM: I don't think we need to say any of this anymore since Rouvoet already
+% shows that ambiguous resolution is undecidable.
+%
+% One key complication has to do
+% with the most-general relation for implicit
+% polymorphism. The most-general relation allows systems with implicit 
+% polymorphism to decide whether a type is an instance of another type. 
+% For example the type |Int -> Int| is an instance of the polymorphic 
+% type |forall a . a -> a|. An algorithm for determining whether a type
+% is more general than another must perform implicit instantiation. 
+% Unfortunately, it is well-known that for \emph{impredicative
+%   instantiation}, the most-general relation is undecidable~\cite{tiuryn1996subtyping}. 
+% However, when only predicative instantiation is allowed, then 
+% the most-general relation is decidable~\cite{odersky1996putting,dunfield,zhao18formalization}. 
+% Resolution in \name is closely related to the most-general relation 
+% and we believe that, under impredicative instantiation, resolution is
+% indeed undecidable.\bruno{This may actually be a known result. See Rouvet?}
 
 \item {\bf Predicative instantiation is not a big restriction in
     practice.} 
-Due to the complications brought by impredicativity, many practical 
+Due to the above complications brought by impredicativity, many practical 
 languages with type-inference only allow predicative instantiation.
 For example, the key algorithm for type-inference currently employed 
 by the GHC Haskell compiler is predicative~\cite{jones2007practical,Vytiniotis}.
 Worth noting is that the original Hindley-Milner (HM)
 type system~\cite{hindley69principal,milner78theory}
 is where the predicativity restriction on polymorphic type
-systems with type-inference was firstly put into place. 
-Since \name is intended as a target for languages for languages with 
-implicit polymorphism and type-inference, which often have
-predicativity restrictions, restricting the core language to allow
-predicative instantiation only does not lose expressive power in practice.
+systems with type-inference was first put into place. 
+Since \name is intended as a target for languages with 
+implicit polymorphism and type-inference, which have
+predicativity restrictions, restricting the core language to allow only
+predicative instantiation does not pose any problems.
 
 \end{itemize}
 
 \paragraph{Alternative Design Choices} One alternative design choice
 worth mentioning for \name would be to allow impredicative
-instantiation in type applications, but still retain the predicativity
+instantiation in explicit type applications, but still retain the predicativity
 restriction during resolution. This design would be less restrictive
 than the design of \name, and we believe that it is a reasonable
-design. We decided to also have the predicative instantiation even 
-for the explicit type applications of \name for two reasons. Firstly,
+design. We decided against it for two reasons. Firstly,
 as already mentioned,
-since \name is aimed to be a target for source languages with
-type-inference. Such source languages often have predicative restrictions anyway, thus 
-there is not much to be gained by having impredicative instantiation
+\name is aimed to be a target for source languages with
+type-inference. As these source languages have predicative restrictions anyway, 
+there is little to be gained from having impredicative instantiation
 in the core. Secondly, and more importantly, some of the meta-theory
 would be more involved if impredicative instantiation on type
-applications was allowed. In particular, Lemmas~\ref{lem:stable:resolution}, \ref{lem:stable:typing} and \ref{lem:stable:correct} would need 
+applications were allowed. In particular, Lemmas~\ref{lem:stable:resolution}, \ref{lem:stable:typing} and \ref{lem:stable:correct} would need 
 to be generalized to allow any types to be used in the substitution, rather than just
 monotypes. This could be problematic since the impredicative instantiations
 of the type variables could bring back the ambiguity issues discussed
-in Section~\ref{sec:ourlang}. We expect that some additional restrictions
-would need to be in place at type applications to prevent instantiations
+in Section~\ref{sec:ourlang}. We expect that additional restrictions
+would needed at type applications to prevent instantiations
 with problematic polymorphic types that would lead to ambiguity.
 
 Allowing full impredicativity (both in type applications and
-resolution) seems more complicated. We expect that such designs 
-are possible, but necessaraly more complicated if ambiguity and
+resolution) seems more complicated. We expect that such a design
+is possible, but necessarily more complicated if ambiguity and
 undecidability are to be avoided. We expect that the work on
 impredicative type-inference~\cite{le2003ml,leijen2008hmf,vytiniotis2008fph} is relevant, and perhaps some 
 of the design choices employed in those works would be helpful 
@@ -358,4 +363,3 @@ is not a goal in itself.  On the opposite, more flexibility may be better,
 for instance allowing for compiler optimization; it may also lead to a
 simpler specification.
 \end{comment}
- 
