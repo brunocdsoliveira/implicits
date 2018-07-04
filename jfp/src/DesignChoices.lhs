@@ -205,7 +205,7 @@ Superclasses are not directly supported by \name. With respect to superclasses \
 of Scala implicits, which do not have a concept similar to
 superclasses either\footnote{Note that, in Scala, superclasses are often
 simulated with OO Subtyping and class hierarchies, although there
-is not one-to-one correspondence between superclasses and OO hierarchies.}.
+is no one-to-one correspondence between superclasses and OO hierarchies.}.
 However, while superclasses are not directly supported, this does not mean
 that they cannot be encoded.
 
