@@ -817,6 +817,7 @@ to resolve the goal $\tyint$ against the environment $\tenv =
 entry, which elaborates to $y$, is committed to and the second entry is not
 considered.
 
+\begin{comment}
 \paragraph{No Backtracking}
 
 Observe that our definition commits more eagerly to a matching rule type than
@@ -835,7 +836,7 @@ checker and incurs an overhead (e.g., maintaining a \emph{trail} stack) to
 allow undoining modifications. Moreover, it is harder to follow the algorithmic
 behavior and debug it, and less obvious how to report failure to the
 programmer. For these reasons, we have avoided backtracking in our design.
- 
+\end{comment}
 %- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 \subsubsection{Stability}
 

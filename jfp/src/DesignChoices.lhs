@@ -93,7 +93,7 @@ to be generalized to allow any types to be used in the substitution, rather than
 monotypes. This could be problematic since the impredicative instantiations
 of the type variables could bring back the ambiguity issues discussed
 in Section~\ref{sec:ourlang}. We expect that additional restrictions
-would needed at type applications to prevent instantiations
+would be needed at type applications to prevent instantiations
 with problematic polymorphic types that would lead to ambiguity.
 
 Allowing full impredicativity (both in type applications and
@@ -111,8 +111,8 @@ this choice is largely due to the strategy employed by Haskell. Since
 early on it was decided that Haskell should not use backtracking
 during resolution. When Haskell picks an instance it completely
 ignores the context: only the head of the instance is considered in
-resolution.  For example, consider the following program with
-overlapping instances:
+resolution. To illustrate this point,
+consider the following program with overlapping instances:
 
 %format dots ="\ldots"
 
@@ -126,10 +126,8 @@ overlapping instances:
 >   dots
 > 
 > f :: StablePtr Int -> [StablePtr Int]
-> f sp = m [sp] -- rejected!
+> f sp = m [sp] 
 
-
-\bruno{Is this a good example?}
 In this piece of code we have a type class |C a| and two
 instances. The first instance requires |Eq a|, whereas the second
 instance requires |Ord a|. The function |f| takes a stable pointer
@@ -140,16 +138,18 @@ instance |Eq (StablePointer a)| but not one for |Ord (StablePointer a)|.
 
 The question is should the above code type-check or not? In GHC
 Haskell the answer is no.  Even though for this program there is no
-ambiguity: the only choice is to pick the first type class instance,
+ambiguity -- the only choice is to pick the first type class instance --
 the program is nevertheless rejected. The reason is that when
 overlapping instances are used in Haskell, resolution only looks at
 the head of the instances. In this case there are two equality specific
 heads |C [a]| and therefore the program is rejected.
 
-Although this design choice is not very well documented in the
+
+Although this Haskell design choice is not very well documented in the
 research literature, the reason for not allowing backtracking is folklore among
 Haskell programmers and can be found in documentation and
-emails~\cite{}. In essence there are two argument for not allowing
+emails~\cite{}\bruno{Tom: Can you put some references here? (blogs, emails, documentation is fine)}.
+In essence there are two arguments for not allowing
 backtracking during resolution:
 
 \begin{itemize}
@@ -173,22 +173,54 @@ in type-checking.
 
 \end{itemize}
 
+\paragraph{No Backtracking in \name} Like in Haskell, our committed choice design
+for \name also looks at head of rules only, whereas a design with backtracking
+would need to look at the contexts as well.
+In other words we commit to a matching rule type, even if
+its recursive goals do not resolve. For instance, when resolving $\tychar$
+against the environment $\tenv = ?\tybool, ?(\tybool \To \tychar), ?(\tyint \To
+\tychar)$, we commit to $?(\tyint \To \tychar)$ even though its recursive goal $\tyint$
+cannot be resolved and thus the resolution of $\tychar$ also fails. A more permissive
+approach would be to backtrack when a recursive resolution fails and try the next
+alternative matching rule. That would allow $\tychar$ to resolve. 
+
+While backtracking is a perfectly established technique in proof search and
+logic programming, it is often shunned in type checking algorithms for
+pragmatic reasons. Here we have opted for a design that looks at the heads
+of rules only, following a similar design choice taken in Haskell. 
+
 \paragraph{Alternative Designs} Other implicit programming mechanisms
-allow backtracking~\cite{}. Therefore another reasonable choice would
+allow backtracking~\cite{DBLP:journals/corr/WhiteBY15}. Therefore another reasonable choice would
 be to employ an algorithm that would perform backtracking as well. Allowing
 backtracking has some advantages. For example more queries
 would be accepted, and it would be possible to have a sound and complete
-algorithm (instead of just a sound one) with respect to Figure~\ref{}.
+algorithm (instead of just a sound one) with respect to Figure~\ref{fig:resolutionf}.
+However there are still some hurdles to be overcomed in order to design a coherent and stable
+algorithm with backtracking. In particular, the specification in Figure~\ref{fig:resolutionf} does
+not guarantee stability, so additional restrictions would need to be into place
+to prevent unstable resolution of queries. 
+
 In our work we opted by an algorithm that follows some of the practical considerations
 that were discussed before in the Haskell community. The nearly 30 years
 of experience with Haskell type classes indicate that such a choice works
 reasonably well in practice. Nonetheless allowing backtracting does have
 better properties in theory, and despite the practical disadvantages with
 respect to committed choice, we think it is still a reasonable and worthwhile
-design to explore in the context of programming languages. Indeed designs such as
-Ocaml implicits~\cite{} are representative of such algorithms in practice.
+design to explore in the context of programming languages.
 
-In the context of theorem proving where
+The Ocaml implicits~\cite{DBLP:journals/corr/WhiteBY15} approach suggests another alternative approach.
+When a query is resolved, we exhaustively search the context for all possible
+possible solutions. If more than one solution is found then the program is
+rejected due to ambiguity. In this way it is possible to have highly overlapping
+rules in the context, that could result in some queries being ambiguous.
+One advantage of this design is its flexibility, since contexts can be more
+liberal and all queries that would be resolved in unambigous contexts with backtracking
+can, in principle, also be resolved with the Ocaml implicits approach.
+However the Ocaml implicits approach is not formalized yet, and the fact that contexts
+have to be search exhaustively raises practical questions regarding performance and
+ease of reasoning that dictated the simpler choice taken in Haskell type classes.
+
+Finally, in the context of theorem proving where
 proof irrelevance is often in play having backtracking seems to be a better choice.
 If type classes are building evidence for proofs, then proof irrelevance means
 that it does not matter which concrete proof is found. What matters is that
