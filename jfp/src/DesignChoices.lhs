@@ -104,7 +104,7 @@ impredicative type-inference~\cite{le2003ml,leijen2008hmf,vytiniotis2008fph} is 
 of the design choices employed in those works would be helpful 
 in the design of a system with full impredicativity.  
 
-\subsection{Committed Choice}
+\subsection{Committed Choice}\label{sec:committed}
 
 \name employs a committed choice for resolution. The motivation for
 this choice is largely due to the strategy employed by Haskell. Since
@@ -244,10 +244,10 @@ that they cannot be encoded.
 At first sight superclasses seem to rely on the ability
 to backtrack. Therefore an important question is whether the choice
 of committed choice precludes superclasses. 
-As we have argued in Section~\ref{}, Haskell does not support
+As we have argued in Section~\ref{sec:committed}, Haskell does not support
 backtracking either, and yet it supports superclasses. Although we do
 not cover superclasses in our work, and in particular in the
-(informally presented) encoding in Section~\ref{}, it is possible to
+(informally presented) encoding in Section~\ref{subsec:encoding}, it is possible to
 model superclasses even when the search strategy employs committed
 choice. Here we discuss superclasses in some more detail, and informaly
 discuss how superclasses can be integrated with a \name-like calculus.
@@ -277,39 +277,87 @@ Superclasses allow the use of methods from the superclasses, even if only a subc
 is part of the type class context. For example:
 
 > p :: Ord a => a -> a -> Bool
-> p = (==)     -- accepted because |Eq a| is a supertype of |Ord a|
+> p = (==)     -- accepted because |Eq a| is a superclass of |Ord a|
 
 \noindent In this case the type of the function |p| assummes that an
 instance for |Ord a| exists. In the body of |p|, the method |==| (of the class |Eq a|)
 is used. This code is accepted in Haskell because |Eq a| is a superclass
 of |Ord a|. 
 
-\paragraph{Superclasses and Overlapping} Consider the following variant of |p|, defined
+\paragraph{Superclasses, Determinism and Coherence}
+One important remark when discussing superclasses is that
+it is non-obvious whether determinism and coherence can be preserved.
+Consider the following variant of |p|, defined
 only for integers:
 
 > p' :: Int -> Int -> Bool
 > p' = (==)     
 
-\noindent This program is also accepted in Haskell. However, 
+\noindent This program is accepted in Haskell. However, 
 one important point about this example is that when finding the implementation
 of |==| in |p| there are actually two possible ways to do so.
 One option is to get the implementation of |Eq Int| directly from
 the |Eq Int| instance. The other option is to get an implementation
 of |Eq Int| from |Ord Int| via the superclass.
+The two elaborations
+would actually be syntactically different, so strictly speaking an elaboration
+with Haskell superclasses is not deterministic. Nonetheless the elaboration is still
+coherent, since both elaborations have the same semantics (they both eventually execute the
+code of the |Eq Int| instance).
 
-We can try to translate the Haskell program into \name by considering
+One important difference to \name, however, is that in Haskell instances are unordered,
+whereas \name uses lexical scoping for rules. Thus \name could be potentialy be deterministic
+due to the ordering of rules in a context.
+
+
+\paragraph{A First Attempt at Encoding Superclasses}
+We can try to translate the previous Haskell definitions into \name by considering
 the superclass relation as an additional rule of the form |forall a. Ord a => Eq a|.
-However the corresponding \name program would not type-check.
-In essence we appear to have a situation where we have a context similar to
-$\tenv =$ |Eq Int, forall a. Ord a => Eq a, Ord Int|, and we have
-to resolve the query |?(Eq Int)|. In \name however, the stability conditions
-would prevent the program |p'| from type-checking under the context $\tenv$.
+With the additional rule we can have a context 
+$\tenv =$ |forall a. Ord a => Eq a, Eq Int, Ord Int| to model the set of instances and the superclass
+relation above\bruno{Tom, we would like to have the superclass rules
+always with the lowest priority right?}. Under this context \name would resolve
+resolve the query |?(Eq Int)| unambigously by picking the second entry in $\tenv$.
+Additionaly, we would also be able to resolve the query |?(Eq a)| arising in the
+definition |p|, since the local context would be
+$\tenv_1 =$ |forall a. Ord a => Eq a, Eq Int, Ord Int, Ord a| and the superclass
+rule together with the last entry in the environment could then be used to conclude |Eq a|.
 
+Unfortunately there is a problem with such an encoding. Suppose that we only have
+the following class declarations and instances:
 
+> class Eq a where
+>   (==) :: a -> a -> Bool
+>
+> class Eq a => Ord a where
+>   (<) :: a -> a -> Bool
+>
+> instance Eq Int where
+>   dots
+
+\noindent That is, there is no longer an instance for |Ord Int|. If the environment
+that we use for resolution is $\tenv =$ |forall a. Ord a => Eq a, Eq Int| then resolving
+|?(Eq Int)| is still possible. However if the order of the rules is swapped and we have
+instead $\tenv =$ |Eq Int, forall a. Ord a => Eq a| then resolving |?(Eq Int)| would fail
+because the first rule would be matched and resolution would fail because it is not
+possible to satiusfy |Ord Int| required by the first rule. In this case the committed
+choice semantics prevents reaching the rule that would resolve |Eq Int|.
+
+\bruno{The following 2 are for you Tom.}
+\paragraph{Superclasses with Committed Choice}
+The problem that we just saw in our encoding is also a problem in GHC Haskell, and GHC
+Haskell does not treat rules arizing from superclasses in the same way as rules arizing
+from type class instances. Instead \bruno{fill me in}
+
+Could we model superclasses with a similar approach in \name? What are the challenges?
+coherence?
+
+\paragraph{Superclasses with Global Scoping and \name-style Resolution in GHC Haskell}
+The newest version of GHC has a \name-inspired resolution algorithm in order to deal
+with \emph{quantified class constraints}~\cite{}.\bruno{fill me in} 
 
 But resolution in the presence of superclasses behaves differently from overlapping instances. 
 
-Superclasses have a ad-hoc treatement in GHC. 
 
 \subsection{Coherence}
 
@@ -328,7 +376,7 @@ While determinism is sufficient to ensure
 coherence, it is still a fairly strict way to ensure coherence. A
 more relaxed and general notion of coherence is to allow elaboration
 and resolution to have multiple different (but observationality equivalent)
-terms for the same expression. Our Corollary~\ref{} provides a formal
+terms for the same expression. Our Corollary~\ref{lem:coherence} provides a formal
 statement of coherence that is based on contextual equivalence of two
 expressions:
 
@@ -338,10 +386,11 @@ expressions:
      \fctx{\etrans{\tenv}}{E_1}{E_2}{\ttrans[\rulet]} \]
 
 This statement is close to the usual definition of coherence in the
-literature~\cite{}. That is $E_1$ and $E_2$ are not required to be
+literature~\cite{Reynolds91coherence,qual,BreazuTannen&91}.
+That is $E_1$ and $E_2$ are not required to be
 syntactically equivalent, but they must be semantically equivalent.
 Many language designs that are coherent are often not necessaraly 
-deterministic~\cite{} (unlike \name).
+deterministic (unlike \name).
 
 \begin{comment}
 Finally, another possible alternative design would be not to have coherence
@@ -361,7 +410,7 @@ instead of committed choice, we decided to allow for a more powerful
 resolution strategy (for example with backtracking) then a more
 relaxed notion of coherence would be helpful. This could be useful
 to deal with some situations that appear in superclasses.
-For example, consider the context
+For example, consider again the context
 $\tenv =$ |Eq Int, forall a. Ord a => Eq a, Ord Int|. In this
 case the query |?(Eq Int)| can be resolved in two possible ways:
 either going via the superclass instance |Ord Int|; or by directly

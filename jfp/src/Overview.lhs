@@ -821,7 +821,7 @@ returns $2$ and not $1$:
 
 
 %~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
-\subsubsection{Encoding Simple Type Classes in $\ourlang$} 
+\subsubsection{Encoding Simple Type Classes in $\ourlang$}\label{subsec:encoding}
 A simple form of type classes can be encoded in $\ourlang$ similarly 
 to how type classes can be encoded in Scala. In this section we briefly 
 (and informally) illustrate the encoding using examples. 
