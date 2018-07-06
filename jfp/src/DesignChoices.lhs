@@ -223,30 +223,31 @@ drawback.
 
 \subsection{Superclasses}
 
-Superclasses are not directly supported by \name. With respect to superclasses \name follows the design
-of Scala implicits, which do not have a concept similar to
-superclasses either\footnote{Note that, in Scala, superclasses are often
-simulated with OO Subtyping and class hierarchies, although there
-is no one-to-one correspondence between superclasses and OO hierarchies.}.
-However, while superclasses are not directly supported, this does not mean
-that they cannot be encoded.
+Like Scala's implicit design,\footnote{Note that, superclasses are often
+simulated in Scala with OO Subtyping and class hierarchies, although there is
+no one-to-one correspondence between both.} \name does not directly support
+superclasses.  
+% However, while superclasses are not directly supported, this
+% does not mean that they cannot be encoded.
+While superclasses can be encoded in \name, there are several problems.
 
-At first sight superclasses seem to rely on the ability
-to backtrack. Therefore an important question is whether the choice
-of committed choice precludes superclasses. 
-As we have argued in Section~\ref{sec:committed}, Haskell does not support
-backtracking either, and yet it supports superclasses. Although we do
-not cover superclasses in our work, and in particular in the
-(informally presented) encoding in Section~\ref{subsec:encoding}, it is possible to
-model superclasses even when the search strategy employs committed
-choice. Here we discuss superclasses in some more detail, and informaly
-discuss how superclasses can be integrated with a \name-like calculus.
+% At first sight superclasses seem to rely on the ability to backtrack, as we may
+% try to obtain a class directly or indirectly through one of its subclasses and
+% apriori may not know which approach resolves transitively.
+% Therefore an important question is whether the choice
+% of committed choice precludes superclasses. 
+% As we have argued in Section~\ref{sec:committed}, Haskell does not support
+% backtracking either, and yet it supports superclasses. Although we do
+% not cover superclasses in our work, and in particular in the
+% (informally presented) encoding in Section~\ref{subsec:encoding}, it is possible to
+% model superclasses even when the search strategy employs committed
+% choice. Here we discuss superclasses in some more detail, and informaly
+% discuss how superclasses can be integrated with a \name-like calculus.
 
 \paragraph{Superclasses in Haskell}
-Since the inception of type classes in Haskell that superclasses have
-been supported.  A familiar example of superclasses is illustrated by
-the classes |Eq| and |Ord| in Haskell, where |Eq| is a superclass of
-|Ord|. The following simplified piece of code shows the two classes,
+Haskell has supported superclasses since the introduction of type classes. The
+|Eq| and |Ord| classes, with |Eq| a superclass of |Ord|, constitute a standard example.
+The following simplified code shows the two classes,
 together with instances for integers:
 
 > class Eq a where
@@ -255,83 +256,68 @@ together with instances for integers:
 > class Eq a => Ord a where
 >   (<) :: a -> a -> Bool
 >
-> instance Eq Int where
->   dots
+> instance Eq Int where dots
 >
-> instance Ord Int where
->   dots
+> instance Ord Int where dots
 
-\noindent In the definition of the class |Ord| the type class constraint |Eq a| specifies
+\noindent In the class context |Eq a| in the definition of the |Ord| class specifies
 that |Eq a| is a superclass of |Ord a|.
-Superclasses allow the use of methods from the superclasses, even if only a subclass
+Superclasses allow the use of methods from the superclasses, even if only the subclass
 is part of the type class context. For example:
 
 > p :: Ord a => a -> a -> Bool
 > p = (==)     -- accepted because |Eq a| is a superclass of |Ord a|
 
-\noindent In this case the type of the function |p| assummes that an
-instance for |Ord a| exists. In the body of |p|, the method |==| (of the class |Eq a|)
+\noindent Here the signature of function |p| assummes that an
+instance for |Ord a| is available. In the body of |p|, the method |(==)| of the class |Eq a|
 is used. This code is accepted in Haskell because |Eq a| is a superclass
 of |Ord a|. 
 
 \paragraph{Superclasses, Determinism and Coherence}
-One important remark when discussing superclasses is that
-it is non-obvious whether determinism and coherence can be preserved.
-Consider the following variant of |p|, defined
+In the presence of superclasses, Haskell's resolution is not deterministic.
+Consider this variant of |p|, defined
 only for integers:
 
 > p' :: Int -> Int -> Bool
 > p' = (==)     
 
-\noindent This program is accepted in Haskell. However, 
-one important point about this example is that when finding the implementation
-of |==| in |p| there are actually two possible ways to do so.
-One option is to get the implementation of |Eq Int| directly from
-the |Eq Int| instance. The other option is to get an implementation
-of |Eq Int| from |Ord Int| via the superclass.
-The two elaborations
-would actually be syntactically different, so strictly speaking an elaboration
-with Haskell superclasses is not deterministic. Nonetheless the elaboration is still
-coherent, since both elaborations have the same semantics (they both eventually execute the
-code of the |Eq Int| instance).
+\noindent Haskell has two ways to resolve |Eq Int| to obtain the implementation
+of |==| in |p'|. The first is to get the implementation of |Eq Int|
+directly from the |Eq Int| instance. The second is to get an
+implementation
+of |Eq Int| as the superclass of |Ord Int|.
+The two elaborations are
+syntactically different, which makes elaboration
+with Haskell superclasses non-deterministic. Nonetheless the elaboration is still
+coherent, since both elaborations yield the same semantics (they both execute the
+code of the one |Eq Int| instance).
 
-One important difference to \name, however, is that in Haskell instances are unordered,
-whereas \name uses lexical scoping for rules. Thus \name could be potentialy be deterministic
-due to the ordering of rules in a context.
+% Haskell's resolution is non-determinsm is due to the fact that it does not order
+% instance 
+% An important difference with \name is that Haskell instances are unordered,
+% whereas \name uses lexical scoping for implicits. Thus \name can be deterministic
+% due to the ordering of the implicits in the context.
 
 
 \paragraph{A First Attempt at Encoding Superclasses}
-We can try to translate the previous Haskell definitions into \name by considering
-the superclass relation as an additional rule of the form |forall a. Ord a => Eq a|.
-With the additional rule we can have a context 
-$\tenv =$ |forall a. Ord a => Eq a, Eq Int, Ord Int| to model the set of instances and the superclass
-relation above\bruno{Tom, we would like to have the superclass rules
-always with the lowest priority right?}. Under this context \name would resolve
-resolve the query |?(Eq Int)| unambigously by picking the second entry in $\tenv$.
-Additionaly, we would also be able to resolve the query |?(Eq a)| arising in the
-definition |p|, since the local context would be
-$\tenv_1 =$ |forall a. Ord a => Eq a, Eq Int, Ord Int, Ord a| and the superclass
-rule together with the last entry in the environment could then be used to conclude |Eq a|.
+We can try to encode the previous Haskell definitions in then \name 
+environment $\tenv = ?|forall a. Ord a => Eq a|, ?|Eq Int|, |Ord Int|$, whose
+implicit entries capture the superclass relation and the two instances.
+With respect to \name, the query |?(Eq Int)| resolves deterministically by picking the second entry in $\tenv$.
+Hence, \name's explicit ordering of implicits avoids Haskell's non-determinism.
 
-Unfortunately there is a problem with such an encoding. Suppose that we only have
-the following class declarations and instances:
+% We would also be able to resolve the query |?(Eq Bool)| arising in the
+% definition |p|, since the local context would be
+% $\tenv_1 =$ |forall Bool. Ord Bool => Eq Bool, Eq Int, Ord Int, Ord Bool| and the superclass
+% rule together with the last entry in the environment could then be used to conclude |Eq Bool|.
 
-> class Eq a where
->   (==) :: a -> a -> Bool
->
-> class Eq a => Ord a where
->   (<) :: a -> a -> Bool
->
-> instance Eq Int where
->   dots
-
-\noindent That is, there is no longer an instance for |Ord Int|. If the environment
-that we use for resolution is $\tenv =$ |forall a. Ord a => Eq a, Eq Int| then resolving
-|?(Eq Int)| is still possible. However if the order of the rules is swapped and we have
-instead $\tenv =$ |Eq Int, forall a. Ord a => Eq a| then resolving |?(Eq Int)| would fail
-because the first rule would be matched and resolution would fail because it is not
-possible to satiusfy |Ord Int| required by the first rule. In this case the committed
-choice semantics prevents reaching the rule that would resolve |Eq Int|.
+While the ordering is beneficial for determinism, fewer queries may succeed due to
+an unsuitable order of implicits.
+For example, suppose that we have instead the environment
+$\tenv = ?|Eq Int|, ?|forall a. Ord a => Eq a|$, then resolving
+|?(Eq Int)| fails
+because the first entry matches and its requirement |Ord Int| cannot be satisfied. In this case the committed
+choice semantics prevents reaching the second entry, which would resolve |Eq Int| directly.
 
 \bruno{The following 2 are for you Tom.}
 \paragraph{Superclasses with Committed Choice}
