@@ -56,7 +56,14 @@
 >    particular the informal and formal meaning of "coherence" seems to
 >    differ.
 
-BRUNO: I've been improving this, especially in Sections 1 and 2.
+IMPROVED: We have improved on all of these four points:
+
+* The metatheory was improved, strenghtned and cleaned up.
+
+* There is now a full Section discussing design decisions (Section 6)
+
+* We have done an extensive revision of the text to be precise about
+terminology.
 
 > 
 > For the most part, this paper is very well written, in a clear and
@@ -78,7 +85,7 @@ BRUNO: I've been improving this, especially in Sections 1 and 2.
 > between stability and equational reasoning is never made formal.
 
 BRUNO: Point out that the new theorems about stability relate to
-equational reasoning?
+equational reasoning? (TODO?)
 
 > Furthermore, only a weak variant of stability (under monotype
 > substitution) is proven, which means that the safety of equational
@@ -87,15 +94,15 @@ equational reasoning?
 > of resolution is one of the central features of COCHIS, this is a bit
 > disappointing.
 
-BRUNO: As discussed the plan is to change Section 2 so that we work
-on *predicative System F* from the start.
+FIXED: We have now opted to present a fully predicative version of the
+System and we discuss alternatives with impredicativity in Section 6.
 
 > Other (arguably less important) claims are not
 > formally proven at all, e.g. termination of resolution, or validity of
 > unification (though informal arguments are given as to their
 > validity).
 
-BRUNO: Anything about this?
+BRUNO: Anything about this? (FILL ME IN)
 
 > Proofs of the remaining claims (type safety, determinacy,
 > etc.) are given in the Coq mechanization and appendix A.  However, the
@@ -110,7 +117,7 @@ BRUNO: Anything about this?
 > an optimal outcome, it would probably help to finish the Coq
 > mechanization.
 
-BRUNO: How's progress with this?
+BRUNO: How's progress with this? (FILL ME IN)
 
 > 
 >  b) Limitation of the resolution algorithm.  There are a number of
@@ -125,16 +132,16 @@ BRUNO: How's progress with this?
 > expressivity/power of resolution remains somewhat unclear (for the
 > case of unambiguity conditions, there is at least a brief discussion
 > of an example of harmless ambiguity, i.e. a "false positive").
-
-BRUNO: Point out that Haskell has similar restrictions
-
 > Finally, there are restrictions that just seem arbitrary, in the sense
 > that they are not motivated or discussed at all, e.g. the "committed
 > choice" semantics of resolution, which precludes backtracking, or the
 > particular choice of termination measure introduced in Section 4.4.
 
+FIXED: We now have a full section (Section 6) where we extensibly
+discuss the design options, as well as some alternatives.
+
 BRUNO: Termination measure is motivated by Haskell.
-Discuss backtracking more.
+(TODO? Say something about termination here?)
 
 > Both of these restrictions cause programs to be rejected that one
 > would sensibly expect to be handled by a locally scoped resolution
@@ -144,9 +151,6 @@ Discuss backtracking more.
 > despite their shortcomings, but unfortunately these reasons are not
 > discussed nor are the effects of the restrictions in terms of
 > expressivity.
-
-BRUNO: TODO have extended discussions in a new Discussion Section.
-
 > 
 > c) Confusing terminology.  There is a tension between the informal use
 > of the term "coherence" (mostly in Sections 1, 2 and 6) and its formal
@@ -182,7 +186,9 @@ BRUNO: TODO have extended discussions in a new Discussion Section.
 > properly defined and consistently used, it is bound to confuse the
 > reader (it certainly confused me).
 
-BRUNO: I've been improving this. More to come.
+FIXED: We have done a complete revision of the text to make the
+terminology more precise. We agree with the comment that in Section
+3.5 we merely have instability.
 
 > 
 > ** Page-by-page evaluation **
@@ -197,7 +203,7 @@ BRUNO: I've been improving this. More to come.
 > between the last two properties (stability and equational reasoning)?
 > The characterization of "stability" on p. 2 seems to suggest otherwise.
 
-BRUNO: Rewrote sentence.
+FIXED: Rewrote sentence.
  
 >  - "COCHIS's resolution employs additional techniques to be entirely
 > deterministic and coherent" -- what is the difference between a
@@ -207,9 +213,7 @@ BRUNO: Rewrote sentence.
 > meaning (that is, the semantics is not ambiguous)."  Given this
 > definition, a coherent resolution strategy seems to necessarily be
 > non-ambiguous, i.e. deterministic.
-
-TODO: Bruno: delay discussion to Discussion section?
- 
+>
 > p. 5: the show/read example is an excellent illustration of why
 > ambiguity in resolution leads to incoherence.  However, the main
 > source of ambiguity here seems to be the choice of how to instantiate
@@ -225,17 +229,12 @@ TODO: Bruno: delay discussion to Discussion section?
 > 
 > in COCHIS?
 
-TODO: yes, with explicit instantiation there wouldn't be ambiguity.
-Should we do something about this? I mean, at that point we are
-talking about Haskell.
-
-BRUNO: After discussion with Tom: Mention that implicit instantiation
-is the culprit here. 
+FIXED: We now mention that implicit instantiation is the culprit here. 
 
 > p. 6: The context "Trans a =>" seems to be missing in the signature of
 > "bad".
 
-BRUNO: Added additional explanation.
+FIXED: Added additional explanation.
  
 > p. 10:
 > 
@@ -245,7 +244,7 @@ BRUNO: Added additional explanation.
 > readers: A => B denotes a "rule" both in Haskell and COCHIS, but a
 > function type in Scala.
 
-BRUNO: Added a footnote 
+FIXED: Added a footnote 
 
 >  - I am confused about whether Fig. 1 constitutes a counterexample to
 > coherence or to stability.  Returning to the original (Haskell)
@@ -261,7 +260,7 @@ BRUNO: Added a footnote
 > than coherence.  Is that correct?  Or maybe "coherence" is used here
 > to mean both determinacy and stability?  Please clarify.
 
-BRUNO: Yes, it means stability. We changed the text to reflect that
+FIXED: Yes, it means stability. We changed the text to reflect that
 and, more generally, to be more precise about coherence and stability.
  
 >  - "not only is the semantics not preserved under unfolding, but
@@ -274,7 +273,7 @@ and, more generally, to be more precise about coherence and stability.
 > the domain annotation $Int$), but it reduces to $"hello"$, which is
 > well-typed.
 
-BRUNO: Added more explanation. The point is that we can go
+FIXED: Added more explanation. The point is that we can go
 from a well-typed program (line 5) into a ill-typed program (line 6),
 simply by doing an unfolding step. 
  
@@ -294,7 +293,7 @@ FIXED: Added some more text.
 > examples of where a query of the form $?(\forall X.r)$ might be
 > useful?
 
-TODO
+TODO?
  
 > p. 14:
 > 
@@ -310,11 +309,9 @@ TODO
 > types to be preserved under strong reduction in COCHIS (although you
 > do not prove this).
 
-TODO? Maybe no need to mention strong reduction.
-IGNORE?
-
-Instead of considering strong reduction in general, we only consider
-reduction of type application, which is the critical case for stability.
+FIXED: Instead of considering strong reduction in general, we only consider
+reduction of type application, which is the critical case for
+stability. We added Lemma 5.4 in connection to this.
  
 >  - Since COCHIS has first-class rules, it might be nice to also
 > discuss the possibility of querying for (possibly polymorphic) rule
@@ -341,14 +338,14 @@ FIXED
 > implicit binding with $\rho = \alpha$.  It might be useful to
 > distinguish the two syntactically.
 
-We have prefixed the implicit entries with a question mark.
+FIXED: We have prefixed the implicit entries with a question mark.
 
  
 >  - why is the well-formedness judgment $\Gamma |- \rho$ necessary?
 > Formalizations of System F usually get by without such a judgment (see
 > e.g. TAPL, ch. 23).
 
-You are right. The condition is not needed.
+FIXED: You are right. The condition is not needed.
 
 > p. 17: a minor typographic comment: the paragraphs immediately
 > following typing rules in the main text (such as those on this page
@@ -366,7 +363,7 @@ FIXED
 > corresponding pairs of intro/elim-rules in the ambiguous resolution
 > judgment?
  
-We have added this explanation.
+FIXED: We have added this explanation.
 
 >  - "The main judgment ... is defined with the help of the auxiliary
 > judgment ..."  Giving human-readable names to these judgments (and all
@@ -397,7 +394,7 @@ FIXED: we have adopted those two names.
 > judgments are defined inductively, and that they are syntax-directed
 > w.r.t. the types enclosed in the square brackets?  Please clarify.
 
-We now say that the definitions are syntax-directed on the types enclosed
+FIXED: We now say that the definitions are syntax-directed on the types enclosed
 in square brackets.
 
 > p. 20: "For this reason we introduce the syntactic sort of monotypes:
@@ -406,7 +403,7 @@ in square brackets.
 > monotypes?  Is there a reason to think of $\alpha => \alpha$ as
 > polymorphic?  Please elaborate.
 
-The syntax of monotypes is modelled after Haskell's notion of monotypes;
+FIXED: The syntax of monotypes is modelled after Haskell's notion of monotypes;
 we now mention this already when the grammar for types is first introduced.
 In addition, we now provide an example that illustrates how instantiation with
 rule types can give rise to additional resolution derivations.
@@ -441,8 +438,8 @@ rule types can give rise to additional resolution derivations.
 > been very helpful (at least to me) in understanding what is meant by
 > "committed choice".
 
-A similar example now appears in textual form in the No Backtracking paragraph
-of the Comitted Choice subsection.
+FIXED: A similar example now appears in textual form in the discussion
+about Comitted Choice in Section 6.
 
 > 
 > The committed choice semantics is also rather surprising, in my
@@ -453,20 +450,7 @@ of the Comitted Choice subsection.
 > forgo backtracking, but these are not discussed in the paper.  Why is
 > that?  Please elaborate.
 
-- We have added a discussion about why we prevent backtracking.
-
-- We have adopted the lookup name for the judgment.
-
-Haskell has does not backtrack. Here is an example
-
-class C a where ...
-
-instance C String
-
-instance C Int => C String
-
-A program with the above instances is rejected no matter what flags
-are used (overlapping, incoherent ...). 
+FIXED: See our discussion in Section 6.2.
 
 >  - "The (...) definition of the judgement itself proceeds by
 > structural induction on the environment $\Gamma'$."  In what sense
@@ -481,7 +465,7 @@ are used (overlapping, incoherent ...).
 > that the lookup judgment is syntax directed w.r.t. the type
 > environment $\Gamma'$. Is this correct?
 
-That is correct. We have modified the formulation accordingly. 
+FIXED: That is correct. We have modified the formulation accordingly. 
  
 > p. 24:
 > 
@@ -489,19 +473,19 @@ That is correct. We have modified the formulation accordingly.
 > $\bar{\alpha'}$ by $\bar{\alpha}'$ for readability (as in the main
 > text at the bottom of p. 23).
 
-Fixed.
+FIXED
  
 >  - "in the main and first auxiliary judgement", I'm not sure
 > which judgments are meant here.  Which is the main auxiliary judgment?
 > Resolution?  Lookup?  Please consider using human-readable names...
 
-Fixed.
+FIXED
 
 > p. 25, Fig. 7: why have a stability judgment with only one rule that
 > is only used once?  Would it not have been easier to just inline this
 > judgment into the (L-RuleNoMatch) rule?
 
-We feel that is useful to name the condition. Also, the algorithmic
+ANSWER: We feel that is useful to name the condition. Also, the algorithmic
 system uses a corresponding judgement with multiple rules.
  
 > p. 26, a minor syntactic point about the example algorithmic
@@ -509,7 +493,7 @@ system uses a corresponding judgement with multiple rules.
 > brackets" [ ... ] around the goals of the algorithmic matching
 > judgment, whereas Fig. 8 does not.
 
-The notation is now consistent.
+FIXED: The notation is now consistent.
 
 > p. 29, termination condition: it is unclear to me how the termination
 > condition is used in practice.  The paragraph says "It is trivial to
@@ -519,7 +503,7 @@ The notation is now consistent.
 > |-_{alg} \rho$, where should I apply the termination condition?  To
 > every type in $\Gamma$?  To $\rho$ as well?
 
-We have clarified this in the text.
+FIXED: We have clarified this in the text.
 
 > Assuming this, I can check that the example where $\Gamma = Char =>
 > Int; Int => Char$ is indeed rejected because $hd(Char) = Int$,
@@ -537,7 +521,7 @@ We have clarified this in the text.
 > But surely, we would want the above program to be accepted?  Am I
 > missing something here?
 
-We have added a paragraph discussing this issue. Permissive termination
+FIXED: We have added a paragraph discussing this issue. Permissive termination
 conditions are not the main focus of our work; coherence is. 
 Moreover, the conditions we have set out here have already shown useful for
 quantified class constraints in Haskell.
@@ -572,7 +556,7 @@ quantified class constraints in Haskell.
 > 
 > What am I missing?
 
-The confusion may be that for the algorithmic version the two conditions
+FIXED: The confusion may be that for the algorithmic version the two conditions
 must both hold:
 
 ||r1|| < ||r2||  /\   occ_a(r1) <= occ_a(r2)
@@ -593,7 +577,7 @@ and to make the approach and its validity clearer.
 > better yet, forward references from the individual theorems in this
 > section to the corresponding lemmas in the appendix.
 
-TODO
+TODO?
  
 >  - "Secondly, the deterministic resolution guarantees a strong form of
 > coherence", in what sense is this a "strong form" of coherence?  In
@@ -605,7 +589,7 @@ TODO
 > uniquely determined").  Is there some subtle distinction between
 > coherent, non-ambiguous and deterministic that I am missing?
 
-TODO
+FIXED: We rephrased.
  
 >  - "Thirdly, on top of the immediate coherence of deterministic
 > resolution, an additional coherence property holds", I find this
@@ -614,7 +598,8 @@ TODO
 > coherence property?  Maybe "coherence property" is used informally to
 > mean "desirable property of an IP system"?  Please clarify.
 
-TODO
+FIXED: We rephrased as part of the revision to make terminology
+more precise.
  
 >  - Lemma 5.4.  The lemma states informally that "Resolution is stable
 > under substitution" but the formal statement only covers *monotype*
@@ -627,8 +612,9 @@ TODO
 > (Ty-TApp) in Fig. 2) so Lemma 5.4 only states a weak version of
 > stability.
 
-We now only allow predicative instantiation in rule Ty-TApp in Cochis.
- 
+FIXED: We now only allow predicative instantiation in rule Ty-TApp in Cochis.
+We discuss alternative impredicative designs in Section 6.1.
+
 >  - Theorem 5.3. "... provided that the algorithm terminates."  It is
 > unclear to me why this last part of the statement is necessary.  If
 > the algorithm does not terminate, there is no (finite) derivation of
@@ -642,11 +628,11 @@ We now only allow predicative instantiation in rule Ty-TApp in Cochis.
 > part of this theorem) nor Lemma A.24 (completeness) in appendix A
 > mention this extra condition.  Please clarify.
 
-The proviso is indeed unnecessary. We have dropped it.
+FIXED: The proviso is indeed unnecessary. We have dropped it.
  
 > p. 33: "(see Chapter 23)" of what? TAPL?
 
-Yes, this is fixed now.
+FIXED: Yes, this is fixed now.
  
 > p. 35, Section 6.3:
 > 
@@ -655,7 +641,7 @@ Yes, this is fixed now.
 > here refers to determinacy or to stability (see my comments above
 > about the example in Fig. 1).
 
-TODO
+FIXED: We rephrased as part of making terminology more precise.
  
 >  - "For example, the query: (...) does not resolve under the
 > deterministic resolution rules of the implicit calculus", this seems
@@ -663,12 +649,13 @@ TODO
 > calculus, which leads me to conclude that it is in fact coherent but
 > not stable.  Please clarify.
 
-TODO
+FIXED: This is right, the main point is that the implicit calculus
+is not stable. 
  
 >  - "As we have already explained in Section 3.5 this approach is
 > incoherent."  -->  deterministic but unstable.
 
-TODO
+FIXED
  
 >  - I'll stop pointing out the inconsistent terminology ("coherence"
 > vs. "deterministic" and "stable") from now on.
@@ -678,7 +665,7 @@ TODO
 > certainly relevant when comparing expressivity/flexibility.  Please
 > elaborate.
 
-TODO 
+TODO?
 
 > p. 36: "This would retain several of benefits" --> "several of the
 > benefits".
@@ -689,7 +676,7 @@ FIXED
 > judgement)".  I do not remember which judgments this refers to.
 > Please consider using human-readable names.
 
-Fixed.
+FIXED.
  
 > p. 41, Appendix A:  Why are the lemmas in this appendix numbered
 > differently from the lemmas and theorems in Section 5?  Please
@@ -725,14 +712,14 @@ FIXED
 > of the various lemmas/proofs beforehand: which lemmas are proved by
 > mutual induction, which are auxiliary lemmas?
 
-Summaries and proof dependency diagrams have been added in the beginning 
+FIXED: Summaries and proof dependency diagrams have been added in the beginning 
 of each section.
 
  
 >  - Lemma A.10, A.11: the unambiguity judgment $|-_{unamb} \Gamma$ for
 > type environments has not been defined.
 
-The definition has been added.
+FIXED: The definition has been added.
 
 > p. 45, proof of Lemma A.11, case (R-TAbs): there seems to be an error
 > in this case of the proof: the IH cannot be applied as described.  The
@@ -750,7 +737,7 @@ The definition has been added.
 > |-_{unamb} \rho$ and invoking it in Lemma A.10 with $\bar{\alpha} =
 > \epsilon$. I have not checked the details, though.
 
-The unambiguity judgment enjoys a weakening property,
+FIXED: The unambiguity judgment enjoys a weakening property,
 easy to prove, according to which, if $\bar\alpha |-_{unamb} \rho$,
 then for any subset $\bar\alpha' \subseteq \bar\alpha$ it also holds
 that $\bar\alpha' |-_{unamb} \rho$. This has been clarified in the 
@@ -788,7 +775,7 @@ FIXED
 > statement of Lemma A.16, or better yet, introduce and explain the role
 > of that predicate before using it in the proof of Lemma A.15.
 
-The definition of R has been moved before Lemma A.15 and explained.
+FIXED: The definition of R has been moved before Lemma A.15 and explained.
  
 > p. 56, proof of Lemma A.20, case (Alg-L-RuleNoMatch): there is an
 > error in this case of the proof: Lemma A.21 cannot be applied as
@@ -811,7 +798,7 @@ The definition of R has been moved before Lemma A.15 and explained.
 > details.  Note that this creates an additional dependency of
 > the proof on Lemma A.27.
 
-You are right. This has been fixed now following your suggestion.
+FIXED: You are right. This has been fixed now following your suggestion.
  
 > p. 57, Lemma A.22: the type environment $\Gamma$ is missing in the
 > conclusion of the lemma (should be $\bar{\alpha}; \Gamma; \rho
@@ -834,25 +821,25 @@ FIXED
 > checked the details.  Note that this would add an extra dependency of
 > Lemma A.26 on Lemma A.21.
 
-You are right. This has been fixed now.
+FIXED: You are right. This has been fixed now.
 
 > p. 59, Lemma A.27:
 > 
 >  - where/how is the substitution order $\theta_1 \sqsubseteq \theta_2$
 > defined?
 
-Definition A.1 has been added.
+FIXED: Definition A.1 has been added.
  
 >  - only the first conclusion of this lemma is proven, what about the
 > second and third conclusions?
 
-The structure of the algorithmic completeness proofs has changed.
+FIXED: The structure of the algorithmic completeness proofs has changed.
 This lemma has been replace by lemmata A.30 and A.31, which are proved
 in detail.
 
 > p. 60, Lemma A.29: where is the proof of this lemma?
 
-We make two assumptions regarding the unification algorithm.
+FIXED: We make two assumptions regarding the unification algorithm.
  
 > Referee: 2
 > 
