@@ -171,7 +171,7 @@ cannot be resolved and thus the resolution of $\tychar$ also fails. A more permi
 approach would be to backtrack when a recursive resolution fails and try the next
 alternative matching rule. That would allow $\tychar$ to resolve. 
 
-In the design of \name, we have followed Haskell's pragmatic reasons for comitted choice.
+In the design of \name, we have followed Haskell's pragmatic reasons for committed choice.
 Considering that Haskell's 30 years of experience have shown that this works well
 in practice, we believe that it is a reasonable choice.
 
@@ -206,7 +206,7 @@ possible solutions. If more than one solution is found, then the program is
 rejected due to ambiguity. In this way it is possible to have highly overlapping
 rules in the context, that could result in some queries being ambiguous.
 One advantage of this design is its flexibility, since contexts can be more
-liberal and all queries that would be resolved in unambigous contexts with backtracking
+liberal and all queries that would be resolved in unambiguous contexts with backtracking
 can, in principle, also be resolved with Ocaml's modular implicits.
 However the modular implicits approach is not formalized yet, and the fact that contexts
 have to be searched exhaustively raises practical questions regarding performance and
@@ -268,7 +268,7 @@ is part of the type class context. For example:
 > p :: Ord a => a -> a -> Bool
 > p = (==)     -- accepted because |Eq a| is a superclass of |Ord a|
 
-\noindent Here the signature of function |p| assummes that an
+\noindent Here the signature of function |p| assumes that an
 instance for |Ord a| is available. In the body of |p|, the method |(==)| of the class |Eq a|
 is used. This code is accepted in Haskell because |Eq a| is a superclass
 of |Ord a|. 
@@ -298,10 +298,10 @@ code of the one |Eq Int| instance).
 % whereas \name uses lexical scoping for implicits. Thus \name can be deterministic
 % due to the ordering of the implicits in the context.
 
-
+:%- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 \paragraph{A First Attempt at Encoding Superclasses}
 We can try to encode the previous Haskell definitions in then \name 
-environment $\tenv = ?|forall a. Ord a => Eq a|, ?|Eq Int|, |Ord Int|$, whose
+environment $\tenv = |?(forall a. Ord a => Eq a)|, |?(Eq Int)|, |?(Ord Int)|$, whose
 implicit entries capture the superclass relation and the two instances.
 With respect to \name, the query |?(Eq Int)| resolves deterministically by picking the second entry in $\tenv$.
 Hence, \name's explicit ordering of implicits avoids Haskell's non-determinism.
@@ -314,20 +314,28 @@ Hence, \name's explicit ordering of implicits avoids Haskell's non-determinism.
 While the ordering is beneficial for determinism, fewer queries may succeed due to
 an unsuitable order of implicits.
 For example, suppose that we have instead the environment
-$\tenv = ?|Eq Int|, ?|forall a. Ord a => Eq a|$, then resolving
+$\tenv = |?(Eq Int)|, |?(forall a. Ord a => Eq a)|$, then resolving
 |?(Eq Int)| fails
 because the first entry matches and its requirement |Ord Int| cannot be satisfied. In this case the committed
 choice semantics prevents reaching the second entry, which would resolve |Eq Int| directly.
 
-\bruno{The following 2 are for you Tom.}
+%- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 \paragraph{Superclasses with Committed Choice}
-The problem that we just saw in our encoding is also a problem in GHC Haskell, and GHC
-Haskell does not treat rules arizing from superclasses in the same way as rules arizing
-from type class instances. Instead \bruno{fill me in}
+The situation we just saw also arises in Haskell. Treating superclass relations
+in the same way as type class instances does not work well with a committed
+choice strategy. That is why GHC treats superclass relations differently. In
+essence, whenever GHC adds a given type class constraint (e.g., from a
+programmer-supplied type signature) to the type environment, it uses the
+superclass relation to also add all of its ancestors. 
+We believe that a similar strategy would be possible for \name. For instance,
+in the last example, the type environment would be $\tenv = \envi{|Eq Int|}{x}$, not
+contain the superclass relation and be able to resolve the query $|?(Eq Int)|$ with $x$. 
+When adding an |Ord Int| entry, we would also add its |Eq Int| superclass, yielding the
+modified environment $\tenv = \envi{|Eq Int|}{x}, \envi{|Ord Int|}{y}, \envi{|Eq Int|}{|super y|}$.
+Now, the query |?(Eq Int)| is resolved with |super y|, which is the superclass value of the new |Ord Int|
+entry.
 
-Could we model superclasses with a similar approach in \name? What are the challenges?
-coherence?
-
+%- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 \paragraph{Superclasses with Global Scoping and \name-style Resolution in GHC Haskell}
 The newest version of GHC has a \name-inspired resolution algorithm in order to deal
 with \emph{quantified class constraints}~\cite{}.\bruno{fill me in} 
@@ -340,7 +348,7 @@ But resolution in the presence of superclasses behaves differently from overlapp
 There are several ways to enforce coherence in a language design. For
 example, Haskell guarantees coherence by ensuring that there is a
 unique instance of a type class per type. In this way whenever code
-accesses a type class dictionary, it will always return the same
+accesses a type class dictionary, it always returns the same
 (equal) dictionary value. This is a very strict way to enforce coherence.
 
 \name's way to achieve coherence is more relaxed than Haskell's. \name
@@ -351,7 +359,7 @@ values (unlike Haskell).
 While determinism is sufficient to ensure
 coherence, it is still a fairly strict way to ensure coherence. A
 more relaxed and general notion of coherence is to allow elaboration
-and resolution to have multiple different (but observationality equivalent)
+and resolution to have multiple different (but observationally equivalent)
 terms for the same expression. Our Corollary~\ref{lem:coherence} provides a formal
 statement of coherence that is based on contextual equivalence of two
 expressions:
@@ -363,9 +371,9 @@ expressions:
 
 This statement is close to the usual definition of coherence in the
 literature~\cite{Reynolds91coherence,qual,BreazuTannen&91}.
-That is $E_1$ and $E_2$ are not required to be
+That is, $E_1$ and $E_2$ are not required to be
 syntactically equivalent, but they must be semantically equivalent.
-Many language designs that are coherent are often not necessaraly 
+Many language designs that are coherent are often not necessarily 
 deterministic (unlike \name).
 
 \begin{comment}
@@ -375,19 +383,19 @@ to ensure that when resolution happens there is a unique way to build
 the implicit value for the respect query. For example,
 with such an approach we could allow the implicit environment:
 $\tenv =$ |Int, Bool, forall a. Bool => a, Char|, even though 
-the query |?Int| would be ambigous because there are two
+the query |?Int| would be ambiguous because there are two
 possible possible ways to resolve the query. 
 \end{comment}
 
 \paragraph{Alternative Designs}
-We use determinism to establish coherence in our work, but a more
+We use determinism to establish coherence in \name, but a more
 relaxed notion of coherence would also be possible. For example if,
 instead of committed choice, we decided to allow for a more powerful
-resolution strategy (for example with backtracking) then a more
+resolution strategy (for example with backtracking), then a more
 relaxed notion of coherence would be helpful. This could be useful
 to deal with some situations that appear in superclasses.
 For example, consider again the context
-$\tenv =$ |Eq Int, forall a. Ord a => Eq a, Ord Int|. In this
+$\tenv =$ |?(Eq Int), ?(forall a. Ord a => Eq a), ?(Ord Int)|. In this
 case the query |?(Eq Int)| can be resolved in two possible ways:
 either going via the superclass instance |Ord Int|; or by directly
 using the instance |Eq Int|. Even thought the two elaborations
