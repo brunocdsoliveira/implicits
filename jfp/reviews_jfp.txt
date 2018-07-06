@@ -888,12 +888,12 @@ FIXED: We make two assumptions regarding the unification algorithm.
 > discussion to properly understand the contribution COCHIS makes, since the
 > calculus itself doesn't preserve global uniqueness.
 
-BRUNO: This work does not address the globally uniqueness property,
+ANSWER: This work does not address the globally uniqueness property,
 therefore we cannot model the Set example in Cochis and have the same
 assurances that we do in Haskell.
 
 However, for a design that is largely inspired by Cochis and still
-tries to ensure the global uniqueness property see the HS 2017
+tries to ensure the global uniqueness property see the Haskell Symposium 2017
 paper on "Quantified Class Constraints".
 
 > Some specific comments, suggestions, nitpicks, etc:
@@ -909,13 +909,19 @@ paper on "Quantified Class Constraints".
 > instead.  Say, with "Set", one could consider parameterizing a Set on the
 > type class instance.
 
-BRUNO: This is indeed one possible approach (another one comes from
-Genus). (Expand? Address in the paper itself?)
+ANSWER: This is indeed one possible approach (another one comes from
+Genus). Our related work discussion touches upon these possibilities.
 
 > p8 Presumably "look for a value of type Ord[A]" means a brute force search of
 > everything in scope, returning the first result? Or are there some
 > constraints?
-> 
+
+ANSWER: No, since our context is ordered we will match the first entry
+in the context and stop. We need to be careful because of
+polymorphism, and impose some additional stability restrictions in the
+context. This is discussed in Section 3.
+
+
 > p10 A minor thing, but I was getting a bit impatient to learn some detail of
 > COCHIS by this point - it promises a lot after all, so I wonder if it's
 > possible to put some intuition about its main points earlier, in section 1?
@@ -923,21 +929,7 @@ Genus). (Expand? Address in the paper itself?)
 > only once we get to overlapping rules that it really gets
 > interesting.
 
-TODO: What else can we had to Section 1?
-
-Suggestion:
-
-Add more detail to the contribution list
-
-It currently does not mention that we achieve coherence through
-determinism
-
-We could separate the functionality from the properties and expand a
-bit on both
-
-Split first bullet into a few: functionality vs properties.
-
-TOM: I have expanded the list of contributions.
+FIXED: We have expanded the list of contributions.
 
 > p15 "We explain this concept in Section 3.5" - there's been a few forward
 > references at this point, for example also the notion of "stability of
@@ -961,7 +953,7 @@ FIXED
 > be... although I do like this way of presenting it, by encountering problems
 > and refining the grammar to solve them.
 
-We now introduce monotypes in the initial grammar. This should make this issue
+FIXED: We now introduce monotypes in the initial grammar. This should make this issue
 less problematic.
  
 > p24 (Nitpick, really) The sentence that introduces section 4 is a bit odd
@@ -969,7 +961,7 @@ less problematic.
 > away. Perhaps better to say that the section introduces an algorithm which
 > translates COCHIS to System F by resolving implicits deterministically.
 
-We have moved the reference to the new figure to the next paragraph.
+FIXED: We have moved the reference to the new figure to the next paragraph.
  
 > p27 First line, please don't say "obviously" and "clearly" no matter how
 > obvious and clear they are to you! Especially when the apparently "obvious"
@@ -988,7 +980,8 @@ FIXED
 > nice to integrate the resolution algorithm with instance arguments, for
 > example.
 
-The problem in dependently typed languages is much more complicated because
+
+FIXED: The problem in dependently typed languages is more complicated because
 type-level lambda abstractions and beta-reductions have to be taken into
 account. Our type system does not feature these.
 
@@ -1005,13 +998,13 @@ and features only covariant rules. We now point out the connection.
 > would also be nice to present the desirable properties of the translation
 > (the ones you prove later) up front.
 
-The hyper references should help with jumping back.
+ANSWER: The hyper references should help with jumping back.
  
 > p36 "It should be easy enough" - this needs backing up, I'm not sure how easy
 > it would be! I would find this more convincing with a sketch of Set in COCHIS
 > noting the restrictions you'd need to make in a source language.
 
-We now refer to the work of Bottu et al. on quantified class constraints for
+FIXED: We now refer to the work of Bottu et al. on quantified class constraints for
 Haskell. This work, inspired by Cochis, enforces unique global instances.
  
 > Referee: 3
@@ -1069,6 +1062,9 @@ Haskell. This work, inspired by Cochis, enforces unique global instances.
 >   coherence is obtained the easy way by enforcing determinism of the
 >   resolution mechanism, introducing in the specification a "committed
 
+FIXED: We now have a more indepth discussion about coherence and
+committed choice in Sections 6.
+
 >   choice" criteria that may cut the search in undesired ways.
 > - The paper lacks a proper evaluation of the design: this work is motivated
 >   by informal examples in the introduction taken from full-fledged languages
@@ -1079,8 +1075,42 @@ Haskell. This work, inspired by Cochis, enforces unique global instances.
 >   real-life examples, between (what would a language based on) COCHIS and
 >   Haskell.  The comparison is not so obvious, as basic examples in Haskell
 >   seems to be problematic in COCHIS.
+
+FIXED: We have improved our discussion significantly:
+
+1) We now have a prototype implementation that can run the basic
+examples in the paper. Although this prototype implementation is still
+not good for a full evaluation of the design, it is nonetheless useful
+for some experimentation.
+
+2) We want to emphasize that the new versions of GHC incoorporate a
+resolution algorithm that is based on COCHIS. The COCHIS-style
+resolution enables the GHC extension for quantified class constraints:
+
+https://ghc.haskell.org/trac/ghc/wiki/QuantifiedConstraints
+
+The details of this extension have been published in the paper:
+
+Gert-Jan Bottu, Georgios Karachalias, Tom Schrijvers, Bruno C. d. S. Oliveira, Philip Wadler:
+Quantified class constraints. Haskell 2017: 148-161
+
+There are some minor differences to the resolution in COCHIS.  For
+example, to fit with Haskell, there is only global scoping and the
+implicit contexts are unorndered. But the core ideas are the
+same. Furthermore for working out how to integrate quantified
+class constraints into Haskell we had to figure out:
+
+A) How to have a source language with type-inference;
+
+B) How to incoorporate superclasses in the framework.
+
+We believe that this provides some evidence of the usefulness
+of COCHIS for modeling implicits/type-class like mechanisms.
+
 > - Finally, the authors seem to ignore some closely related work on modular
 >   implicits (see [1]).
+
+FIXED: We now cite and discuss this work.
 
 > The technical development is still rigorous, and I think that, despite its
 > limitation, the work would be worth publishing as it could perhaps inspire
@@ -1117,7 +1147,7 @@ Haskell. This work, inspired by Cochis, enforces unique global instances.
 > for instance allowing for compiler optimization; it may also lead to a
 > simpler specification.
 
-TODO: Discuss the coherence design space as outlined above.
+FIXED: We now discuss coherence in Section 6.4.
 
 > ## Expressiveness
 >
@@ -1165,10 +1195,8 @@ TODO: Discuss the coherence design space as outlined above.
 > Eq Int" which will force searching for "Ord Int" and fail---because of
 > committed choice, the rule "x1" will not be considered.  Is this correct?
 
-TODO: Elaborate on the connection with Haskell type classes.
-
-BRUNO: Mention also that we do not show how to model superclasses
-here.
+FIXED: We have extended discussions in Section 6 relating to
+superclasses and committed choice now.
 
 > ## Committed choice
 > This is used to ensure deterministic resolution, which then trivially
@@ -1188,12 +1216,13 @@ here.
 > common useful examples used by the Haskell community would be implemented in
 > COCHIS.
 
-We have added a discussion. Basically, backtracking is shunned in type checkers
+FIXED: We have added a discussion in Section 6. Basically, backtracking is shunned in type checkers
 for various pragmatic reasons. As an illustration, we have opted for
 backtracking in our Quantified Class Constraints work (derived from Cochis) for
 Haskell, but the backtracking has been rejected by Simon Peyton Jones who
 prefers restrictions instead, quoting worries about performance as the main
-reason. 
+reason.
+
 See https://github.com/Gertjan423/ghc-proposals/blob/quantified-constraints/proposals/0000-quantified-constraints.rst#overlap
 
 > ## Comparison with other solutions
@@ -1208,13 +1237,18 @@ See https://github.com/Gertjan423/ghc-proposals/blob/quantified-constraints/prop
 > some (all? which ones?)  different surface languages with a form of
 > implicits.
 
-TODO: discuss relation to other languages
+ANSWER: Since our prior submission we have published the Haskell
+Symposium paper on quantified class constraints and implemented
+this feature in GHC. This shows that variants of COCHIS-style
+resolution interact well with many real-world features supported
+in GHC.
+
 
 > Besides, COCHIS does not have a (prototype) implementation, in which small
 > or middle-size practical examples could be tried.  Altogether, this makes
 > the practical usefulness of the proposal hard to evaluate.
 
-We have created and made available a prototype implementation.
+FIXED: We have created and made available a prototype implementation.
 
 > ## Missed related works
 > Modular implicits (published in [1]) extend the OCaml language with some
@@ -1224,7 +1258,7 @@ We have created and made available a prototype implementation.
 > detailed formalization (but conversely they has a prototype implementation).
 > A comparison between modular implicits and COCHIS is therefore expected.
 
-We now discuss OCaml's modular implicits in the Related Work section.
+FIXED: We now discuss OCaml's modular implicits in the Related Work section.
 
 > ## Predicative instantiation (page 20, line 3)
 > The language is presented as a framework for implicits in "System F", which
@@ -1238,9 +1272,7 @@ We now discuss OCaml's modular implicits in the Related Work section.
 > predicative version of System F, which in practice means just some
 > Hindley-Milner type system.
 
-TODO: discuss predicative instantiation wrt System F
-
-BRUNO: To add to the discussion section.
+FIXED: We have an extended discussion on (im)predicativity in Section 6 now.
 
 > ## OTHER GENERAL COMMENTS
 > ### Incremental presentation of the type system.
@@ -1287,7 +1319,7 @@ TODO: consistent terminology for rules
 > "G |- \rho_1"). And similarly for rule Ty-IAbs, so that the side
 > condition would only be needed for Rule Ty-Tapp.
 
-Following a suggestion of Review 1, we have omitted well-scoping constraints
+FIXED: Following a suggestion of Review 1, we have omitted well-scoping constraints
 as they are not directly necessary for the meta-theoretical results.
 Hence, the well-formedness of environments has also been omitted.
 
@@ -1298,7 +1330,7 @@ Hence, the well-formedness of environments has also been omitted.
 >           \Gamma |-_r^f  \rho ~> E
 >           \Gamma; \rho ~> x |-_r^f  \tau ~> E; \Sigma
 
-The square brackets are indeed redundant, but they do emphasize where the
+FIXED: The square brackets are indeed redundant, but they do emphasize where the
 focus lies. This emphasis is intentional.
 
 > - Besides, it seems that the notation
@@ -1310,21 +1342,21 @@ focus lies. This emphasis is intentional.
 >         \rho "can be instantiated" to \rho_1 => ... \rho_n => \tau
 >   where \rho_1, ... \rho_n is the codomain of \Sigma'
 
-We have changed the notation as you suggest.
+FIXED: We have changed the notation as you suggest.
 
 > - Why do you use smaller fonts for technical rules?  Given that maths also
 >   contain many subscripts, I do not think this is wise and I would prefer
 >   normal size: you could save horizontal space by writing rule names above
 >   the rules (rule names could remain in small size, though).
 
-We no longer use scriptsize in the rules.
+FIXED: We no longer use scriptsize in the rules.
 
 > - The gray overlay in typing rules is annoyingly noisy: it attracts the eye,
 >   while this is supposed to be something that the reader does not have to
 >   look at in a first reading. I suggest just using (the right amount of)
 >   gray for the foreground color and leaving the background color in white.
 
-We have opted for a much lighter gray background, which we hope is much 
+FIXED: We have opted for a much lighter gray background, which we hope is much 
 less distracting.
 
 > - (Optional) You use the "=" sign for definitional equality.  I would prefer
@@ -1332,7 +1364,7 @@ less distracting.
 > definitional
 >   equality.
 
-We have decided not to adopt your suggestion. It would be easy to overlook
+ANSWER: We have decided not to adopt your suggestion. It would be easy to overlook
 a case and confuse the reader.
 
 > - It would help if the PDF contained more hyper-references so as to ease the
@@ -1342,7 +1374,7 @@ a case and confuse the reader.
 >   version to have a page or figure reference next to rule names when those
 >   have not been introduced in the current subsection.
 
-We have added hyper references for figures, urls and citations.
+FIXED: We have added hyper references for figures, urls and citations.
 
 > - Several lines are overfull.
 
@@ -1386,7 +1418,7 @@ FIXED
 > ## LINEAR COMMENTS
 > Please, use the lineno package, when submitting a paper for reviewing.
 
-We are now using this package.
+FIXED: We are now using this package.
 
 > - Abstract, l-6, compact formulation: this is arguable, given the complexity
 >   of the specification of the resolution judgment.
@@ -1402,7 +1434,7 @@ ADDED
 >   explain the quote on a concrete example, so that it is understandable
 >   without looking at the reference?
 
-FIXED? (BRUNO): Changed text. Is it clearer now?
+FIXED
 
 > - Page 3, line -8 "uses a stack discipline, and... from matching decisions".
 >   We expect this choice to have some drawback, but it is unclear where this
@@ -1452,14 +1484,14 @@ FIXED
 >   "That is any query that is polymorphic before instantiation will be resolved
 >   using the same rule after instantiation."
 
-We have reformulated the sentence to make it clearer.
+FIXED: We have reformulated the sentence to make it clearer.
 
 > - Page 14, line -4: ", and refers to the bound value with variable x."  This
 >   compact formulation is difficult to understand, and formally incorrect:
 >   "\lambda (x : \rho). e" is an expression (e.g. a lambda abstraction), not
 >   a binder! "\lambda" alone is a binder. That is a bit confusing.
 
-Reformulated.
+FIXED: Reformulated.
 
 > - Page 15, line 5:
 >   I would have first defined
@@ -1475,36 +1507,36 @@ Reformulated.
 >                 =def= implicit e_1 : \rho_1. ... implicit e_n : \rho_n in e0
 >   (Note that your definition is ``syntactically'' ill-formed.)
 
-Fixed. We have omitted the \vec forms as they are not used.
+FIXED: We have omitted the \vec forms as they are not used.
 
 > - Page 17, line -7: "have overlapping conclusions."
 >   Give an example of overlapping conclusions or a forward pointer.
 
-The example follows immediately. We have exended the explanation to
+FIXED: The example follows immediately. We have exended the explanation to
 point out that it illustrates the issue.
 
 > - Page 17, 3.4, l5: "resolving "a" given "G = a ~> x"
 >   What is "a"? ---does not belong to the grammar of COCHIS.
 
-That should have been \alpha. It's fixed now.
+FIXED: That should have been \alpha. It's fixed now.
 
 > - Page 17, line -5: (\lambda y.y)x
 >   Seems to be missing a space for the application.
 
-There is a small space.
+FIXED: There is a small space.
 
 > - (optional) Page 19, footnote 4:
 >   I am not sure this is a happy choice. It shows that the focused type
 >   systems is too tricky to be shown to the reader...
 
-The problem is that focusing admits many fewer proofs, and for this problem
+ANSWER: The problem is that focusing admits many fewer proofs, and for this problem
 a problematic one would be much larger and thus harder to explain.
 
 > - Page 20,  line -15: (An alternative ... for this purpose)
 >   This is not an equivalent solution as it would allow to type more
 >   programs. This should be made clearer.
 
-The text has been reformulated to make this clearer.
+FIXED: The text has been reformulated to make this clearer.
 
 > - Page 20, line -11:  "The auxiliary judgment"
 >   should be "This auxiliary judgment"
@@ -1519,19 +1551,19 @@ FIXED
 > - Page 20, line -7:  "these contexts are unambiguous"
 >   Could you explain the intuition?
 
-DONE
+FIXED: We now explain the intuition
 
 > - Page 20, line -7:  "rule (Ty_Query)"
 >   adding "in Fig 2, page 16"
 
-The rule name is now a hyperlink.
+FIXED: The rule name is now a hyperlink.
 
 > - Page 21, Committed choice, line -7: "replace all three ... a new judgment"
 >   This is a misleading intuition, since the new judgment requires the same
 >   sort of three hypotheses in Rule DL-RuleMatch.  Could you rephrase it
 >   differently?
 
-We now use the verb "encapsulate" which conveys that the hypotheses have been
+FIXED: We now use the verb "encapsulate" which conveys that the hypotheses have been
 moved to a separate definition.
 
 > - Page 21, Committed choice, line -9: "Rule (FR-Simp)"
@@ -1550,7 +1582,7 @@ FIXED
 >   This is an undefined and non-standard notation.
 >   The standard notation would be a comma and a space instead of ":".
 
-It is actually quite common to use colons instead of commas after
+FIXED: It is actually quite common to use colons instead of commas after
 quantifiers. In fact, many styles are used: no separator, a space,
 a comma, a period, and a colon. The other two reviewers do not seem
 to have a problem with this notation.
@@ -1575,7 +1607,7 @@ FIXED
 >   This is a new terminology, not used anywhere else.
 >   What do you mean?
 
-This has been replaced by "stability checking".
+FIXED: This has been replaced by "stability checking".
 
 > - Page 27, 4.2, line 8: "instantiation inst[<-e]ad of"
 
@@ -1602,7 +1634,7 @@ FIXED
 >   I would not say this is a strong form of coherence, since here coherence
 >   is obtained the easy by just avoiding multiple paths...
 
-We have reformulated and now distinguish a determinacy theorem from
+FIXED: We have reformulated and now distinguish a determinacy theorem from
 a separate coherence corollary.
 
 > - Page 33, Lemma 5.4: "Stable under [<-type] substitution"
