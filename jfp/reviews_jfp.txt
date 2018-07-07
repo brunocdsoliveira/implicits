@@ -60,7 +60,7 @@ IMPROVED: We have improved on all of these four points:
 
 * The metatheory was improved, strenghtned and cleaned up.
 
-* There is now a full Section discussing design decisions (Section 6)
+* There is now a new section discussing our design decisions (Section 6).
 
 * We have done an extensive revision of the text to be precise about
 terminology.
@@ -84,8 +84,8 @@ terminology.
 > important for equational reasoning.  Unfortunately, the connection
 > between stability and equational reasoning is never made formal.
 
-BRUNO: Point out that the new theorems about stability relate to
-equational reasoning? (TODO?)
+We have now made the connection more clear, by relating stability
+to preservation of semantics under reduction of type application.
 
 > Furthermore, only a weak variant of stability (under monotype
 > substitution) is proven, which means that the safety of equational
@@ -95,7 +95,7 @@ equational reasoning? (TODO?)
 > disappointing.
 
 FIXED: We have now opted to present a fully predicative version of the
-System and we discuss alternatives with impredicativity in Section 6.
+system and we discuss alternatives with impredicativity in Section 6.
 
 > Other (arguably less important) claims are not
 > formally proven at all, e.g. termination of resolution, or validity of
@@ -140,8 +140,9 @@ BRUNO: How's progress with this? (FILL ME IN)
 FIXED: We now have a full section (Section 6) where we extensibly
 discuss the design options, as well as some alternatives.
 
-BRUNO: Termination measure is motivated by Haskell.
-(TODO? Say something about termination here?)
+We also point out that we have adopted and generalized Haskell's 
+termination conditions and that exploring more permissive conditions
+is left to future work.
 
 > Both of these restrictions cause programs to be rejected that one
 > would sensibly expect to be handled by a locally scoped resolution
@@ -577,7 +578,8 @@ and to make the approach and its validity clearer.
 > better yet, forward references from the individual theorems in this
 > section to the corresponding lemmas in the appendix.
 
-TODO?
+FIXED: we have added a hyperlink from every theorem to the corresponding
+proof section in the appendix.
  
 >  - "Secondly, the deterministic resolution guarantees a strong form of
 > coherence", in what sense is this a "strong form" of coherence?  In
@@ -684,7 +686,8 @@ FIXED.
 > backward references between the appendix and the corresponding
 > statements in Section 5.
 
-TODO -> Klara
+FIXED: we have added a hyperlink from every theorem to the corresponding
+proof section in the appendix.
  
 > p. 42:
 > 
@@ -888,7 +891,7 @@ FIXED: We make two assumptions regarding the unification algorithm.
 > discussion to properly understand the contribution COCHIS makes, since the
 > calculus itself doesn't preserve global uniqueness.
 
-ANSWER: This work does not address the globally uniqueness property,
+ANSWER: This work does not address the global uniqueness property,
 therefore we cannot model the Set example in Cochis and have the same
 assurances that we do in Haskell.
 
@@ -1378,7 +1381,7 @@ FIXED: We have added hyper references for figures, urls and citations.
 
 > - Several lines are overfull.
 
-TODO
+We will take care of this for the camera ready copy.
 
 > - There seems to be a problem with some of your display math environments,
 >   as many displayed math formulars are followed by an extra blank space on
@@ -1441,7 +1444,8 @@ FIXED
 >   is discussed. Could you briefly comment on this here, and possibly point
 >   to a more detailed discussion further on in the paper?
 
-TODO: Add some extra discussion in the discussion section?
+We now show that this has an impact on which queries can be resolved in 
+Section 6.2.
 
 > - Page 3, line -6, "minimal formal model"
 >   The qualifier "minimal" is problematic in this context. You mean "small".
