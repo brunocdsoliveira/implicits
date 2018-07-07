@@ -216,7 +216,7 @@ Another important property that is closely related to coherence is \emph{stabili
 Informally stability ensures that instantiation of type variables does not affect resolution. 
 Unfortunately overlapping instances threaten this property. 
 Consider the following declaration, that uses the |trans| method from the type 
-class |trans| and the two instances declared previously:
+class |Trans| and the two instances declared previously:
 
 > bad :: a -> a
 > bad x = trans x  -- unstable definition!
@@ -505,7 +505,7 @@ in line~(5) (which is accepted in Scala).
 In the expression in line~(6) the Scala compiler does detect two possible instances for |Int => Int|,
 but does not select the most specific one. In this case the call in line~(6) is considered 
 ambiguous because Scala accounts for other factors, when deciding where there is ambiguity 
-or not~\cite{oliveira12implicit,odersky17implicits}.
+or not~\cite{implicits,odersky17implicits}.
 %%The reason for this is that 
 %%Scala uses a tie-breaker rule for disambiguating instances. Scala attributes
 %%1 point to a rule in the following situations: a) a rule is in a deeper scope than the other rule; 
@@ -826,7 +826,7 @@ A simple form of type classes can be encoded in $\ourlang$ similarly
 to how type classes can be encoded in Scala. In this section we briefly 
 (and informally) illustrate the encoding using examples. 
 The simple encoding presented here does not deal with \emph{superclasses}. 
-We discuss superclasses, as well as other important features such as type-inference 
+We discuss superclasses 
 in Section~\ref{sec:discussion}.
 \begin{comment} 
 However it is known that superclasses can be modelled as sugar, by computing a 

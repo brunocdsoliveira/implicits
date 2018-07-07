@@ -142,7 +142,7 @@ by type classes. Besides local scoping, in the implicit calculus
 class model only allows instances of classes (which can be viewed 
 as a special kind of record) to be passed implicitly. Finally the
 implicit calculus supports higher-order instances/rules: 
-that is rules, where the rule requirements can themselves be other rules. 
+that is rules where the rule requirements can themselves be other rules. 
 The
 implicit calculus has been shown to be type-safe, and it also ensures
 coherence, but it lacks stability. The SI calculus lacks both
@@ -183,7 +183,13 @@ type-safe, but also stable and coherent. Naturally, the unrestricted calculus
 does not support global uniqueness of instances, since this property depends on the
 global scoping restriction. Nevertheless, if retaining global
 uniqueness is desired, that can be modeled by the subset of
-\name without local declarations.
+\name without local declarations. In fact, based on the resolution
+algorithm of an early version 
+of \name, GHC has been recentely extended with \emph{quantified class
+  constraints}~\cite{haskell2017b}\footnote{\url{https://ghc.haskell.org/trac/ghc/wiki/QuantifiedConstraints}}. Quantified class constraints enable
+higher-order rules in a setting with global scoping.
+ 
+
 %If a single global scope exists in a
 %program then the determinism and coherence of \name imply that 
 
@@ -249,9 +255,8 @@ Section~\ref{sec:overview} presents an informal overview of our calculus.
 Section~\ref{sec:ourlang} describes a polymorphic type system that
 statically excludes ill-behaved programs. Section~\ref{sec:trans} provides the elaboration 
 semantics of our calculus into System F and correctness results. 
-%Section 5 presents the source language and its encoding into $\ourlang$. 
+Section 6 discusses several of our design choices as well as some alternatives. 
 Section~\ref{sec:related} discusses related work and Section~\ref{sec:conclusion} concludes.
-\bruno{don't forget to revise organization after rewriting.}
 
 %if False
 This paper is a rewrite and expansion of the conference paper by Oliveira et

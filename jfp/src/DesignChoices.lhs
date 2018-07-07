@@ -214,7 +214,7 @@ ease of reasoning that have dictated the committed choice approach taken by Hask
 
 Finally, in the context of theorem provers like Coq~\cite{coqclasses} where
 proof irrelevance typically holds, backtracking seems to be the better choice.
-If type classes are supplying proofs and it does matter which proof is found,
+If type classes are supplying proofs and it does not matter which proof is found,
 coherence is not relevant, and the objection about the difficulty of reasoning is
 also not relevant. 
 Moreover, in theorem proving the expressiveness of search is often more important than
@@ -223,13 +223,13 @@ drawback.
 
 \subsection{Superclasses}
 
-Like Scala's implicit design,\footnote{Note that, superclasses are often
+Like Scala's implicits design,\footnote{Note that, superclasses are often
 simulated in Scala with OO Subtyping and class hierarchies, although there is
 no one-to-one correspondence between both.} \name does not directly support
 superclasses.  
 % However, while superclasses are not directly supported, this
 % does not mean that they cannot be encoded.
-While superclasses can be encoded in \name, there are several problems.
+While superclasses can be encoded in \name to a certain extent, there are several problems.
 
 % At first sight superclasses seem to rely on the ability to backtrack, as we may
 % try to obtain a class directly or indirectly through one of its subclasses and
@@ -298,7 +298,7 @@ code of the one |Eq Int| instance).
 % whereas \name uses lexical scoping for implicits. Thus \name can be deterministic
 % due to the ordering of the implicits in the context.
 
-:%- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+%- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 \paragraph{A First Attempt at Encoding Superclasses}
 We can try to encode the previous Haskell definitions in then \name 
 environment $\tenv = |?(forall a. Ord a => Eq a)|, |?(Eq Int)|, |?(Ord Int)|$, whose
