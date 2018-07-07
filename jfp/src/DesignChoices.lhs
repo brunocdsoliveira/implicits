@@ -337,10 +337,14 @@ entry.
 
 %- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 \paragraph{Superclasses with Global Scoping and \name-style Resolution in GHC Haskell}
-The newest version of GHC has a \name-inspired resolution algorithm in order to deal
-with \emph{quantified class constraints}~\cite{}.\bruno{fill me in} 
-
-But resolution in the presence of superclasses behaves differently from overlapping instances. 
+As we have explained above, standard Haskell gets away with committed choice in
+the presence of superclasses without unnecessarily rejecting queries. Yet, this
+is no longer the case for the recent extension with \emph{quantified class
+constraints}~\cite{haskell2017b}.  Like \name, quantified class constraints allow nested
+implications in type class instance contexts and as superclasses. The committed choice
+approach does not work with the latter. GHC's has decided to retain its committed
+choice approach and to reject queries that would require backtracking to
+explore the superclass relations.
 
 
 \subsection{Coherence}
