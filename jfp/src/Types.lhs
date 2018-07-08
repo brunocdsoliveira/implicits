@@ -309,7 +309,10 @@ resolution renders the meaning of a program ambiguous. In other words, if both
 resolutions are allowed then the semantics is not coherent. 
 % \end{enumerate}
 
-We next address these two issues one by one.
+We next address these two issues one by one. Readers who are keen
+to see the end result may wish to
+skip the gradual developments and jump straight to
+Section~\ref{s:types:summary}.
 
 %-------------------------------------------------------------------------------
 \subsection{Type-Directed Resolution with Focusing}
@@ -975,7 +978,7 @@ variables $\bar{\alpha},\bar{\alpha}'$ and the type environment after substituti
 }
    
 %- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-\subsubsection{Summary}
+\subsubsection{Summary}\label{s:types:summary}
 
 \figtwocol{fig:resolution2}{Deterministic Resolution and Translation to System F}{
 \begin{center}
