@@ -139,8 +139,8 @@ matching heads |C [a]|, the program is rejected.
 
 Although this Haskell design choice is not very well documented in the research
 literature, the reason for not allowing backtracking is folklore among Haskell
-programmers and can be found in documentation and emails~\cite{}\bruno{Tom: Can
-you put some references here? (blogs, emails, documentation is fine)}.  In
+programmers and can be found in various informal discussions.\footnote{\url{https://mail.haskell.org/pipermail/haskell-cafe/2006-September/018500.html},\\ \url{https://www.reddit.com/r/haskell/comments/3afi3t/the_constraint_trick_for_instances/cscb33j/?st=jjcz7zeh&sh=1e5f3c8b}, \\ \url{https://github.com/Gertjan423/ghc-proposals/blob/quantified-constraints/proposals/0000-quantified-constraints.rst##overlap}
+}  In
 essence there are two arguments for not allowing backtracking during
 resolution:
 

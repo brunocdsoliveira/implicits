@@ -1298,8 +1298,14 @@ FIXED: We have an extended discussion on (im)predicativity in Section 6 now.
 > (A table of content would also have been helpful, thus I wonder whether this
 > is possible within the JFP style.)
 
-TODO: provide summary with the definitions of the final system
-TODO: add table of content in some form or other
+The resulting system is in Figure 7 referenced from Section 3.5.5 - Summary.
+
+ADDED:
+- We have added a forward pointer at the end of Section 3.3 to Section 3.5.5
+  for the readers who wish to skip the gentle developments and rationales and
+  see the result right away.
+- TODO: We have extended Section 3.5.5. to state again briefly the behavior of each
+  judgment and rule in Figure 7.
 
 > ### Terminology: Rule
 > I find the notion of "rules" a bit confusing.  First, a "rule" is formally
