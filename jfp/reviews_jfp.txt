@@ -670,7 +670,7 @@ FIXED
 > certainly relevant when comparing expressivity/flexibility.  Please
 > elaborate.
 
-TODO?
+FIXED: we now discuss mention the strategies used by different systems.
 
 > p. 36: "This would retain several of benefits" --> "several of the
 > benefits".

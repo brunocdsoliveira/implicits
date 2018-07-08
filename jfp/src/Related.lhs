@@ -173,15 +173,22 @@ overlapping instances.
 
 The GHC Haskell compiler supports overlapping
 instances~\cite{designspace} that live in the same global scope. This
-allows some relief for the lack of local scoping, but it still does 
+allows some relief for the lack of local scoping. Yet, it still does 
 not allow different instances for the same type to coexist in 
-different scopes of a program.
+different scopes of a program. Moreover, GHC only commits to
+an instance if it is the only one whose head matches, and does
+not backtrack among multiple matching instances.
+
 $\ourlang$ has a different approach to overlapping compared to
 \emph{instance chains}~\cite{chain}. With instance chains the
 programmer imposes an order on a set of overlapping type class
-instances. All instance chains for a type class have a global scope and
+instances. 
+All instance chains for a type class have a global scope and
 are expected not to overlap. This makes the scope of overlapping
-closed within a chain.  In our calculus, we make our local scope
+closed within a chain. Instance chains can explicitly declare 
+cases when resolution should fail, and these are dealt with by
+backtracking.
+In our calculus, we make our local scope
 closed, thus overlap only happens within one nested scope.
 More recently, there has been a proposal for \emph{closed type families 
 with overlapping equations}~\cite{eisenberg}. This proposal allows the
@@ -210,14 +217,14 @@ through requiring non-overlapping instances. Their algorithm performs a
 backtracking search among these instances as well as any local assumptions
 (which themselves can ultimately only be satisfied by combinations of global
 instances), rather than a linear committed-choice traversal of the environment.
-\bruno{Have an expanded discussion}
+% \bruno{Have an expanded discussion}
 
 \paragraph{IP Mechanisms in Dependently Typed Programming}
 A number of dependently typed languages also have IP mechanisms
 inspired by type classes. Coq's type classes~\cite{coqclasses} and
 canonical structures~\cite{gonthier11lessad-doc}, Agda's instance
 arguments~\cite{instanceargs} and Idris type classes~\cite{brady} all allow multiple and/or highly overlapping
-rules/instances that can be incoherent. 
+rules/instances that can be incoherent.
 The Coq theorem prover has two mechanisms that allow modelling
 type-class like structures: \emph{canonical structures}~\cite{gonthier11lessad-doc} and
 \emph{type classes}~\cite{coqclasses}. The two mechanisms have quite a bit of
@@ -225,10 +232,16 @@ overlap in terms of functionality. In both mechanisms the idea is to
 use dependent records to model type-class-like structures, and pass
 instances of such records implicitly, but they still follow Haskell's 
 global scoping approach. Nevertheless highly overlapping instances, which 
-can be incoherent, are allowed. Like implicits, the design of
-Idris type classes allows for any type of value to be implicit. Thus
-type classes in Idris are first-class, can be manipulated like any other 
-values, and also allow multiple (incoherent) instances of the same type.
+can be incoherent, are allowed and resolution performs a backtracking search. 
+Like implicits, the design of Idris type classes, known as \emph{interfaces},  allows for any type of value
+to be implicit. Thus type classes in Idris are first-class and can be manipulated
+like any other 
+values. The language distinguishes unnamed instances, which are used for
+resolution, and named instances which have to be applied explicitly. To former
+cannot be overlapping, while there can be multiple (incoherent) named instances
+of the same type. The implicit resolution follows the committed choice strategy
+of Haskell, and ignores the fact that named instances can distinguish between
+alternative derivations.
 \emph{Instance arguments}~\cite{instanceargs} are an Agda extension
 that is closely related to implicits. Like $\ourlang$, 
 instance arguments use a special arrow for introducing implicit 
@@ -238,7 +251,8 @@ directly from the regular type environment, and any previously defined
 declaration can be used as a rule. The original design of instance arguments
 severely restricted the power of resolution by forbidding recursive resolution.
 Since then, recursive resolution has been enabled in Agda. Like Coq's and Idris's 
-type classes, instance arguments allow multiple incoherent rules.
+type classes, instance arguments allow multiple incoherent rules. Agda computes all 
+possible resolutions and uses one of them only if all are equal.
 
 \begin{comment}
 An interesting aspect about IP mechanisms for theorem proving is that,
