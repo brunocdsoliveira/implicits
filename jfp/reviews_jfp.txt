@@ -294,8 +294,11 @@ FIXED: Added some more text.
 > examples of where a query of the form $?(\forall X.r)$ might be
 > useful?
 
-TODO?
- 
+FIXED: We now show an example of a polymorphic query, say that
+       they are mostly useful in combination with higher-kinded types
+       and point to the work on quantified class constraints, which
+       shows several useful examples. 
+
 > p. 14:
 > 
 >  - "While this poses no threat to type soundness, (...) Consider the
@@ -321,7 +324,7 @@ stability. We added Lemma 5.4 in connection to this.
 > rules only interesting for the purpose of resolving first-order
 > queries?
 
-TODO: Consider a polymorphic query example?
+ADDED: See above concerning polymorphic queries.
  
 >  - Section 3.1: "In a rule type $\rho_1 => \rho_1$, type $\rho_1$ is
 > called the context and type $\rho_2$ the head."  It would be nice to

@@ -714,7 +714,7 @@ and can be instantiated to multiple rules of monomorphic types
 |Int => Pair Int Int, Bool => Pair Bool Bool, dots|.
 
 Multiple monomorphic queries can be resolved by the same
-rule. The following expression returns 
+polymorhic rule. The following expression returns 
 |((3,3),(True,True))|: 
 
 %if False
@@ -733,6 +733,17 @@ rule. The following expression returns
 %endif
 
 > implicit 3 in implicit True in implicit (biglam a (rule a (((query a),(query a))))) in (query (Pair Int Int), query (Pair Bool Bool))
+
+Queries can be polymorphic too. For instance, the following example extracts the polymorphic
+implicit with a polymorphic query. 
+
+> implicit (biglam a (rule a (((query a),(query a))))) in query (forall b. b => (Pair b b)))
+
+In practice, polymorphic queries are useful in combination with higher-kinded
+types where they occur as recursive resolvents of polymorphic rules. We cannot
+illustrate such with \name as, to keep its definition small, it is not equipped with higher-kinded types. The
+interested reader can find examples in the work of Bottu et al.~\shortcite{haskell2017b}.
+
 
 %~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 \paragraph{Combining Higher-Order and Polymorphic Rules} 
