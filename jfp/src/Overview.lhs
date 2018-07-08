@@ -267,7 +267,7 @@ provides a datatype for sets that is polymorphic in the elements along with a
 < union :: Ord a => Set a -> Set a -> Set a
 
 \noindent For efficiency reasons the sets are represented by a
-datastructure that orders the elements in a particular way. 
+data structure that orders the elements in a particular way. 
 It is natural to rely on the |Ord| type class to deal with ordering for the particular type |a|.  To preserve the
 correct invariant, it is crucial that the ordering of elements in the
 set is always the same. The global uniqueness property guarantees this. If two
@@ -714,7 +714,7 @@ and can be instantiated to multiple rules of monomorphic types
 |Int => Pair Int Int, Bool => Pair Bool Bool, dots|.
 
 Multiple monomorphic queries can be resolved by the same
-polymorhic rule. The following expression returns 
+polymorphic rule. The following expression returns 
 |((3,3),(True,True))|: 
 
 %if False
