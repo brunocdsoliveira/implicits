@@ -1074,6 +1074,45 @@ variables $\bar{\alpha},\bar{\alpha}'$ and the type environment after substituti
 Figure~\ref{fig:resolution2} puts all the above measures together in our
 unambiguous, deterministic and stable definition of resolution.
 
+The \emph{main judgment} $\dres{\tenv}{\rulet}{E}$ resolves the query $\rulet$
+against the type environment $\tenv$. It is defined by a single rule,
+\rref{R-Main}, which delegates the task to the auxiliary \emph{focusing
+judgment} $\drres{\bar{\alpha}}{\tenv}{\rulet}{E}$. 
+
+The focusing judgment
+has one more index than the main judgment, namely the type variables $\bar{\alpha}$
+that are recorded in the type environment, which are retrieved by the function
+$\tyvars{\tenv}$ in rule \rref{R-Main}. Three rules define the focusing judgment. The first two,
+\rref{R-IAbs} and \rref{R-TAbs}, strip the query type $\rulet$ until only a simple
+type $\type$ remains, which is handled by rule \rref{R-Simp}. Rule \rref{R-IAbs} strips
+the context $\rulet_1$ from a rule type $\rulet_1 \To \rulet_2$, adds it to the type environment
+as a new implicit and then recursively processes the head $\rulet_1$. Rule \rref{R-TAbs} strips
+the quantifier from a universally quantified type $\forall \alpha. \rulet$ and adds the
+type variable $\alpha$ to the type environment in which $\rulet$ is processed. Finally,
+rule \rref{R-Simp} delegates the job of processing the simple type $\type$ to the auxiliary
+\emph{lookup judgment} $\dlres{\bar{\alpha}}{\tenv}{\tenv'}{\type}{E}$.
+
+The lookup judgment takes an additional index, the type environment $\tenv'$, which is initialised
+to $\tenv$ in rule \rref{R-Simp}. It pops entries from $\tenv'$ until it finds an
+implicit that matches the simple query type $\type$. Rule \rref{L-RuleMatch} first uses the
+auxiliary \emph{matching judgment} $\dmres{\tenv}{\rulet}{x}{\tau}{E}{\overline{\rulet'~\gbox{\leadsto x}}}$
+to establish that implicit $\rulet$ at the top of $\tenv'$ matches the query type $\type$ and
+to receive new queries $\rulet'$, which it resolves recursively against the type environment $\tenv$.
+Rule \rref{L-RuleNoMatch} skips the implicit at the top of the environment when it is stable to do so
+according to the auxiliary \emph{stability judgment} $\dstable{\bar{\alpha}}{\tenv}{\rulet}{x}{\type}$.
+Rules \rref{L-Var} and \rref{L-TyVar} skip term and type variable entries.
+
+Three rules define the matching judgment. In the first one, \rref{M-Simp}, the
+implicit is a simple type $\type$ that is identical to query type; there are no
+remaining queries. When the implicit is a rule type $\rulet_1 \To \rulet_2$, rule \rref{M-IApp} defers
+querying $\rulet_1$ and first checks whether $\rulet_2$ matches the query $\type$. When the
+implicit is a universally quantified type $\forall \alpha.\rulet$, rule \rref{M-TApp} instantiates
+it appropriately to match the query $\type$.
+
+Finally, the stability judgment is defined by a single rule, \rref{Stable}, which
+makes sure that there is no substitution $\theta$ of the type variables $\bar{\alpha}$ 
+for which $\theta(\rulet)$ matches $\theta(\type)$.
+
 % %- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 % \paragraph{Legacy}
 % 

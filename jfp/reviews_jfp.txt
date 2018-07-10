@@ -1,3 +1,8 @@
+We are grateful to the reviewers for their thorough and extensive reviews.
+They have helped us in making a major revision of our paper. 
+
+We have written our responses between the questions and comments below.
+
 > Referees' Comments to Author:
 > Referee: 1
 > 
@@ -1304,7 +1309,7 @@ ADDED:
 - We have added a forward pointer at the end of Section 3.3 to Section 3.5.5
   for the readers who wish to skip the gentle developments and rationales and
   see the result right away.
-- TODO: We have extended Section 3.5.5. to state again briefly the behavior of each
+- We have extended Section 3.5.5. to state again briefly the behavior of each
   judgment and rule in Figure 7.
 
 > ### Terminology: Rule
