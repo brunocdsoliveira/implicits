@@ -87,10 +87,10 @@ resulting from the resolution of $\rulet$.
 
 For simple types $\type$ rule \rref{R-Simp} delegates the work of
 building evidence, when a matching implicit $\rulet$ is found in the
-environment, to rule \rref{L-RuleMatch}. The evidence consists of two parts:
+environment, to rule \rref{L-Match}. The evidence consists of two parts:
 $E$ is the evidence of matching $\type$ against $\rulet$. This match contains
 placeholders $\bar{x}$ for the contexts whose resolution is postponed by rule
-\rref{M-IAbs}. It falls to rule \rref{L-RuleMatch} to perform these
+\rref{M-IAbs}. It falls to rule \rref{L-Match} to perform these
 postponed resolutions, obtain their evidence $\bar{E}$ and fill in the
 placeholders.
 

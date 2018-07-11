@@ -161,7 +161,7 @@ and matching) of the deterministic resolution judgment. They all proceed by indu
 the corresponding deterministic resolution judgment. Therefore, their dependencies, depicted in
 the diagram below, follow those of the sub-judgments that constitute the main deterministic
 resolution judgment. Because the proofs of this section are mechanized, an auxiliary lemma
-is necessary to handle the multiple substitutions that rule \rref{L-RuleMatch} uses.
+is necessary to handle the multiple substitutions that rule \rref{L-Match} uses.
 
 \begin{center}
 \begin{tikzpicture}[node distance=1cm, auto,]
@@ -540,7 +540,7 @@ The proof proceeds by induction on the derivation of the third hypothesis.
 \begin{description}
 \setlength{\itemsep}{1em}
 %===============================================================================
-\item[\fbox{\rref{L-RuleMatch}}]\quad$\dlres{\bar{\alpha}}{\tenv}{\tenv',\envi{\rulet}{x}}{\type}{E_1[\bar{E}'_1/\bar{x}]}$\\
+\item[\fbox{\rref{L-Match}}]\quad$\dlres{\bar{\alpha}}{\tenv}{\tenv',\envi{\rulet}{x}}{\type}{E_1[\bar{E}'_1/\bar{x}]}$\\
 %===============================================================================
 
   The rule's two hypotheses are
@@ -552,9 +552,9 @@ where $\Sigma_1 = \overline{\rulet'_1~\gbox{\leadsto x}}$ ,
 \begin{equation*}
 \drres{\bar{\alpha}}{\tenv}{\rulet'_1}{E'_1} \quad (\forall \rulet'_1 \in \overline{\rulet}'_1)
 \end{equation*}%
-  Then the fourth hypothesis was either derived from rule \rref{L-RuleMatch},
-  or from rule \rref{L-RuleNoMatch}. However, the hypothesis of the latter is
-  not satisfied: $\epsilon;E_1;\Sigma_1$ forms a counter-example. Hence, using rule \rref{L-RuleMatch}
+  Then the fourth hypothesis was either derived from rule \rref{L-Match},
+  or from rule \rref{L-NoMatch}. However, the hypothesis of the latter is
+  not satisfied: $\epsilon;E_1;\Sigma_1$ forms a counter-example. Hence, using rule \rref{L-Match}
   the fourth hypothesis is also derived.
 
   Then it follows from the first hypothesis of the rule (given above),
@@ -574,14 +574,14 @@ where $\Sigma_1 = \overline{\rulet'_1~\gbox{\leadsto x}}$ ,
 
 
 %===============================================================================
-\item[\fbox{\rref{L-RuleNoMatch}}]\quad$\dlres{\bar{\alpha}}{\tenv}{\tenv',\envi{\rulet}{x}}{\type}{E_1'}$\\
+\item[\fbox{\rref{L-NoMatch}}]\quad$\dlres{\bar{\alpha}}{\tenv}{\tenv',\envi{\rulet}{x}}{\type}{E_1'}$\\
 %===============================================================================
 
-  Then the fourth hypothesis was either derived from rule \rref{L-RuleMatch},
-  or from rule \rref{L-RuleNoMatch}. However, the hypothesis of the former is
+  Then the fourth hypothesis was either derived from rule \rref{L-Match},
+  or from rule \rref{L-NoMatch}. However, the hypothesis of the former is
   not satisfied, as it would be a counter-example for the first hypothesis of
   the assumed rule of the third hypothesis. Hence, the fourth hypothesis is also
-  formed by rule \rref{L-RuleNoMatch}.
+  formed by rule \rref{L-NoMatch}.
 
   From the second hypothesis of the lemma we derive $\unambig{}{\tenv'}$.
   Then from the second hypothesis of the rule and the induction hypothesis we conclude
@@ -1003,7 +1003,7 @@ The proof proceeds by induction on the derivation of the first hypothesis, mutua
 \begin{description}
 \setlength{\itemsep}{1em}
 %===============================================================================
-\item[\fbox{\rref{L-RuleMatch}}]\quad$
+\item[\fbox{\rref{L-Match}}]\quad$
 \dlres{\bar{\alpha},\alpha,\bar{\alpha}'}{\tenv,\alpha,\tenv'}{\tenv'',\envi{\rulet}{x}}{\type}{E}$ \ \\
 %===============================================================================
 
@@ -1017,7 +1017,7 @@ The proof proceeds by induction on the derivation of the first hypothesis, mutua
 \begin{equation*}
 \drres{{\alpha},\bar{\alpha}'}{\tenv,\tenv'[\suty/\alpha]}{\ruleset[\suty/\alpha]}{\bar{E}[|\suty|/\alpha]}
 \end{equation*}
-  By combining these two observations with rule \rref{L-RuleMatch} we obtain the first desired result
+  By combining these two observations with rule \rref{L-Match} we obtain the first desired result
 \begin{equation*}
 \dlres{\bar{\alpha},\bar{\alpha}'}{\tenv,\tenv'[\suty/\alpha]}{\tenv''',\envi{\rulet[\suty/\alpha]}{x}}{\type[\suty/\alpha]}{E[|\suty|/\alpha]}
 \end{equation*}  
@@ -1046,7 +1046,7 @@ The proof proceeds by induction on the derivation of the first hypothesis, mutua
   \end{enumerate}
 
 %===============================================================================
-\item[\fbox{\rref{L-RuleNoMatch}}]\quad$\dlres{\bar{\alpha},\alpha,\bar{\alpha}'}{\tenv,\alpha,\tenv'}{\tenv'',\envi{\rulet}{x}}{\type}{E'}$\ \\
+\item[\fbox{\rref{L-NoMatch}}]\quad$\dlres{\bar{\alpha},\alpha,\bar{\alpha}'}{\tenv,\alpha,\tenv'}{\tenv'',\envi{\rulet}{x}}{\type}{E'}$\ \\
 %===============================================================================
 
 The rule's first hypothesis states that
@@ -1064,7 +1064,7 @@ $\theta' \cdot [\suty/\alpha]$. In this case, the above simplifies to
 \begin{equation*}
   \dlres{\bar{\alpha},\bar{\alpha}'}{\tenv,\tenv'[\suty/\alpha]}{\tenv'''}{\type[\suty/\alpha]}{E'[|\suty|/\alpha]}
 \end{equation*}
-  With rule \rref{L-RuleNoMatch} we combine these two observations into the desired first result
+  With rule \rref{L-NoMatch} we combine these two observations into the desired first result
 \begin{equation*}
   \dlres{\bar{\alpha},\bar{\alpha}'}{\tenv,(\tenv',\envi{\rulet}{x})[\suty/\alpha]}{\tenv'''}{\type[\suty/\alpha]}{E'[|\suty|/\alpha]}
 \end{equation*}
@@ -1827,7 +1827,7 @@ The proof proceeds by induction on the derivation of the hypothesis.
 \begin{description}
 \setlength{\itemsep}{1em}
 %===============================================================================
-\item[\fbox{\rref{Alg-L-RuleMatch}}]\quad$\adlres{\bar\alpha}{\tenv}{\tenv',\envi{\rulet}{x}}{\type}{E[\bar{E}/\bar{x}]}$\ \\
+\item[\fbox{\rref{Alg-L-Match}}]\quad$\adlres{\bar\alpha}{\tenv}{\tenv',\envi{\rulet}{x}}{\type}{E[\bar{E}/\bar{x}]}$\ \\
 %$\bar{\alpha};\tenv; \tenv', \rulet~{\leadsto x} \alg \type~{\leadsto E[\bar{E}/\bar{x}]}$ \ \\
 %===============================================================================
 
@@ -1835,13 +1835,13 @@ From the rule's first hypothesis and Lemma~\ref{lemma:asoundness:3} we have
 \begin{equation*}
 \dmres{\tenv}{\rulet}{E}{\type}{E'}{\ie{\ruleset}{\bar{x}}}
 \end{equation*}
-Then, using Lemma~\ref{lemma:asoundness:1} and rule \rref{L-RuleMatch} we conclude
+Then, using Lemma~\ref{lemma:asoundness:1} and rule \rref{L-Match} we conclude
 \begin{equation*}
 \dlres{\bar\alpha}{\tenv}{\tenv',\envi{\rulet}{x}}{\type}{E[\bar{E}/\bar{x}]}
 \end{equation*}
 
 %===============================================================================
-\item[\fbox{\rref{Alg-L-RuleNoMatch}}]\quad
+\item[\fbox{\rref{Alg-L-NoMatch}}]\quad
 $\adlres{\bar\alpha}{\tenv}{\tenv',\envi{\rulet}{x}}{\type}{E'}$\ \\
 %$\bar{\alpha};\tenv;\tenv', \rulet~{\leadsto x}\alg \type~{\leadsto E'}$ \ \\
 %===============================================================================
@@ -1866,7 +1866,7 @@ From the rule's first premise and the negation of Lemma~\ref{lemma:acompleteness
 \not\exists \theta, E, \Sigma, \dom(\theta) \subseteq \bar{\alpha}:
 \dmres{\theta(\tenv)}{\theta(\rulet)}{x}{\theta(\type)}{E}{\Sigma}
 \end{equation*}
-  Hence with rule \rref{L-RuleNoMatch} we conclude
+  Hence with rule \rref{L-NoMatch} we conclude
 \begin{equation*}
    \dlres{\bar\alpha}{\tenv}{\tenv',\envi{\rulet}{x}}{\type}{E'}
 %  \bar{\alpha};\tenv;\tenv',\rulet \leadsto x \ivturns \type~{\leadsto E'}
@@ -2141,7 +2141,7 @@ The proof proceeds by induction on the derivation of the second hypothesis.
 \begin{description}
 \setlength{\itemsep}{1em}
 %===============================================================================
-\item[\fbox{\rref{L-RuleMatch}}]\quad
+\item[\fbox{\rref{L-Match}}]\quad
 $\dlres{\bar\alpha}{\tenv}{\tenv',\envi{\rulet}{x}}{\type}{E[\bar{E}/\bar{x}]}$ \ \\
 %===============================================================================
 
@@ -2151,13 +2151,13 @@ $\alpha=\epsilon$, we have
 \begin{equation*}
   \admres{\epsilon}{\tenv}{\rulet}{x}{\epsilon}{\type}{E'}{\ie{\bar\rulet}{\bar{x}}}
 \end{equation*}
-Then, using Lemma~\ref{lemma:acompleteness:1} and rule \rref{Alg-L-RuleMatch} we conclude
+Then, using Lemma~\ref{lemma:acompleteness:1} and rule \rref{Alg-L-Match} we conclude
 \begin{equation*}
   \adlres{\bar\alpha}{\tenv}{\tenv',\envi{\rulet}{x}}{\type}{E[\bar{E}/\bar{x}]}
 \end{equation*}
 
 %===============================================================================
-\item[\fbox{\rref{L-RuleNoMatch}}]\quad
+\item[\fbox{\rref{L-NoMatch}}]\quad
 $\dlres{\bar\alpha}{\tenv}{\tenv',\envi{\rulet}{x}}{\type}{E'}$ \ \\
 %$\bar{\alpha};\tenv;\tenv', \rulet~{\leadsto x}\ivturns \type~{\leadsto E'}$ \ \\
 %===============================================================================
@@ -2177,7 +2177,7 @@ Lemma~\ref{lemma:acompleteness:4}, we have:
 \begin{equation*}
 \incoherent{\bar\alpha}{\tenv}{\rulet}{\type}
 \end{equation*}
-  Hence with rule \rref{Alg-L-RuleNoMatch} we conclude
+  Hence with rule \rref{Alg-L-NoMatch} we conclude
 \begin{equation*}
   \adlres{\bar\alpha}{\tenv}{\tenv',\envi{\rulet}{x}}{\type}{E'}
 \end{equation*}

@@ -780,12 +780,12 @@ type environment $\tenv'$:
 \hfill \myruleform{\lres{\tenv}{\tenv'}{\type}{E}} \hfill \llap{\it Lookup}\\ \\
 %- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -%
 
-  \myrule{DL-RuleMatch}
+  \myrule{DL-Match}
           {\fmres{\tenv}{\rulet}{x}{\tau}{E}{\overline{\rulet'~\gbox{\leadsto x}}} \\
             \frres{\tenv}{\rulet'}{E'} \quad (\forall \rulet' \in \overline{\rulet}')
           }
           {\lres{\tenv}{\tenv',\envi{\rulet}{x}}{\type}{E[\bar{E}'/\bar{x}]}} \\ \\
-  \myrule{DL-RuleNoMatch}{
+  \myrule{DL-NoMatch}{
            \not\exists E, \Sigma:\enskip \fmres{\tenv}{\rulet}{x}{\type}{E}{\Sigma} \\
            \lres{\tenv}{\tenv'}{\type}{E'}
           }
@@ -801,11 +801,11 @@ type environment $\tenv'$:
          {\lres{\tenv}{\tenv',\alpha}{\type}{E}} 
 \eda
 
-Rule~\rref{DL-RuleMatch} concerns the case where the first entry in the 
+Rule~\rref{DL-Match} concerns the case where the first entry in the 
 environment matches the goal. Its behavior is the same as in the
 original definition of rule~\rref{FR-Simp}.
 
-Rule~\rref{DL-RuleNoMatch} is mutually exclusive with the above rule: it
+Rule~\rref{DL-NoMatch} is mutually exclusive with the above rule: it
 skips the first entry in the environment only iff it does not match to look for
 a matching implicit deeper in the environment. This implements the committed choice
 semantics: the first matching implicit is committed to and further implicits are not
@@ -864,12 +864,12 @@ because it defies the common expectation that simple refactorings like the reduc
 above do not change a program's behavior.
 
 To avoid this problem and obtain stability under type substitution, we tighten
-the requirement of rule~\rref{DL-RuleNoMatch}: an implicit
+the requirement of rule~\rref{DL-NoMatch}: an implicit
 in the environment can only be skipped iff it does not match under any possible
 substitution of type variables. With this tightened requirement the scenario
 above simply does not resolve: unstable resolutions are invalid.
 \bda{c}
-  \myrule{DL-RuleNoMatch'}{
+  \myrule{DL-NoMatch'}{
 	\stable{\tenv}{\rulet}{x}{\type} \\
            \lres{\tenv}{\tenv'}{\type}{E'}
           }
@@ -897,7 +897,7 @@ spanner in the works. Consider what happens:
 Using
 Rule~\rref{FR-TAbs}, we would recursively resolve $\beta \arrow \beta$
 against the extended environment $\tenv_1 = \tenv_0, \beta$. Next we get stuck
-as neither rule~\rref{DL-RuleMatch} nor rule~\rref{DL-RuleNoMatch'}
+as neither rule~\rref{DL-Match} nor rule~\rref{DL-NoMatch'}
 applies. The former does not apply because $\alpha \arrow \alpha$ does not
 match $\beta \arrow \beta$.  Also the latter does not apply because there are
 two substitutions such that $\theta(\alpha \arrow \alpha)$ matches
@@ -1020,12 +1020,12 @@ variables $\bar{\alpha},\bar{\alpha}'$ and the type environment after substituti
 %---------------------------------------------------------------------%
 \hfill \myruleform{\dlres{\bar{\alpha}}{\tenv}{\tenv'}{\type}{E}} \hfill \llap{\it Lookup} \\ \\
 %---------------------------------------------------------------------%
-  \myrule{L-RuleMatch}
+  \myrule{L-Match}
           {\dmres{\tenv}{\rulet}{x}{\tau}{E}{\overline{\rulet'~\gbox{\leadsto x}}} \\
             \drres{\bar{\alpha}}{\tenv}{\rulet'}{E'} \quad (\forall \rulet' \in \overline{\rulet}')
           }
           {\dlres{\bar{\alpha}}{\tenv}{\tenv',\envi{\rulet}{x}}{\type}{E[\bar{E}'/\bar{x}]}} \\
-  \myrule{L-RuleNoMatch}{
+  \myrule{L-NoMatch}{
 	   \dstable{\bar{\alpha}}{\tenv}{\rulet}{x}{\type} \\
            \dlres{\bar{\alpha}}{\tenv}{\tenv'}{\type}{E'}
           }
@@ -1094,11 +1094,11 @@ rule \rref{R-Simp} delegates the job of processing the simple type $\type$ to th
 
 The lookup judgment takes an additional index, the type environment $\tenv'$, which is initialised
 to $\tenv$ in rule \rref{R-Simp}. It pops entries from $\tenv'$ until it finds an
-implicit that matches the simple query type $\type$. Rule \rref{L-RuleMatch} first uses the
+implicit that matches the simple query type $\type$. Rule \rref{L-Match} first uses the
 auxiliary \emph{matching judgment} $\dmres{\tenv}{\rulet}{x}{\tau}{E}{\overline{\rulet'~\gbox{\leadsto x}}}$
 to establish that implicit $\rulet$ at the top of $\tenv'$ matches the query type $\type$ and
 to receive new queries $\rulet'$, which it resolves recursively against the type environment $\tenv$.
-Rule \rref{L-RuleNoMatch} skips the implicit at the top of the environment when it is stable to do so
+Rule \rref{L-NoMatch} skips the implicit at the top of the environment when it is stable to do so
 according to the auxiliary \emph{stability judgment} $\dstable{\bar{\alpha}}{\tenv}{\rulet}{x}{\type}$.
 Rules \rref{L-Var} and \rref{L-TyVar} skip term and type variable entries.
 
@@ -1295,12 +1295,12 @@ for which $\theta(\rulet)$ matches $\theta(\type)$.
 % \\ \\ \\
 % \myruleform{\bar{\alpha};\tenv;\tenv' \ivturns \type~\gbox{\leadsto E}}\\ \\
 % 
-%   \myrule{L-RuleMatch}
+%   \myrule{L-Match}
 %           {\tenv; \rulet~\gbox{\leadsto x} \ivturns \tau~\gbox{\leadsto E}; \overline{\rulet'~\gbox{\leadsto x}} \\
 %             \bar{\alpha};\tenv \ivturns \rulet'~\gbox{\leadsto E'} \quad (\forall \rulet' \in \overline{\rulet}')
 %           }
 %           {\bar{\alpha};\tenv;\tenv',\rulet~\gbox{\leadsto x} \ivturns \type~\gbox{\leadsto E[\bar{E}'/\bar{x}]}} \\
-%   \myrule{L-RuleNoMatch}{
+%   \myrule{L-NoMatch}{
 % 	\mathit{stable}(\bar{\alpha},\tenv,\rulet,\type) \\
 % %   \not\exists \theta, E, \Sigma, \mathit{dom}(\theta) \subseteq \bar{\alpha}: \theta(\tenv); \theta(\rulet)~\gbox{\leadsto x} \ivturns \theta(\tau)~\gbox{\leadsto E}; \Sigma \\
 %            \bar{\alpha};\tenv;\tenv' \ivturns \type~\gbox{\leadsto E'}
@@ -1372,17 +1372,17 @@ for which $\theta(\rulet)$ matches $\theta(\type)$.
 % is syntax-directed on $\tenv'$: it traverses $\tenv'$ from right to left until
 % it finds a rule type $\rulet$ that matches the simple type $\type$.  Rules
 % \mylabel{L-Var} and \mylabel{L-TyVar} skip the irrelevant entries in the
-% environment. Rule \mylabel{L-RuleMatch} identifies a matching rule type
+% environment. Rule \mylabel{L-Match} identifies a matching rule type
 % $\rulet$ -- where matching is determined by with the third auxiliary judgment
 % -- and takes care of recursively resolving its context types; details follow
-% below.  Finally, rule \mylabel{L-RuleNoMatch} skips a rule type in the
+% below.  Finally, rule \mylabel{L-NoMatch} skips a rule type in the
 % environment if it does not match. Its condition
 % $\mathit{stable}(\bar{\alpha},\tenv,\rulet,\type)$ entails the opposite of rule
-% \mylabel{L-RuleMatch}'s first condition: $\not\exists
+% \mylabel{L-Match}'s first condition: $\not\exists
 % \Sigma:~\tenv;\rulet \ivturns \type; \Sigma$.
 % (We come back to the reason why the condition is stronger than this in
 % Section~\ref{sec:coherence}.)
-% As a consequence, rules \mylabel{L-RuleMatch} and \mylabel{L-RuleNoMatch}
+% As a consequence, rules \mylabel{L-Match} and \mylabel{L-NoMatch}
 % are mutually exclusive and \emph{the judgment effectively commits to the
 % right-most matching rule in $\tenv'$}.
 % We maintain the invariant that $\tenv'$ is a prefix of $\tenv$; rule
@@ -1403,7 +1403,7 @@ for which $\theta(\rulet)$ matches $\theta(\type)$.
 % postponed resolvents are captured in the $\Sigma$ argument. This
 % way they do not influence the matching decision and backtracking is avoided.
 % Instead, the recursive resolutions are executed, as part of rule
-% \mylabel{L-RuleMatch}, after the rule has been committed to.
+% \mylabel{L-Match}, after the rule has been committed to.
 % Rule \mylabel{M-Simp} constitutes the base case where the rule type equals the
 % target type. Rule \mylabel{M-IApp} is the counterpart of the original
 % rule \mylabel{R-IApp} where the implication arrow $\rulet_1 \iarrow \rulet_2$
@@ -1510,12 +1510,12 @@ for which $\theta(\rulet)$ matches $\theta(\type)$.
 % %-------------------------------------------------------------------------------
 % \paragraph{Coherence Enforcement}\label{sec:coherence}
 % 
-% In order to enforce coherence, rule \mylabel{L-RuleNoMatch} makes sure that the
+% In order to enforce coherence, rule \mylabel{L-NoMatch} makes sure that the
 % decision to not select a context type is stable under all possible
 % substitutions $\theta$.  Consider for instance the |bad| example from Section~\ref{sec:overview:incoherence}: when looking up |b -> b|, the rule 
 % |Int -> Int| does not match and is otherwise skipped. Yet, under the substitution
 % $\theta = [|b| \mapsto |Int|]$ the rule would match after all. In
-% order to avoid this unstable situation, rule \mylabel{L-RuleNoMatch} only skips a context
+% order to avoid this unstable situation, rule \mylabel{L-NoMatch} only skips a context
 % type in the implicit environment, if there is no substitution $\theta$ for
 % which the type would match the context type.
 % 
@@ -1529,10 +1529,10 @@ for which $\theta(\rulet)$ matches $\theta(\type)$.
 % covers all possible instantiations.
 % 
 % We clearly identify which type variables $\bar{\alpha}$ are to be considered
-% for substitution by rule \mylabel{L-RuleNoMatch} by parametrising the
+% for substitution by rule \mylabel{L-NoMatch} by parametrising the
 % judgments by this set. These are the type variables that occur in the environment
 % $\tenv$ at the point of the query. The main resolution judgment $\ivturns \rulet$
-% grabs them and passes them on to all uses of rule \mylabel{L-RuleNoMatch}.
+% grabs them and passes them on to all uses of rule \mylabel{L-NoMatch}.
 
 %===============================================================================
 \section{Resolution Algorithm}
@@ -1576,7 +1576,7 @@ represents all the goals collected so far in which type variables
 have not been substituted yet. In contrast, $\Sigma'$ denotes all obligations
 with type variables already substituted.
 
-Finally, observe that rule \rref{Alg-L-RuleMatch} invokes the algorithmic
+Finally, observe that rule \rref{Alg-L-Match} invokes the algorithmic
 judgment with an empty set of not-yet-instantiated type variables and an empty
 accumulator $\Sigma$.
 
@@ -1609,7 +1609,7 @@ and its algorithmic counterpart:
 %- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 \subsection{Algorithmic Stability Check}
 
-The second difference can be found in \rref{Alg-L-RuleNoMatch} of the lookup judgment. Instead of
+The second difference can be found in \rref{Alg-L-NoMatch} of the lookup judgment. Instead of
 using the $\dstable{\bar{\alpha}}{\tenv}{\rulet}{x}{\type}$ judgment, which quantifies over all valid 
 substitutions, this rule uses the algorithmic judgment
 $\coherent{\bar{\alpha}}{\tenv}{\rulet}{\type}$. This auxiliary judgment checks algorithmically
@@ -1629,7 +1629,7 @@ matchability, no recursive resolvents $\Sigma$ are collected nor are any
 elaborations tracked.
 Secondly, since the stability check considers the substitution of the type
 variables $\bar{\alpha}$ that occur in the environment at the point of the
-query, rule \rref{Alg-L-RuleNoMatch} pre-populates the substitutable
+query, rule \rref{Alg-L-NoMatch} pre-populates the substitutable
 variables of the $\coh$ judgment with them. Contrast this with the matching
 judgment where only the implicit's quantified variables are instantiated.
 
@@ -1765,12 +1765,12 @@ unification problems derived for their subterms.
 \hfill \myruleform{\adlres{\bar{\alpha}}{\tenv}{\tenv'}{\type}{E}} \hfill \llap{\it Lookup} \\ \\
 %------------------------------------------------------------------------------%
 
- \myrule{Alg-L-RuleMatch}{\admres{\epsilon}{\tenv}{\rulet}{x}{\epsilon}{\type}{E}{\bar{\rulet}'~\gbox{\leadsto \bar{x}'}} \quad\enskip
+ \myrule{Alg-L-Match}{\admres{\epsilon}{\tenv}{\rulet}{x}{\epsilon}{\type}{E}{\bar{\rulet}'~\gbox{\leadsto \bar{x}'}} \quad\enskip
           \adrres{\bar{\alpha}}{\tenv}{\rulet'}{E'} \enskip (\forall \rulet' \in \bar{\rulet}')
          }
          {\adlres{\bar{\alpha}}{\tenv}{ \tenv', \envi{\rulet}{x}}{\type}{E[\bar{E}'/\bar{x}'] }}  \\ \\
  
- \myrule{Alg-L-RuleNoMatch}
+ \myrule{Alg-L-NoMatch}
          {\incoherent{\bar{\alpha}}{\tenv}{\rulet}{\type} \quad\quad
           \adlres{\bar{\alpha}}{\tenv}{\tenv'}{\type}{E'}}
          {\adlres{\bar{\alpha}}{\tenv}{\tenv', \envi{\rulet}{x}}{\type}{E'}}  \\ \\
