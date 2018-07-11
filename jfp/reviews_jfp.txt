@@ -89,6 +89,7 @@ terminology.
 > important for equational reasoning.  Unfortunately, the connection
 > between stability and equational reasoning is never made formal.
 
+IMPROVED:
 We have now made the connection more clear, by relating stability
 to preservation of semantics under reduction of type application.
 
@@ -106,9 +107,7 @@ system and we discuss alternatives with impredicativity in Section 6.
 > formally proven at all, e.g. termination of resolution, or validity of
 > unification (though informal arguments are given as to their
 > validity).
-
-BRUNO: Anything about this? (FILL ME IN)
-
+>
 > Proofs of the remaining claims (type safety, determinacy,
 > etc.) are given in the Coq mechanization and appendix A.  However, the
 > mechanization seems unfinished -- I found at least one judgment that is
@@ -122,9 +121,12 @@ BRUNO: Anything about this? (FILL ME IN)
 > an optimal outcome, it would probably help to finish the Coq
 > mechanization.
 
-BRUNO: How's progress with this? (FILL ME IN)
+FIXED:
+We have filled in the definition of stability in the Coq mechanisation
+whose existence was previously stated as an axiom.
+In addition, we have fixed the errors in the manual proofs. More details
+follow below.
 
-> 
 >  b) Limitation of the resolution algorithm.  There are a number of
 > restrictions introduced in the deterministic and algorithmic versions
 > of resolution w.r.t. ambiguous resolution, which cause the former to
@@ -494,8 +496,8 @@ FIXED
 > is only used once?  Would it not have been easier to just inline this
 > judgment into the (L-RuleNoMatch) rule?
 
-ANSWER: We feel that is useful to name the condition. Also, the algorithmic
-system uses a corresponding judgement with multiple rules.
+ANSWER: We feel that it is useful to name the stability condition. Also, the
+algorithmic system uses a corresponding judgement with multiple rules.
  
 > p. 26, a minor syntactic point about the example algorithmic
 > derivation at the top of this page: this derivation uses "focusing
@@ -675,7 +677,7 @@ FIXED
 > certainly relevant when comparing expressivity/flexibility.  Please
 > elaborate.
 
-FIXED: we now discuss mention the strategies used by different systems.
+FIXED: we now mention the strategies used by different systems.
 
 > p. 36: "This would retain several of benefits" --> "several of the
 > benefits".
@@ -850,7 +852,7 @@ in detail.
 
 > p. 60, Lemma A.29: where is the proof of this lemma?
 
-FIXED: We make two assumptions regarding the unification algorithm.
+ADDED: We now state that we assume the two properties of unification without proof
  
 > Referee: 2
 > 
@@ -1323,7 +1325,8 @@ ADDED:
 > (C => D)", so why make a difference between all of them that contain a
 > (double) arrow type "A => B" and an implicit "C" that does not?
 
-TODO: consistent terminology for rules
+We now use rule (type) consistently for terms \?ρ.e and types ρ1 => ρ2, and
+implicits for implicit entries in the type environment.
 
 > ### Side conditions in typing rules (e.g. Fig 2)
 > The treatment of well-formedness is surprising and seems incorrect because

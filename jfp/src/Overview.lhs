@@ -287,8 +287,8 @@ challenging for Haskell implementations.\footnote{\url{https://mail.haskell.org/
 \subsection{Scala Implicits and Stability}
 
 Scala implicits~\cite{implicits} are an interesting alternative IP
-design. Unlike type classes, implicits have locally scoped
-rules. Consequently Scala does not have the global uniqueness
+design. Unlike type classes, implicits are locally scoped.
+Consequently Scala does not have the global uniqueness
 property, since different ``instances'' may exist for
 the same type in different scopes. Another interesting difference
 between implicits and type classes is that values of any type can be
@@ -370,7 +370,7 @@ of type |Ord[A]| in the \emph{implicit
 environment}. The implicit environment collects values that are declared to be implicit, 
 and usable for automatic implicit resolution. 
 
-Implicit values or rules, which correspond to type class instances in Haskell, 
+Implicit values, which correspond to type class instances in Haskell, 
 are declared by using the |implicit| keyword. The following three examples capture
 the ``instances'' for |Ord|:  
 %{
@@ -449,7 +449,7 @@ several interesting use cases for implicits.
 
 %~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 \paragraph{Instability in Scala}
-Although Scala allows \emph{nested} local scoping and overlapping rules,
+Although Scala allows \emph{nested} local scoping and overlapping implicits,
 \textit{stability} is not guaranteed. Figure~\ref{fig:scala} illustrates
 the issue briefly, based on the example from Section~\ref{sec:overview-coherence}.
 Line~(1) defines a function |id| with type parameter |a|, which is simply
@@ -687,8 +687,7 @@ The following expression returns $(3, 4)$:
 %~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 \paragraph{Recursive Resolution} 
 Note that resolving the  query |(query (Pair Int Int))| above
-involves applying multiple rules. 
-%combining multiple rules. 
+involves multiple implicits. 
 The current environment does not contain
 the required integer pair. It does however contain the integer $3$ and a rule 
 %$\qlam{\tyInt}{\texttt{(\qask{\tyInt},\qask{\tyInt}+1)}}$
@@ -701,7 +700,7 @@ result of applying the pair-producing rule to $3$.
 %format dots = "\ldots"
 
 %~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
-\paragraph{Polymorphic Rules and Queries} $\ourlang$ allows polymorphic rules. For example, the rule 
+\paragraph{Polymorphic Implicits and Queries} $\ourlang$ features explicit polymorphism. For example, the rule 
 |biglam a (rule a (((query a),(query a))))|
 abstracts over a type using standard type abstraction and then uses 
 a rule abstraction to provide a value of type |a| in the implicit environment of 
@@ -782,8 +781,8 @@ integer pair). For example, the following expression returns $((3,3),(3,3))$:
 % rule to $(3,3)$.
 
 %~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
-\paragraph{Locally and Lexically Scoped Rules} 
-Rules can be nested and resolution respects the lexical scope of rules. 
+\paragraph{Locally and Lexically Scoped Implicits} 
+Implicits can be nested and resolution respects their lexical scope. 
 Consider the following program: 
 
 > implicit 1 in 
@@ -912,7 +911,7 @@ argument of the call |sort [(3,'a'), (2,'c'), (3,'b')]| automatically inferred:
 <        sort [(3,'a'), (2,'c'), (3,'b')]
 
 %-------------------------------------------------------------------------------
-\subsection{Overlapping Rules and Stability in $\ourlang$}
+\subsection{Overlapping Implicits and Stability in $\ourlang$}
 \label{sec:overview:incoherence}
 
 As previously shown, the lexical scope imposes a natural precedence

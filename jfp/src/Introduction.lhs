@@ -142,7 +142,7 @@ by type classes. Besides local scoping, in the implicit calculus
 class model only allows instances of classes (which can be viewed 
 as a special kind of record) to be passed implicitly. Finally the
 implicit calculus supports higher-order instances/rules: 
-that is rules where the rule requirements can themselves be other rules. 
+that is rules whose requirements can themselves be other rules. 
 The
 implicit calculus has been shown to be type-safe, and it also ensures
 coherence, but it lacks stability. The SI calculus lacks both
@@ -205,7 +205,7 @@ to a standard technique for proof search in logic called
 focused proof search, which is still essentially non-deterministic,
 \name's resolution employs additional techniques to be entirely
 deterministic and coherent.  In particular, unlike focused proof
-search, our resolution uses a stack discipline to prioritize rules,
+search, our resolution uses a stack discipline to prioritize implicits,
 and removes any recursive resolutions from matching decisions. Moreover,
 further restrictions are needed to obtain stability.
 
@@ -214,8 +214,8 @@ In summary, our contributions are as follows:
 \begin{itemize}
 \item We present \name,
   a \emph{coherent}, \emph{stable} and \emph{type-safe} formal model for
-  implicit programming that supports local scoping, overlapping rules,
-  first-class instances and higher-order rules.
+  implicit programming that supports local scoping, overlapping implicits,
+  first-class implicits and higher-order rules.
 
 %\item We identify the connection between the type-directed resolution
 %  process of IP and focussing. The design of resolution in

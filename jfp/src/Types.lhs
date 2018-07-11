@@ -502,7 +502,7 @@ nondeterminism:
 % with a rule type $\rulet'$ in rule~\rref{FM-TApp}, 
 1) the \emph{ambiguous} instantiation of type variable $\alpha$
 with a monotype $\suty$ in rule~\rref{FM-TApp},
-and 2) nondeterministic selection of a rule type $\rulet$ from the type environment
+and 2) nondeterministic selection of an implicit $\rulet$ from the type environment
 $\tenv$ in rule~\rref{FR-Simp}. This section eradicates those two remaining
 sources of nondeterminism to obtain an entirely deterministic formulation
 of resolution. On top of that, it imposes an additional \emph{stability} condition
@@ -763,7 +763,7 @@ Our solution is to replace the nondeterministic relation $?\rulet \in \tenv$ by
 a deterministic one that selects the first matching implicit in the environment and
 commits to it. In fact, we encapsulate all three hypotheses of rule~\rref{FR-Simp}
 in a new \emph{lookup} judgment $\lres{\tenv}{\tenv'}{\type}{E}$ which resolves
-$\type$ with the first matching rule in the environment $\tenv'$ and performs
+$\type$ with the first matching implicit in the environment $\tenv'$ and performs
 any recursive resolutions against the environment $\tenv$. Of course, the modified
 rule~\rref{FR-Simp'} invokes this lookup judgment with two copies of the same environment, i.e.,
 $\tenv$ and $\tenv'$ are identical.
@@ -807,8 +807,8 @@ original definition of rule~\rref{FR-Simp}.
 
 Rule~\rref{DL-RuleNoMatch} is mutually exclusive with the above rule: it
 skips the first entry in the environment only iff it does not match to look for
-a matching rule deeper in the environment. This implements the committed choice
-semantics: the first matching rule is committed to and further rules are not
+a matching implicit deeper in the environment. This implements the committed choice
+semantics: the first matching implicit is committed to and further implicits are not
 considered.
 
 Finally, rules~\rref{DL-Var} and \rref{DL-TyVar} skip the irrelevant
@@ -823,14 +823,14 @@ considered.
 \begin{comment}
 \paragraph{No Backtracking}
 
-Observe that our definition commits more eagerly to a matching rule type than
-necessary to dispel nondeterminism. We even commit to a matching rule type, if
+Observe that our definition commits more eagerly to a matching implicit than
+necessary to dispel nondeterminism. We even commit to a matching implicit, if
 its recursive goals do not resolve. For instance, when resolving $\tychar$
 against the environment $\tenv = ?\tybool, ?(\tybool \To \tychar), ?(\tyint \To
 \tychar)$, we commit to $?(\tyint \To \tychar)$ even though its recursive goal $\tyint$
 cannot be resolved and thus the resolution of $\tychar$ also fails. A more permissive
 approach would be to backtrack when a recursive resolution fails and try the next
-alternative matching rule. That would allow $\tychar$ to resolve. 
+alternative matching implicit. That would allow $\tychar$ to resolve. 
 
 While backtracking is a perfectly established technique in proof search and
 logic programming, it is often shunned in type checking algorithms for
@@ -864,8 +864,8 @@ because it defies the common expectation that simple refactorings like the reduc
 above do not change a program's behavior.
 
 To avoid this problem and obtain stability under type substitution, we tighten
-the requirement of rule~\rref{DL-RuleNoMatch}: a
-rule in the environment can only be skipped iff that rule does not match under any possible
+the requirement of rule~\rref{DL-RuleNoMatch}: an implicit
+in the environment can only be skipped iff it does not match under any possible
 substitution of type variables. With this tightened requirement the scenario
 above simply does not resolve: unstable resolutions are invalid.
 \bda{c}
@@ -1919,7 +1919,7 @@ unification problems derived for their subterms.
 \subsection{Termination of Resolution}
 
 
-If we are not careful about which rules are added to the implicit environment,
+If we are not careful about which implicits are added to the environment,
 then the resolution process may not terminate.  This section describes how to
 impose a set of modular syntactic restrictions that prevents non-termination. 
 As an example of non-termination consider 
@@ -1942,13 +1942,13 @@ This paper adapts those restrictions to the setting of \name.
 
 We show termination by characterising the resolution process as a (resolution)
 tree with goals in the nodes. The initial goal sits at the root of the tree. A
-multi-edge from a parent node to its children represents a rule from the
+multi-edge from a parent node to its children represents a rule type from the
 environment that matches the parent node’s goal; the node's children are the
 recursive goals. 
 
 Resolution terminates if the tree is finite.  Hence, if it does not terminate,
 there is an infinite path from the root in the tree, that denotes an infinite
-sequence of matching rule applications. To show that there cannot be such an
+sequence of matching rule type applications. To show that there cannot be such an
 infinite path, we use a norm $\tnorm$ (defined at the bottom of Figure~\ref{fig:termination})
 that maps the head of every goal $\rulet$ to a natural number, its size.
 
@@ -1960,7 +1960,7 @@ children.
 %- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 \paragraph{Termination Condition}
 It is trivial to show that the size strictly decreases, if we require that
-every rule in the environment makes it so. This requirement is formalised as
+every rule type in the environment makes it so. This requirement is formalised as
 the termination condition $\term{\rulet}$ in Figure~\ref{fig:termination}.
 This condition should be imposed on every type added to the environment, namely
 to $\rulet_1$ in rule~\rref{Ty-IAbs} of Figure~\ref{fig:type} and to $\rulet_1$

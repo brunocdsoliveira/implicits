@@ -7,26 +7,26 @@
 
 The most closely related work can
 be divided into three strands: IP mechanisms that support local
-scoping with coherence and stability, but forbid overlapping rules and lack other
+scoping with coherence and stability, but forbid overlapping implicits and lack other
 types of flexibility; IP mechanisms that have global scoping and
 preserve coherence and stability; and IP mechanisms that are unstable and sometimes incoherent
 but offer greater flexibility in terms of local scoping and/or overlapping
-rules. $\ourlang$ is unique in offering flexibility 
-(local scoping with overlapping rules, first-class rules 
+implicits. $\ourlang$ is unique in offering flexibility 
+(local scoping with overlapping implicits, first-class implicits 
 and higher-order rules), while preserving coherence and stability.
 
 %----------------------------------------------------------------------
 \subsection{Implicit Programming with Local Scoping, but no Overlapping Rules}
 
 Our work allows a very flexible model of implicits with first-class
-rules, higher-order rules and nested scoping with overlapping rules
+implicits, higher-order rules and nested scoping with overlapping implicits 
 while guaranteeing coherence and stability.  Closest to our work in terms of
 combining additional flexibility with desirable properties (such as coherence and stability)
 are \emph{modular type
 classes}~\cite{modular} and System $F_{G}$~\cite{systemfg}. Both 
 works preserve coherence and stability in the presence of local scoping, but (unlike
-$\ourlang$) the local scopes \emph{forbid overlapping rules}. The
-restriction of no overlapping rules is an essential part of
+$\ourlang$) the local scopes \emph{forbid overlapping implicits}. The
+restriction of no overlapping implicits is an essential part of
 guaranteeing coherence and stability. $\ourlang$ also has several other fundamental
 differences to both modular type classes and System $F_{G}$.
 \textit{Modular type classes}~\cite{modular} are a language design
@@ -57,7 +57,7 @@ where recursive resolution and the ability to compose rules automatically is
 a key feature and source of convenience.
 
 %----------------------------------------------------------------------
-\subsection{Implicit Programming with Local Scoping and Overlapping Rules}
+\subsection{Implicit Programming with Local Scoping and Overlapping Implicits}
 
 The implicit calculus~\cite{oliveira12implicit} is the main 
 inspiration for the design of $\ourlang$. There are two major 
@@ -92,8 +92,8 @@ in Section~\ref{subsec:det} this approach is both incoherent and unstable.
 \emph{Scala implicits}~\cite{implicits,scala} were themselves the
 inspiration for the implicit calculus and, therefore, share various
 similarities with $\ourlang$.  In Scala implicit arguments can be of
-any type, and local scoping (including overlapping rules) is
-supported. However the original model of Scala implicits did not allow
+any type, and local scoping (including overlapping implicits) is
+supported. However the original model of Scala implicits did not
 allow higher-order rules.
 Recently, following the implicit calculus and a preliminary version of
 $\ourlang$, Odersky et al.~\shortcite{odersky17implicits} presented the SI
@@ -132,7 +132,7 @@ Section~\ref{sec:intro}, there are a number of design choices that
 (Haskell-style) type classes take that are different from $\ourlang$. 
 Most prominently, type classes make a strong differentiation
 between types and type classes, and they use global scoping instead of
-local scoping for instances/rules. The design choice for global scoping can be
+local scoping for instances/implicits. The design choice for global scoping can be
 traced back to Wadler and Blott's~\shortcite{adhoc} original paper on
 type classes. They wanted to extend Hindley-Milner
 type-inference~\cite{hindley69principal,milner78theory,damas82principal}
@@ -224,7 +224,7 @@ A number of dependently typed languages also have IP mechanisms
 inspired by type classes. Coq's type classes~\cite{coqclasses} and
 canonical structures~\cite{gonthier11lessad-doc}, Agda's instance
 arguments~\cite{instanceargs} and Idris type classes~\cite{brady} all allow multiple and/or highly overlapping
-rules/instances that can be incoherent.
+implicits/instances that can be incoherent.
 The Coq theorem prover has two mechanisms that allow modelling
 type-class like structures: \emph{canonical structures}~\cite{gonthier11lessad-doc} and
 \emph{type classes}~\cite{coqclasses}. The two mechanisms have quite a bit of
@@ -246,12 +246,12 @@ alternative derivations.
 that is closely related to implicits. Like $\ourlang$, 
 instance arguments use a special arrow for introducing implicit 
 arguments. However, unlike most other mechanisms,
-implicit rules are not declared explicitly. Instead rules are drawn
+implicits are not declared explicitly. Instead they are drawn
 directly from the regular type environment, and any previously defined 
-declaration can be used as a rule. The original design of instance arguments
+declaration can be used as an implicit. The original design of instance arguments
 severely restricted the power of resolution by forbidding recursive resolution.
 Since then, recursive resolution has been enabled in Agda. Like Coq's and Idris's 
-type classes, instance arguments allow multiple incoherent rules. Agda computes all 
+type classes, instance arguments allow multiple incoherent implicits. Agda computes all 
 possible resolutions and uses one of them only if all are equal.
 
 \begin{comment}
@@ -265,17 +265,17 @@ so important, as long as a proof exists.
 Haskell type classes not only ensure coherence
 but also \emph{global uniqueness}~\cite{uniqueness} (due to global scoping), as discussed in
 Section~\ref{sec:overview-coherence}. Unrestricted $\ourlang$ programs ensure coherence
-only, as multiple rules for the same type can coexist in the same
+only, as multiple implicits that match the same type can coexist in the same
 program. We agree that for programs such as the |Set| example, it is
 highly desirable to ensure that the same ordering instance is used
 consistently. $\ourlang$ is a core calculus, meant to enable the
 design of source languages that utilize its power. 
 An example are Bottu et al.'s~\shortcite{haskell2017b} quantified class constraints for Haskell,
 which forbid
-local scoping constructs and, instead, make all declared rules visible
+local scoping constructs and, instead, make all declared implicits visible
 in a single global environment. This retains several of the
-benefits of $\ourlang$ (such as first-class, higher-order rules, and
-coherent overlapping rules), while providing a form of global
+benefits of $\ourlang$ (such as first-class implicits, higher-order rules, and
+coherent overlapping implicits), while providing a form of global
 uniqueness. However this design is still essentially
 non-modular, which is a key motivation for many alternatives to type
 classes to provide local scoping instead. 

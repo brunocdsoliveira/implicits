@@ -169,7 +169,7 @@ against the environment $\tenv = ?\tybool, ?(\tybool \To \tychar), ?(\tyint \To
 \tychar)$, we commit to $?(\tyint \To \tychar)$ even though its recursive goal $\tyint$
 cannot be resolved and thus the resolution of $\tychar$ also fails. A more permissive
 approach would be to backtrack when a recursive resolution fails and try the next
-alternative matching rule. That would allow $\tychar$ to resolve. 
+alternative matching implicit. That would allow $\tychar$ to resolve. 
 
 In the design of \name, we have followed Haskell's pragmatic reasons for committed choice.
 Considering that Haskell's 30 years of experience have shown that this works well
@@ -204,7 +204,7 @@ Ocaml's modular implicits~\cite{DBLP:journals/corr/WhiteBY15} suggest another al
 When a query is resolved, it exhaustively searches the implicit context for all 
 possible solutions. If more than one solution is found, then the program is
 rejected due to ambiguity. In this way it is possible to have highly overlapping
-rules in the context, that could result in some queries being ambiguous.
+implicits in the type environment, that could result in some queries being ambiguous.
 One advantage of this design is its flexibility, since contexts can be more
 liberal and all queries that would be resolved in unambiguous contexts with backtracking
 can, in principle, also be resolved with Ocaml's modular implicits.
