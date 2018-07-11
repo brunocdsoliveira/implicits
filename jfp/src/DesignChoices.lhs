@@ -200,14 +200,14 @@ resolution.
 % respect to committed choice, we think it is still a reasonable and worthwhile
 % design to explore in the context of programming languages.
 
-Ocaml's modular implicits~\cite{DBLP:journals/corr/WhiteBY15} suggest another alternative.
+OCaml's modular implicits~\cite{DBLP:journals/corr/WhiteBY15} suggest another alternative.
 When a query is resolved, it exhaustively searches the implicit context for all 
 possible solutions. If more than one solution is found, then the program is
 rejected due to ambiguity. In this way it is possible to have highly overlapping
 implicits in the type environment, that could result in some queries being ambiguous.
 One advantage of this design is its flexibility, since contexts can be more
 liberal and all queries that would be resolved in unambiguous contexts with backtracking
-can, in principle, also be resolved with Ocaml's modular implicits.
+can, in principle, also be resolved with OCaml's modular implicits.
 However the modular implicits approach is not formalized yet, and the fact that contexts
 have to be searched exhaustively raises practical questions regarding performance and
 ease of reasoning that have dictated the committed choice approach taken by Haskell type classes.

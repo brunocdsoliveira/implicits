@@ -360,7 +360,7 @@ $\tenv$ in essentially the same way. Hence, unlike the nondeterminism in the
 previous example at the end of Section~\ref{s:resolution} where the context provides two
 ways of resolving the query, this form of nondeterminism
 serves no purpose.
-We will see that focusing provides a straightjacket that eliminates the gratuitous nondeterminism
+We will see that focusing provides a straitjacket that eliminates the gratuitous nondeterminism
 and allows only the first and more direct of these two proofs. 
 
 % More generally, without loss of
@@ -515,7 +515,7 @@ instantiation has pre-emptively avoided a further source of nondeterminism.
 
 We have restricted $\ourlang$ to predicative instantiation, i.e., type
 variables can only be instantiated with monotypes $\suty$. Impredicativity is a
-well-known source of nondeterminsm in other settings like type inference
+well-known source of nondeterminism in other settings like type inference
 for the polymorphic $\lambda$-calculus~\cite{boehm85,pfenning93}. It would
 cause similar problems for $\ourlang$, in the rules ~\rref{AR-TApp} and
 \rref{FM-TApp} for ambiguous and focusing resolution that choose an
@@ -523,7 +523,7 @@ instantiation of a type variable.
 
 % The established solution also works here: restrict to predicativity. 
 
-To see why the impredicative instantation in those rules causes
+To see why the impredicative instantiation in those rules causes
 nondeterminism, consider two ways resolving $\aresp{\tenv_1}{\tyint \iarrow \tyint}$
 against the environment $\tenv_1 = ?(\forall \alpha.\alpha \iarrow \alpha)$:\footnote{
 For the sake of compactness the example uses the ambiguous definition of resolution.
@@ -836,7 +836,7 @@ While backtracking is a perfectly established technique in proof search and
 logic programming, it is often shunned in type checking algorithms for
 pragmatic reasons. In particular, it complicates the implementation of the type
 checker and incurs an overhead (e.g., maintaining a \emph{trail} stack) to
-allow undoining modifications. Moreover, it is harder to follow the algorithmic
+allow undoing modifications. Moreover, it is harder to follow the algorithmic
 behavior and debug it, and less obvious how to report failure to the
 programmer. For these reasons, we have avoided backtracking in our design.
 \end{comment}
@@ -1616,7 +1616,7 @@ $\coherent{\bar{\alpha}}{\tenv}{\rulet}{\type}$. This auxiliary judgment checks 
 whether the type $\rulet$ matches $\type$ under any possible instantiation
 of the type variables $\bar{\alpha}$.
 
-We apply the same deferred-instantation technique as with the first difference: Instead,
+We apply the same deferred-instantiation technique as with the first difference: Instead,
 of applying a substitution first and then checking whether the implicit matches the goal, we 
 defer the instantiation to the end where we can deterministically pick one instantiation instead of considering all valid instantiations. 
 As a consequence of the similarity, 
@@ -1681,7 +1681,7 @@ The first use case is that in rule~\rref{Alg-M-Simp} where this is not a
 problem because the scenario never arises. In
 $\mgu{\type'}{\type}$ only $\type'$ contains unification
 variables and hence the range of the substitution never contains any
-unification variables. As a consequence the above exampe and others like
+unification variables. As a consequence the above example and others like
 it cannot occur.
 \item
 The second use case, in rule~\rref{Sta-Simp}, is
@@ -1980,7 +1980,7 @@ requires that the head $\type_1$ of $\rulet_1$ is strictly smaller than the
 head $\type_2$ of $\rulet_2$.
 
 To account for polymorphism and the fact that the type variables in rule types
-can be intanstiated, rule \rref{T-Rule} ensures that 
+can be instantiated, rule \rref{T-Rule} ensures that 
 the $\tnorm[\tau_1] < \tnorm[\tau_2]$ property is stable under substitution.
 Declaratively, we can formulate this stability under substitution as: 
 \[\forall \theta.
@@ -2001,7 +2001,7 @@ Rule~\rref{T-Rule} uses instead an
 equivalent algorithmic formulation which states that, in addition to
 $\tnorm[\type_1] < \tnorm[\type_2]$, the number of occurrences
 of any free type variable $\alpha$ may not be larger in $\type_1$ than
-in $\type_2$. The first condition expresses that for the empty subsitution,
+in $\type_2$. The first condition expresses that for the empty substitution,
 the size strictly decreases, say from $\tnorm[\type_2] = n$ to $
 \tnorm[\type_1] = m$. If we instantiate a type variable $\alpha$ to a type $\suty$ of size $k$,
 then the sizes change to 

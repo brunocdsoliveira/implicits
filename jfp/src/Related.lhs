@@ -211,7 +211,7 @@ Inspired by the focusing approach of $\ourlang$ Bottu et
 al.~\shortcite{haskell2017b} have extended Haskell's type class inference with
 \textit{quantified class constraints}.  This generalizes the syntax of
 Haskell's type class constraints to feature arbitrarily nested uses of
-universal quantificiation and impliciation. Their work differs from $\ourlang$
+universal quantification and implication. Their work differs from $\ourlang$
 in that it does not support local instances. Moreover, they achieve coherence
 through requiring non-overlapping instances. Their algorithm performs a
 backtracking search among these instances as well as any local assumptions
