@@ -1068,8 +1068,13 @@ definition in Section 3.1?
 >   The two problems are actually related, and certainly not disjoint.
 >   The second one is a consequence of the first one. Hence the formulation is
 >   slightly misleading.
->   
-> 
+
+A not syntax-directed procedure could still output unique results if there where
+additional (not necessarilly syntax-directed) conditions that would allow only one 
+solution out of many. Then, the resolution mechanism would still not be
+syntax-directed but it would be deterministic.
+-- Klara
+
 > 662, 663: 
 > 
 >   Indeed, this example illustrates both issues mentioned at (656).
@@ -1078,7 +1083,10 @@ definition in Section 3.1?
 > 
 >   This sentence says: "ambiguous resolution" implies "ambiguous semantics".
 >   This is true on this example, but not in general.  It would be better to
->   start the sentence with "On this example". 
+>   start the sentence with "On this example".
+
+Minor. -- Klara
+
 > 
 > Fig 4: 
 > 
@@ -1098,31 +1106,50 @@ definition in Section 3.1?
 >         . |-^f_r [ . ] ~> .
 > 
 >   You may wish to reconsider this choice...
-> 
+
+It is explicitly explained in l.685 that the brackets indicate the component of 
+the judgment over which it is syntax-directed. Then it is explained again in 
+l.687 (for the  focusing judgment) and l.695 (for the matching judgment).
+-- Klara
+
 > 660: 
 > 
 >   The judgment misses the grayed part for the elaborated term. Although
 >   useless information here, it may still be better to keep the same syntax
 >   as in Fig. 3, as this shorter non-elaborating syntax has never been
 >   formally introduced.
-> 
+
+Clarify that gray part is missing or fill it in?
+-- Klara ??
+
 > 726: thus avoid [<-this] source of ambiguity
-> 
+
+FIXED
+
 > Fig 5, and below: 
 > 
 >   Choosing different names for \alpha and \bar \alpha would _considerably_
 >   ease the job of the poor reader.
-> 
+
+-- Klara ??
+
 > 816: because there are TWO substitutions
 >   
 >   Why two? One is enough. So it would be clearer saying "because there is a
 >   substitution ..."
+
+Both substitutions are mentioned so that they can be further analyzed in the
+next paragraph.
+-- Klara
+
 > 
 > 826: 
 > 
 >   You are pointing to Fig 7, which is too far away: could you try to make is
->   closer, i.e. on the next page? 
-> 
+>   closer, i.e. on the next page?
+
+-- Klara ??
+
 > 833: 
 > 
 >   It is _very hard_ to parse the comma in the middle of the two formulas. 
