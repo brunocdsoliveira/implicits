@@ -1,0 +1,1380 @@
+> Referees' Comments to Author:
+> Referee: 1
+> 
+> Comments to the Author
+> I am pleased to see that this revision of the paper addresses most of
+> the concerns I had about the previous version.
+> 
+>  + The formal presentation of COCHIS has been improved substantially,
+>    the errors in the proofs have been corrected.  I'm particularly
+>    pleased with the improvements in the appendix, which now features
+>    dependency diagrams and hyper-references that make navigating the
+>    proofs much easier (though unfortunately, some of the hyper
+>    references don't work in the PDF I received).
+> 
+>  + Most of the (formal) claims are now either proven, supported by
+>    proof sketches, or clearly marked as (unproven) assumptions.
+> 
+>  + The design decisions are now motivated, justified and discussed in
+>    more detail.  In particular, the "committed choice" semantics is
+>    now properly justified, compared and contrasted to alternative
+>    designs, and its advantages and limitations are discussed.
+> 
+>  + The terminology has been clarified and corrected where necessary.
+>    In particular, the meaning of the term "coherence" has been
+>    clarified and the difference between coherence and stability is
+>    discussed in detail in Section 2.
+> 
+> My remaining concerns are minor:
+> 
+>  - There are still some typos, small language issues, as well as a
+>    minor omission in one of the proofs (see details below).
+> 
+>  - As mentioned by the other referees, the evaluation of the design is
+>    somewhat lacking.  Although the design decision are now properly
+>    justified and discussed, it remains unclear how the particular
+>    combination of features chosen for COCHIS' resolution strategy
+>    (locally scoped, stable under type substitution, committed choice
+>    rather than backtracking) stack up, in practice, against other,
+>    more established strategies, such as Haskell's globally-unique but
+>    non-modular type classes or Scala's locally scoped but incoherent
+>    implicits.  The authors now provide a prototype implementation of
+>    COCHIS, but apparently it has not been used to evaluate the
+>    calculus on realistic examples.
+> 
+> I consider both of these minor issues.  The former should be easy to
+> address (I give more concrete suggestions below).  The latter is
+> harder to address, but I do not consider this a strong requirement for
+> the publication of the paper: the main claims and contributions of the
+> paper are not to propose a real-world programming language but a core
+> calculus with a set of formally established desirable properties.
+> 
+> However, I have a particular concern related to the justification of
+> some of the design decision mentioned above.  The authors argue at
+> various points in the paper that the lack of stability under type
+> substitution in some systems is a major impediment to reasoning about
+> equivalence of programs, refactoring, compiler optimizations,
+> inlining, etc., and that "simple unfoldings" ought not to change the
+> meaning of a program.  This is of course true, but it also seems
+> slightly misleading since stability of resolution under type
+> substitution does not guarantee stability of resolution under
+> arbitrary reductions (or "unfoldings"), it merely guarantees stability
+> w.r.t. type instantiations (as evidenced by Lemma 5.3).  Consider the
+> following COCHIS term:
+> 
+>   implicit 1: Int  in
+>   let x = ?Int     in
+>   implicit 2: Int  in
+>   x
+> 
+> which evaluates to 1 because resolution in COCHIS is lexically scoped,
+> and thus the query ?Int is resolved to the closest implicit
+> instance: 1.  However, if we reduce the let-binding, i.e. if we
+> replace the variable x by it's definition, we obtain the term
+> 
+>   implicit 1: Int  in
+>   implicit 2: Int  in
+>   ?Int
+> 
+> which evaluates to 2, again because of the lexically scoped resolution
+> strategy employed by COCHIS.  Thus, we have changed the meaning of the
+> program just by inlining the definition of a variable -- an supposedly
+> harmless operation that was not supposed to change the meaning of
+> programs.  A similar example can be used to show that well-typedness
+> is not preserved by reduction either (due to a combination of lexical
+> scoping and committed choice, see details below).  While the above
+> program is clearly a toy example, I would expect that similar issues
+> could arise e.g. from refactoring parts of a real-world code base.
+> 
+> I do not think that the lack of stability under arbitrary reductions
+> is a major problem.  In fact, it seems difficult to avoid such issues
+> altogether while retaining local scoping (and without imposing an
+> explicit order via e.g. instance chains).  And clearly, stability
+> under type substitution facilitates reasoning about program by
+> eliminating at least one source of unexpected changes.  However, I
+> suggest the authors mention that, despite stability under type
+> substitution, reasoning about programs remains "a subtle matter in the
+> presence of implicits".
+> 
+> Finally, Section 2 has been expanded and improved to clarify some
+> technical issues, in particular subsections 2.2 and 2.3 now give a
+> precise distinction between stability and coherence.  While the
+> additional explanations and examples in these sections are indeed very
+> helpful, the quality of writing in these two sections is not quite as
+> good as in the remainder of the paper.  I give some concrete examples
+> (typos, grammar) below.
+> 
+> ** Page-by-page comments **
+> 
+> l.37 (and later): internal PDF hyper-references (e.g. citations,
+> footnotes, sections, etc.) do not seem to work (verified in two
+> different PDF viewers). Maybe you need to recompile your TeX sources a
+> few times?
+> 
+> l.76: "stability of substitutions" should be "stability [of
+> resolution] _under_ substitution" or better yet "stability of
+> resolution under _type_ substitution/instantiation" (resolution is not
+> stable under term substitution, as explained above).
+> 
+> l.106: "the lack of important properties such as stability makes
+> reasoning about the semantics of programs harder, and can prevent
+> refactorings and compiler optimizations such as inlining".  There are
+> multiple issues here:
+> 
+>  1. as mentioned above, inlining and naive refactoring are problematic
+>     if done before resolution irrespective of stability (under type
+>     substitution) since resolution is not stable under term
+>     substitution;
+> 
+>  2. stability neither enables nor prevents compiler transformations
+>     that are performed _after_ resolution (like inlining or
+>     optimizations).  After resolution/elaboration to System F,
+>     inlining is unproblematic.
+> 
+> footnote 1 (p. 4): "It makes no sense to talk about stability in a
+> simply typed calculus, ...", again this only holds for stability under
+> _type_ substitution, which seems relevant in this footnote.
+> 
+> footnote 2 (p. 5): the link in this footnote seems to be related to
+> the citation preceding the note in the text (Bottu et al., 2017). It
+> would be less distracting if it were added to the corresponding entry
+> in the bibliography.
+> 
+> l.221: "Functions show and read..." --> "The functions show and read"
+> 
+> l.231: "Haskell rejects such program." --> "such programs"
+> 
+> l.233: "The following program illustrates part of the issues" -->
+> "part of the issue" or "some of the issues"
+> 
+> l.244: "such choice" --> "this choice"
+> 
+> l.247: "Therefore, for the expression..." --> remove "Therefore,"
+> 
+> l.250: "taking the choice of using" --> "making the choice of using"
+> or simply just "using"
+> 
+> footnotes 4 and 5 (p. 8): the text in both of these footnotes is
+> identical, and both notes really serve the purpose of citing a
+> reference (the GHC documentation).  This feels distracting and like a
+> waste of footer space.  I suggest converting these notes into proper
+> citations instead: please add an entry in the bibliography for the GHC
+> documentation and cite it. (The same goes for similar footnotes later
+> on in the paper.)
+> 
+> l.281--284: "With Trans α => α -> α resolution is applied
+> lazily. (...)" I appreciate the clarification (thanks to which I now
+> understand this example).  However, I find the choice of terminology
+> ("lazy" vs. "eager") a bit confusing as it suggests run-time rather
+> than a compile-time behavior.  Similarly, resolution is not delayed to
+> the "calls of bad" but to the _call site_ of bad.  Finally, the term
+> "static information" seems unnecessarily vague: more concretely, the
+> information available at the call site (but not the declaration site)
+> of bad is the (potentially) more precise, or even concrete type
+> instance for the type parameter $\alpha$, which, in turn, leads to a
+> more precise goal type for resolution.  Or is there some other type of
+> additional information that one would expect to be available at the
+> call site?  I suggest replacing the two sentences by something like
+> "With Trans α => α -> α resolution is deferred to the call site of
+> bad, allowing the instance of Trans α to be selected when α has been
+> instantiated to a [potentially] more precise type."
+> 
+> l.283: "In contrast," --> "By contrast,"
+> 
+> l.294: "That is, type instantiation affects the choice of the
+> instance".  The duplication of "instance" here might be confusing.  I
+> suggest replacing "the choice of the instance" by "type class
+> instantiation".
+> 
+> l.296: "In contrast (in)coherence is not really observable from a
+> compiler implementation: we need a language specification to
+> understand whether there is incoherence or not."  I do not understand
+> this sentence.  In what sense does the language specification provide
+> more information than an actual compiler implementation?
+> 
+> footnotes 6 and 7 (p.9): these should go into the bibliography and be
+> referenced as citations.
+> 
+> l.420: there is a spurious space between $f$ and $(x)$ in the function
+> application $f(x)$.
+> 
+> l.440: "but typing is not preserved either: (...) using a simple
+> unfolding step makes the program ill-typed!" After reading this
+> paragraph, one might be forgiven for thinking that this problem only
+> appears in systems where resolution is unstable under substitution of
+> types, and that, therefore, reasoning about equivalence/unfolding,
+> inlining, etc. in COCHIS is easy.  But this example seems to be an
+> instance of the more general problem discussed above, namely that
+> resolution is not stable under beta-reduction.  Due to COCHIS'
+> committed choice resolution strategy, a beta-reduction step can in
+> fact break resolution (and thus typing) in COCHIS as well.  Consider
+> following variation of the pathological example given above:
+> 
+>   implicit 1: Int                  in
+>   let x = ?Int                     in
+>   implicit boolToInt: Bool => Int  in
+>   x
+> 
+> This term is well-typed since the query ?Int will resolve to the
+> closest (and only) implicit instance in the environment.  However, if
+> the variable x is replaced by its definition (i.e. the let binding is
+> "unfolded"), we obtain
+> 
+>   implicit 1: Int                  in
+>   implicit boolToInt: Bool => Int  in
+>   ?Int
+> 
+> which is ill-typed because the query ?Int can no longer be resolved:
+> deterministic resolution will commit to the first/closest "matching"
+> implicit, which is ?(Bool => Int), and fail to complete the match
+> since its context (Bool) cannot be recursively resolved.
+> 
+> It might be worth pointing out to the reader that reasoning about
+> program equivalence and preservation of well-typedness can be tricky
+> even when resolution is stable under type substitution.
+> 
+> l.506: "We cannot illustrate such with COCHIS" --> "illustrate this"
+> or "illustrate such use cases"
+> 
+> l.534: "was already explored in our previous work on the implicit
+> calculus", this suggests that combining type inference and
+> COCHIS-style resolution is a solved problem, but I suspect this is not
+> the case.  In particular:
+> 
+>  - I wonder whether the approach described in the cited paper
+>    (Oliveira et al., 2012) is directly applicable to COCHIS, a stable
+>    calculus, even though it was developed for the implicit calculus
+>    (IC), which, according to Section 7 is unstable.  More generally, I
+>    wonder whether and how the particular design choices of the COCHIS
+>    resolution strategy combine and interact with the IC approach to
+>    type inference, and if desirable properties such as coherence and
+>    ambiguity are preserved.
+> 
+>  - More concretely, consider the show/read example from Section
+>    2.2. (p.7). As discussed previously, the ambiguity in this example
+>    arises from the fact that the type parameter $\alpha$ can be
+>    instantiated in different ways, resulting in potentially different
+>    semantics.  But, type instantiations are explicit in COCHIS, so the
+>    ambiguity might actually disappear once the surface language term
+>    "show (read 3)" has been elaborated into a COCHIS term (i.e. after
+>    type inference).  Furthermore, resolution might fail depending on
+>    the particular choice of type instantiation (e.g. inferring $\alpha
+>    = Int$ or $\alpha = String$ should be unproblematic, but $\alpha =
+>    \beta$ for some abstract $\beta$ might cause resolution to fail).
+>    How is this example elaborated into COCHIS using the approach
+>    described in the IC paper?  What does the resulting COCHIS term
+>    look like?  Is type inference independent from resolution, or are
+>    they interlinked?  Are coherence and stability preserved w.r.t. the
+>    surface language?
+> 
+> l.584: "While this poses no threat to type soundness, ...", I suspect
+> you are confusing "type soundness" with "type preservation" here. Type
+> soundness is proven via (type preserving) elaboration into System F,
+> where type preservation holds. But type preservation for COCHIS is
+> only proven for the special case of type applications/instantiations.
+> In general, a well-type term in COCHIS might well step into an
+> ill-typed term (as discussed above), so type preservation does not
+> hold.  Similarly, programs are not "stable under inlining" in general,
+> yet this paragraph suggests otherwise, namely that resolution in
+> COCHIS is stable under both reduction and inlining.
+> 
+> 
+> l.676: "We will see that focusing (...) eliminates the gratuitous
+> nondeterminism" and l.703, "This type-directed formulation of
+> entailment greatly reduces the number of proofs for a given goal."
+> These facts are illustrated by examples, but the terminology remains
+> rather vague.  E.g. what exactly should be considered "gratuitous
+> nondeterminism", what constitutes a "great reduction"?  Line 673
+> suggests that "two different proofs [resolving the same goal] use the
+> information in the context Γ in essentially the same way."  I suspect
+> that this means that the two proofs actually elaborate into
+> semantically equal System F terms, and that the focused proofs
+> correspond to implicit terms in a particular normal form.  Is this the
+> case?  If yes, then it might be nice to include this "intuition"
+> (focusing eliminates equivalent but non-normal resolution terms) in
+> the paper.
+> 
+> l.726: "thus avoid source of ambiguity" --> "avoid this source ..."
+> 
+> l.747: "Inductive rule" --> "The inductive rule"
+> 
+> l.799: "This is problematic because it defies the common expectation
+> that simple refactorings like the reduction of type application above
+> do not change a program’s behavior."  Again, this suggests that once
+> resolution is stable under type substitution, refactorings no longer
+> change program behavior, which is not true in general.
+> 
+> l.997: "every rule type in the environment", do you mean the type of
+> every implicit binding "?r" in the environment? Or do normal variable
+> bindings with rule types like "x: r1 => r2" have to be checked for
+> termination as well?
+> 
+> l.1020 and l.1021: "||[σ/α||τ1]" and "||[σ/α||τ2]" there seems to be
+> some mismatch of brackets and vertical bars.
+> 
+> l.1064: there is a bit of spurious white space before the word "which"
+> at the beginning of this line.
+> 
+> l.1084: Lemma 5.1 is formulated in terms of the ambiguous resolution
+> judgment.  But on the previous page (above l.1064) the paragraph on
+> resolution suggests that the translation is defined in terms of
+> deterministic resolution.  Please clarify.
+> 
+> l.1109, in Lemma 5.2: "under type substitution" --> "under monotype
+> substitution"
+> 
+> footnote 13, p.38: please make this a bibliographic reference.
+> 
+> l.1126: "Section A.8 proves partial completeness" in what sense is
+> this completeness "partial" w.r.t. to deterministic resolution? Maybe
+> it should just be "completeness"?
+> 
+> l.1135: "The proof follows trivially from Theorem 5.1." The proof
+> follows from Theorem 5.1 and the normalization property of System F.
+> The latter is a well-known fact, but hardly a trivial one.  Please
+> mention normalization of System F.
+> 
+> l.1207: "As there two equality specific" --> "As there _are_ two
+> _equally_ specific"
+> 
+> footnote 14, p.41: these should be references in the bibliography.
+> 
+> l.1230: "Considering that Haskell’s 30 years of experience have shown
+> that this works well in practice, we believe that it is a reasonable
+> choice."  I don't find this argument convincing.  In COCHIS, the
+> example on p.41 is only rejected because the instance declarations are
+> given in that particular order, so that the implicit instances for Ord
+> ends up lexically closer to the at the call site of "m" than does the
+> one for Eq, and hence is committed to.  If we were to swap the order
+> of the two declarations, then Haskell would still not accept the
+> example because there would still be two equally specific matches,
+> where as COCHIS would now commit to the Eq instance and resolve the
+> query.  Hence, while COCHIS' committed choice strategy might retain
+> the performance benefits of Haskell's, it does not preserve its ease
+> of reasoning.  Locally scoped resolution _without_ backtracking seems
+> no more intuitive to me than locally scoped resolution _with_
+> backtracking.
+> 
+> l.1238: the paragraph mentions OCaml's modular implicits as a
+> potential alternative, but not Scala's.  Given that COCHIS has been
+> inspired partly by Scala's implicits (and given the many Scala
+> examples in the paper), I wonder what type of resolution strategy
+> Scala employs.  It might be nice to include this here (or in Section
+> 7.2).
+> 
+> l.1287: It might be worth mentioning that the environment $\Gamma$
+> given in this example would not pass the termination checker because
+> the entry ?(∀α.Ord α => Eq α) would be rejected.  So this strategy for
+> encoding super classes seems rather impractical unless termination
+> checking is handled differently.
+> 
+> l.1361 "System $F^G$" --> "System $F_G$" (superscript to subscript).
+> 
+> l.1386 "this approach is both incoherent and unstable" -->
+> "deterministic but unstable".  I pointed this out already in my first
+> review, and it was marked as "FIXED" in the author response.  I trust
+> that the authors have implemented the remaining changes they proposed
+> in the author response.
+> 
+> l.1698, Section A.3: The dependency diagrams in this and later
+> sections of the appendix look great and are very helpful.  Thank you
+> for going through the effort of adding these!
+> 
+> l.1939: "as givens" --> "as given"
+> 
+> l.1969 (top of p.75): "Hence with rule (L-NoMatch) we conclude..."
+> Something seems to be missing here:
+> 
+>  - to apply the (L-NoMatch) rule, we first need to apply (Stable);
+> 
+>  - to do so, we need the validity premise $\bar{\alpha}; \Gamma \vdash
+>    \theta$ on $\theta$.  But from the previous step, we only have that
+>    $dom(\theta) \subseteq \bar{a}$.  Is there a hidden lemma that
+>    allows us to derive the former from the latter?
+> 
+> l.2023: The System F term $E$ resulting from the deterministic
+> matching statement on this line is missing a prime, i.e. it should be
+> $E'$ rather than $E$.
+> 
+> 
+> Referee: 2
+> 
+> Comments to the Author
+> Thanks to the authors for their revision to the paper and detailed response to comments. All of my questions have been answered and the answers included in the revision where appropriate. Other than this, probably the most significant difference with the previous version is a new section discussing the design decisions and relating them to other approaches. This section provides a useful summary of the issues in designing a system for resolving implicits, and good justifications for the choices made in Cochis.
+> 
+> The text has been revised, and like the previous version I still think it is well written and motivates the need for Cochis well. Implicit programming constructs are important in a lot of modern programming languages and will continue to be so, so I think there is a lot of value in this work. It is believable to me that an implementer of a new programming language could take the calculus as described and implement it directly in the core. There's discussion of alternative possible design choices throughout, as well as in the new section, so an implementer would be well informed if they wished to make alternative choices. Overall, I'd suggest that this version be accepted.
+> 
+> There's a small number of minor things I noticed, mostly in the new section:
+> 
+> p40 1190 "first implicit who's" => "first implicit whose"
+> 
+> p40 1199 You use "StablePointer" here but "StablePtr" in the code above - I assume you mean the latter
+> 
+> p47 1477 "To former cannot" => "The former cannot"
+> 
+> p48 1496 "An example are Bottu et al's quantified class constraints" - I can't decide if this is grammatically correct or not! It sounds a bit clunky to me either way, however.
+> 
+> Referee: 3
+> 
+> BEGINNING OF REVIEW
+> 
+> ** SUMMARY
+> 
+> [this is mostly unchanged from my previous review]
+> 
+> The paper presents a second-order explicitly-typed language COCHIS a la
+> system F with first-order implicit values.  The motivation is to serve as a
+> core language for (understanding) languages with implicit arguments.  A type
+> system is used to check that source programs are correctly typed, but also
+> that the implicit arguments are always defined, deterministic, and stable.
+> The typing judgment of expressions uses an auxiliary resolution judgment for
+> implicit arguments, and most of the technical discussion focuses on
+> explaining the design of the resolution judgment so that implicits are
+> deterministic and stable.
+> 
+> Three versions of the resolution judgment are given, which are, in order of
+> appearance, Ambiguous, Focused, and Deterministic, ---and I will use letters
+> (A), (F), and (D) to refer to them in the rest of my review, instead of the
+> more cryptic symbols "|-_r^a", "|-_r^f" and "|-r", respectively.  System (A)
+> is ambiguous by design and leads to a non-deterministic semantics of COCHIS.
+> It is meant as the largest set of programs that could make sense in the
+> COCHIS approach. Then, an equivalent focused system (F) is introduced, as
+> an intermediate way to explain the final deterministic System (D). This is
+> based on the idea of focusing, which puts derivations in a more canonical
+> form, hence factoring many equivalent derivations, before restricting the
+> system, so that at most one focused derivation will ever be allowed.  The
+> final deterministic system (D) has the stronger property that it is also
+> stable by type substitution, allowing a preservation of the semantics by
+> certain forms of inlining.  System (D) also comes with an equivalent
+> algorithmic presentation (judgment |-_alg), say (D').  All judgments are
+> instrumented so as to also elaborate programs into System F terms.
+> 
+> Finally, the paper presents the main formal results, briefly: the
+> elaboration in System F, which serves as the semantic definition of COCHIS,
+> preserves well-typedness.  The proof is modular, and is first shown for
+> ambiguous resolution (A), of which the deterministic resolution (D) is a
+> subcase.  The algorithmic resolution (D') is also shown to be equivalent to
+> its more logical specification (D).  Stability by substitution is also
+> shown.  This part is quite short in the body of the paper, as it only
+> contains the main statements, but proofs are detailed in the appendices,
+> some of which have been mechanically verified in Coq, while others, such as
+> determinism, are just paper proofs.
+> 
+> The submission gives an URL that points to a prototype implementation, but
+> unfortunately, this did not compiled out of the box with the current version
+> (8.4.3) of Haskell, and the "README.md" file does not give a specific
+> version number under which it should be compiled, so I was not able to check
+> the examples.
+> 
+> 
+> ** OVERALL EVALUATION
+> 
+> [The first paragraph is mostly unchanged]
+> 
+> The topic of the paper is certainly of interest for the JFP community:
+> implicit values have been introduced in Scala to mimic some of the Haskell
+> type-class mechanism, which significantly contributed to the success of
+> Haskell and has then been adopted/adapted by other programming languages.
+> Implicits are themselves quite attractive as they come at a lower conceptual
+> entry cost, but they are also less structured.  Hence, an exploration of the
+> design space for implicits is quite valuable.
+> 
+> The presentation is technically rigorous, as the main results about the
+> language, claimed in the core of the paper, are all proved in appendices.
+> The presentation is also clear, progressive, and modular, by separating the
+> idea of implicits presented in system (A) from the crafting of the
+> deterministic subset system (D).  
+> 
+> [The rest of my review is new or adapted from my previous review]
+> 
+> *** Examples 
+> 
+> There are also many useful examples, but unfortunately, these are often in
+> the introduction (section 2) or postponed to the discussion (sections 6 and
+> 8), while the core of the paper (section 3) could still benefit from more
+> examples (and sometimes explanations) to better illustrated not the
+> technical itself, design but its consequences on resolution and concrete
+> examples.  
+> 
+> Another minor problem with understanding the examples (or rather, the
+> proposal itself) is that definitions are given for the core language,
+> without type constants, such as Int or Char, nor type constructors such as
+> list, but only arrow types (-> and =>), so the reader has to guess how to
+> extend the formal definitions either from the definition for arrow types or
+> from the examples.
+> 
+> *** Stability
+> 
+> An interesting property of the design is the stability property, which
+> ensures that type specialization preserves the semantics, which certainly
+> avoids some kind of surprising behaviors.  This is also new in the sense
+> that previous systems never stated this property---which in fact often did
+> not hold.  This is also an important contribution of the paper. 
+> 
+> The next contribution is the way the deterministic system is presented.  The
+> authors have carefully presented the final system (D) as a restriction of
+> the more intuitive and more general system (A), which is ambiguous in
+> incoherent. While coherence is solved in the trivial way by restricting the
+> semantics so that it disallows backtracking (first-choice commitment), this
+> is imposed on a focused presentation that already factors a class of
+> equivalent typing derivations.
+> 
+> *** Coherence
+> 
+> However, even though COCHIS is coherent, this is in a trivial way, by
+> determinacy, and this article does not at all contribute to the well-known
+> problem of coherence.  As apparent in the discussion, the main limitations
+> of COCHIS are strikingly resulting from its first-choice commitment, whose
+> sole reason to avoiding the coherence problem.  In the new version, these
+> limitations are clearly and fairly stated in the discussion (section 6)
+> where other options are also presented.  The first-choice commitment is a
+> fine design choice for COCHIS.  However, the presentation remains somewhat
+> annoying by heavily emphasizing the problem of coherence in several places,
+> while COCHIS has really nothing to say about coherence. For example, the
+> paper keeps repeating that COCHIS has stable and coherent implicit---to
+> start with the title; see also linear comments below at lines 1100,
+> 1326-1327, 1332-1340, 1436-1438.  This probably deserves the paper and could
+> also be misleading for someone having a first quick look at the paper.
+> 
+> *** COCHIS in practice
+> 
+> Another worry I have is the lack of a practical evaluation of COCHIS.  In
+> fact, the main question the reader has is whether the very successful
+> Haskell type-class mechanism can be emulated with implicits.  Unfortunately,
+> the paper does not give a clear answer and, worse, we have to read all the
+> paper to realize the answer is still unclear (and I still do not know
+> myself!).  
+> 
+> Motivating examples are taken from Haskell (and Scala), letting the reader
+> think that COCHIS will solve them nicely. When comes the presentation of
+> System D (i.e. the introduction of first-choice commitment), we understand
+> some of the limitations and that this will not work exactly as in Haskell,
+> but also that [some extensions] of Haskell are also relying on a similar
+> choice. So we don't really see the problems at this point, unless the reader
+> tries his examples on his own.  Some problems are discussed in section 6,
+> such as dealing with superclasses, but are outside of the formalization, so
+> we don't know if (and how) they actually work.  
+> 
+> COCHIS is not Haskell, so they is nothing wrong in principle in not covering
+> the whole Haskell language, but the authors should clearly let us know how
+> much of Haskell can (and cannot) be done in COCHIS, very early in the paper.
+> While there is a prototype implementation, I could not compile it out of the
+> box. Looking at the code, it contains very few examples, and I wonder how
+> much the prototype has been strained.  If available, any information on
+> practical experience would actually be welcome.
+> 
+> COCHIS is explicitly typed, and does not say anything about the use of
+> implicits in a language with type inference, such as Haskell.  In such a
+> situation, coherence should then also take the elaboration of implicit type
+> information into account, since it may also determine the semantics.
+> 
+> *** Summary 
+> 
+> In summary, the authors have fixed the main problems, and the work is really
+> worth publishing, but the are still quite a few easy directions in which the
+> article could be improved, mostly presentational.  I am quite confident that
+> the authors could implement these for the final version, so that the reader
+> gets the best out of this article.  Hence, I recommend either a minor revision
+> or acceptance up to small changes.
+> 
+> Other recommendations for further improvements follow in both general and
+> linear comments.
+> 
+> 
+> ** GENERAL COMMENTS
+> 
+> ** Language primitives
+> 
+> The paper suggests, but without really saying it, that the new construct
+> that abstract over types (\lambda_? \tau. e) is necessary to have the full
+> generality of local scoping and first-class implicits, but does not seem to
+> be the case.
+> 
+> *** Comparison with the let-implicit construct
+> 
+> The more common and intuitive construct for introducing implicits,
+> i.e. values that can be used to build implicit arguments is
+> 
+>         let implicit y : t = e1 in e2
+> 
+> This introduces a binding that can be used explicitly as normal bindings or
+> implicitly to construct values of implicit arguments.  Whether the binding
+> can also be used explicit is a matter of details, and one could use the
+> wildcard _ to ensure by construction that y does not explicitly appear in
+> e2. 
+> 
+> Indeed, such a construct (or something equivalent or more expressive) is
+> _needed_ to allow the notion of local scoping.
+> 
+> This construction need not be first class. For example, the construct may be
+> restricted to toplevel expressions, i.e. never occur under an abstraction.
+> 
+> To make implicit first-class, it then suffices to allow this construct to
+> appear in any expression, in particular under term abstractions. Then, COCHIS
+> implicit abstraction
+> 
+>     \lambda_? t1. e may : t1 => t2
+> 
+> may be encoded as
+> 
+>     \lambda x : t. let implicit x : t = x in e : t1 -> t2
+> 
+> and  e1 with e2  would just be encoded as the application  e1 e2. 
+> 
+> Of course, one can also use a special form or arrow to mark lambda's that
+> are encodings of implicit arguments, for instance using a new type
+> definition 
+> 
+>     type (=>) A B = Implicit (A -> B)
+> 
+> and packing lambda's into "implicit" declarations. This is a matter of
+> details. 
+> 
+> Of course, the converse also holds: 
+> 
+>     let implicit _ : t1 = e1 in e2 
+> 
+> can be encoded as 
+> 
+>     (lambda? t1. e2) with e1
+> 
+> Hence, the two are inter-encodable, ignoring both the elaboration of
+> programs, which is discussed below but a rather orthogonal issue
+> and the restriction of \sigma types not to contain double-arrows (I am not
+> sure how much this is critical). 
+> 
+> Notice, however, that the let-implicit construct invite to a shorter form
+> 
+>     let implicit _ = e1 in e2 
+> 
+> where t1 is the unique type of e1 in System F or would be the principal type
+> of e1 in Haskell/ML, which how requires principal types (actually typing
+> derivations) to avoid ambiguities.
+> 
+> *** Elaboration in COCHIS
+> 
+> In COCHIS implicit terms can be elaborated by picking implicit bindings from
+> the contexts or applying then to implicits.  A minor difference is that
+> only special abstractions "A => B" can be implicitly applied. 
+> 
+> However, COCHIS also allows to _infer_ implicit abstractions (rule AR-Iabs),
+> below called (IA)
+> which other implicits usually do not allow and would require an explicit
+> declaration of an implicit abstraction. 
+> 
+> Removing this IA feature, discussed below, the elaboration elaboration of
+> implicits in COCHIS could be performed similarly with in a language with just
+> the let-implicit construct.
+> 
+> 
+> *** Local scoping, first-class implicits, and higher-order rules
+> 
+> The paper uses three notions and treats them as complementary features, but
+> without precisely defining them, while it uses them to make COCHIS unique
+> among other proposals (e.g. line 1346).  This should be fixed in the final
+> version.
+> 
+> While local scoping v.s. global scoping is a relatively clear idea.  The
+> notion of first-class implicits, although also intuitively clear, should be
+> precisely defined.  Finally, the expression ``higher-order rules'' is new in
+> this context and must be defined and explained. (For instance, I could not
+> understand myself what is exactly meant by line 1366.)
+> 
+> In fact, COCHIS introduces a single construct, namely abstraction over
+> implicit values, that simultaneously introduces local-scoping, first-class
+> implicits, and higher-order rules. This makes is difficult to understand
+> each of these notions separately. 
+> 
+> By contrast, the "let implicit x = e1 in e2" seems more intuitive and only
+> introduces the idea of local scoping.  For example, if this construct is
+> restricted to toplevel, implicits would not be first-class, and conversely,
+> implicits becomes first-class only as soon as let-implicits are allowing in
+> any context, in particular under type abstractions.  
+> 
+> As for high-order rules, I still do not know what it exactly means.
+> 
+> ** Surprising differences between systems A, F, and D. 
+> 
+> The paper presents three resolution strategies (A), (F), and (D), and then
+> prove both that (A) and (F) are equivalent and that (D) is a subset of (F).
+> 
+>  (A) is the intuitive simple semantics.
+>  (F) is an intermediate step needed to understand system (D)
+>  (D) is the final specification, which the user need to understand.
+> 
+> The idea that /(D) is mainly a restriction of (A) by committing to first
+> choice/ is rather intuitive. But this intuition is insufficient.  Although
+> (A) and (F) are equivalent, (D) is defined as a restriction of (F). Hence,
+> the user must also understand (F) in order to understand (D).  This should
+> probably be emphasized.
+> 
+> In particular, there may be somewhat surprising consequences of the
+> first-choice commitment, that can only be understood in (F).  For example,
+> resolving ?(Int => Int => Int) in an empty context should elaborate to many
+> terms in (A), but just to the two terms \x. \y. x and \x. \y. y in (F),
+> omitting type information.  System (D) which is deterministic will only pick
+> one of the two choice, namely the later.
+> 
+> First-choice commitment may perhaps be intuitive (or at least easy to
+> mentally compute) when terms are explicitly put in context as with
+> 
+>         let implicit x1 = e1 in ... in ... ?t ...
+> 
+> but, this is less obvious when terms are higher-order of type (T1 => T2) =>
+> T3 and abstractions (T1 => T2) may themselves be inferred. 
+> 
+> For example, the (result of evaluating the) elaboration of
+> 
+>     ?(Int => Int => Int) with 0 with 1, 
+> 
+> may not be that obvious.  
+> 
+> - In System (D), ?(Int => Int => Int) should be resolved as \x \y. y. 
+>   Since the _algorithm_ with push the two implicit arguments of type Int
+>   into the context, and then pick the last one.
+> 
+> - In System (A), ?(Int => Int => Int), the elaboration could also 
+>   return \x.\y.\x (and many other programs that are not in normal form). 
+> 
+> It may seem arbitrary for a logician, that among the two symmetric solutions 
+> only the one is returned---but D since is deterministic, then which one is
+> returned may seem arbitrary.
+> 
+> In fact, one could generalize the program and infer ?(All A. A => A => A).
+> The problem remains the same.  However, generalizing a little less ?(All
+> A. A => Int => A) has a unique solution /\A \x:A.\y:Int. x and is stable.
+> 
+> In this case, the restriction of System (A) can be circumvented
+> by being more explicit, and in this case, replace ?(I => I => I) by
+> 
+>         (?(\all A. A => I -> A) with Int) 
+> or
+>         (?(\all A B. A => B -> A) with Int with Int) 
+> 
+> Then comes the question, how general is this? 
+> 
+> In summary, the failure to infer \x.\y.x for (I => I => I) cannot just be
+> understood by first-choice commitment in (A), but by fist-choice commitment
+> in (F).  
+> 
+> 
+> *** Implicit abstractions (IA)
+> 
+> Elaboration in System (A) allows inferring implicit abstractions as well as
+> applications, which is unusual in systems with implicits (although there are
+> few of them). As a consequence, this allows (A) to infer arbitrary
+> lambda-terms, which I think deserve a specific discussion.
+> 
+> In particular, this allows inferring terms in an empty context, such as
+> 
+>         0 |- ?(All A, B. A => B => A) ~> /\A. \x:A.\y:B.x
+>         0 |- ?(All A. A => A => A) ~> /\A. \x:A.\y:A.y
+>         0 |- ?(Int => Int => Int) ~> \x:Int.\y:Int.y
+> 
+> Unfortunately, this particularity of Cochis is not much discussed.  Besides,
+> is not so interesting in system (D) because it only returns one, somewhat
+> arbitrary solution among all possible solutions in system (A).
+> 
+> In fact, it does not seem to have a significant impact on the design, at
+> least on the use of Cochis, since the paper does not show any example taking
+> advantage of this feature.
+> 
+> Hence, do you have a good justification for allowing this? 
+> 
+> ** Prototype
+> 
+> The paper mentions a HASKELL prototype implementation of COCHIS located at
+> https://bitbucket.org/tom_schrijvers/cochis/ (There is actually a typo in
+> the URL, which when copied does turn the underscore into a space, but this
+> might be a problem with the PDF post-processing---to be checked with the
+> editor.)
+> 
+> However, the prototype does not compile out of the box with Haskell version
+> 8.4.3.  It might be a compatibility problem, but the README.md of the
+> distribution does not contain any version number.
+> 
+> The prototype distribution does not contain serious examples, which I found
+> surprising. How do you know that you approach will scale up in practice? 
+> 
+> ** Termination. 
+> 
+> The termination condition is unclear.  The definition of the |-_{term} in
+> Figure 10 is precise and formal, but I did not find any use of the judgment
+> in other rules. That is, where is this judgment plugged into the other
+> systems (A, F, or D)?
+> 
+> From my understanding searching for ?(Int => (Int => Int) => Int) should
+> fail because of the termination condition.
+> 
+>  - Intuitively, this will push ?Int and ?(Int => Int) in context, then
+>    search for ?Int which should first try using Int => Int from the context,
+>    and therefore try to infer ?Int again, in the same context.
+> 
+>  - Formally following Figure 10, it seems 
+>    that |/-_term Int => (Int => Int) => Int
+>    because |/-_term (Int => Int) => Int, 
+>    as  hd (Int => Int) = hd (Int). 
+>    (and moreover, || Int => Int || = 3 while ||Int|| = 1.)
+> 
+> My impression is that many useful examples will be rejected similarly:
+> 
+>         ?Bool, ?(Bool => Int) |- ?Int
+> 
+> Since |/-_term Int => Int, I assume that |/-_term Ord Int => Eq Int either.  
+> Then, how do you encore the instance  hierarchies of Haskell?
+> Please explain. 
+> 
+> Notice that Figure 10 only describes termination for core COCHIS,
+> i.e. without only arrows and double arrows for type constructors.  How do
+> you defined || Int || or || list (\rho) || ? (I guessed, but I should not
+> have to.)
+> 
+> ** Stability under substitution. 
+> 
+> Stability is in fact the combination of two notions. 
+> 
+> - static stability: 
+> 
+>        If G |- \rho ~> E then exits E' st G\theta \rho\theta ~> E'
+> 
+> - dynamic stability
+> 
+>        If G |- \rho ~> E and  G\theta \rho\theta ~> E'
+>        then E' = E\rho
+> 
+> Dynamic stability is essential so that the semantics does not change during
+> code specialization, and most of the argument about stability in the paper
+> is in fact in favor of dynamic stability.
+> 
+> Static stability ensures that typability is preserved by type specialization
+> This is less important.  At worse a specialized program may be rejected,
+> typically as ambiguous, but not have a misleading behavior.
+>   
+> You may want to distinguish these two flavors and then define stability as
+> the combination of both.
+> 
+> ** Stability judgment. 
+> 
+> The notion of stability is a key notion, but its specification and
+> implementations are actually quite subtle and the explanation of the typing
+> rules in System (D) and (D') could both be explained in more details and
+> with examples. 
+> 
+> An example I found instructive is comparing
+> 
+>         A |- A => I => A ~>
+> and
+>         0 |- All A. A => I => A) ~> 
+> 
+> both in system D and D'.
+> 
+> Rule Alg-L-NoMatch uses the negation of the stability judgment "|-/-sta"
+> while the corresponding judgment in System D is call stabled (.).  I
+> understand the way it works, but this is not obvious at first, and would
+> certainly deserve a better explanation.
+> 
+> ** First-class polymorphism. 
+> 
+> There is a subtle difference between (A) and (F) in the treatment of
+> first-class polymorphism, which you haven't explained. See (612).
+> 
+> ** Design space
+> 
+> There are many languages (with many options discussed) and many properties.
+> I think you should consider summarizing the design space in a table, whose
+> columns are the properties and each language _variant_ appears on a separate
+> line.
+> 
+> 
+> ** On the uniqueness of COCHIS. 
+> 
+>   This may be a subjective judgment, but I felt the authors heavily and
+>   repeatedly insist on the uniqueness of COCHIS, which in the context is
+>   often to be understood as the superiority of COCHIS.  I think the message
+>   would be clearer and the reading easier if the authors focused on the
+>   differences in features without insisting on the uniqueness and coherence.
+> 
+>   The main feature of COCHIS, which is precisely stated and carefully
+>   crafted, is static stability.  The over novelty, compared to previous
+>   works on implicit calculi, is the use of focusing to reduce the search
+>   space, which although not a novel technique in itself, hasn't been used
+>   before for implicit calculi.  Cochis does nothing new and interesting
+>   about coherence, as already mentioned.
+>    
+> ** LINEAR COMMENTS 
+> 
+> Thank you for adding line numbers, which makes the reviewer's life so much
+> easier!
+> 
+> 35 : IP
+> 
+>   This abbreviates "Implicit Programming", which is not a standard
+>   abbreviation.  Hence, I would suggest to inline it.  There are just 17
+>   remaining occurrences, 15 of which are "IP mechanisms".  Even, if you
+>   decide not to inline it, you at least avoid this abbreviation in the
+>   abstract and paragraph titles.
+> 
+> 
+> 48 : "Haskell's type classes"
+> 
+>   This is ambiguous, since there is core Haskell and many Haskell extensions
+>   as mentioned later on in the article.  It would help to find a qualifier
+>   when referring to "core Haskell" and use it consistently through the
+>   article. 
+> 
+>   Here, as well as line 57, Haskell means "core Haskell". But the reader
+>   only understands this on line 70 and on.
+> 
+> 86-89: You should inline (an excerpt of) Reynolds's notion of coherence.
+> 
+> 115-117: 
+> 
+>   The logic of this statement is misleading.  The discussion above (109-114)
+>   is about uniqueness of instances, coherence, stability, flexibility.
+>   However, two new properties "first-class and higher-order rules" jumps in
+>   here. Logically, we would expect:
+> 
+>    "There are no current design that support local scoping, overlapping
+>     instances while at the same time ensuring both coherence and stability."
+> 
+>   I am not sure this would still be true: For example, OCaml implicits have
+>   local scoping, overlapping instances, are coherent, and have dynamic
+>   stability (see the entry "Stability under substitution").
+> 
+>   It then sounds like first-class and higher-order rules are added here just
+>   to make COCHIS unique rather than as a statement that clarifies the
+>   discussion started in this paragraph.
+> 
+> 116: "various other features such as"
+> 
+>   This is loose, hence the statement 
+> 
+>     "there are no current design that supports ... various other features
+>      such as ..."
+>    
+>   is questionable. 
+> 
+> 142:  "a coherent, stable and type-safe" 
+> 
+>   Although there are sometimes variations on the combination of qualifiers,
+>   it sounds like a repetition, heavily emphasizing the uniqueness of COCHIS,
+>   while it is actually just another point in the design space.
+> 
+> 158: "as is elaboration under reduction of type application"
+> 
+>   I don't understand what you mean by this. 
+>   You should probably split into two sentences but also explain what you
+>   mean by "elaboration under reduction". (Elaboration is static, reduction is
+>   dynamic, so what is elaboration under reduction?)
+> 
+> 414:  "Although"
+>   
+>   This sentence surprised me: "Although A and B, not C" suggests that C
+>   should follow from A and B. 
+> 
+>   However, in the present case, A and C seems independent, while B is
+>   a source of problem rather than a solution for C.
+> 
+>   What I think you mean is
+> 
+>    "Scala allows A and B as COCHIS. However, by contrast with COCHIS it does
+>     not ensure C."
+> 
+>   Why then not say so? 
+>   
+> Fig 1: 
+> 
+>   Why do you go back to Scala syntax here and not stay with the ? notation
+>   that you have just introduced (line 363). This would relieve the ready the
+>   pain of learning a new syntax.
+> 
+> 546: 
+> 
+>   A line break does not seem justified here.
+> 
+> 612: 
+> 
+>   The syntax defines \sigma ranging over monotypes.  Later, \tau is used to
+>   range over simple types with some subtleties that would be worth
+>   emphasizing.
+> 
+>   In particular, \tau is recursively defined with \rho, hence allow inner
+>   polymorphism while \rho does not.
+> 
+>   You could also remind the definition of \tau in line 612 and explain
+>   the difference.  
+> 
+>   I suggest to exchange the word "simple types" and "monotypes": simple
+>   types refer to types without quantifiers, as in simply-typed
+>   lambda-calculus.  Monotypes refers more to monomorphic types, which could
+>   be understood has having no outer quantifier.  I think this usage is much
+>   more common, if not standard.
+> 
+>   Below I will keep using your terminology, i.e. monotypes for \sigma and
+>   simple types for \tau, although I recommend the converse.
+> 
+>   Independently, you should also explain why monotypes \sigma do not contain
+>   (monomorphic) rule types (\sigma => \sigma).  This also means that one
+>   cannot abstract other rule types (\alpha cannot be instantiated by
+>   (monomorphic) rule types).  How critical is this? (see Comparison with the
+>   let-implicit construct).
+> 
+> Fig 3:
+> 
+>   I don't think |\rho| has been defined at the stage.
+>   Please point (forward) to its definition.
+> 
+> 656: Suffer from TWO problems
+> 
+>   The two problems are actually related, and certainly not disjoint.
+>   The second one is a consequence of the first one. Hence the formulation is
+>   slightly misleading.
+>   
+> 
+> 662, 663: 
+> 
+>   Indeed, this example illustrates both issues mentioned at (656).
+> 
+> 665:  
+> 
+>   This sentence says: "ambiguous resolution" implies "ambiguous semantics".
+>   This is true on this example, but not in general.  It would be better to
+>   start the sentence with "On this example". 
+> 
+> Fig 4: 
+> 
+>   The notation G |-^f_r [\rho] ~> E is not very intuitive.  I already said
+>   so in my previous review.  You may decide to keep the notation, but I
+>   insist that the reader intuitively tries to parse this as
+> 
+>         G |-^f_r ( [\rho] ) ~> E 
+> 
+>   and thus attempt to give a meaning to [\rho], which is not a well-formed
+>   object. 
+> 
+>   Besides, there is no reason to have redundant notation between ^f on the
+>   judgment and [ ] which must de facto be considered as part of the 3-place
+>   judgment symbol:
+> 
+>         . |-^f_r [ . ] ~> .
+> 
+>   You may wish to reconsider this choice...
+> 
+> 660: 
+> 
+>   The judgment misses the grayed part for the elaborated term. Although
+>   useless information here, it may still be better to keep the same syntax
+>   as in Fig. 3, as this shorter non-elaborating syntax has never been
+>   formally introduced.
+> 
+> 726: thus avoid [<-this] source of ambiguity
+> 
+> Fig 5, and below: 
+> 
+>   Choosing different names for \alpha and \bar \alpha would _considerably_
+>   ease the job of the poor reader.
+> 
+> 816: because there are TWO substitutions
+>   
+>   Why two? One is enough. So it would be clearer saying "because there is a
+>   substitution ..."
+> 
+> 826: 
+> 
+>   You are pointing to Fig 7, which is too far away: could you try to make is
+>   closer, i.e. on the next page? 
+> 
+> 833: 
+> 
+>   It is _very hard_ to parse the comma in the middle of the two formulas. 
+>   I suggest to write "A and B and C" here instead of "A, B and C" to help
+>   the reader with parsing.
+> 
+> 918: As a consequence of the similarity
+> 
+>   What similarity are your talking about?
+> 
+> 920-925: 
+> 
+>   This whole paragraph is unclear.
+> 
+> 930: (Dunfield & Krishnaswami, 2013)
+> 
+>   What you are doing here seems a trivial subcase of unification under a
+>   mixed prefix where some variables are rigid and others are flexible, which
+>   is now well-known.  I don't see what (Dunfield & Krishnasswami, 2013). 
+>   If something non-standard is happening, please explain it. 
+>   Keeping the score of type variables is not that difficult. 
+> 
+> 944: The most general unifier.
+> 
+>   I would rather say "A most general unifier".
+>                    
+> 940-947: Most General Unifiers
+> 
+>   The problem described here seems artificial to me.
+>   The scoping is usually not a problem: in the case you describe here, 
+>   I would just introduce a fresh variable \gamma bound before \alpha and
+>   \beta, and then substitute \alpha  by \gamma -> \gamma and \beta by
+>   \gamma. Why cannot this be done? 
+> 
+> 948: by a stroke of luck
+> 
+>   I don't think so. 
+>   What you think is a problem does not seem to be one.
+> 
+> 
+> 951: "only \tau' contains unification variables"
+> 
+>   Can you say why?
+> 
+> 968:  a similar check on relative positions...
+> 
+>   You are again referring to Dunfield and Krishnaswami, but unification
+>   under a mixed prefix also naturally should also keep track of variables
+>   dependencies during the resolution.
+> 
+> 973: occurs-check.
+> 
+>   Doing the occur check during the unification is a known source of
+>   inefficiency. 
+> 
+> Fig 9: 
+> 
+>   This is basically first-order unification with rigid variables, which is
+>   rather standard and can be solved efficiently, e.g. using a modern
+>   approach with unification constraints, while the algorithm you present
+>   there is inefficient.
+> 
+> 982: type class instances
+> 
+>   Should be "type-class instances"
+> 
+> 1012-1014: 
+> 
+>   Double check the sizes (and maybe detailed them) as I counted 9 instead of
+>   10: size (Int -> Int -> Int) = 5, hence 
+>   size ((Int -> Int -> Int) -> (Int -> Int -> Int)) = 11, but
+>   size ((Int -> Int -> Int) -> Int -> Int) = 9. 
+> 
+> 1034-1035:
+> 
+>   Indeed, this restriction seems quite severe.
+>   See discussion on "Termination" above.
+> 
+> Fig 10:
+> 
+>   You should tell us how to count type-constructor, such as Int or List \rho.
+>   We have to infer || Int || = 1 from the examples, but we should not have
+>   to guess.
+> 
+> 1047: System F expressions 
+> 
+>   should be System-F expressions
+>   (many similar occurrences below)
+> 
+> 1100: Corollary 5.1
+> 
+>   This paragraph looks pedantic and pretentious.
+> 
+>   Determinacy obviously implies coherence, by construction.
+> 
+>   So I don't see the point of _formally_ stating corollary 5.1 (i.e. using
+>   sophisticated maths formulas), since observational equivalence follows
+>   from equality, which follows from determinacy.  This could be said in
+>   simple words without invoking contextual equivalence (which you actually
+>   haven't defined), and as you say whose definition is useless.
+> 
+>   It sounds like you want to say that you have designed a system that ensure
+>   coherence, but you have not really.  You have just designed a system that is
+>   deterministic (by restriction), and from which coherence trivially follows.
+> 
+> 1110: This is a key lemma.
+> 
+>   Why a new paragraph? 
+> 
+>   If there is a new paragraph, then "This" should be replaced "Stability of
+>   Resolution".
+> 
+>   In either case, "is" could rather be "is also" as "Stability of
+>   Resolution" is also interesting by itself and not just an intermediate
+>   lemma.
+> 
+> 1122:  "\forall ... \rho_i"
+> 
+>   The line is hard to parse, ":" should rather be a comma.
+>   However, I would rather used more words and say
+> 
+>      and also $|-_unamb \rho_i$ for all $?\rho_i$ in $\Gamma$. 
+> 
+> 1134: Theorem 5.6
+> 
+>   Don't you  wish to also add "and \epsilon |- V : |\rho|." ?
+> 
+> 1159-1165: Predicative instantiations is not a big restriction in practice.
+> 
+>   This contradicts the quest for impredicative instantiation, e.g. as done
+>   in Haskell.  This paragraph is completely biased, and somewhat useless.
+>   Besides, this is an orthogonal debate.  And there is no need to present
+>   this as a justification not to consider impredicative polymorphism. The
+>   truth is more in the two preceding paragraphs.
+> 
+> 1166-1168: 
+> 
+>   COCHIS is also presented as a way to complete/improve HASKELL, which has
+>   extensions with first-class polymorphism. This seems a contradiction.
+> 
+> 1190: Committed Choice
+> 
+>   This is a key feature of COCHIS, whose design depends on this. 
+>   This could be more clearly stated and emphasized. 
+> 
+> 1207: there [<=are] two equality
+> 
+> 1215: manually
+> 
+>   Do you mean "mentally"? 
+> 
+> 1218: type-checking times programs
+> 
+>   Something is wrong here.
+> 
+> 1219: GHC
+> 
+>   Why GHC here and not COCHIS? 
+>   Since you are talking about performance, maybe you should say a word about
+>   the performance of COCHIS inference. 
+> 
+>    - Worst case, do you have any result? 
+>    - In practice, since you have an implementation. 
+>      Did you try in on large examples? 
+> 
+> 1236: 
+> 
+>   I am surprised here to see stability as the main problem. Wouldn't 
+>   coherence be also lost, which seems to be even worst than the lack of
+>   stability. 
+> 
+> 1254: "worse performance is also not a big drawback"
+> 
+>   I agree with the general idea, but this is perhaps too strong (some users
+>   would certainly disagree). I suggest something weaker, such as 
+>   "worse performance is more tolerable".
+> 
+> 1287: then <- the
+> 
+> 1289: in \Gamma should be in~\Gamma.  
+> 
+> 1291-1295: 
+> 
+>   This seems a severe drawback, which should be discussed earlier in the
+>   core of the paper and not just a small paragraph in the concluding
+>   remarks. 
+> 
+> 1296-1306:
+> 
+>   This mechanism (described in 1299-1301) reminds me of _saturation_
+>   proposed by Scherer and Remy in "Which simple types have a unique
+>   inhabitant?" at ICFP 2005 used in combination of focusing.
+> 
+>   However, your implementation seems ad hoc, as a patch to system D 
+>   using a new keyword super y, rather being integrated in system F.
+>   Actually, I don't understand what "super y" does. In Cochis, dictionaries
+>   would be records. Hence "super y" should just be an accessor to the
+>   record/dictionary OrdInt giving back the EqInt record/dictionary. So why
+>   would you need a new keyword.  I would prefer to see such a mechanism
+>   formalized in system (F) before you restrict it to system (D).
+> 
+>   Besides, the new binding ?Eq Int ~> super y hides the previous binding 
+>   ?Eq Int ~> x which should still be visible and in some cases more
+>   efficient to access directly than via other dictionaries. 
+> 
+>   I understand why you wish to make ?Eq Int accessible from ?Ord Int in
+>   addition, but I do not see why they should be used instead of the direct
+>   access to EqInt. 
+> 
+>   Besides, this problem does not seem to resolve the issue discussed above 
+>   (1291-1295), since if the class instance ?(Eq Int) is defined first, 
+>   before the class  Ord A, but no instance ?Ord Int has been defined, then the
+>   context still look like ?(Eq Int), ?(\forall A. Ord A => Eq A) and the
+>   search for ?Ord Int still fails. 
+> 
+>   Therefore, I do not quite understand what super is a solution for.  Do you
+>   mean that "Superclasses with Committed Choice" is a replacement for "A
+>   first attempt at Encoding Superclasses"?  But then if you do not push the
+>   relation ?(\forall A. Ord A => Eq A), I do not see how you can implement a
+>   polymorphic function that works for any type of class Ord and using both
+>   (\equiv) and (<) methods of class Eq and Ord.
+> 
+>   Hence "Superclasses with Committed Choice" does not seem to be a working
+>   proposal by itself.
+> 
+> 1320:  "is more relaxed than Haskell's"
+> 
+>   Although I agree with the text that follows, I don't think it is accurate 
+>   to summarizing it in this way.
+> 
+>   Cochis enforces coherence by determinism, which is restriction, rather
+>   than a relaxation.  Cochis has local scoping, which is more relaxed.  So
+>   Cochis is more relaxed on one key aspect and more restricted on another
+>   key aspect, and you cannot conclude that Cochis is more relaxed than
+>   Haskell.
+> 
+> 1326-1327:   See 1100. 
+> 
+>   Yes, you give a formal statement, but in your deterministic setting, this is
+>   an overkill.
+> 
+> 1332-1340: 
+> 
+>   Yes, indeed.  The problem is that COCHIS is built around being
+>   first-commitment choice.  You keep discussing a more relaxed version that
+>   would require keeping track of coherence, but you are not doing so.  This
+>   would make a huge difference. Then, the formal statement 1100 would be the
+>   key.  However, since you did not tackle the problem of coherence, this
+>   discourse feels like describing a wishful proposal that would be
+>   non-derterministic but that is not yours.
+> 
+> 1366: 
+> 
+>   The feature "higher-order rules" has not been clearly defined.
+> 
+> 1377(+7): [strangely lines are not numbered in this paragraph]
+> 
+>   I don't see any significant different between n-ary arguments and unary
+>   arguments. Hence, the source of problem does not seem to be between n-ary
+>   arguments but just an unsatisfactory solution in the calculus of
+>   implicits. 
+> 
+>   Besides, I don't understand the example (last line before 1378), because
+>   it does not involve multiple arguments.
+> 
+> 1405-1411: 
+> 
+>   Coherence in OCaml Implicits is slightly more involved that what you
+>   suggest here: the module system is able to keep track of some equalities
+>   between modules applications. I.e. it could tell that the module signature
+>   of Eq Int is equal to the sub-structure Eq Int that can be access in Ord
+>   Int.  
+> 
+> 1436-1438: 
+> 
+>   This is again misleading, suggesting that COCHIS takes care of coherence
+>   in a non trivial way. (See 1100.)
+> 
+> 1477: "[To<-? The] former cannot"
+> 
+> 1507-1510: 
+> 
+>   OCaml implicits can do the same and allow the encoding of associated
+>   types. 
+> 
+> 1517: 
+> 
+>   You could perhaps also mention saturation (see 1296-1306).
+> 
+> 1530: "Genus's solution"
+> 
+>   Perhaps it is also relevant to point to OCaml implicits. 
+> 
+> END OF REVIEW
