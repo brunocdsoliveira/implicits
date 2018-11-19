@@ -39,14 +39,14 @@ term variable $x$.
 
 The function $\ttrans$ takes 
 $\name$ types $\rulet$ to System F types T: 
-\begin{equation*}
+\begin{myequation*}
 \begin{array}{rcl@{\hspace{1cm}}rcl}
 \ttrans[\alpha] & = & \alpha &
 \ttrans[\forall \alpha. \rulet] & = & \forall \alpha. \ttrans[\rulet] \\
 \ttrans[\rulet_1 \arrow \rulet_2] & = & \ttrans[\rulet_1] \arrow \ttrans[\rulet_2] &
 \ttrans[\rulet_1 \iarrow \rulet_2] & = & \ttrans[\rulet_1] \arrow \ttrans[\rulet_2] %\\
 \end{array}
-\end{equation*}
+\end{myequation*}
 It reveals that implicit $\name$ arrows are translated to explicit System F function arrows.
 
 %- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
@@ -72,9 +72,9 @@ in the body of the rule abstraction to construct System F terms of type $\ttrans
 The more interesting part of the translation happens when resolving queries.
 Queries are translated by rule $\rref{Ty-Query}$ using the auxiliary resolution
 judgment $\ivturns$:
-\begin{equation*}
+\begin{myequation*}
 \dres{\tenv}{\rulet}{E}
-\end{equation*}
+\end{myequation*}
 which is shown, in deterministic form, in Figure~\ref{fig:resolution2}.  The
 translation builds a System F term as evidence for the resolution.  
 
@@ -102,14 +102,14 @@ of desirable properties.
   expression, $\rulet$ be a type, $\tenv$ a type environment and $E$ a System F expression. If
   $\wte{\tenv}{e}{\rulet}{E}$, then $\fwte{\etrans{\tenv}}{E}{\ttrans[\rulet]}$.
 \end{theorem}
-Here we define the translation of the type environment form $\name$ to System F as:
-\begin{equation*}
+Here we define the translation of the type environment from $\name$ to System F as:
+\begin{myequation*}
 \begin{array}{rcl@{\hspace{2cm}}rcl}
 \etrans{\epsilon} & = & \epsilon & \etrans{\tenv,\alpha} & = & \etrans{\tenv}, \alpha \\
 \etrans{\tenv,x : \rulet} & = & \etrans{\tenv}, x : \ttrans[\rulet] &
 \etrans{\tenv, \envi{\rulet}{x}} & = & \etrans{\tenv}, x : \ttrans[\rulet]
 \end{array}
-\end{equation*}
+\end{myequation*}
 
 An important lemma in the theorem's proof is the type preservation of 
 resolution.
@@ -120,16 +120,18 @@ If $\ares{\tenv}{\rulet}{E}$, then $\fwte{\etrans{\tenv}}{E}{\ttrans[\rulet]}$.
 Section~\ref{proof:preservation} of the Appendix points to the mechanized proofs
 of Theorem~\ref{thm:type:preservation} and Lemma~\ref{lem:type:preservation} stated above.
 
-Moreover, we can express three key properties of Figure~\ref{fig:resolution2}'s
+In addition, we can express three key properties of Figure~\ref{fig:resolution2}'s
 definition of resolution in terms of the generated evidence.
-Firstly, the deterministic version of resolution is a sound variation on the original ambiguous resolution.
+Firstly, the deterministic version of resolution is a sound variation on the original ambiguous
+resolution.
 \begin{theorem}[Soundness]
 Figure~\ref{fig:resolution2}'s deterministic definition of resolution is sound (but
 incomplete) with respect to Figure~\ref{fig:resolution1}'s ambiguous definition.
 \[\forall \tenv, \rulet, E: \quad\quad \dres{\tenv}{\rulet}{E} \quad\Rightarrow\quad \ares{\tenv}{\rulet}{E} \]
 \end{theorem}
-Section~\ref{proof:det_soundness} of the Appendix points to the mechanized proof of the above
-theorem.
+As a corollary (by use of this result with Lemma~\ref{lem:type:preservation}), the
+deterministic resolution process is also type-preserving. Section~\ref{proof:det_soundness} of
+the Appendix points to the mechanized proof of the above theorem.
 Secondly, the deterministic resolution is effectively deterministic:
 \begin{theorem}[Determinacy]\label{thm:determinacy}
 %The generated evidence of resolution is uniquely determined.
@@ -166,7 +168,7 @@ contextually equivalent to itself.
 Thirdly, on top of the immediate coherence of deterministic resolution, 
 an additional stability property holds.
 \begin{lemma}[Stability of Resolution]\label{lem:stable:resolution}
-Resolution is stable under type substitution.
+Resolution is stable under monotype substitution.
 \[\forall \tenv,\alpha,\tenv',\suty,\rulet, E: \enskip\
 \dres{\tenv,\alpha,\tenv'}{\rulet}{E} \enskip\wedge\enskip \tenv \vdash \sigma
 \enskip\Rightarrow\enskip 
@@ -191,13 +193,13 @@ allows us to conclude the correctness of static reduction of type application.
 \begin{theorem}[Correctness of Type Application Reduction]\label{lem:stable:correct}
 If a type application and its reduced form elaborate to two System~F terms,
 those terms are contextually equivalent.
-\begin{equation*}
+\begin{myequation*}
 \forall \tenv, \alpha, e, \suty, E1, E2 : \enskip\\
 \wte{\tenv}{(\Lambda \alpha.e)\,\suty}{\rulet}{E_1} ~\wedge~
 \wte{\tenv}{e[\suty/\alpha]}{\rulet}{E_2}
 \enskip\Rightarrow\enskip 
 \fctx{\etrans{\tenv}}{E_1}{E_2}{\ttrans[\rulet]}
-\end{equation*}
+\end{myequation*}
 \end{theorem}
 The stability Lemmas~\ref{lem:stable:resolution} and~\ref{lem:stable:typing} are proved in
 Section~\ref{proof:coherence} of the Appendix.
@@ -237,7 +239,9 @@ Then $\dres{\tenv}{\rulet}{E}$ if and only if $\adres{\tenv}{\rulet}{E}$.
 \end{theorem}
 The proof is split in two parts, one for each ``direction'' of the theorem.
 Section~\ref{proof:alg_soundness} proves
-soundness of the algorithm with respect to deterministic resolution, while Section~\ref{proof:alg_completeness} proves partial completeness.
+soundness of the algorithm with respect to deterministic resolution, while Section~\ref{proof:alg_completeness} proves partial completeness. The latter correctness property is partial because
+it does not hold without the additional termination conditions for the queried type and the
+type environment, \(\tenv\).
 
 %-------------------------------------------------------------------------------
 \subsection{Dynamic Semantics}
@@ -252,6 +256,7 @@ Now we can state the conventional type safety theorem for $\name$:
 If $\wtep{\epsilon}{e}{\rulet}$, then $\mathit{eval}(e) = V$ for
 some System F value $V$.
 \end{theorem}
-The proof follows trivially from Theorem~\ref{thm:type:preservation}.
+The proof follows from Theorem~\ref{thm:type:preservation} and System F's well-known
+normalization property.
 
 

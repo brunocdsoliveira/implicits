@@ -612,7 +612,7 @@ for the sake of conciseness, we have abbreviated $\tybool$ and $\tyint$ to $B$ a
 \end{equation*}
 }%
 By restricting ourselves to instantiation with monotypes, we disallow the
-second derivation and thus avoid source of ambiguity.
+second derivation and thus avoid this source of ambiguity.
 
 % \begin{equation*}
 % \myexruleL{AR-IApp}
@@ -730,7 +730,7 @@ This auxiliary judgment expresses that all type variables $\bar{\alpha}$
 are resolved when matching against $\rulet$.
 Its base case, rule \rref{UA-Simp}, expresses
 that fixing the simple type $\type$ fixes its free type variables
-$\bar{\alpha}$. Inductive rule \rref{UA-TAbs}
+$\bar{\alpha}$. The inductive rule \rref{UA-TAbs}
 accumulates the bound type variables $\bar{\alpha}$ before the
 head. Rule \rref{UA-IAbs} skips over any contexts
 on the way to the head, but also recursively requires that these contexts are
@@ -2005,8 +2005,8 @@ in $\type_2$. The first condition expresses that for the empty substitution,
 the size strictly decreases, say from $\tnorm[\type_2] = n$ to $
 \tnorm[\type_1] = m$. If we instantiate a type variable $\alpha$ to a type $\suty$ of size $k$,
 then the sizes change to 
-$\tnorm[[\suty/\alpha]\type_1] = m + k \times \occ{\alpha}{\type_1}$ and
-$\tnorm[[\suty/\alpha]\type_2] = n + k \times \occ{\alpha}{\type_2}$  where
+$\tnorm[{[\suty/\alpha]\type_1}] = m + k \times \occ{\alpha}{\type_1}$ and
+$\tnorm[{[\suty/\alpha]\type_2}] = n + k \times \occ{\alpha}{\type_2}$  where
 the auxiliary function $\occ{\alpha}{\rulet}$ determines the number of occurrences of $\alpha$ in $\rulet$. 
 The second condition guarantees that $k \times \occ{\alpha}{\type_1} \leq k \times \occ{\alpha}{\type_2}$
 and thus that the strict decrease is preserved under substitution.

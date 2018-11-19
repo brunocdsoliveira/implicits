@@ -294,46 +294,71 @@
 > (focusing eliminates equivalent but non-normal resolution terms) in
 > the paper.
 > 
+-- Klara ??
+
 > l.726: "thus avoid source of ambiguity" --> "avoid this source ..."
-> 
+
+FIXED
+
 > l.747: "Inductive rule" --> "The inductive rule"
-> 
+
+FIXED
+
 > l.799: "This is problematic because it defies the common expectation
 > that simple refactorings like the reduction of type application above
 > do not change a program’s behavior."  Again, this suggests that once
 > resolution is stable under type substitution, refactorings no longer
 > change program behavior, which is not true in general.
-> 
+
+-- Klara ??
+
 > l.997: "every rule type in the environment", do you mean the type of
 > every implicit binding "?r" in the environment? Or do normal variable
 > bindings with rule types like "x: r1 => r2" have to be checked for
 > termination as well?
+
+-- Klara ??
+
 > 
 > l.1020 and l.1021: "||[σ/α||τ1]" and "||[σ/α||τ2]" there seems to be
 > some mismatch of brackets and vertical bars.
-> 
+
+FIXED
+
 > l.1064: there is a bit of spurious white space before the word "which"
 > at the beginning of this line.
-> 
+
+FIXED
+
 > l.1084: Lemma 5.1 is formulated in terms of the ambiguous resolution
 > judgment.  But on the previous page (above l.1064) the paragraph on
 > resolution suggests that the translation is defined in terms of
 > deterministic resolution.  Please clarify.
-> 
+
+Clarification added under the statement of Lemma 5.2. -- Klara
+
 > l.1109, in Lemma 5.2: "under type substitution" --> "under monotype
 > substitution"
-> 
+
+FIXED
+
 > footnote 13, p.38: please make this a bibliographic reference.
 > 
 > l.1126: "Section A.8 proves partial completeness" in what sense is
 > this completeness "partial" w.r.t. to deterministic resolution? Maybe
 > it should just be "completeness"?
-> 
+
+Completeness is partial because it doesn't hold without the termination
+conditions for the queried type and the implicit context.
+Clarified in the text.
+
 > l.1135: "The proof follows trivially from Theorem 5.1." The proof
 > follows from Theorem 5.1 and the normalization property of System F.
 > The latter is a well-known fact, but hardly a trivial one.  Please
 > mention normalization of System F.
-> 
+
+FIXED
+
 > l.1207: "As there two equality specific" --> "As there _are_ two
 > _equally_ specific"
 > 
@@ -367,21 +392,23 @@
 > the entry ?(∀α.Ord α => Eq α) would be rejected.  So this strategy for
 > encoding super classes seems rather impractical unless termination
 > checking is handled differently.
-> 
+
 > l.1361 "System $F^G$" --> "System $F_G$" (superscript to subscript).
-> 
+
 > l.1386 "this approach is both incoherent and unstable" -->
 > "deterministic but unstable".  I pointed this out already in my first
 > review, and it was marked as "FIXED" in the author response.  I trust
 > that the authors have implemented the remaining changes they proposed
 > in the author response.
-> 
+
 > l.1698, Section A.3: The dependency diagrams in this and later
 > sections of the appendix look great and are very helpful.  Thank you
 > for going through the effort of adding these!
-> 
+
 > l.1939: "as givens" --> "as given"
-> 
+
+FIXED
+
 > l.1969 (top of p.75): "Hence with rule (L-NoMatch) we conclude..."
 > Something seems to be missing here:
 > 
@@ -395,8 +422,9 @@
 > l.2023: The System F term $E$ resulting from the deterministic
 > matching statement on this line is missing a prime, i.e. it should be
 > $E'$ rather than $E$.
-> 
-> 
+
+-- Klara ??
+
 > Referee: 2
 > 
 > Comments to the Author

@@ -359,6 +359,10 @@
 \newcommand{\fwte}[3]{\hello{#1 \turns_{\scriptscriptstyle \hspace{-1mm}\mathtt{F}} #2 : #3}}
 \newcommand{\fctx}[4]{\hello{#1 \turns_{\scriptscriptstyle \hspace{-1mm}\mathtt{F}} #2 \simeq_{\rm ctx} #3 : #4}}
 
+% Remove unnecessary indentation in the first line after an equation-block
+\newenvironment{myequation}{\begin{equation}}{\end{equation}\ignorespacesafterend}
+\newenvironment{myequation*}{\begin{equation*}}{\end{equation*}\ignorespacesafterend}
+
 %%% Local Variables: 
 %%% mode: latex
 %%% TeX-master: "Main"
