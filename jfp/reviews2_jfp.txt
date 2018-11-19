@@ -335,7 +335,8 @@ FIXED
 > resolution suggests that the translation is defined in terms of
 > deterministic resolution.  Please clarify.
 
-Clarification added under the statement of Lemma 5.2. -- Klara
+Clarification added under the statement of Lemma 5.2.
+-- Klara
 
 > l.1109, in Lemma 5.2: "under type substitution" --> "under monotype
 > substitution"
@@ -349,8 +350,9 @@ FIXED
 > it should just be "completeness"?
 
 Completeness is partial because it doesn't hold without the termination
-conditions for the queried type and the implicit context.
-Clarified in the text.
+conditions for the queried type and the implicit context. Clarified in 
+the text.
+-- Klara
 
 > l.1135: "The proof follows trivially from Theorem 5.1." The proof
 > follows from Theorem 5.1 and the normalization property of System F.
@@ -1046,11 +1048,20 @@ FIXED
 >   cannot abstract other rule types (\alpha cannot be instantiated by
 >   (monomorphic) rule types).  How critical is this? (see Comparison with the
 >   let-implicit construct).
+
+-- Klara ??
+
 > 
 > Fig 3:
 > 
 >   I don't think |\rho| has been defined at the stage.
 >   Please point (forward) to its definition.
+
+The Cochis -> System F type-translation function is used even earlier in Fig. 2.
+The definition of the function is in p. 38 (very forward). Should I move that
+definition in Section 3.1?
+-- Klara ??
+
 > 
 > 656: Suffer from TWO problems
 > 
