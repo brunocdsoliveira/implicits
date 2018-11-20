@@ -324,6 +324,7 @@ irrelevant. They don't affect the process and they don't produce subgoals.
 After all, a normal variable binding is not an implicit. It has to be
 explicitly used in an expression.
 -- Klara ??
+  => change to "every implicit binding"
 
 > 
 > l.1020 and l.1021: "||[σ/α||τ1]" and "||[σ/α||τ2]" there seems to be
@@ -341,7 +342,8 @@ FIXED
 > resolution suggests that the translation is defined in terms of
 > deterministic resolution.  Please clarify.
 
-Clarification added under the statement of Lemma 5.2.
+Clarification added under the statement of Theorem 5.2.
+=> change order of sentences
 -- Klara
 
 > l.1109, in Lemma 5.2: "under type substitution" --> "under monotype
@@ -350,7 +352,9 @@ Clarification added under the statement of Lemma 5.2.
 FIXED
 
 > footnote 13, p.38: please make this a bibliographic reference.
-> 
+
+TODO: use bibtex @misc entry
+ 
 > l.1126: "Section A.8 proves partial completeness" in what sense is
 > this completeness "partial" w.r.t. to deterministic resolution? Maybe
 > it should just be "completeness"?
@@ -366,6 +370,7 @@ the text.
 > mention normalization of System F.
 
 FIXED
+ => call it "strong normalisation"
 
 > l.1207: "As there two equality specific" --> "As there _are_ two
 > _equally_ specific"
@@ -428,6 +433,7 @@ FIXED
 >    allows us to derive the former from the latter?
 
 Change the second hypothesis of lemma A31?
+=> yes, fix statement + proofs
 
 > 
 > l.2023: The System F term $E$ resulting from the deterministic
@@ -1062,6 +1068,7 @@ Means l.2026?
 Why rule types are not monotypes is explained later, at the end of section 3.5.1.
 I could add a forward pointer to that section, but we do this already in l.624.
 -- Klara
+=> ignore
 
 > 
 > Fig 3:
@@ -1073,6 +1080,8 @@ The Cochis -> System F type-translation function is used even earlier in Fig. 2.
 The definition of the function is in p. 38 (very forward). Should I move that
 definition in Section 3.1?
 -- Klara ??
+
+=> ignore grey parts until next section, so don't explain them here
 
 > 
 > 656: Suffer from TWO problems
@@ -1086,6 +1095,7 @@ additional (not necessarilly syntax-directed) conditions that would allow only o
 solution out of many. Then, the resolution mechanism would still not be
 syntax-directed but it would be deterministic.
 -- Klara
+=> ignore
 
 > 662, 663: 
 > 
@@ -1098,6 +1108,7 @@ syntax-directed but it would be deterministic.
 >   start the sentence with "On this example".
 
 Minor. -- Klara
+=> Hence, ambiguous resoluation _may_ render 
 
 > 
 > Fig 4: 
@@ -1123,6 +1134,7 @@ It is explicitly explained in l.685 that the brackets indicate the component of
 the judgment over which it is syntax-directed. Then it is explained again in 
 l.687 (for the  focusing judgment) and l.695 (for the matching judgment).
 -- Klara
+=> ignore
 
 > 660: 
 > 
@@ -1133,6 +1145,7 @@ l.687 (for the  focusing judgment) and l.695 (for the matching judgment).
 
 Clarify that gray part is missing or fill it in?
 -- Klara ??
+=> ignore
 
 > 726: thus avoid [<-this] source of ambiguity
 
@@ -1144,6 +1157,7 @@ FIXED
 >   ease the job of the poor reader.
 
 -- Klara ??
+=> ignore
 
 > 816: because there are TWO substitutions
 >   
@@ -1153,6 +1167,7 @@ FIXED
 Both substitutions are mentioned so that they can be further analyzed in the
 next paragraph.
 -- Klara
+=> ignore
 
 > 
 > 826: 
@@ -1161,6 +1176,7 @@ next paragraph.
 >   closer, i.e. on the next page?
 
 -- Klara ??
+=> ignore
 
 > 833: 
 > 
@@ -1242,6 +1258,7 @@ Minor. -- Klara
 >   Should be "type-class instances"
 
 -- Klara ??
+=> ignore
 
 > 
 > 1012-1014: 
@@ -1258,7 +1275,9 @@ FIXED
 > 
 >   Indeed, this restriction seems quite severe.
 >   See discussion on "Termination" above.
-> 
+
+=> Already explained in the text.
+ 
 > Fig 10:
 > 
 >   You should tell us how to count type-constructor, such as Int or List \rho.
@@ -1266,6 +1285,7 @@ FIXED
 >   to guess.
 
 FIXED
+=> We assume that the size of type constants like Int is 1.
 
 > 
 > 1047: System F expressions 
@@ -1288,29 +1308,39 @@ FIXED
 >   It sounds like you want to say that you have designed a system that ensure
 >   coherence, but you have not really.  You have just designed a system that is
 >   deterministic (by restriction), and from which coherence trivially follows.
-> 
+
+=> ignore
+ 
 > 1110: This is a key lemma.
 > 
 >   Why a new paragraph? 
-> 
+
+FIX
+ 
 >   If there is a new paragraph, then "This" should be replaced "Stability of
 >   Resolution".
 > 
 >   In either case, "is" could rather be "is also" as "Stability of
 >   Resolution" is also interesting by itself and not just an intermediate
 >   lemma.
-> 
+ 
+=> ignore
+
 > 1122:  "\forall ... \rho_i"
 > 
 >   The line is hard to parse, ":" should rather be a comma.
 >   However, I would rather used more words and say
 > 
 >      and also $|-_unamb \rho_i$ for all $?\rho_i$ in $\Gamma$. 
-> 
+
+=> implement this
+ 
 > 1134: Theorem 5.6
 > 
 >   Don't you  wish to also add "and \epsilon |- V : |\rho|." ?
-> 
+
+=> ignore
+ 
 > 1159-1165: Predicative instantiations is not a big restriction in practice.
 > 
 >   This contradicts the quest for impredicative instantiation, e.g. as done
