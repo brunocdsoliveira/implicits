@@ -317,6 +317,12 @@ FIXED
 > bindings with rule types like "x: r1 => r2" have to be checked for
 > termination as well?
 
+The termination condition expresses that, in the resolution process,
+the new subgoals of a parent goal are for types smaller than that of the 
+parent goal. However, in this process, the normal variable bindings are 
+irrelevant. They don't affect the process and they don't produce subgoals.
+After all, a normal variable binding is not an implicit. It has to be
+explicitly used in an expression.
 -- Klara ??
 
 > 
@@ -420,11 +426,15 @@ FIXED
 >    \theta$ on $\theta$.  But from the previous step, we only have that
 >    $dom(\theta) \subseteq \bar{a}$.  Is there a hidden lemma that
 >    allows us to derive the former from the latter?
+
+Change the second hypothesis of lemma A31?
+
 > 
 > l.2023: The System F term $E$ resulting from the deterministic
 > matching statement on this line is missing a prime, i.e. it should be
 > $E'$ rather than $E$.
 
+Means l.2026?
 -- Klara ??
 
 > Referee: 2
@@ -1049,7 +1059,9 @@ FIXED
 >   (monomorphic) rule types).  How critical is this? (see Comparison with the
 >   let-implicit construct).
 
--- Klara ??
+Why rule types are not monotypes is explained later, at the end of section 3.5.1.
+I could add a forward pointer to that section, but we do this already in l.624.
+-- Klara
 
 > 
 > Fig 3:
