@@ -922,8 +922,8 @@ them make sense. Essentially, there are two groups of substitutions:
       that appear in the environment at the point of the query by means of the function $\tyvars{\tenv}$, 
       and to pass them on through the auxiliary judgments to the point where the stability check is performed.
       Hence, the auxiliary judgments 
-      $\drres{\bar{\alpha}}{\tenv}{\rulet}{E}$, 
-      $\dlres{\bar{\alpha}}{\tenv}{\tenv'}{\type}{E}$ and
+      $\drres{\bar{\alpha}}{\tenv}{\rulet}{E}$ (focusing), 
+      $\dlres{\bar{\alpha}}{\tenv}{\tenv'}{\type}{E}$ (lookup) and
       $\dstable{\bar{\alpha}}{\tenv}{\rulet}{x}{\type}$ now all feature an additional argument $\bar{\alpha}$ of
       type variables that can be substituted.
 
@@ -1614,24 +1614,27 @@ using the $\dstable{\bar{\alpha}}{\tenv}{\rulet}{x}{\type}$ judgment, which quan
 substitutions, this rule uses the algorithmic judgment
 $\coherent{\bar{\alpha}}{\tenv}{\rulet}{\type}$. This auxiliary judgment checks algorithmically
 whether the type $\rulet$ matches $\type$ under any possible instantiation
-of the type variables $\bar{\alpha}$.
-
-We apply the same deferred-instantiation technique as with the first difference: Instead,
+of the type variables $\bar{\alpha}$. We apply the same deferred-instantiation technique as with the first difference: Instead,
 of applying a substitution first and then checking whether the implicit matches the goal, we 
-defer the instantiation to the end where we can deterministically pick one instantiation instead of considering all valid instantiations. 
-As a consequence of the similarity, 
-the definition of the judgment $\coherent{\bar{\alpha}}{\tenv}{\rulet}{\type}$ is a
-variation on that of $\admres{\bar{\alpha}}{\tenv}{\rulet}{
-E}{\Sigma}{\type}{E'}{\Sigma'}$.
+defer the instantiation to the end where we can deterministically pick one instantiation instead of considering all valid instantiations.
 
-There are two differences. Firstly, since the judgment is only concerned with
+As a consequence of the similarity, in purpose and strategy, between the algorithmic stability, $\coherent{\bar{\alpha}}{\tenv}{\rulet}{\type}$,
+and the matching judgment, $\admres{\bar{\alpha}}{\tenv}{\rulet}{E}{\Sigma}{\type}{E'}{\Sigma'}$, the former is a variation
+of the latter, with two differences.
+%As a consequence of the similarity,
+%the definition of the judgment $\coherent{\bar{\alpha}}{\tenv}{\rulet}{\type}$ is a
+%variation on that of $\admres{\bar{\alpha}}{\tenv}{\rulet}{
+%E}{\Sigma}{\type}{E'}{\Sigma'}$.
+%There are two differences.
+Firstly, since the stability judgment is only concerned with
 matchability, no recursive resolvents $\Sigma$ are collected nor are any
 elaborations tracked.
 Secondly, since the stability check considers the substitution of the type
 variables $\bar{\alpha}$ that occur in the environment at the point of the
 query, rule \rref{Alg-L-NoMatch} pre-populates the substitutable
 variables of the $\coh$ judgment with them. Contrast this with the matching
-judgment where only the implicit's quantified variables are instantiated.
+judgment where only the implicit's quantified variables are instantiated,
+as witnessed by rules \rref{Alg-M-TApp} and \rref{Alg-M-Simp}.
 
 %-------------------------------------------------------------------------------
 \subsection{Scope-Aware Unification}
@@ -1988,12 +1991,14 @@ Declaratively, we can formulate this stability under substitution as:
 \enskip \tnorm[\theta(\type_1)] < \tnorm[\theta(\type_2)]\] 
 
 Consider for instance the type
-$\forall a. (a \arrow a) \iarrow (a \arrow \tyint \arrow \tyint)$. 
-The head's size 5 is strictly greater than the context
+$\forall a. (a \arrow a) \iarrow (a \arrow \tyint \arrow \tyint)$.
+In the presernce of ground types, we set their size to be equal to that of a
+type variable, namely 1. In this example,
+the head's size 5 is strictly greater than the context
 constraint's size 3. Yet, if we instantiate $\alpha$ to
 $(\tyint \arrow \tyint \arrow \tyint)$, 
 then the
-head's size becomes 10 while the context constraint's size becomes 11.
+head's size becomes 9 while the context constraint's size becomes 11.
 
 The declarative formulation above is not suitable in an algorithm because
 it enumerates all possible substitutions.

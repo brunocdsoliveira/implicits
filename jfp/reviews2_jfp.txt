@@ -1167,27 +1167,40 @@ next paragraph.
 >   It is _very hard_ to parse the comma in the middle of the two formulas. 
 >   I suggest to write "A and B and C" here instead of "A, B and C" to help
 >   the reader with parsing.
+
+Added some text in between.
+-- Klara
+
 > 
 > 918: As a consequence of the similarity
 > 
 >   What similarity are your talking about?
-> 
+
+FIXED ??
+
 > 920-925: 
 > 
 >   This whole paragraph is unclear.
-> 
+
+FIXED ??
+
 > 930: (Dunfield & Krishnaswami, 2013)
 > 
 >   What you are doing here seems a trivial subcase of unification under a
 >   mixed prefix where some variables are rigid and others are flexible, which
 >   is now well-known.  I don't see what (Dunfield & Krishnasswami, 2013). 
 >   If something non-standard is happening, please explain it. 
->   Keeping the score of type variables is not that difficult. 
+>   Keeping the score of type variables is not that difficult.
+
+-- Klara ??
+
 > 
 > 944: The most general unifier.
 > 
 >   I would rather say "A most general unifier".
->                    
+
+Minor. -- Klara
+               
 > 940-947: Most General Unifiers
 > 
 >   The problem described here seems artificial to me.
@@ -1195,7 +1208,7 @@ next paragraph.
 >   I would just introduce a fresh variable \gamma bound before \alpha and
 >   \beta, and then substitute \alpha  by \gamma -> \gamma and \beta by
 >   \gamma. Why cannot this be done? 
-> 
+>
 > 948: by a stroke of luck
 > 
 >   I don't think so. 
@@ -1215,7 +1228,7 @@ next paragraph.
 > 973: occurs-check.
 > 
 >   Doing the occur check during the unification is a known source of
->   inefficiency. 
+>   inefficiency.
 > 
 > Fig 9: 
 > 
@@ -1227,6 +1240,9 @@ next paragraph.
 > 982: type class instances
 > 
 >   Should be "type-class instances"
+
+-- Klara ??
+
 > 
 > 1012-1014: 
 > 
@@ -1234,6 +1250,9 @@ next paragraph.
 >   10: size (Int -> Int -> Int) = 5, hence 
 >   size ((Int -> Int -> Int) -> (Int -> Int -> Int)) = 11, but
 >   size ((Int -> Int -> Int) -> Int -> Int) = 9. 
+
+FIXED
+
 > 
 > 1034-1035:
 > 
@@ -1245,6 +1264,9 @@ next paragraph.
 >   You should tell us how to count type-constructor, such as Int or List \rho.
 >   We have to infer || Int || = 1 from the examples, but we should not have
 >   to guess.
+
+FIXED
+
 > 
 > 1047: System F expressions 
 > 
