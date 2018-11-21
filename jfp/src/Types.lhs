@@ -305,7 +305,7 @@ $\aresp{\Gamma_0}{\tyint}$. It also shows the second issue as there are two
 fully different derivation trees for $\aresp{\Gamma_0}{\tyint}$.
 While this may seem harmless at the type-level, at the value-level each
 derivation corresponds to a (possibly) different value. Hence, ambiguous
-resolution renders the meaning of a program ambiguous. In other words, if both
+resolution may render the meaning of a program ambiguous. In other words, if both
 resolutions are allowed then the semantics is not coherent. 
 % \end{enumerate}
 
@@ -1963,7 +1963,7 @@ children.
 %- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 \paragraph{Termination Condition}
 It is trivial to show that the size strictly decreases, if we require that
-every rule type in the environment makes it so. This requirement is formalised as
+every implicit binding in the environment makes it so. This requirement is formalised as
 the termination condition $\term{\rulet}$ in Figure~\ref{fig:termination}.
 This condition should be imposed on every type added to the environment, namely
 to $\rulet_1$ in rule~\rref{Ty-IAbs} of Figure~\ref{fig:type} and to $\rulet_1$

@@ -323,8 +323,8 @@ parent goal. However, in this process, the normal variable bindings are
 irrelevant. They don't affect the process and they don't produce subgoals.
 After all, a normal variable binding is not an implicit. It has to be
 explicitly used in an expression.
--- Klara ??
-  => change to "every implicit binding"
+=> changed to "every implicit binding"
+FIXED
 
 > 
 > l.1020 and l.1021: "||[σ/α||τ1]" and "||[σ/α||τ2]" there seems to be
@@ -344,7 +344,7 @@ FIXED
 
 Clarification added under the statement of Theorem 5.2.
 => change order of sentences
--- Klara
+FIXED
 
 > l.1109, in Lemma 5.2: "under type substitution" --> "under monotype
 > substitution"
@@ -371,6 +371,8 @@ the text.
 
 FIXED
  => call it "strong normalisation"
+ => With the call-by-value operational semantics that we've chosen for
+ System F, the system is only weakly normalizing (cf. Pierce, Ch 23.5)
 
 > l.1207: "As there two equality specific" --> "As there _are_ two
 > _equally_ specific"
@@ -440,8 +442,7 @@ Change the second hypothesis of lemma A31?
 > matching statement on this line is missing a prime, i.e. it should be
 > $E'$ rather than $E$.
 
-Means l.2026?
--- Klara ??
+FIXED
 
 > Referee: 2
 > 
@@ -1107,8 +1108,8 @@ syntax-directed but it would be deterministic.
 >   This is true on this example, but not in general.  It would be better to
 >   start the sentence with "On this example".
 
-Minor. -- Klara
 => Hence, ambiguous resoluation _may_ render 
+FIXED
 
 > 
 > Fig 4: 
@@ -1192,13 +1193,13 @@ Added some text in between.
 > 
 >   What similarity are your talking about?
 
-FIXED ??
+FIXED
 
 > 920-925: 
 > 
 >   This whole paragraph is unclear.
 
-FIXED ??
+FIXED
 
 > 930: (Dunfield & Krishnaswami, 2013)
 > 
@@ -1316,6 +1317,8 @@ FIXED
 >   Why a new paragraph? 
 
 FIX
+Looks like the first line after a theorem or lemma always starts with a new
+paragraph. -- Klara
  
 >   If there is a new paragraph, then "This" should be replaced "Stability of
 >   Resolution".
@@ -1334,6 +1337,7 @@ FIX
 >      and also $|-_unamb \rho_i$ for all $?\rho_i$ in $\Gamma$. 
 
 => implement this
+FIXED
  
 > 1134: Theorem 5.6
 > 

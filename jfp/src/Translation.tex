@@ -129,9 +129,10 @@ Figure~\ref{fig:resolution2}'s deterministic definition of resolution is sound (
 incomplete) with respect to Figure~\ref{fig:resolution1}'s ambiguous definition.
 \[\forall \tenv, \rulet, E: \quad\quad \dres{\tenv}{\rulet}{E} \quad\Rightarrow\quad \ares{\tenv}{\rulet}{E} \]
 \end{theorem}
-As a corollary (by use of this result with Lemma~\ref{lem:type:preservation}), the
-deterministic resolution process is also type-preserving. Section~\ref{proof:det_soundness} of
+Section~\ref{proof:det_soundness} of
 the Appendix points to the mechanized proof of the above theorem.
+As a corollary (by use of this result with Lemma~\ref{lem:type:preservation}), the
+deterministic resolution process is also type-preserving.
 Secondly, the deterministic resolution is effectively deterministic:
 \begin{theorem}[Determinacy]\label{thm:determinacy}
 %The generated evidence of resolution is uniquely determined.
@@ -173,7 +174,7 @@ Resolution is stable under monotype substitution.
 \dres{\tenv,\alpha,\tenv'}{\rulet}{E} \enskip\wedge\enskip \tenv \vdash \sigma
 \enskip\Rightarrow\enskip 
 \dres{\tenv,\tenv'[\sigma/\alpha]}{\rulet[\sigma/\alpha]}{E[\ttrans[\sigma]/\alpha]} \]
-\end{lemma}%
+\end{lemma}
 This is a key lemma to establish that static reduction of type application 
 preserves typing and elaboration.
 \begin{lemma}[Stability of Typing under Type Application Reduction]
@@ -234,7 +235,7 @@ With the evidence we can state the correctness of the algorithm.
 
 \begin{theorem}[Partial Correctness]
 Let $\tenv$ be a type environment, $\rulet$ be a type and E be a System F expression.
-Assume that $\unambig{}{\rulet}$ and also $\forall ?\rulet_i \in \tenv: \unambig{}{\rulet_i}$.
+Assume that $\unambig{}{\rulet}$ and also $\unambig{}{\rulet_i}$ for all \(?\rulet_i \in \tenv\).
 Then $\dres{\tenv}{\rulet}{E}$ if and only if $\adres{\tenv}{\rulet}{E}$.
 \end{theorem}
 The proof is split in two parts, one for each ``direction'' of the theorem.
