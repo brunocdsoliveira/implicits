@@ -514,9 +514,13 @@ FIXED
 > There's a small number of minor things I noticed, mostly in the new section:
 > 
 > p40 1190 "first implicit who's" => "first implicit whose"
-> 
+
+FIXED
+
 > p40 1199 You use "StablePointer" here but "StablePtr" in the code above - I assume you mean the latter
-> 
+
+FIXED
+
 > p47 1477 "To former cannot" => "The former cannot"
 > 
 > p48 1496 "An example are Bottu et al's quantified class constraints" - I can't decide if this is grammatically correct or not! It sounds a bit clunky to me either way, however.

@@ -237,7 +237,7 @@ Like implicits, the design of Idris type classes, known as \emph{interfaces},  a
 to be implicit. Thus type classes in Idris are first-class and can be manipulated
 like any other 
 values. The language distinguishes unnamed instances, which are used for
-resolution, and named instances which have to be applied explicitly. To former
+resolution, and named instances which have to be applied explicitly. The former
 cannot be overlapping, while there can be multiple (incoherent) named instances
 of the same type. The implicit resolution follows the committed choice strategy
 of Haskell, and ignores the fact that named instances can distinguish between

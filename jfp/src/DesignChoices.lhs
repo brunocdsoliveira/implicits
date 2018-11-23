@@ -106,7 +106,7 @@ in the design of a system with full impredicativity.
 
 \subsection{Committed Choice}\label{sec:committed}
 
-\name commits to the first implicit who's head matches the query type. It has
+\name commits to the first implicit whose head matches the query type. It has
 inherited this committed choice approach from Haskell. 
 Consider for instance the following Haskell program with two overlapping instances:
 
@@ -124,10 +124,10 @@ Consider for instance the following Haskell program with two overlapping instanc
 This code declares a type class |C a| and defines two
 instances. The first instance requires |Eq a|, whereas the second
 instance requires |Ord a|. The function |f| takes a stable pointer
-(|StablePointer|)
-and returns a list of stable pointers. Unlike many other types, |StablePointer| only supports 
+(|StablePtr|)
+and returns a list of stable pointers. Unlike many other types, |StablePtr| only supports 
 equality, and not ordering. That is, there is an
-instance |Eq (StablePointer a)| but not one for |Ord (StablePointer a)|. 
+instance |Eq (StablePtr a)| but not one for |Ord (StablePtr a)|. 
 
 Should the above code type-check or not? In GHC
 Haskell the answer is no.  Even though there is no ambiguity in this program---
