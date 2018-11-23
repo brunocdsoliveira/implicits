@@ -522,7 +522,9 @@ FIXED
 FIXED
 
 > p47 1477 "To former cannot" => "The former cannot"
-> 
+
+FIXED
+
 > p48 1496 "An example are Bottu et al's quantified class constraints" - I can't decide if this is grammatically correct or not! It sounds a bit clunky to me either way, however.
 > 
 > Referee: 3
@@ -576,8 +578,9 @@ FIXED
 > (8.4.3) of Haskell, and the "README.md" file does not give a specific
 > version number under which it should be compiled, so I was not able to check
 > the examples.
-> 
-> 
+
+TODO: Better documentation? Fix this?
+ 
 > ** OVERALL EVALUATION
 > 
 > [The first paragraph is mostly unchanged]
@@ -646,7 +649,9 @@ FIXED
 > start with the title; see also linear comments below at lines 1100,
 > 1326-1327, 1332-1340, 1436-1438.  This probably deserves the paper and could
 > also be misleading for someone having a first quick look at the paper.
-> 
+
+TODO? Ok this is a big presentational complain. Should we address it?
+
 > *** COCHIS in practice
 > 
 > Another worry I have is the lack of a practical evaluation of COCHIS.  In
@@ -673,7 +678,9 @@ FIXED
 > box. Looking at the code, it contains very few examples, and I wonder how
 > much the prototype has been strained.  If available, any information on
 > practical experience would actually be welcome.
-> 
+
+TODO? Shall we address this more?
+
 > COCHIS is explicitly typed, and does not say anything about the use of
 > implicits in a language with type inference, such as Haskell.  In such a
 > situation, coherence should then also take the elaboration of implicit type
@@ -761,7 +768,7 @@ FIXED
 > where t1 is the unique type of e1 in System F or would be the principal type
 > of e1 in Haskell/ML, which how requires principal types (actually typing
 > derivations) to avoid ambiguities.
-> 
+>
 > *** Elaboration in COCHIS
 > 
 > In COCHIS implicit terms can be elaborated by picking implicit bindings from
@@ -775,9 +782,11 @@ FIXED
 > 
 > Removing this IA feature, discussed below, the elaboration elaboration of
 > implicits in COCHIS could be performed similarly with in a language with just
-> the let-implicit construct.
-> 
-> 
+> the let-implicit construct. 
+
+TODO? Should we have a discussion on the design choice of
+implicit abstractions?
+
 > *** Local scoping, first-class implicits, and higher-order rules
 > 
 > The paper uses three notions and treats them as complementary features, but
@@ -790,7 +799,10 @@ FIXED
 > precisely defined.  Finally, the expression ``higher-order rules'' is new in
 > this context and must be defined and explained. (For instance, I could not
 > understand myself what is exactly meant by line 1366.)
-> 
+
+ANSWER: I think that in the paper we explain what an higher-order rule
+is. See for example the paragraph on higher-order rules in the Overview.
+
 > In fact, COCHIS introduces a single construct, namely abstraction over
 > implicit values, that simultaneously introduces local-scoping, first-class
 > implicits, and higher-order rules. This makes is difficult to understand
@@ -801,7 +813,9 @@ FIXED
 > restricted to toplevel, implicits would not be first-class, and conversely,
 > implicits becomes first-class only as soon as let-implicits are allowing in
 > any context, in particular under type abstractions.  
-> 
+
+TODO? Still the topic of let vs IA
+
 > As for high-order rules, I still do not know what it exactly means.
 > 
 > ** Surprising differences between systems A, F, and D. 
@@ -818,7 +832,9 @@ FIXED
 > (A) and (F) are equivalent, (D) is defined as a restriction of (F). Hence,
 > the user must also understand (F) in order to understand (D).  This should
 > probably be emphasized.
-> 
+
+TODO?
+
 > In particular, there may be somewhat surprising consequences of the
 > first-choice commitment, that can only be understood in (F).  For example,
 > resolving ?(Int => Int => Int) in an empty context should elaborate to many
@@ -867,7 +883,9 @@ FIXED
 > In summary, the failure to infer \x.\y.x for (I => I => I) cannot just be
 > understood by first-choice commitment in (A), but by fist-choice commitment
 > in (F).  
-> 
+
+TODO? Anything to be done here?
+
 > 
 > *** Implicit abstractions (IA)
 > 
@@ -875,7 +893,9 @@ FIXED
 > applications, which is unusual in systems with implicits (although there are
 > few of them). As a consequence, this allows (A) to infer arbitrary
 > lambda-terms, which I think deserve a specific discussion.
-> 
+
+TODO?
+
 > In particular, this allows inferring terms in an empty context, such as
 > 
 >         0 |- ?(All A, B. A => B => A) ~> /\A. \x:A.\y:B.x
@@ -891,7 +911,12 @@ FIXED
 > advantage of this feature.
 > 
 > Hence, do you have a good justification for allowing this? 
-> 
+
+TODO?: Is there any good justification to disallow it?
+
+Personaly I think that imposing an arbitrary restriction simply
+because we did not find an application is worse than allowing the feature.
+
 > ** Prototype
 > 
 > The paper mentions a HASKELL prototype implementation of COCHIS located at
