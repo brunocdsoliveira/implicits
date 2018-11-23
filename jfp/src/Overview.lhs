@@ -116,7 +116,7 @@ coherence. For example, Haskell rejects the expression:
 > show (read "3") == "3" 
 
 \noindent due to \emph{ambiguity} of 
-\emph{type class resolution}~\cite{qual}.  Functions |show| and
+\emph{type class resolution}~\cite{qual}. The functions |show| and
 |read| print and parse values of any type |a| that implements 
 the classes |Show| and |Read|:  
 
@@ -132,13 +132,13 @@ Choosing |a=Float| leads to |False|,
 since showing the float |3| would result in |"3.0"|,
 while choosing |a=Int| leads to |True|. In other words if this 
 expression was accepted then it could have multiple possible semantics. 
-To ensure coherence instead of making an arbitrary choice Haskell rejects such program.
+To ensure coherence instead of making an arbitrary choice Haskell rejects such programs.
 
 %~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 \paragraph{Overlapping Instances} 
 Advanced features of type classes, such as overlapping
 instances, require additional restrictions to
-ensure coherence. The following program illustrates part of the issues:
+ensure coherence. The following program illustrates some of the issues:
 
 > class Trans a where trans :: a -> a
 > instance Trans a where trans x = x
@@ -155,15 +155,15 @@ or the second instance? Ideally this question should be answered
 by the language specification. One possible choice for the 
 specification (not the Haskell choice) 
 would be to allow any matching instance to be used, but 
-such choice would lead to incoherence, since |trans 3| could 
+this choice would lead to incoherence, since |trans 3| could 
 then both evaluate to |3| or |4|. Instead, for overlapping instances, 
 the GHC documentation\footnote{\url{http://ghc.readthedocs.io/en/8.0.1/glasgow_exts.html##overlapping-instances}} makes a different choice and 
 declares that the \emph{most specific instance} should be chosen. 
-Therefore, for the expression |trans 3|, the most specific is |Trans Int| 
+For the expression |trans 3|, the most specific is |Trans Int| 
 and the expression evaluates to |4|. 
 
 For the particular program |trans 3|, the Haskell specification manages to avoid 
-incoherence by taking the choice of using the 
+incoherence by using the 
 most specific instance, which ensures an unambiguous semantics. 
 Thus Haskell preserves coherence in the presence of a certain kind of overlapping instances, 
 but there are other problematic overlapping instances that threaten the coherence property.
@@ -222,10 +222,12 @@ class |Trans| and the two instances declared previously:
 > bad x = trans x  -- unstable definition!
 
 Note here that the type of |bad| is |a -> a| instead of |Trans a => a -> a|. 
-In Haskell both signatures can be accepted, but they are not equivalent. With |Trans a => a -> a|
-resolution is applied lazily. That is, resolution is delayed to the calls of |bad|, allowing 
-the instance of |Trans a| to be selected when more static information is available. 
-In contrast, with |a -> a| resolution is applied eagerly, and an instance must 
+In Haskell both signatures can be accepted, but they are not equivalent. 
+With |Trans a => a -> a| resolution is deferred to the call site of bad, allowing the instance of |Trans a| to be selected when |a| has been instantiated to a (potentially) more precise type.
+%With |Trans a => a -> a|
+%resolution is applied lazily. That is, resolution is delayed to the calls of |bad|, allowing 
+%the instance of |Trans a| to be selected when more static information is available. 
+By contrast, with |a -> a| resolution is applied eagerly, and an instance must 
 be selected at the definition site. 
 If Haskell were to accept this definition, it
 would have to implement |trans| using the first instance,
@@ -241,8 +243,7 @@ which allows the program to type check.
 Note that even though to allow |bad| we need the
 \texttt{IncoherentInstances} extension, which is suggestive of the
 definition breaking \emph{coherence}, the issue here is not really
-coherence but rather stability. That is, type instantiation affects the
-choice of the instance.  As this example illustrates, instability is
+coherence but rather stability. That is, type instantiation affects type class instantiation.  As this example illustrates, instability is
 actually observable from a compiler implementation like GHC: we can
 observe that |bad 3| and |trans 3| behave differently. In contrast
 (in)coherence is not really observable from a compiler implementation:
@@ -458,7 +459,7 @@ in Scala represents a function type, rather than a rule type.}.
 The |implicit| keyword in the declaration specifies that this value may
 be used to synthesise an implicit argument.
 Line~(2) defines a function |trans| with type parameter |a|,
-which takes an implicit argument |f| of type |a => a| and returns |f(x)|.
+which takes an implicit argument |f| of type |a => a| and returns $f(x)$.
 Here the |implicit| keyword specifies that the actual argument should not be
 given explicitly; instead argument of the appropriate type will be synthesised from
 the available |implicit| declarations.
@@ -740,7 +741,7 @@ implicit with a polymorphic query.
 
 In practice, polymorphic queries are useful in combination with higher-kinded
 types where they occur as recursive resolvents of polymorphic rules. We cannot
-illustrate such with \name as, to keep its definition small, it is not equipped with higher-kinded types. The
+illustrate this with \name as, to keep its definition small, it is not equipped with higher-kinded types. The
 interested reader can find examples in the work of Bottu et al.~\shortcite{haskell2017b}.
 
 

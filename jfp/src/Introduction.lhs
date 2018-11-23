@@ -104,7 +104,7 @@ coherence in the presence of overlapping instances.
 % presence of overlapping instances. 
 Another important property
 that is broken in the presence of overlapping instances 
-(if special care is not taken) is the so-called \emph{stability} of
+(if special care is not taken) is the so-called \emph{stability} of (type)
 substitutions. The issue is that 
 the behaviour of resolution for an expression |e| can change if |e| 
 gets a more specific type, leading to a different evaluation result. 
@@ -147,7 +147,8 @@ The
 implicit calculus has been shown to be type-safe, and it also ensures
 coherence, but it lacks stability. The SI calculus lacks both
 coherence and stability, but the authors present a simply-typed subset 
-that is coherent\footnote{It makes no sense to talk about stability
+that is coherent\footnote{It makes no sense to talk about stability of
+  type substitutions
   in a simply typed calculus, since this is a property that is only
   relevant for polymorphic calculi.}.
 Unfortunately, while both the implicit/SI calculus and the various existing

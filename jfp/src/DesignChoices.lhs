@@ -300,9 +300,10 @@ code of the one |Eq Int| instance).
 
 %- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 \paragraph{A First Attempt at Encoding Superclasses}
-We can try to encode the previous Haskell definitions in then \name 
+We can try to encode the previous Haskell definitions in the \name 
 environment $\tenv = |?(forall a. Ord a => Eq a)|, |?(Eq Int)|, |?(Ord Int)|$, whose
-implicit entries capture the superclass relation and the two instances.
+implicit entries capture the superclass relation and the two instances\footnote{Note that the proposed encoding does
+not satisfy our termination conditions, but we ignore this aspect since there are other more pressing issues with the encoding.}.
 With respect to \name, the query |?(Eq Int)| resolves deterministically by picking the second entry in $\tenv$.
 Hence, \name's explicit ordering of implicits avoids Haskell's non-determinism.
 

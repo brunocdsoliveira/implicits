@@ -33,7 +33,7 @@ differences to both modular type classes and System $F_{G}$.
 that uses ML-modules to model type classes. The main novelty of this
 design is that, in addition to explicit instantiation of modules,
 implicit instantiation is also supported.  System
-$F^{G}$~\cite{systemfg} also offers an implicit parameter passing
+$F_{G}$~\cite{systemfg} also offers an implicit parameter passing
 mechanism with local scoping, which is used for concept-based generic
 programming~\cite{siek11concepts}. Both mechanisms are strongly influenced by type
 classes, and they preserve some of the characteristics of type
@@ -87,7 +87,7 @@ Rouvoet~\shortcite{Rouvoet} presents $\lambda_\Rightarrow^S$, which is a
 variation on the implicit calculus. The key feature of his calculus is the
 focusing resolution of Figure~\ref{fig:resolutionf}, although Rouvoet does not
 make the connection with focusing in proof search. As we have already explained
-in Section~\ref{subsec:det} this approach is both incoherent and unstable.
+in Section~\ref{subsec:det} this approach is both deterministic and unstable.
 
 \emph{Scala implicits}~\cite{implicits,scala} were themselves the
 inspiration for the implicit calculus and, therefore, share various

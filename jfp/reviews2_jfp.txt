@@ -95,7 +95,10 @@
 > suggest the authors mention that, despite stability under type
 > substitution, reasoning about programs remains "a subtle matter in the
 > presence of implicits".
-> 
+
+TODO: Are we going to address this in the paper or not? Philip
+proposed to write some text.
+
 > Finally, Section 2 has been expanded and improved to clarify some
 > technical issues, in particular subsections 2.2 and 2.3 now give a
 > precise distinction between stability and coherence.  While the
@@ -110,12 +113,16 @@
 > footnotes, sections, etc.) do not seem to work (verified in two
 > different PDF viewers). Maybe you need to recompile your TeX sources a
 > few times?
-> 
+
+TODO: Test the hyper-references?
+
 > l.76: "stability of substitutions" should be "stability [of
 > resolution] _under_ substitution" or better yet "stability of
 > resolution under _type_ substitution/instantiation" (resolution is not
 > stable under term substitution, as explained above).
-> 
+
+TODO: Change name?
+
 > l.106: "the lack of important properties such as stability makes
 > reasoning about the semantics of programs harder, and can prevent
 > refactorings and compiler optimizations such as inlining".  There are
@@ -130,30 +137,48 @@
 >     that are performed _after_ resolution (like inlining or
 >     optimizations).  After resolution/elaboration to System F,
 >     inlining is unproblematic.
-> 
+
+TODO: Address those?
+
 > footnote 1 (p. 4): "It makes no sense to talk about stability in a
 > simply typed calculus, ...", again this only holds for stability under
 > _type_ substitution, which seems relevant in this footnote.
-> 
+
+FIXED: Was more precise and mentioned "stability of type substitutions"
+
 > footnote 2 (p. 5): the link in this footnote seems to be related to
 > the citation preceding the note in the text (Bottu et al., 2017). It
 > would be less distracting if it were added to the corresponding entry
 > in the bibliography.
-> 
+
+TODO?
+
 > l.221: "Functions show and read..." --> "The functions show and read"
-> 
+
+FIXED
+
 > l.231: "Haskell rejects such program." --> "such programs"
-> 
+
+FIXED
+
 > l.233: "The following program illustrates part of the issues" -->
 > "part of the issue" or "some of the issues"
-> 
+
+FIXED
+
 > l.244: "such choice" --> "this choice"
-> 
+
+FIXED
+
 > l.247: "Therefore, for the expression..." --> remove "Therefore,"
-> 
+
+FIXED
+
 > l.250: "taking the choice of using" --> "making the choice of using"
 > or simply just "using"
-> 
+
+FIXED
+
 > footnotes 4 and 5 (p. 8): the text in both of these footnotes is
 > identical, and both notes really serve the purpose of citing a
 > reference (the GHC documentation).  This feels distracting and like a
@@ -161,7 +186,9 @@
 > citations instead: please add an entry in the bibliography for the GHC
 > documentation and cite it. (The same goes for similar footnotes later
 > on in the paper.)
-> 
+
+TODO?: Convert to proper citations?
+
 > l.281--284: "With Trans α => α -> α resolution is applied
 > lazily. (...)" I appreciate the clarification (thanks to which I now
 > understand this example).  However, I find the choice of terminology
@@ -178,26 +205,40 @@
 > "With Trans α => α -> α resolution is deferred to the call site of
 > bad, allowing the instance of Trans α to be selected when α has been
 > instantiated to a [potentially] more precise type."
-> 
+
+FIXED
+
 > l.283: "In contrast," --> "By contrast,"
-> 
+
+FIXED
+
 > l.294: "That is, type instantiation affects the choice of the
 > instance".  The duplication of "instance" here might be confusing.  I
 > suggest replacing "the choice of the instance" by "type class
 > instantiation".
-> 
+
+FIXED
+
 > l.296: "In contrast (in)coherence is not really observable from a
 > compiler implementation: we need a language specification to
 > understand whether there is incoherence or not."  I do not understand
 > this sentence.  In what sense does the language specification provide
 > more information than an actual compiler implementation?
-> 
+
+TODO?: a language spec can be non-deterministic, whereas a
+language implementation is (usually) deterministic. I.e. it should
+implement one of the behaviours of the spec.
+
 > footnotes 6 and 7 (p.9): these should go into the bibliography and be
 > referenced as citations.
-> 
+
+TODO: Move to citations?
+
 > l.420: there is a spurious space between $f$ and $(x)$ in the function
 > application $f(x)$.
-> 
+
+FIXED
+
 > l.440: "but typing is not preserved either: (...) using a simple
 > unfolding step makes the program ill-typed!" After reading this
 > paragraph, one might be forgiven for thinking that this problem only
@@ -232,10 +273,14 @@
 > It might be worth pointing out to the reader that reasoning about
 > program equivalence and preservation of well-typedness can be tricky
 > even when resolution is stable under type substitution.
-> 
+
+TODO: Address this?
+
 > l.506: "We cannot illustrate such with COCHIS" --> "illustrate this"
 > or "illustrate such use cases"
-> 
+
+FIXED
+
 > l.534: "was already explored in our previous work on the implicit
 > calculus", this suggests that combining type inference and
 > COCHIS-style resolution is a solved problem, but I suspect this is not
@@ -266,7 +311,9 @@
 >    look like?  Is type inference independent from resolution, or are
 >    they interlinked?  Are coherence and stability preserved w.r.t. the
 >    surface language?
-> 
+
+TODO?
+
 > l.584: "While this poses no threat to type soundness, ...", I suspect
 > you are confusing "type soundness" with "type preservation" here. Type
 > soundness is proven via (type preserving) elaboration into System F,
@@ -277,8 +324,9 @@
 > hold.  Similarly, programs are not "stable under inlining" in general,
 > yet this paragraph suggests otherwise, namely that resolution in
 > COCHIS is stable under both reduction and inlining.
-> 
-> 
+
+TODO?
+ 
 > l.676: "We will see that focusing (...) eliminates the gratuitous
 > nondeterminism" and l.703, "This type-directed formulation of
 > entailment greatly reduces the number of proofs for a given goal."
@@ -394,27 +442,39 @@ FIXED
 > of reasoning.  Locally scoped resolution _without_ backtracking seems
 > no more intuitive to me than locally scoped resolution _with_
 > backtracking.
-> 
+
+TODO?
+
 > l.1238: the paragraph mentions OCaml's modular implicits as a
 > potential alternative, but not Scala's.  Given that COCHIS has been
 > inspired partly by Scala's implicits (and given the many Scala
 > examples in the paper), I wonder what type of resolution strategy
 > Scala employs.  It might be nice to include this here (or in Section
 > 7.2).
-> 
+
+TODO? Probably not. Scala's resolution is actually fairly ad-hoc.
+We could potentially say something about Simplicity, I guess.
+
 > l.1287: It might be worth mentioning that the environment $\Gamma$
 > given in this example would not pass the termination checker because
 > the entry ?(∀α.Ord α => Eq α) would be rejected.  So this strategy for
 > encoding super classes seems rather impractical unless termination
 > checking is handled differently.
 
+FIXED: Added a footnote
+
 > l.1361 "System $F^G$" --> "System $F_G$" (superscript to subscript).
+
+FIXED
 
 > l.1386 "this approach is both incoherent and unstable" -->
 > "deterministic but unstable".  I pointed this out already in my first
 > review, and it was marked as "FIXED" in the author response.  I trust
 > that the authors have implemented the remaining changes they proposed
 > in the author response.
+
+FIXED
+
 
 > l.1698, Section A.3: The dependency diagrams in this and later
 > sections of the appendix look great and are very helpful.  Thank you
