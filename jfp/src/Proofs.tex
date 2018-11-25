@@ -63,13 +63,13 @@ of resolution preserves types.
 \begin{minipage}{0.95\columnwidth}
 \begin{lemma}\label{lemma:tp:1}
   If 
-\begin{equation*}
+\begin{myequation*}
      \wte{\tenv}{e}{\rulet}{E}
-\end{equation*}
+\end{myequation*}
   then
-\begin{equation*}
+\begin{myequation*}
      \fwte{\etrans\tenv}{E}{\etrans\rulet}
-\end{equation*}
+\end{myequation*}
 \end{lemma}
 \end{minipage}
 }}
@@ -83,13 +83,13 @@ of resolution preserves types.
 \begin{minipage}{0.95\columnwidth}
 \begin{lemma}\label{lemma:resolution}\label{lemma:tp:2} %two labels?
   If 
-\begin{equation*}
+\begin{myequation*}
      \ares{\tenv}{\rulet}{e}
-\end{equation*}
+\end{myequation*}
   then
-\begin{equation*}
+\begin{myequation*}
      \fwte{\etrans\tenv}{E}{\etrans\rulet}
-\end{equation*}
+\end{myequation*}
 \end{lemma}
 \end{minipage}
 }}
@@ -112,13 +112,13 @@ preserves all the derivations of the original environment.
 \begin{minipage}{0.95\columnwidth}
 \begin{lemma}[Weakening]\label{lemma:weakening}
   If 
-\begin{equation*}
+\begin{myequation*}
   \ares{\tenv, \tenv'}{\rulet}{E}
-\end{equation*}
+\end{myequation*}
   then
-\begin{equation*}
+\begin{myequation*}
   \ares{\tenv, \tenv'', \tenv'}{\rulet}{E}
-\end{equation*}
+\end{myequation*}
 \end{lemma}
 \end{minipage}
 }}
@@ -135,17 +135,17 @@ by the remainder of the type environment.
 \begin{minipage}{0.95\columnwidth}
 \begin{lemma}[Substitution]\label{lemma:substitution}
   If 
-\begin{equation*}
+\begin{myequation*}
   \ares{\tenv, \envi{\rulet}{x}, \tenv'}{\rulet'}{E'}
-\end{equation*}
+\end{myequation*}
   and
-\begin{equation*}
+\begin{myequation*}
   \ares{\tenv}{\rulet}{E}
-\end{equation*}
+\end{myequation*}
   then
-\begin{equation*}
+\begin{myequation*}
   \ares{\tenv, \tenv'}{\rulet'}{E'[E/x]}
-\end{equation*}
+\end{myequation*}
 \end{lemma}
 \end{minipage}
 }}
@@ -191,13 +191,13 @@ sound with respect to non-deterministic resolution.
 \begin{minipage}{0.95\columnwidth}
 \begin{lemma}\label{lemma:s23:4}
   If 
-\begin{equation*}
+\begin{myequation*}
   \dres{\tenv}{\rulet}{E}
-\end{equation*}
+\end{myequation*}
   then
-\begin{equation*}
+\begin{myequation*}
    \ares{\tenv}{\rulet}{E}
-\end{equation*}
+\end{myequation*}
 \end{lemma}
 \end{minipage}
 }}
@@ -212,13 +212,13 @@ The lemma immediately follows from Lemma~\ref{lemma:s23:3}.
 \begin{minipage}{0.95\columnwidth}
 \begin{lemma}\label{lemma:s23:3}
   If 
-\begin{equation*}
+\begin{myequation*}
   \drres{\bar{\alpha}}{\tenv}{\rulet}{E}
-\end{equation*}
+\end{myequation*}
   then
-\begin{equation*}
+\begin{myequation*}
   \ares{\tenv}{\rulet}{E}
-\end{equation*}
+\end{myequation*}
 \end{lemma}
 \end{minipage}
 }}
@@ -236,13 +236,13 @@ This lemma is proved together with Lemma~\ref{lemma:s23:2} by mutual induction o
 \begin{minipage}{0.95\columnwidth}
 \begin{lemma}\label{lemma:s23:2}
   If 
-\begin{equation*}
+\begin{myequation*}
   \dlres{\bar{\alpha}}{\tenv}{\tenv'}{\type}{E}
-\end{equation*}
+\end{myequation*}
   then
-\begin{equation*}
+\begin{myequation*}
   \ares{\tenv}{\type}{E}
-\end{equation*}
+\end{myequation*}
 \end{lemma}
 \end{minipage}
 }}
@@ -260,21 +260,21 @@ The above proof relies on the following lemma.
 \begin{minipage}{0.95\columnwidth}
 \begin{lemma}\label{lemma:s23:1}
   If 
-\begin{equation*}
+\begin{myequation*}
   \dmres{\tenv}{\rulet}{E}{\type}{E'}{\ie{\ruleset}{\bar{x}}}
-\end{equation*}
+\end{myequation*}
   and
-\begin{equation*}
+\begin{myequation*}
   \ares{\tenv}{\rulet}{E}
-\end{equation*}
+\end{myequation*}
   and
-\begin{equation*}
+\begin{myequation*}
   \ares{\tenv}{\ruleset}{\bar{E}}
-\end{equation*}
+\end{myequation*}
   then
-\begin{equation*}
+\begin{myequation*}
   \ares{\tenv}{\type}{E'[\bar{E}/\bar{x}]}
-\end{equation*}
+\end{myequation*}
 \end{lemma}
 \end{minipage}
 }}
@@ -286,9 +286,9 @@ The proof proceeds by induction on the derivation of the first assumption and re
 %\klara{This is not the case any more. Remove.}
 %In order to deal with the de Bruijn variable representation in our mechanization,
 %judgement
-%\begin{equation*}
+%\begin{myequation*}
 %  \dmres{\tenv}{\rulet}{E}{\type}{E'}{\ie{\ruleset}{\bar{x}}}
-%\end{equation*}
+%\end{myequation*}
 %differs from the corresponding mechanized definition (\texttt{DRes\_match} in file CochisDet.v) in the first argument, $\tenv$. In our mechanization, $\tenv$ is expressed by means of two environments, $\denv_m$ and $\tenv_m$, so that $\tenv = \tenv_m,\denv_m$.
 
 %###############################################################################
@@ -297,17 +297,17 @@ The proof proceeds by induction on the derivation of the first assumption and re
 \begin{minipage}{0.95\columnwidth}
 \begin{lemma}\label{lemma:s23:5}
 If 
-\begin{equation*}
+\begin{myequation*}
   \dmres{\tenv}{\rulet}{E}{\type}{E'}{\ie{\ruleset}{\bar{x}}}
-\end{equation*}
+\end{myequation*}
 and
-\begin{equation*}
+\begin{myequation*}
   \ares{\tenv}{\rulet}{E}
-\end{equation*}
+\end{myequation*}
 then
-\begin{equation*}
+\begin{myequation*}
   \ares{\tenv, \envi{\ruleset}{\bar{x}}}{\type}{E'}
-\end{equation*}
+\end{myequation*}
 \end{lemma}
 \end{minipage}
 }}
@@ -375,25 +375,25 @@ This definition will be used throughout this section.
 \begin{minipage}{0.95\columnwidth}
 \begin{lemma}\label{lemma:determinism:0}
   If 
-\begin{equation*}
+\begin{myequation*}
   \unambenv{\tenv}
-\end{equation*}
+\end{myequation*}
   and
-\begin{equation*}
+\begin{myequation*}
   \unambig{}{\rulet}
-\end{equation*}
+\end{myequation*}
   and
-\begin{equation*}
+\begin{myequation*}
   \dres{\tenv}{\rulet}{E_1}
-\end{equation*}
+\end{myequation*}
 and
-\begin{equation*}
+\begin{myequation*}
   \dres{\tenv}{\rulet}{E_2}
-\end{equation*}
+\end{myequation*}
 then
-\begin{equation*}
+\begin{myequation*}
   E_1 = E_2
-\end{equation*}
+\end{myequation*}
 \end{lemma}
 \end{minipage}
 }}
@@ -402,9 +402,9 @@ then
 From the lemma's third and fourth hypotheses, the hypothesis
 of rule \rref{R-Main} and Lemma~\ref{lemma:determinism:1} the desired
 result follows
-\begin{equation*}
+\begin{myequation*}
   E_1 = E_2
-\end{equation*}
+\end{myequation*}
 \end{proof}
 
 %###############################################################################
@@ -413,25 +413,25 @@ result follows
 \begin{minipage}{0.95\columnwidth}
 \begin{lemma}\label{lemma:determinism:1}
   If 
-\begin{equation*}
+\begin{myequation*}
   \unambig{}{\tenv}
-\end{equation*}
+\end{myequation*}
   and
-\begin{equation*}
+\begin{myequation*}
   \unambig{}{\rulet}
-\end{equation*}
+\end{myequation*}
   and
-\begin{equation*}
+\begin{myequation*}
   \drres{\bar{\alpha}}{\tenv}{\rulet}{E_1}
-\end{equation*}
+\end{myequation*}
 and
-\begin{equation*}
+\begin{myequation*}
   \drres{\bar{\alpha}}{\tenv}{\rulet}{E_2}
-\end{equation*}
+\end{myequation*}
 then
-\begin{equation*}
+\begin{myequation*}
   E_1 = E_2
-\end{equation*}
+\end{myequation*}
 \end{lemma}
 \end{minipage}
 }}
@@ -447,21 +447,21 @@ The proof proceeds by induction on the derivation of the third hypothesis.
 
 It follows that the lemma's fourth hypothesis is also derived by rule
 \rref{R-IAbs}. It follows from the lemma's second hypothesis that 
-\begin{equation*}
+\begin{myequation*}
   \unambig{}{\rulet_1}\quad\wedge\quad \unambig{}{\rulet_2}
-\end{equation*}
+\end{myequation*}
 From this and lemma's first hypothesis, it follows that
-\begin{equation*}
+\begin{myequation*}
   \unambig{}{\tenv,\envi{\rulet_1}{x}}
-\end{equation*}
+\end{myequation*}
 From the rule's hypothesis and the induction hypothesis, it follows that
-\begin{equation*}
+\begin{myequation*}
   E_1 = E_2
-\end{equation*}
+\end{myequation*}
 Hence, we may conclude
-\begin{equation*}
+\begin{myequation*}
   \abs{x}{|\rulet_1|}{E_1} =  \abs{x}{|\rulet_1|}{E_2}
-\end{equation*}
+\end{myequation*}
 
 %===============================================================================
 \item[\fbox{\rref{R-TAbs}}]\quad$\drres{\bar{\alpha}}{\tenv}{\tall{\alpha}{\rulet}}{\Abs{\alpha}{E_1}}$ \\
@@ -469,26 +469,26 @@ Hence, we may conclude
 
 It follows that the lemma's fourth hypothesis is also derived by rule
 \rref{R-TAbs}. It follows from the lemma's second hypothesis that 
-\begin{equation*}
+\begin{myequation*}
   \unambig{\alpha}{\rulet}
-\end{equation*}
+\end{myequation*}
 The unambiguity judgment enjoys a weakening property which we use here to obtain
-\begin{equation*}
+\begin{myequation*}
   \unambig{}{\rulet}
-\end{equation*}
+\end{myequation*}
 From the lemma's first hypothesis, it follows that
-\begin{equation*}
+\begin{myequation*}
   \unambig{}{\tenv, \alpha}
-\end{equation*}
+\end{myequation*}
 From the rule's hypothesis and the induction hypothesis, it follows that
-\begin{equation*}
+\begin{myequation*}
   E_1 = E_2
-\end{equation*}
+\end{myequation*}
 Hence, we may conclude
-\begin{equation*}
+\begin{myequation*}
   \Abs{\alpha}{E_1} = \Abs{\alpha}{E_2}
 %  \Lambda \alpha.E_1 = \Lambda \alpha.E_2
-\end{equation*}
+\end{myequation*}
 
 %===============================================================================
 \item[\fbox{\rref{R-Simp}}]\quad$\drres{\bar{\alpha}}{\tenv}{\type}{E_1}$ \\
@@ -497,9 +497,9 @@ Hence, we may conclude
 
 It follows that the lemma's fourth hypothesis is also derived by rule
 \rref{R-Simp}. We obtain the desired result from Lemma~\ref{lemma:determinism:2}
-\begin{equation*}
+\begin{myequation*}
   E_1 = E_2
-\end{equation*}
+\end{myequation*}
 
 \end{description}
 \end{proof}
@@ -510,27 +510,27 @@ It follows that the lemma's fourth hypothesis is also derived by rule
 \begin{minipage}{0.95\columnwidth}
 \begin{lemma}\label{lemma:determinism:2}
   If 
-\begin{equation*}
+\begin{myequation*}
   \unambig{}{\tenv}
 %  \unamb \tenv
-\end{equation*}
+\end{myequation*}
   and
-\begin{equation*}
+\begin{myequation*}
   \unambig{}{\tenv'}
 %  \unamb \tenv'
-\end{equation*}
+\end{myequation*}
   and
-\begin{equation*}
+\begin{myequation*}
   \dlres{\bar{\alpha}}{\tenv}{\tenv'}{\type}{E_1}
-\end{equation*}
+\end{myequation*}
 and
-\begin{equation*}
+\begin{myequation*}
   \dlres{\bar{\alpha}}{\tenv}{\tenv'}{\type}{E_2}
-\end{equation*}
+\end{myequation*}
 then
-\begin{equation*}
+\begin{myequation*}
   E_1 = E_2
-\end{equation*}
+\end{myequation*}
 \end{lemma}
 \end{minipage}
 }}
@@ -544,14 +544,14 @@ The proof proceeds by induction on the derivation of the third hypothesis.
 %===============================================================================
 
   The rule's two hypotheses are
-\begin{equation*}
+\begin{myequation*}
 \dmres{\tenv}{\rulet}{x}{\tau}{E_1}{\Sigma_1}
-\end{equation*}%
+\end{myequation*}%
 where $\Sigma_1 = \overline{\rulet'_1~\gbox{\leadsto x}}$ , 
   and
-\begin{equation*}
+\begin{myequation*}
 \drres{\bar{\alpha}}{\tenv}{\rulet'_1}{E'_1} \quad (\forall \rulet'_1 \in \overline{\rulet}'_1)
-\end{equation*}%
+\end{myequation*}%
   Then the fourth hypothesis was either derived from rule \rref{L-Match},
   or from rule \rref{L-NoMatch}. However, the hypothesis of the latter is
   not satisfied: $\epsilon;E_1;\Sigma_1$ forms a counter-example. Hence, using rule \rref{L-Match}
@@ -560,17 +560,17 @@ where $\Sigma_1 = \overline{\rulet'_1~\gbox{\leadsto x}}$ ,
   Then it follows from the first hypothesis of the rule (given above),
   from the first hypothesis of the lemma, which entails $\unambig{}{\rulet}$,  
   and from Lemma~\ref{lemma:determinism:3} (with $\bar{\sigma}_1 = \bar{\sigma}_2 = \bar{\sigma}_1' = \bar{\sigma}_2' = \epsilon$) that
-\begin{equation*}
+\begin{myequation*}
   E_1 = E_2 \quad\wedge\quad \Sigma_1 = \Sigma_2
-\end{equation*}
+\end{myequation*}
   From the second hypothesis of the rule and Lemma~\ref{lemma:determinism:1} it also follows that
-\begin{equation*}
+\begin{myequation*}
   \bar{E}'_1 = \bar{E}'_2
-\end{equation*}
+\end{myequation*}
   Hence, we may conclude
-\begin{equation*}
+\begin{myequation*}
   E_1[\bar{E}'_1/\bar{x}] = E_2[\bar{E_2}'/\bar{x}]
-\end{equation*}
+\end{myequation*}
 
 
 %===============================================================================
@@ -586,9 +586,9 @@ where $\Sigma_1 = \overline{\rulet'_1~\gbox{\leadsto x}}$ ,
   From the second hypothesis of the lemma we derive $\unambig{}{\tenv'}$.
   Then from the second hypothesis of the rule and the induction hypothesis we conclude
   the desired result
-\begin{equation*}
+\begin{myequation*}
   E_1' = E_2'
-\end{equation*}
+\end{myequation*}
 
 %===============================================================================
 \item[\fbox{\rref{L-Var}}]\quad$\dlres{\bar{\alpha}}{\tenv}{\tenv',x:\rulet}{\type}{E_1}$\\
@@ -598,9 +598,9 @@ where $\Sigma_1 = \overline{\rulet'_1~\gbox{\leadsto x}}$ ,
   Clearly the fourth hypothesis is also derived by rule \rref{L-Var}.
   Moreover, from the second hypothesis it follows that $\unambig{}{\tenv'}$.
   Hence, from the induction hypothesis we conclude that
-\begin{equation*}
+\begin{myequation*}
   E_1 = E_2
-\end{equation*}
+\end{myequation*}
 
 %===============================================================================
 \item[\fbox{\rref{L-TyVar}}]\quad$\dlres{\bar{\alpha}}{\tenv}{\tenv',\alpha}{\type}{E_1}$\\
@@ -609,9 +609,9 @@ where $\Sigma_1 = \overline{\rulet'_1~\gbox{\leadsto x}}$ ,
   Clearly the fourth hypothesis is also derived by rule \rref{L-TyVar}.
   Moreover, from the second hypothesis it follows that $\unambig{}{\tenv'}$.
   Hence, from the induction hypothesis we conclude that
-\begin{equation*}
+\begin{myequation*}
   E_1 = E_2
-\end{equation*}
+\end{myequation*}
 \end{description}
 \end{proof}
 
@@ -661,35 +661,35 @@ Now we are ready to show that the judgment is deterministic.\\
 \begin{minipage}{0.95\columnwidth}
 \begin{lemma}\label{lemma:determinism:3}
   If 
-\begin{equation*}
+\begin{myequation*}
   \unambig{\bar{\alpha}}{\rulet}
 %  \bar{\alpha} \unamb \rulet
-\end{equation*}
+\end{myequation*}
   and
-\begin{equation*}
+\begin{myequation*}
   \dmresa{\bar{\suty}_1}{\tenv}{\rulet[\bar{\suty}_2/\bar{\alpha}]}{E[|\bar{\suty}_2|/\bar{\alpha}]}{\type}{E_1}{\Sigma_1}
 %  \bar{\suty}_1 ; \tenv; \rulet[\bar{\suty}_2/\bar{\alpha}]\leadsto E[|\bar{\suty}_2|/\bar{\alpha}] \ivturns \type \leadsto E_1; \Sigma_1
-\end{equation*}
+\end{myequation*}
 and
-\begin{equation*}
+\begin{myequation*}
   \dmresa{\bar{\suty}_1'}{\tenv}{\rulet[\bar{\suty}_2'/\bar{\alpha}]}{E[|\bar{\suty}_2'|/\bar{\alpha}]}{\type}{E_2}{\Sigma_2}
 %  \bar{\suty}_1' ; \tenv; \rulet[\bar{\suty}_2'/\bar{\alpha}]\leadsto E[|\bar{\suty}_2'|/\bar{\alpha}] \ivturns \type \leadsto E_2; \Sigma_2
-\end{equation*}
+\end{myequation*}
 then
-\begin{equation*}
+\begin{myequation*}
   \bar{\suty}_1 = \bar{\suty}_1' \andl \bar{\suty}_2 = \bar{\suty}_2'
   \andl E_1 = E_2 \andl \Sigma_1 = \Sigma_2
   \andl \unambig{}{\Sigma_1}
-\end{equation*}
+\end{myequation*}
 % where
-% \begin{equation*}
+% \begin{myequation*}
 % \begin{array}{c}
 %   \myruleform{\bar{\suty}; \rulet \vdash \type} \\ \\
 %   \mylabel{P-1} \quad \myirule{}{\epsilon; \type \vdash \type} \\ \\
 %   \mylabel{P-2} \quad \myirule{\bar{\suty}; \rulet_2 \vdash \type}{\bar{\suty}; \rulet_1 \iarrow \rulet_2 \vdash \type}
 %   \mylabel{P-3} \quad \myirule{\bar{\suty}; \rulet[\suty/\alpha] \vdash \type}{\suty,\bar{\suty}; \forall\alpha.\rulet \vdash \type}
 % \end{array}
-% \end{equation*}
+% \end{myequation*}
 \end{lemma}
 \end{minipage}
 }}
@@ -705,28 +705,28 @@ The proof proceeds by induction on the derivation of the first hypothesis.
 
   Then the second and third hypothesis of the lemma must have been formed by rule \rref{M-Simp}
   and hence 
-\begin{equation*}
+\begin{myequation*}
   \bar{\suty}_1 = \epsilon = \bar{\suty}_1'
-\end{equation*}
+\end{myequation*}
   
   For the same reason we have that $\type'[\bar{\suty}_2/\bar{\alpha}] = \type = \type'[\bar{\suty}_2'/\bar{\alpha}]$. Since we know that $\bar{\alpha} \subseteq \mathit{ftv}(\type)$, it must follow also that
-\begin{equation*}
+\begin{myequation*}
   \bar{\suty}_2 = \bar{\suty}_2'
-\end{equation*}
+\end{myequation*}
 
   As a consequence, we also have that
-\begin{equation*}
+\begin{myequation*}
   E_1 = E[|\bar{\sigma}_2|/\bar{\alpha}] = E[|\bar{\sigma}_2'|/\bar{\alpha}] = E_2
-\end{equation*}
+\end{myequation*}
 
   Finally, it also follows from rule \rref{M-Simp} that
-\begin{equation*}
+\begin{myequation*}
   \Sigma_1 = \epsilon = \Sigma_2
-\end{equation*}
+\end{myequation*}
   and trivially
-\begin{equation*}
+\begin{myequation*}
   \unambig{}{\epsilon}
-\end{equation*}
+\end{myequation*}
 %===============================================================================
 \item[\fbox{\rref{UA-IAbs}}]\quad$\unambig{\bar{\alpha}}{\rulet_1 \To \rulet_2}$ \\
 %$\bar{\alpha} \unamb \rulet_1 \iarrow \rulet_2$ \ \\
@@ -735,7 +735,7 @@ The proof proceeds by induction on the derivation of the first hypothesis.
   Then the second and third hypothesis of the lemma must have been formed by rule \rref{M-IApp}.
   From their two hypotheses and from the hypothesis of the rule and the induction hypothesis, we obtain
   the desired results
-\begin{equation*}
+\begin{myequation*}
   \bar{\suty}_1 = \bar{\suty}_1' \andl \bar{\suty}_2 = \bar{\suty}_2'
   \andl
   E_1 = E_2
@@ -743,14 +743,14 @@ The proof proceeds by induction on the derivation of the first hypothesis.
   \Sigma_1,\ie{\rulet_1[|\bar{\sigma}_2|/\bar{\alpha}]}{x}
   = 
   \Sigma_2,\ie{\rulet_1[|\bar{\sigma}_2'|/\bar{\alpha}]}{x}
-\end{equation*}
+\end{myequation*}
 
   We also derive from the induction hypothesis that $\unambig{}{\Sigma_1}$. 
   Since $\unambig{\bar{\alpha}}{\rulet_1 \To \rulet_2}$, we also have $\unambig{}{\rulet_1}$.
   Hence we also conclude
-\begin{equation*}
+\begin{myequation*}
   \unambig{}{\Sigma_1,\ie{\rulet_1}{x}}
-\end{equation*}
+\end{myequation*}
 %===============================================================================
 \item[\fbox{\rref{UA-TAbs}}]\quad$\unambig{\bar{\alpha}}{\forall \alpha.\rulet}$\\
 %$\bar{\alpha} \unamb \forall \alpha.\rulet$ \ \\
@@ -759,7 +759,7 @@ The proof proceeds by induction on the derivation of the first hypothesis.
 Then the second and third hypothesis of the lemma must have been formed by rule \rref{M-TApp},
   with $\bar{\suty}_1 = \bar{\suty}_{1,1},\suty_{1,2}$ and $\bar{\suty}_1' = \bar{\suty}_{1,1}',\suty_{1,2}'$.
   From their two hypotheses and from the hypothesis of the rule and the induction hypothesis, we obtain
-\begin{equation*}
+\begin{myequation*}
   \bar{\suty}_2,\suty_{1,2} = \bar{\suty}_2',\suty_{1,2}' 
   \andl
   \bar{\suty}_{1,1} = \bar{\suty}_{1,1}'
@@ -769,10 +769,10 @@ Then the second and third hypothesis of the lemma must have been formed by rule 
   \Sigma_1 = \Sigma_2
   \andl
   \unambig{}{\Sigma_1}
-\end{equation*}
+\end{myequation*}
   
   From this we conclude the desired result 
-\begin{equation*}
+\begin{myequation*}
   \bar{\suty}_1 = \bar{\suty}_1' \andl \bar{\suty}_2 = \bar{\suty}_2'
   \andl
   E_1 = E_2
@@ -780,7 +780,7 @@ Then the second and third hypothesis of the lemma must have been formed by rule 
   \Sigma_1 = \Sigma_2
   \andl
   \unambig{}{\Sigma_1}
-\end{equation*}
+\end{myequation*}
 \end{description}
 \end{proof}
 
@@ -830,19 +830,19 @@ Deterministic resolution is stable under substitution.
 \begin{minipage}{0.95\columnwidth}
 \begin{lemma}\label{lemma:coherence:0}
   If 
-\begin{equation*}
+\begin{myequation*}
   \dres{\tenv,\alpha,\tenv'}{\rulet}{E}
 %   \tenv,\alpha,\tenv' \ivturns \rulet\leadsto E
-\end{equation*}
+\end{myequation*}
 %  and
-%\begin{equation*}
+%\begin{myequation*}
 %  \wfty{\tenv}{\suty}
-%\end{equation*}
+%\end{myequation*}
   then
-\begin{equation*}
+\begin{myequation*}
   \dres{\tenv,\tenv'[\suty/\alpha]}{\rulet[\suty/\alpha]}{E[|\suty|/\alpha]}
 %  \tenv,\tenv'[\suty/\alpha] \ivturns \rulet[\suty/\alpha] \leadsto E[|\suty|/\alpha]
-\end{equation*}
+\end{myequation*}
 \end{lemma}
 \end{minipage}
 }}
@@ -851,20 +851,20 @@ Deterministic resolution is stable under substitution.
   The proof proceeds by induction on the first derivation and uses Lemma~\ref{lemma:coherence:1}.
   
   The hypothesis of rule \rref{R-Main} then is
-\begin{equation*}
+\begin{myequation*}
   \drres{\ftv{\tenv},\alpha,\ftv{\tenv'}}{\tenv,\alpha,\tenv'}{\rulet}{E}
-\end{equation*}
+\end{myequation*}
 
   From Lemma~\ref{lemma:coherence:1} it follows that
-\begin{equation*}
+\begin{myequation*}
   \drres{\ftv{\tenv},\ftv{\tenv'}}{\tenv,\tenv'[\suty/\alpha]}{\rulet[\suty/\alpha]}{E[|\suty|/\alpha]}
-\end{equation*}
+\end{myequation*}
 
   As $\ftv{\tenv'} = \ftv{\tenv'[\suty/\alpha]}$, the desired result follows from rule
   \rref{R-Main}
-\begin{equation*}
+\begin{myequation*}
  \dres{\tenv,\tenv'[\suty/\alpha]}{\rulet[\suty/\alpha]}{E[|\suty|/\alpha]}
-\end{equation*}
+\end{myequation*}
 \end{proof}
 %###############################################################################
 
@@ -898,17 +898,17 @@ $\alpha\in\tenv''$ and $\alpha\notin\tenv''$.
 \begin{minipage}{0.95\columnwidth}
 \begin{lemma}\label{lemma:coherence:1}
   If 
-\begin{equation*}
+\begin{myequation*}
   \drres{\bar{\alpha},\alpha,\bar{\alpha}}{\tenv,\alpha,\tenv'}{\rulet}{E}
-\end{equation*}
+\end{myequation*}
 %  and
-%\begin{equation*}
+%\begin{myequation*}
 %  \wfty{\tenv}{\suty}
-%\end{equation*}
+%\end{myequation*}
   then
-\begin{equation*}
+\begin{myequation*}
   \drres{\bar{\alpha},\bar{\alpha}'}{\tenv,\tenv'[\suty/\alpha]}{\rulet[\suty/\alpha]}{E[|\suty|/\alpha]}
-\end{equation*}
+\end{myequation*}
 \end{lemma}
 \end{minipage}
 }}
@@ -923,48 +923,48 @@ The proof proceeds by induction on the derivation of the first hypothesis, mutua
 %===============================================================================
 
 From the rule's hypothesis and the induction hypothesis we have
-\begin{equation*}
+\begin{myequation*}
 \drres{\bar{\alpha},\bar{\alpha}'}{\tenv,(\tenv',\envi{\rulet_1}{x})[\suty/\alpha]}{\rulet_2[\suty/\alpha]}{E[|\suty|/\alpha]}
-\end{equation*}
+\end{myequation*}
 From the definition of substitution and rule \rref{R-IAbs} we then conclude
-\begin{equation*}
+\begin{myequation*}
 \drres{\bar{\alpha},\bar{\alpha}'}{\tenv,\tenv'[\suty/\alpha]}{(\rulet_1 \iarrow \rulet_2)[\suty/\alpha]}{(\abs{x}{\etrans{\rulet_1}}{E})[|\suty|/\alpha]}
-\end{equation*}
+\end{myequation*}
 
 %===============================================================================
 \item[\fbox{\rref{R-TAbs}}]\quad$\drres{\bar{\alpha},\alpha,\bar{\alpha}'}{\tenv,\alpha,\tenv'}{\tall{\beta}{\rulet}}{\Abs{\beta}{E}}$\\
 %===============================================================================
 
 From the rule's hypothesis and the induction hypothesis we have
-\begin{equation*}
+\begin{myequation*}
 \drres{\bar{\alpha},\bar{\alpha}'}{\tenv,(\tenv',\beta)[\suty/\alpha]}{\rulet[\suty/\alpha]}{E[|\suty|/\alpha]}
-\end{equation*}
+\end{myequation*}
 From the definition of substitution and rule \rref{R-TAbs} we then conclude
-\begin{equation*}
+\begin{myequation*}
 \drres{\bar{\alpha},\bar{\alpha}'}{\tenv,\tenv'[\suty/\alpha]}{(\tall{\beta}{\rulet})[\suty/\alpha]}{(\Abs{\beta}{E})[|\suty|/\alpha]}
-\end{equation*}
+\end{myequation*}
 %===============================================================================
 \item[\fbox{\rref{R-Simp}}]\quad$\drres{\bar{\alpha},\alpha,\bar{\alpha}'}{\tenv,\alpha,\tenv'}{\type}{E}$ \\
 %$\bar{\alpha},\alpha,\bar{\alpha}';\tenv,\alpha,\tenv'\ivturns \type \leadsto E$ \ \\
 %===============================================================================
 
 From the rule's hypothesis and Lemma~\ref{lemma:coherence:2} we conclude
-\begin{equation*}
+\begin{myequation*}
 \dlres{\bar{\alpha},\bar{\alpha}'}{\tenv,\tenv'[\suty/\alpha]}{\tenv'''}{\type[\suty/\alpha]}{E[|\suty|/\alpha]}
-\end{equation*}
+\end{myequation*}
   and
-\begin{equation*}
+\begin{myequation*}
   R(\tenv;\alpha;\tenv';\tenv,\alpha,\tenv';\tenv''';\suty)
-\end{equation*}
+\end{myequation*}
   The latter could only have been obtained by rule \rref{R-2}. 
   Hence, we know that $\tenv''' = \tenv,\tenv'[\suty/\alpha]$ and the former is equivalent to
-\begin{equation*}
+\begin{myequation*}
 \dlres{\bar{\alpha},\bar{\alpha}'}{\tenv,\tenv'[\suty/\alpha]}{\tenv,\tenv'[\suty/\alpha]}{\type[\suty/\alpha]}{E[|\suty|/\alpha]}
-\end{equation*}
+\end{myequation*}
 With this fact we can conclude by rule \rref{R-Simp}
-\begin{equation*}
+\begin{myequation*}
 \drres{\bar{\alpha},\bar{\alpha}'}{\tenv,\tenv'[\suty/\alpha]}{\type[\suty/\alpha]}{E[|\suty|/\alpha]}
-\end{equation*}
+\end{myequation*}
 \end{description}
 \end{proof}
 
@@ -974,25 +974,25 @@ With this fact we can conclude by rule \rref{R-Simp}
 \begin{minipage}{0.95\columnwidth}
 \begin{lemma}\label{lemma:coherence:2}
   If 
-\begin{equation*}
+\begin{myequation*}
 \dlres{\bar{\alpha},\alpha,\bar{\alpha}'}{\tenv,\alpha,\tenv'}{\tenv''}{\type}{E}
-\end{equation*}
+\end{myequation*}
   and
-\begin{equation*}
+\begin{myequation*}
   \tenv'' \subseteq \tenv,\alpha,\tenv'
-\end{equation*}
+\end{myequation*}
 %  and
-%\begin{equation*}
+%\begin{myequation*}
 %\wfty{\tenv}{\suty}
-%\end{equation*}
+%\end{myequation*}
   then
-\begin{equation*}
+\begin{myequation*}
 \dlres{\bar{\alpha},\bar{\alpha}'}{\tenv,\tenv'[\suty/\alpha]}{\tenv'''}{\type[\suty/\alpha]}{E[|\suty|/\alpha]}
-\end{equation*}
+\end{myequation*}
   and
-\begin{equation*}
+\begin{myequation*}
   R(\tenv;\alpha;\tenv';\tenv'';\tenv''';\suty)
-\end{equation*}
+\end{myequation*}
 \end{lemma}
   
 \end{minipage}
@@ -1009,40 +1009,40 @@ The proof proceeds by induction on the derivation of the first hypothesis, mutua
 
   Then it follows from the first hypothesis of the rule and of Lemma~\ref{lemma:coherence:3}
   that
-\begin{equation*}
+\begin{myequation*}
 \dmres{\tenv,\tenv'[\suty/\alpha]}{\rulet[\suty/\alpha]}{E[|\suty|/\alpha]}{\type[\suty/\alpha]}{E'[|\suty|/\alpha]}{\ie{\ruleset[\suty/\alpha]}{\bar{x}}}
-\end{equation*}
+\end{myequation*}
   Also it follows from the second hypothesis of the rule and of Lemma~\ref{lemma:coherence:1}
   that
-\begin{equation*}
+\begin{myequation*}
 \drres{{\alpha},\bar{\alpha}'}{\tenv,\tenv'[\suty/\alpha]}{\ruleset[\suty/\alpha]}{\bar{E}[|\suty|/\alpha]}
-\end{equation*}
+\end{myequation*}
   By combining these two observations with rule \rref{L-Match} we obtain the first desired result
-\begin{equation*}
+\begin{myequation*}
 \dlres{\bar{\alpha},\bar{\alpha}'}{\tenv,\tenv'[\suty/\alpha]}{\tenv''',\envi{\rulet[\suty/\alpha]}{x}}{\type[\suty/\alpha]}{E[|\suty|/\alpha]}
-\end{equation*}  
+\end{myequation*}  
   We obtain the second desired result by case analysis on $\tenv'' \subseteq \tenv,\alpha,\tenv'$:
   \begin{enumerate}
   \item $\tenv = \tenv_1,\envi{\rulet}{x},\tenv_2 \quad\wedge\quad \tenv'' = \tenv_1$: \\
   In this case we can use rule \rref{R-1} to establish:
-\begin{equation*}
+\begin{myequation*}
   R((\tenv_1,\envi{\rulet}{x}),\tenv_2;\alpha;\tenv';\tenv_1,\envi{\rulet}{x};\tenv_1,\envi{\rulet}{x};\sigma)
-\end{equation*}
+\end{myequation*}
   which is equivalent to
-\begin{equation*}
+\begin{myequation*}
   R(\tenv;\alpha;\tenv';\tenv'',\envi{\rulet}{x};\tenv'',\envi{\rulet}{x};\sigma)
-\end{equation*}
+\end{myequation*}
 
   \item $\tenv' = \tenv_1',\envi{\rulet}{x}, \tenv_2' \andl \tenv'' = \tenv,\alpha,\tenv_1'$: \\
   In this case we can use rule \rref{R-2} to establish:
-\begin{equation*}
+\begin{myequation*}
   R(\tenv;\alpha;(\tenv_1',\envi{\rulet}{x}),\tenv_2';\tenv,\alpha,(\tenv_1',\envi{\rulet}{x});
   \tenv,(\tenv_1',\envi{\rulet}{x})[\suty/\alpha];\sigma)
-\end{equation*}
+\end{myequation*}
   which is equivalent to
-\begin{equation*}
+\begin{myequation*}
   R(\tenv;\alpha;\tenv';\tenv'',\envi{\rulet}{x};\tenv,(\tenv_1',\envi{\rulet}{x})[\suty/\alpha];\sigma)
-\end{equation*}
+\end{myequation*}
   \end{enumerate}
 
 %===============================================================================
@@ -1050,60 +1050,60 @@ The proof proceeds by induction on the derivation of the first hypothesis, mutua
 %===============================================================================
 
 The rule's first hypothesis states that
-\begin{equation*}
+\begin{myequation*}
   \not\exists \theta, E, \Sigma, \mathit{dom}(\theta) \subseteq (\bar{\alpha},\alpha,\bar{\alpha}'):
   \dmres{\theta(\tenv,\alpha,\tenv')}{\theta(\rulet)}{x}{\theta(\type)}{E}{\Sigma}
-\end{equation*}
+\end{myequation*}
   Hence, the above also holds when we restrict $\theta$ to be of the form
 $\theta' \cdot [\suty/\alpha]$. In this case, the above simplifies to
-\begin{equation*}
+\begin{myequation*}
   \not\exists \theta', E, \Sigma, \mathit{dom}(\theta) \subseteq (\bar{\alpha},\bar{\alpha}'):
   \dmres{\theta'(\tenv,\tenv'[\suty/\alpha])}{\theta'(\rulet[\suty/\alpha])}{x}{\theta'(\type[\suty/\alpha])}{E}{\Sigma}
-\end{equation*}
+\end{myequation*}
   From the rule's second hypothesis and the induction hypothesis we have
-\begin{equation*}
+\begin{myequation*}
   \dlres{\bar{\alpha},\bar{\alpha}'}{\tenv,\tenv'[\suty/\alpha]}{\tenv'''}{\type[\suty/\alpha]}{E'[|\suty|/\alpha]}
-\end{equation*}
+\end{myequation*}
   With rule \rref{L-NoMatch} we combine these two observations into the desired first result
-\begin{equation*}
+\begin{myequation*}
   \dlres{\bar{\alpha},\bar{\alpha}'}{\tenv,(\tenv',\envi{\rulet}{x})[\suty/\alpha]}{\tenv'''}{\type[\suty/\alpha]}{E'[|\suty|/\alpha]}
-\end{equation*}
+\end{myequation*}
 
   Similarly, following the rule's second hypothesis and the induction hypothesis we have:
-\begin{equation*}
+\begin{myequation*}
   R(\tenv;\alpha;\tenv';\tenv'';\tenv''';\suty)
-\end{equation*}
+\end{myequation*}
 
   We do a case analysis on the derivation of this judgment.
   \begin{enumerate}
   \item \rref{R-1}: \\ Then we have
-\begin{equation*}
+\begin{myequation*}
   \tenv = \tenv_1,x:\rulet,\tenv_2  \andl \tenv'' = \tenv_1 \andl \tenv''' = \tenv_1
-\end{equation*}
+\end{myequation*}
        By rule \rref{R-2} we then have
-\begin{equation*}
+\begin{myequation*}
 R((\tenv_1,x:\rulet),\tenv_2;\alpha;\tenv';\tenv_1,\envi{\rulet}{x};\tenv_1,\envi{\rulet}{x};\suty)
-\end{equation*}
+\end{myequation*}
         which, given all the equations we have, is equivalent to
-\begin{equation*}
+\begin{myequation*}
 R(\tenv;\alpha;\tenv';\tenv'',\envi{\rulet}{x};\tenv'',\envi{\rulet}{x};\suty)
-\end{equation*}
+\end{myequation*}
 
   \item \rref{R-2}: \\
    Then we have
-\begin{equation*}
+\begin{myequation*}
   \tenv' = \tenv_1',\tenv_2'  \andl \tenv'' = \tenv,\alpha,\tenv_1' \andl 
       \tenv''' = \tenv,\tenv_1'[\suty/\alpha]
-\end{equation*}
+\end{myequation*}
   Since $\tenv'',\envi{\rulet}{x} \subseteq \tenv,\alpha,\tenv'$, it follows that $\tenv_2' = \envi{\rulet}{x},\tenv_{2,2}'$.
   Hence, by rule \rref{R-2} we can establish
-\begin{equation*}
+\begin{myequation*}
 R(\tenv;\alpha;(\tenv_1',\envi{\rulet}{x}),\tenv_2';\tenv,\alpha,(\tenv_1',\envi{\rulet}{x});\tenv,(\tenv_1',\envi{\rulet}{x})[\suty/\alpha];\suty)
-\end{equation*}
+\end{myequation*}
         which, given all the equations we have, is equivalent to
-\begin{equation*}
+\begin{myequation*}
 R(\tenv;\alpha;\tenv';\tenv'',\envi{\rulet}{x};\tenv,(\tenv_1',\envi{\rulet}{x})[\suty/\alpha];\suty)
-\end{equation*}
+\end{myequation*}
   \end{enumerate}
   
 %===============================================================================
@@ -1111,51 +1111,51 @@ R(\tenv;\alpha;\tenv';\tenv'',\envi{\rulet}{x};\tenv,(\tenv_1',\envi{\rulet}{x})
 %===============================================================================
 
 Then following the rule's hypothesis and the induction hypothesis we have:
-\begin{equation*}
+\begin{myequation*}
   \dlres{\bar{\alpha},\bar{\alpha}'}{\tenv,\tenv'[\suty/\alpha]}{\tenv'''}{\type[\suty/\alpha]}{E[|\suty|/\alpha]}
 %  \bar{\alpha},\bar{\alpha}';\tenv,\tenv'[\suty/\alpha];\tenv''' \ivturns \type[\suty/\alpha] \leadsto E[|\suty|/\alpha]
-\end{equation*}
+\end{myequation*}
   By rule \rref{L-Var} and the definition of substitution we then have
-\begin{equation*}
+\begin{myequation*}
   \dlres{\bar{\alpha},\bar{\alpha}'}{\tenv,\tenv'[\suty/\alpha]}{\tenv''',\relation{x}{\rulet[\suty/\alpha]}}{\type[\suty/\alpha]}{E[|\suty|/\alpha]}
 %  \bar{\alpha},\bar{\alpha}';\tenv,\tenv'[\suty/\alpha];\tenv''',x:\rulet[\suty/\alpha] \ivturns \type[\suty/\alpha] \leadsto E[|\suty|/\alpha]
-\end{equation*}
+\end{myequation*}
   Similarly, following the rule's hypothesis and the induction hypothesis we have:
-\begin{equation*}
+\begin{myequation*}
   R(\tenv;\alpha;\tenv';\tenv'';\tenv''';\suty)
-\end{equation*}
+\end{myequation*}
 
   We do a case analysis on the derivation of this judgment.
   \begin{enumerate}
   \item \rref{R-1}: \\ Then we have
-\begin{equation*}
+\begin{myequation*}
   \tenv = \tenv_1,\relation{x}{\rulet},\tenv_2  \andl \tenv'' = \tenv_1 \andl \tenv''' = \tenv_1
-\end{equation*}
+\end{myequation*}
        By rule \rref{R-2} we then have
-\begin{equation*}
+\begin{myequation*}
 R((\tenv_1,\relation{x}{\rulet}),\tenv_2;\alpha;\tenv';\tenv_1,\relation{x}{\rulet};\tenv_1,\relation{x}{\rulet};\suty)
-\end{equation*}
+\end{myequation*}
         which, given all the equations we have, is equivalent to
-\begin{equation*}
+\begin{myequation*}
 R(\tenv;\alpha;\tenv';\tenv'',\relation{x}{\rulet};\tenv'',\relation{x}{\rulet};\suty)
-\end{equation*}
+\end{myequation*}
 
   \item \rref{R-2}: \\
    Then we have
-\begin{equation*}
+\begin{myequation*}
   \tenv' = \tenv_1',\tenv_2' \andl \tenv'' = \tenv,\alpha,\tenv_1' \andl
       \tenv''' = \tenv,\tenv_1'[\suty/\alpha]
-\end{equation*}
+\end{myequation*}
 
   Since $\tenv'',\relation{x}{\rulet} \subseteq \tenv,\alpha,\tenv'$, it follows that $\tenv_2' = \relation{x}{\rulet},\tenv_{2,2}'$.
   Hence, by rule \rref{R-2} we can establish
-\begin{equation*}
+\begin{myequation*}
 R(\tenv;\alpha;(\tenv_1',\relation{x}{\rulet}),\tenv_2';\tenv,\alpha,(\tenv_1',\relation{x}{\rulet});\tenv,(\tenv_1',\relation{x}{\rulet})[\suty/\alpha];\suty)
-\end{equation*}
+\end{myequation*}
         which, given all the equations we have, is equivalent to
-\begin{equation*}
+\begin{myequation*}
 R(\tenv;\alpha;\tenv';\tenv'',\relation{x}{\rulet};\tenv,(\tenv_1',\relation{x}{\rulet})[\suty/\alpha];\suty)
-\end{equation*}
+\end{myequation*}
   \end{enumerate}
 
 %===============================================================================
@@ -1164,65 +1164,65 @@ R(\tenv;\alpha;\tenv';\tenv'',\relation{x}{\rulet};\tenv,(\tenv_1',\relation{x}{
 %===============================================================================
 
   Then following the rule's hypothesis and the induction hypothesis we have:
-\begin{equation*}
+\begin{myequation*}
   \dlres{\bar{\alpha},\bar{\alpha}'}{\tenv,\tenv'[\suty/\alpha]}{\tenv'''}{\type[\suty/\alpha]}{E[|\suty|/\alpha]}
 %  \bar{\alpha},\bar{\alpha}';\tenv,\tenv'[\suty/\alpha];\tenv''' \ivturns \type[\suty/\alpha] \leadsto E[|\suty|/\alpha]
-\end{equation*}
+\end{myequation*}
   By rule \rref{L-TyVar} and the definition of substitution we then have
-\begin{equation*}
+\begin{myequation*}
   \dlres{\bar{\alpha},\bar{\alpha}'}{\tenv,\tenv'[\suty/\alpha]}{\tenv''',\beta}{\type[\suty/\alpha]}{E[|\suty|/\alpha]}
 %  \bar{\alpha},\bar{\alpha}';\tenv,\tenv'[\suty/\alpha];\tenv''',\beta \ivturns \type[\suty/\alpha] \leadsto E[|\suty|/\alpha]
-\end{equation*}
+\end{myequation*}
   Similarly, following the rule's hypothesis and the induction hypothesis we have:
-\begin{equation*}
+\begin{myequation*}
   R(\tenv;\alpha;\tenv';\tenv'';\tenv''';\suty)
-\end{equation*}
+\end{myequation*}
 
   We do a case analysis on the derivation of this judgment.
   \begin{enumerate}
   \item \rref{R-1}: \\ Then we have
-\begin{equation*}
+\begin{myequation*}
   \tenv = \tenv_1,\tenv_2 \andl \tenv'' = \tenv_1 \andl \tenv''' = \tenv_1
-\end{equation*}
+\end{myequation*}
   We further distinguish between two mutually exclusive cases:
   \begin{enumerate}
   \item $\tenv_2 = \epsilon$ \\
         It follows that $\alpha = \beta$ and we can establish by means of \rref{R-2} that
-\begin{equation*}
+\begin{myequation*}
 R(\tenv_1,\tenv_2;\alpha;\epsilon,\tenv';\tenv_1,\tenv_2,\alpha;\tenv_1,\tenv_2,\epsilon[\suty/\alpha];\suty)
-\end{equation*}
+\end{myequation*}
         which, given all the equations we have, is equivalent to
-\begin{equation*}
+\begin{myequation*}
 R(\tenv;\alpha;\tenv';\tenv'',\beta;\tenv;\suty)
-\end{equation*}
+\end{myequation*}
 
   \item $\tenv_2 \neq \epsilon$ \\
        Then it follows that $\tenv_2 = \beta,\tenv_{2,2}$ and by rule \rref{R-2} we have
-\begin{equation*}
+\begin{myequation*}
 R((\tenv_1,\beta),\tenv_{2,2};\alpha;\tenv';\tenv_1,\beta;\tenv_1,\beta;\suty)
-\end{equation*}
+\end{myequation*}
         which, given all the equations we have, is equivalent to
-\begin{equation*}
+\begin{myequation*}
 R(\tenv;\alpha;\tenv';\tenv'',\beta;\tenv_1,\beta;\suty)
-\end{equation*}
+\end{myequation*}
   \end{enumerate}
 
   \item \rref{R-2}: \\
    Then we have
-\begin{equation*}
+\begin{myequation*}
   \tenv' = \tenv_1',\tenv_2' \andl \tenv'' = \tenv,\alpha,\tenv_1' \andl
       \tenv''' = \tenv,\tenv_1'[\suty/\alpha]
-\end{equation*}
+\end{myequation*}
 
   Since $\tenv'',\beta \subseteq \tenv,\alpha,\tenv'$, it follows that $\tenv_2' = \beta,\tenv_{2,2}'$.
   Hence, by rule \rref{R-2} we can establish
-\begin{equation*}
+\begin{myequation*}
 R(\tenv;\alpha;(\tenv_1',\beta),\tenv_2';\tenv,\alpha,(\tenv_1',\beta);\tenv,(\tenv_1',\beta)[\suty/\alpha];\suty)
-\end{equation*}
+\end{myequation*}
         which, given all the equations we have, is equivalent to
-\begin{equation*}
+\begin{myequation*}
 R(\tenv;\alpha;\tenv';\tenv'',\beta;\tenv,(\tenv_1',\beta)[\suty/\alpha];\suty)
-\end{equation*}
+\end{myequation*}
   \end{enumerate}
 \end{description}
 \end{proof}
@@ -1233,13 +1233,13 @@ R(\tenv;\alpha;\tenv';\tenv'',\beta;\tenv,(\tenv_1',\beta)[\suty/\alpha];\suty)
 \begin{minipage}{0.95\columnwidth}
 \begin{lemma}\label{lemma:coherence:3}
   If 
-\begin{equation*}
+\begin{myequation*}
   \dmres{\tenv,\alpha,\tenv'}{\rulet}{E}{\type}{E'}{\ie{\ruleset}{\bar{x}}}
-\end{equation*}
+\end{myequation*}
   then
-\begin{equation*}
+\begin{myequation*}
   \dmres{\tenv,\tenv'[\suty/\alpha]}{\rulet[\suty/\alpha]}{E[|\suty|/\alpha]}{\type[\suty/\alpha]}{E'[|\suty|/\alpha]}{\ie{\ruleset[\suty/\alpha]}{\bar{x}}}
-\end{equation*}
+\end{myequation*}
 \end{lemma}
 \end{minipage}
 }}
@@ -1253,23 +1253,23 @@ The proof proceeds by induction on the derivation of the hypothesis.
 %===============================================================================
 
 The desired conclusion follows directly from rule \rref{M-Simp}
-\begin{equation*}
+\begin{myequation*}
 \dmres{\tenv,\tenv'[\suty/\alpha]}{\type[\suty/\alpha]}{E[|\suty/\alpha|]}{\type[\suty/\alpha]}{E[|\suty/\alpha|]}{\epsilon}
-\end{equation*}
+\end{myequation*}
 
 %===============================================================================
 \item[\fbox{\rref{M-IApp}}]\quad$\dmres{\tenv,\alpha,\tenv'}{\rulet_1 \To \rulet_2}{E}{\type}{E'}{\Sigma,\ie{\rulet_1}{x}}$\\
 %===============================================================================
 
 From the rule's hypothesis and the induction hypothesis we have 
-\begin{equation*}
+\begin{myequation*}
 \dmres{\tenv,(\tenv',\envi{\rulet_1}{x})[\suty/\alpha]}{\rulet_2[\suty/\alpha]}{(E~x)[|\suty|/\alpha]}{\type[\suty/\alpha]}{E'[|\suty|/\alpha]}{(\rulet_1~\gbox{\leadsto x},\Sigma)[\suty/\alpha]}
-\end{equation*}
+\end{myequation*}
   Then from the definition of substutition and rule \rref{M-IApp} we conclude
-\begin{equation*}
+\begin{myequation*}
   \dmres{\tenv,\tenv'[\suty/\alpha]}{(\rulet_1 \To \rulet_2)[\suty/\alpha]}{E[|\suty|/\alpha]}{\type[\suty/\alpha]}{E'[|\suty|/\alpha]}{\Sigma[\suty/\alpha]}
 %  \tenv,\tenv'[\suty/\alpha]; (\rulet_1 \iarrow \rulet_2)[\suty/\alpha] \leadsto E[|\suty|/\alpha] \ivturns \type[\suty/\alpha] \leadsto E'[|\suty|/\alpha]; (\Sigma,\rulet_1 \leadsto x)[\suty/\alpha]
-\end{equation*}
+\end{myequation*}
 
 %===============================================================================
 \item[\fbox{\rref{M-TApp}}]\quad$\dmres{\tenv,\alpha,\tenv'}{\tall{\beta}{\rulet}}{E}{\type}{E'}{\Sigma}$\\
@@ -1277,17 +1277,17 @@ From the rule's hypothesis and the induction hypothesis we have
 %===============================================================================
 
   From the rule's hypothesis and the induction hypothesis we have 
-\begin{equation*}
+\begin{myequation*}
   \dmres{\tenv,\tenv'[\suty/\alpha]}{\rulet[\suty'/\beta][\suty/\alpha]}{(E |\suty'|)[|\suty|/\alpha]}{\type[\suty/\alpha]}{E'[|\suty|/\alpha]}{\Sigma[\suty/\alpha]}
 %  \tenv,\tenv'[\suty/\alpha]; \rulet[\suty'/\beta][\suty/\alpha] \leadsto (E |\suty'|)[|\suty|/\alpha] \ivturns \type[\suty/\alpha] \leadsto E'[|\suty|/\alpha]; \Sigma[\suty/\alpha]
-\end{equation*}
+\end{myequation*}
 
   We conclude by rule \rref{M-TApp}, reasoning modulo
   the definition of substitution
-\begin{equation*}
+\begin{myequation*}
   \dmres{\tenv,\tenv'[\suty/\alpha]}{(\tall{\beta}{\rulet})[\suty/\alpha]}{E[|\suty|/\alpha]}{\type[\suty/\alpha]}{E'[|\suty|/\alpha]}{\Sigma[\suty/\alpha]}
 %  \tenv,\tenv'[\suty/\alpha]; (\forall\beta.\rulet)[\suty/\alpha] \leadsto E[|\suty|/\alpha] \ivturns \type[\suty/\alpha] \leadsto E'[|\suty|/\alpha]; \Sigma[\suty/\alpha]
-\end{equation*}
+\end{myequation*}
 \end{description}
 \end{proof}
 
@@ -1297,13 +1297,13 @@ From the rule's hypothesis and the induction hypothesis we have
 \begin{minipage}{0.95\columnwidth}
 \begin{lemma}\label{lemma:tapp_reduction}
   If 
-\begin{equation*}
+\begin{myequation*}
   \wte{\tenv}{\mmapp{(\Abs{\alpha}{e})}{\suty}}{\rulet[\suty/\alpha]}{\mmapp{(\Abs{\alpha}{E})}{\etrans{\suty}}}
-\end{equation*}
+\end{myequation*}
   then
-\begin{equation*}
+\begin{myequation*}
   \wte{\tenv}{e[\suty/\alpha]}{\rulet[\suty/\alpha]}{E[\ttrans[\suty]/\alpha]}
-\end{equation*}
+\end{myequation*}
 \end{lemma}
 \end{minipage}
 }
@@ -1312,7 +1312,7 @@ From the rule's hypothesis and the induction hypothesis we have
 By case analysis, the two last rules used in the derivation of the theorem's hypothesis must be
 instances of \rref{Ty-TAbs} and \rref{Ty-TApp}, as shown below.
 
-\begin{equation*}
+\begin{myequation*}
 \inferrule*[Left=\textsc{Ty-TApp}]
   {
     {\inferrule*[Left=\textsc{Ty-TAbs}]
@@ -1323,15 +1323,15 @@ instances of \rref{Ty-TAbs} and \rref{Ty-TApp}, as shown below.
   {
     \wte{\tenv}{\mmapp{(\Abs{\alpha}{e})}{\suty}}{\rulet[\suty/\alpha]}{\mmapp{(\Abs{\alpha}{E})}{\etrans{\suty}}}
   }
-\end{equation*}
+\end{myequation*}
 Therefore, it suffices to show that
-\begin{equation*}
+\begin{myequation*}
 \begin{array}{r l}
 \text{If}&\wte{\tenv,\alpha}{e}{\rulet}{E}\\
 %\text{and}&\wfty{\tenv}{\suty},\\
 \text{then}&\wte{\tenv}{e[\suty/\alpha]}{\rulet[\suty/\alpha]}{E[\etrans{\suty}/\alpha]}
 \end{array}
-\end{equation*}
+\end{myequation*}
 This can be proven as a special case ($\tenv' = \epsilon$) of the following theorem.
 \end{proof}
 
@@ -1340,17 +1340,17 @@ This can be proven as a special case ($\tenv' = \epsilon$) of the following theo
 \begin{minipage}{0.95\columnwidth}
 \begin{lemma}\label{lemma:typing_stability}
   If 
-\begin{equation*}
+\begin{myequation*}
   \wte{\tenv,\alpha,\tenv'}{e}{\rulet}{E}
-\end{equation*}
+\end{myequation*}
 %  and
-%\begin{equation*}
+%\begin{myequation*}
 %  \wfty{\tenv}{\suty}
-%\end{equation*}
+%\end{myequation*}
   then
-\begin{equation*}
+\begin{myequation*}
   \wte{\tenv,\tenv'[\suty/\alpha]}{e[\suty/\alpha]}{\rulet[\suty/\alpha]}{E[\ttrans[\suty]/\alpha]}
-\end{equation*}
+\end{myequation*}
 \end{lemma}
 \end{minipage}
 }
@@ -1374,9 +1374,9 @@ $\wte{\tenv,\tenv'[\suty/\alpha]}{x}{\rulet[\suty/\alpha]}{x}$.\\
 From the rule's premise, we get
 $\wte{\tenv,\alpha,\tenv',\relation{x}{\rulet_1}}{e}{\rulet_2}{E}$. By passing this to the
 induction hypothesis, we obtain
-\begin{equation*}
+\begin{myequation*}
 \wte{\tenv,\tenv'[\suty/\alpha],\relation{x}{\rulet_1[\suty/\alpha]}}{e}{\rulet_2[\suty/\alpha]}{E[\etrans{\suty}/\alpha]}
-\end{equation*}
+\end{myequation*}
 From the definition of substitution and by supplying the latter to rule \rref{Ty-Abs}, we reach
 the goal.\\
 
@@ -1386,13 +1386,13 @@ the goal.\\
 
 From the assumptions of rule \rref{Ty-App}, the induction hypothesis and the definition of
 substitution, we obtain
-\begin{equation*}
+\begin{myequation*}
 \wte{\tenv,\tenv'[\suty/\alpha]}{e_2}{\rulet_1[\suty/\alpha]\to\rulet_2[\suty/\alpha]}{E_1[\etrans{\suty}/\alpha]}
-\end{equation*}
+\end{myequation*}
 and
-\begin{equation*}
+\begin{myequation*}
 \wte{\tenv,\tenv'[\suty/\alpha]}{e_1}{\rulet_1[\suty/\alpha]}{E_2[\etrans{\suty}/\alpha]}
-\end{equation*}
+\end{myequation*}
 By instantiating rule \rref{Ty-App} with the two judgments above, we obtain our goal.\\
 
 %===============================================================================
@@ -1400,9 +1400,9 @@ By instantiating rule \rref{Ty-App} with the two judgments above, we obtain our 
 %===============================================================================
 
 From the assumptions of rule \rref{Ty-TAbs} and the induction hypothesis, we obtain
-\begin{equation*}
+\begin{myequation*}
 \wte{\tenv,(\tenv',\alpha')[\suty/\alpha]}{e[\suty/\alpha]}{\rulet}{E\etrans{\suty}/\alpha]}
-\end{equation*}
+\end{myequation*}
 where, from the definition of substitution, we have
 $(\tenv',\alpha')[\suty/\alpha] = \tenv'[\suty/\alpha],\alpha'$. Using this equation in the judgment above, we reach the goal by applying rule \rref{Ty-TAbs} on it.\\
 
@@ -1413,50 +1413,50 @@ $\wte{\tenv,\alpha,\tenv'}{\mmapp{e}{\rulet_1}}{\rulet_2[\rulet_1/\alpha']}{\mma
 
 %Note that $\alpha \neq \alpha'$.
 The first assumption of rule \rref{Ty-TApp} is
-\begin{equation*}
+\begin{myequation*}
 \wte{\tenv,\alpha,\tenv'}{e}{\tall{\alpha'}{\rulet_2}}{E}
-\end{equation*}
+\end{myequation*}
 Then, from the induction hypothesis and the definition of substitution, we get
-\begin{equation*}
+\begin{myequation*}
 \wte{\tenv,\tenv'[\suty/\alpha]}{e[\suty/\alpha]}{\tall{\alpha'}{(\rulet_2[\suty/\alpha])}}{E[\etrans{\suty}/\alpha]}
-\end{equation*}
+\end{myequation*}
 %From the second hypothesis of rule \rref{Ty-TApp} and by presevation of type well-scoping
 %under type substitution (straight-forward to prove) we get
-%\begin{equation*}
+%\begin{myequation*}
 %\wfty{\tenv,\tenv'[\suty/\alpha]}{\rulet_1[\suty/\alpha]}
-%\end{equation*}
+%\end{myequation*}
 
 Using this in rule \rref{Ty-TApp}, we get
-\begin{equation*}
+\begin{myequation*}
 \wte{\tenv,\tenv'[\suty/\alpha]}{\mmapp{(e[\suty/\alpha])}{(\rulet_1[\suty/\alpha])}}{(\rulet_2[\suty/\alpha])[\rulet_1[\suty/\alpha] /\alpha']}{\mmapp{E[\etrans{\suty}/\alpha]}{\etrans{\rulet_1[\suty/\alpha]}}}
-\end{equation*}
+\end{myequation*}
 which is syntactically equal to our goal, since by the definition of substitution and type
 translation and from the commutativity-like property of substitution composition, we get the following equations.
-\begin{equation*}
+\begin{myequation*}
 \arraycolsep=1.4pt\def\arraystretch{1.5}
 \begin{array}{c}
 \mmapp{(e[\suty/\alpha])}{(\rulet_1[\suty/\alpha])} = (\mmapp{e}{\rulet_1})[\suty/\alpha]\\
 (\rulet_2[\suty/\alpha])[\rulet_1[\suty/\alpha] /\alpha'] = \rulet_2[\rulet_1/\alpha'][\suty/\alpha]\\
 \mmapp{E[\etrans{\suty}/\alpha]}{\etrans{\rulet_1[\suty/\alpha]}} = \mmapp{E[\etrans{\suty}/\alpha]}{\etrans{\rulet_1}[\etrans{\suty}/\alpha]} = (\mmapp{E}{\rulet_1})[\etrans{\suty}/\alpha]
 \end{array}
-\end{equation*}
+\end{myequation*}
 
 %===============================================================================
 \item[\fbox{\rref{Ty-IAbs}}]\quad$\wte{\tenv,\alpha,\tenv'}{\ruleabs{\rulet_1}{e}}{\rulet_1 \iarrow \rulet_2}{\abs{x}{\etrans{\rulet_1}}{E}}$\\
 %===============================================================================
 
 From the first assumption of rule \rref{Ty-IAbs} and the induction hypothesis, we get
-\begin{equation*}
+\begin{myequation*}
 \wte{\tenv,\tenv'[\suty/\alpha],\envi{\rulet_1[\suty/\alpha]}{x}}{e[\suty/\alpha]}{\rulet_2[\suty/\alpha]}{E[\etrans{\suty}/\alpha]}
-\end{equation*}
+\end{myequation*}
 Passing the second assumption of rule \rref{Ty-IAbs} to Lemma~\ref{lemma:unamb_subst:0}, we get
-\begin{equation*}
+\begin{myequation*}
 \unambig{}{\rulet_1[\suty/\alpha]}
-\end{equation*}
+\end{myequation*}
 %By preservation of type well-scoping under type substitution, it also holds that
-%\begin{equation*}
+%\begin{myequation*}
 %\wfty{\tenv,\tenv'[\suty/\alpha]}{\rulet_1[\suty/\alpha]}
-%\end{equation*}
+%\end{myequation*}
 By using the two obtained results and the freshness assumption of rule \rref{Ty-IAbs}
 to instantiate a new \rref{Ty-IAbs} rule, we reach the goal.\\
 
@@ -1466,12 +1466,12 @@ to instantiate a new \rref{Ty-IAbs} rule, we reach the goal.\\
 
 From the two assumptions of rule \rref{Ty-IApp}, the induction hypothesis and the definition of
 substitution, we obtain
-\begin{equation*}
+\begin{myequation*}
 \begin{array}{c}
 \wte{\tenv,\tenv'[\suty/\alpha]}{e_1[\suty/\alpha]}{\rulet_2[\suty/\alpha]\To\rulet_1[\suty/\alpha]}{E_1[\etrans{\suty}/\alpha]}\\
 \text{and}\quad\wte{\tenv,\tenv'[\suty/\alpha]}{e_2[\suty/\alpha]}{\rulet_2[\suty/\alpha]}{E_2[\etrans{\suty}/\alpha]}
 \end{array}
-\end{equation*}
+\end{myequation*}
 By passing the two judgments above to rule \rref{Ty-IAbs}, we obtain the desired result.\\
 
 %===============================================================================
@@ -1480,19 +1480,19 @@ By passing the two judgments above to rule \rref{Ty-IAbs}, we obtain the desired
 
 From the first assumption of rule \rref{Ty-Query}, where we consider deterministic
 resolution, and Lemma~\ref{lemma:coherence:0} we get
-\begin{equation*}
+\begin{myequation*}
 \dres{\tenv,\tenv'[\suty/\alpha]}{\rulet[\suty/\alpha]}{E[\etrans{\suty}/\alpha]}
-\end{equation*}
+\end{myequation*}
 %From the second assumption of rule \rref{Ty-Query}, the second hypothesis of this theorem and
 %the property of type well-scoping under substitution, we have
-%\begin{equation*}
+%\begin{myequation*}
 %\wfty{\tenv,\tenv'[\suty/\alpha]}{\rulet[\suty/\alpha]}
-%\end{equation*}
+%\end{myequation*}
 Passing the second assumption of rule \rref{Ty-Query} to Lemma~\ref{lemma:unamb_subst:0}
 results in
-\begin{equation*}
+\begin{myequation*}
 \unambig{}{\rulet[\suty/\alpha]}
-\end{equation*}
+\end{myequation*}
 Then, we can instantiate rule \rref{Ty-Query} with the two obtained results above,
 to reach the goal of this case.
 \end{proof}
@@ -1503,13 +1503,13 @@ to reach the goal of this case.
 \begin{minipage}{0.95\columnwidth}
 \begin{lemma}\label{lemma:unamb_subst:0}
   If
-\begin{equation*}
+\begin{myequation*}
   \unambig{}{\rulet}
-\end{equation*}
+\end{myequation*}
   then
-\begin{equation*}
+\begin{myequation*}
   \unambig{}{\rulet[\suty/\alpha]}
-\end{equation*}
+\end{myequation*}
 \end{lemma}
 \end{minipage}
 }}
@@ -1526,17 +1526,17 @@ $\alpha\notin\epsilon$.
 \begin{minipage}{0.95\columnwidth}
 \begin{lemma}\label{lemma:unamb_subst:1}
   If 
-\begin{equation*}
+\begin{myequation*}
   \unambig{\bar{\alpha}}{\rulet}
-\end{equation*}
+\end{myequation*}
   and
-\begin{equation*}
+\begin{myequation*}
   \alpha\notin\bar{\alpha}
-\end{equation*}
+\end{myequation*}
   then
-\begin{equation*}
+\begin{myequation*}
   \unambig{\bar{\alpha}}{\rulet[\suty/\alpha]}
-\end{equation*}
+\end{myequation*}
 \end{lemma}
 \end{minipage}
 }}
@@ -1555,22 +1555,22 @@ $\ftv{\type[\suty/\alpha]} = (\ftv{\type}\setminus\{\alpha\})\cup\ftv{\suty}$.
 
 %From the first two hypotheses of the theorem, we know that $\alpha\notin\ftv{\suty}$. Using this,
 %we can conclude
-%\begin{equation*}
+%\begin{myequation*}
 %\arraycolsep=1.4pt\def\arraystretch{1}
 %\begin{array}{rl}
 %\ftv{\tau[\suty/\alpha]}&=(\ftv{\tau}\setminus\{\alpha\})\cup\ftv{\suty}\\
 %                        &=(\ftv{\tau}\cup\ftv{\suty})\setminus\{\alpha\}
 %\end{array}
-%\end{equation*}
+%\end{myequation*}
 
 From the assumption of rule \rref{UA-Main} and the second hypothesis of the theorem,
 we have that $\bar\alpha\subseteq\ftv{\type}\setminus\{\alpha\}$. Then trivially it also
 holds that $\bar\alpha\subseteq(\ftv{\type}\setminus\{\alpha\})\cup\ftv{\suty}$.\\
 %Then, it holds also that $\bar\alpha\subseteq\ftv{\tau}\cup\ftv{\suty}$ and from the fourth
 %hypothesis of the theorem, we reach the goal:
-%\begin{equation*}
+%\begin{myequation*}
 %\bar\alpha\subseteq(\ftv{\tau}\cup\ftv{\suty})\setminus\{\alpha\}
-%\end{equation*}
+%\end{myequation*}
 
 %===============================================================================
 \item[\fbox{\rref{UA-TAbs}}]\quad$\unambig{\bar{\alpha}}{\tall{\beta}{\rulet}}$\\
@@ -1579,31 +1579,31 @@ holds that $\bar\alpha\subseteq(\ftv{\type}\setminus\{\alpha\})\cup\ftv{\suty}$.
 From the second hypothesis of the theorem and the adopted Barendregt convention, it follows that $\alpha\notin\bar\alpha,\beta$.
 
 From the assumption of the rule and the induction hypothesis, we get
-\begin{equation*}
+\begin{myequation*}
 \unambig{\bar{\alpha},\beta}{\rulet[\suty/\alpha]}
-\end{equation*}
+\end{myequation*}
 By using this in rule \rref{UA-TAbs} and from the definition of substitution, we reach the goal:
-\begin{equation*}
+\begin{myequation*}
 \unambig{\bar{\alpha}}{(\tall{\beta}{\rulet})[\suty/\alpha]}
-\end{equation*}
+\end{myequation*}
 
 %===============================================================================
 \item[\fbox{\rref{UA-IAbs}}]\quad$\unambig{\bar{\alpha},\alpha,\bar{\alpha}'}{\rulet_1\To\rulet_2}$\\
 %===============================================================================
 
 Passing the first assumption of rule \rref{UA-IAbs} to Lemma~\ref{lemma:unamb_subst:0} results in
-\begin{equation*}
+\begin{myequation*}
 \unambig{}{\rulet_1[\suty/\alpha]}
-\end{equation*}
+\end{myequation*}
 From the second assumption of rule \rref{UA-IAbs} and the induction hypothesis, we get
-\begin{equation*}
+\begin{myequation*}
 \unambig{\bar{\alpha}}{\rulet_2[\suty/\alpha]}
-\end{equation*}
+\end{myequation*}
 By the definition of substitution and the last two obtained results used with rule
 \rref{UA-IAbs}, we reach the goal:
-\begin{equation*}
+\begin{myequation*}
 \unambig{\bar{\alpha}}{(\rulet_1\To\rulet_2)[\suty/\alpha]}
-\end{equation*}
+\end{myequation*}
 \end{proof}
 %-------------------------------------------------------------------------------
 
@@ -1627,17 +1627,17 @@ a substitution that indeed unifies its two input types.\\
 \begin{minipage}{0.95\columnwidth}
 \begin{lemma}\label{lemma:mgu_property:1}
   If 
-\begin{equation*}
+\begin{myequation*}
   \theta = \mgu{\type}{\type'}
-\end{equation*}
+\end{myequation*}
   then
-\begin{equation*}
+\begin{myequation*}
   \theta(\type) = \theta(\type')
-\end{equation*}
+\end{myequation*}
   and
-\begin{equation*}
+\begin{myequation*}
   \dom{(\theta)} \subseteq \bar{\alpha}
-\end{equation*}
+\end{myequation*}
 
 \end{lemma}
 \end{minipage}
@@ -1657,26 +1657,26 @@ Assumption~\ref{axiom:mgu_property:3} states that $\mgu{\type}{\type'}$ is the m
 \begin{minipage}{0.95\columnwidth}
 \begin{axiom}\label{axiom:mgu_property:3}%\label{axiom:acompleteness:5}
   If 
-\begin{equation*}
+\begin{myequation*}
   \theta(\type) = \theta(\type')
-\end{equation*}
+\end{myequation*}
   and
-\begin{equation*}
+\begin{myequation*}
   \dom{(\theta)} \subseteq \bar{\alpha}
-\end{equation*}
+\end{myequation*}
   then
-%\begin{equation*}
+%\begin{myequation*}
 %  \theta' = \mgu{\type}{\type'}
-%\end{equation*}
+%\end{myequation*}
 %  and
-%\begin{equation*}
+%\begin{myequation*}
 %  \dom{(\theta')} \subseteq \bar{\alpha}
-%\end{equation*}
+%\end{myequation*}
 %  and
-\begin{equation*}
+\begin{myequation*}
   \theta \sqsubseteq \mgu{\type}{\type'}
 %  \theta \sqsubseteq \theta'
-\end{equation*}
+\end{myequation*}
 \end{axiom}
 \end{minipage}
 }}
@@ -1687,33 +1687,33 @@ Assumption~\ref{axiom:mgu_property:3} states that $\mgu{\type}{\type'}$ is the m
 \begin{minipage}{0.95\columnwidth}
 \begin{axiom}\label{axiom:mgu_property:2}
   If 
-\begin{equation*}
+\begin{myequation*}
   \theta(\type) = \type'
-\end{equation*}
+\end{myequation*}
   and
-\begin{equation*}
+\begin{myequation*}
   \dom{(\theta)} \subseteq \bar{\alpha}
-\end{equation*}
+\end{myequation*}
   and
-\begin{equation*}
+\begin{myequation*}
   \bar{\alpha} \subseteq \ftv{\type}
-\end{equation*}
+\end{myequation*}
   and
-\begin{equation*}
+\begin{myequation*}
   \forall \alpha \in \bar{\alpha}, \forall \beta \in \ftv{\type'}, \quad \before{\beta}{\alpha}
-\end{equation*}
+\end{myequation*}
   then
-%\begin{equation*}
+%\begin{myequation*}
 %  \theta' = \mgu{\type}{\type'}
-%\end{equation*}
+%\end{myequation*}
 %  and
-%\begin{equation*}
+%\begin{myequation*}
 %  \dom{(\theta')} \subseteq \bar{\alpha}
-%\end{equation*}
+%\end{myequation*}
 %  and
-\begin{equation*}
+\begin{myequation*}
   \theta = \mgu{\type}{\type'}
-\end{equation*}
+\end{myequation*}
 \end{axiom}
 \end{minipage}
 }}
@@ -1756,27 +1756,27 @@ algorithmic matching soundness proof.
 \begin{minipage}{0.95\columnwidth}
 \begin{lemma}\label{lemma:asoundness:0}
   If 
-\begin{equation*}
+\begin{myequation*}
   \adres{\tenv}{\rulet}{E}
   %\tenv \alg \rulet \leadsto E
-\end{equation*}
+\end{myequation*}
   then
-\begin{equation*}
+\begin{myequation*}
  \dres{\tenv}{\rulet}{E}
 %  \tenv \ivturns \rulet \leadsto E
-\end{equation*}
+\end{myequation*}
 \end{lemma}
 \end{minipage}
 }
 \begin{proof}
   From the hypothesis it follows that 
-\begin{equation*}
+\begin{myequation*}
   \adrres{\tyvars{\tenv}}{\tenv}{\rulet}{E}
-\end{equation*}
+\end{myequation*}
   Hence, by Lemma~\ref{lemma:asoundness:1} and rule \rref{R-Main} the desired conclusion follows.
-%\begin{equation*}
+%\begin{myequation*}
 %  \dres{\tenv}{\rulet}{E}
-%\end{equation*}
+%\end{myequation*}
 \end{proof}
 
 %###############################################################################
@@ -1785,13 +1785,13 @@ algorithmic matching soundness proof.
 \begin{minipage}{0.95\columnwidth}
 \begin{lemma}\label{lemma:asoundness:1}
   If 
-\begin{equation*}
+\begin{myequation*}
   \adrres{\bar\alpha}{\tenv}{\rulet}{E}
-\end{equation*}
+\end{myequation*}
   then
-\begin{equation*}
+\begin{myequation*}
   \drres{\bar\alpha}{\tenv}{\rulet}{E}
-\end{equation*}
+\end{myequation*}
 \end{lemma}
 \end{minipage}
 }}
@@ -1811,13 +1811,13 @@ from Lemma~\ref{lemma:asoundness:2}.
 \begin{minipage}{0.95\columnwidth}
 \begin{lemma}\label{lemma:asoundness:2}
   If 
-\begin{equation*}
+\begin{myequation*}
   \adlres{\bar\alpha}{\tenv}{\tenv'}{\rulet}{E}
-\end{equation*}
+\end{myequation*}
   then
-\begin{equation*}
+\begin{myequation*}
   \dlres{\bar\alpha}{\tenv}{\tenv'}{\rulet}{E}
-\end{equation*}
+\end{myequation*}
 \end{lemma}
 \end{minipage}
 }}
@@ -1832,13 +1832,13 @@ The proof proceeds by induction on the derivation of the hypothesis.
 %===============================================================================
 
 From the rule's first hypothesis and Lemma~\ref{lemma:asoundness:3} we have
-\begin{equation*}
+\begin{myequation*}
 \dmres{\tenv}{\rulet}{E}{\type}{E'}{\ie{\ruleset}{\bar{x}}}
-\end{equation*}
+\end{myequation*}
 Then, using Lemma~\ref{lemma:asoundness:1} and rule \rref{L-Match} we conclude
-\begin{equation*}
+\begin{myequation*}
 \dlres{\bar\alpha}{\tenv}{\tenv',\envi{\rulet}{x}}{\type}{E[\bar{E}/\bar{x}]}
-\end{equation*}
+\end{myequation*}
 
 %===============================================================================
 \item[\fbox{\rref{Alg-L-NoMatch}}]\quad
@@ -1847,30 +1847,30 @@ $\adlres{\bar\alpha}{\tenv}{\tenv',\envi{\rulet}{x}}{\type}{E'}$\ \\
 %===============================================================================
 
   From the rule's second premise and the induction hypothesis we have
-\begin{equation*}
+\begin{myequation*}
   \dlres{\bar\alpha}{\tenv}{\tenv'}{\type}{E'}
 %  \bar{\alpha};\tenv;\tenv' \ivturns \type~{\leadsto E'}
-\end{equation*}
+\end{myequation*}
 From the rule's first premise and the negation of Lemma~\ref{lemma:acompleteness:7}, we have:
-%\begin{equation*}
+%\begin{myequation*}
 %\not\exists E, \Sigma:
 %\admres{\bar\alpha}{\tenv}{\rulet}{x}{\epsilon}{\type}{E}{\Sigma}
-%\end{equation*}
+%\end{myequation*}
 %or equivaltenly,
-%\begin{equation*}
+%\begin{myequation*}
 %\not\exists \theta, E, \Sigma:
 %\admres{\bar\alpha}{\tenv}{\rulet}{x}{\epsilon}{\type}{\etrans{\theta}(E)}{\theta(\Sigma)}
-%\end{equation*}
+%\end{myequation*}
 %From the negation of Lemma~\ref{lemma:acompleteness:3} we thus have
-\begin{equation*}
+\begin{myequation*}
 \not\exists \theta, E, \Sigma, \dom(\theta) \subseteq \bar{\alpha}:
 \dmres{\theta(\tenv)}{\theta(\rulet)}{x}{\theta(\type)}{E}{\Sigma}
-\end{equation*}
+\end{myequation*}
   Hence with rule \rref{L-NoMatch} we conclude
-\begin{equation*}
+\begin{myequation*}
    \dlres{\bar\alpha}{\tenv}{\tenv',\envi{\rulet}{x}}{\type}{E'}
 %  \bar{\alpha};\tenv;\tenv',\rulet \leadsto x \ivturns \type~{\leadsto E'}
-\end{equation*}
+\end{myequation*}
 
 %===============================================================================
 \item[\fbox{\rref{Alg-L-Var}}]\quad
@@ -1879,15 +1879,15 @@ $\adlres{\bar\alpha}{\tenv}{\tenv',\relation{x}{\rulet}}{\type}{E}$\ \\
 %===============================================================================
 
 From the rule's hypothesis and the induction hypothesis we obtain
-\begin{equation*}
+\begin{myequation*}
   \dlres{\bar\alpha}{\tenv}{\tenv'}{\type}{E}
 %  \bar{\alpha};\tenv;\tenv' \ivturns \type~{\leadsto E}
-\end{equation*}
+\end{myequation*}
 By rule \rref{L-Var} we conclude
-\begin{equation*}
+\begin{myequation*}
   \dlres{\bar\alpha}{\tenv}{\tenv',\relation{x}{\rulet}}{\type}{E}
 %  \bar{\alpha};\tenv;\tenv',x:\rulet \ivturns \type~{\leadsto E}
-\end{equation*}
+\end{myequation*}
 
 %===============================================================================
 \item[\fbox{\rref{Alg-L-TyVar}}]\quad
@@ -1896,15 +1896,15 @@ $\adlres{\bar{\alpha}}{\tenv}{\tenv',\alpha}{\type}{E}$ \ \\
 %===============================================================================
 
 From the rule's hypothesis and the induction hypothesis we obtain
-\begin{equation*}
+\begin{myequation*}
   \dlres{\bar{\alpha}}{\tenv}{\tenv'}{\type}{E}
 %  \bar{\alpha};\tenv;\tenv' \ivturns \type~{\leadsto E}
-\end{equation*}
+\end{myequation*}
 By rule \rref{L-TyVar} we conclude
-\begin{equation*}
+\begin{myequation*}
   \dlres{\bar{\alpha}}{\tenv}{\tenv',\alpha}{\type}{E}
 %  \bar{\alpha};\tenv;\tenv',\alpha \ivturns \type~{\leadsto E}
-\end{equation*}
+\end{myequation*}
 \end{description}
 \end{proof}
 
@@ -1917,21 +1917,21 @@ for the $\bar{\alpha}$ type variables.
 \begin{minipage}{0.95\columnwidth}
 \begin{lemma}\label{lemma:asoundness:3}
   If 
-\begin{equation*}
+\begin{myequation*}
 \admress{\bar\alpha}{\tenv}{\rulet}{E}{\Sigma}{\type}{E'}{\Sigma'}{\theta}
-\end{equation*}
+\end{myequation*}
   and
-\begin{equation*}
+\begin{myequation*}
   \dom{(\theta)} \subseteq \bar{\alpha}
-\end{equation*}
+\end{myequation*}
   then,
-\begin{equation*}
+\begin{myequation*}
 \dmres{\theta(\tenv)}{\theta(\rulet)}{\etrans\theta(E)}{\theta(\type)}{E'}{\Sigma''}
-\end{equation*}
+\end{myequation*}
   for $\Sigma''$ such that
-\begin{equation*}
+\begin{myequation*}
   \Sigma' = \theta(\Sigma),\Sigma''
-\end{equation*}
+\end{myequation*}
 \end{lemma}
 \end{minipage}
 }}
@@ -1947,9 +1947,9 @@ $\admress{\bar\alpha}{\tenv}{\type'}{E}{\Sigma}{\type}{\etrans\theta(E)}{\theta(
 
 From the hypothesis of the rule and Lemma~\ref{lemma:mgu_property:1} it follows that
 $\theta(\type') = \theta(\type)$. Hence, with rule~\rref{M-Simp}, we obtain the goal judgment.
-\begin{equation*}
+\begin{myequation*}
   \dmres{\theta(\tenv)}{\theta(\type')}{\etrans\theta{E}}{\theta(\type')}{\etrans\theta{E}}{\epsilon}
-\end{equation*}
+\end{myequation*}
 %where the meta-variable $\Sigma''$ from the theorem statement has been instantiated to $\epsilon$.\\
 
 %===============================================================================
@@ -1959,13 +1959,13 @@ $\admress{\bar\alpha}{\tenv}{\rulet_1\To\rulet_2}{E}{\Sigma}{\type}{E'}{\Sigma'}
 
   From the premise of the rule, the induction hypothesis and the definition of substitution,
 we have that
-\begin{equation*}
+\begin{myequation*}
   \dmres{\theta(\tenv),\envi{\theta(\rulet_1)}{x}}{\theta(\rulet_2)}{\etrans\theta(\mmapp{E}{x})}{\theta(\type)}{E'}{\Sigma''}
-\end{equation*}
+\end{myequation*}
 where $\Sigma' = \theta(\Sigma,\ie{\rulet_1}{x}),\Sigma''$. By rule \rref{M-IApp} we may then conclude
-\begin{equation*}
+\begin{myequation*}
 \dmres{\theta(\tenv)}{\theta(\rulet_1\To\rulet_2)}{\etrans\theta(E)}{\theta(\type)}{E'}{\theta(\ie{\rulet_1}{x}),\Sigma''}
-\end{equation*}
+\end{myequation*}
 Trivially, the last condition of the theorem holds, since $\Sigma' = \theta(\Sigma),((\theta(\ie{\rulet_1}{x}),\Sigma'')$.\\
 
 %===============================================================================
@@ -1974,14 +1974,14 @@ $\admress{\bar\alpha}{\tenv}{\tall{\alpha}{\rulet}}{E}{\Sigma}{\type}{E'}{\Sigma
 %===============================================================================
 
   Then it follows from the rule's premise and from the induction hypothesis that
-\begin{equation*}
+\begin{myequation*}
 \dmres{\theta(\tenv)}{\theta(\rulet)}{\etrans\theta(\mmapp{E}{\alpha})}{\theta(\type)}{E'}{\Sigma''}
-\end{equation*}
+\end{myequation*}
 where $\Sigma' = \theta(\Sigma),\Sigma''$.
   Hence, it follows from rule \rref{M-TApp} that
-\begin{equation*}
+\begin{myequation*}
   \dmres{\theta(\tenv)}{\theta(\tall{\alpha}{\rulet})}{\etrans\theta(E)}{\theta(\type)}{E'}{\Sigma''}
-\end{equation*}
+\end{myequation*}
 \end{description}
 \end{proof}
 
@@ -1992,13 +1992,13 @@ where $\Sigma' = \theta(\Sigma),\Sigma''$.
 %\begin{minipage}{0.95\columnwidth}
 %\begin{lemma}\label{lemma:asoundness:5}
 %  If 
-%\begin{equation*}
+%\begin{myequation*}
 %  \admres{\bar\alpha}{\tenv}{\rulet}{E}{\Sigma}{\type}{E'}{\Sigma'}
-%\end{equation*}
+%\end{myequation*}
 %  then
-%\begin{equation*}
+%\begin{myequation*}
 %  \coherent{\bar\alpha}{\tenv}{\rulet}{\type}
-%\end{equation*}
+%\end{myequation*}
 %\end{lemma}
 %\end{minipage}
 %}}
@@ -2052,34 +2052,34 @@ completeness of algorithmic matching.
 \begin{minipage}{0.95\columnwidth}
 \begin{lemma}\label{lemma:acompleteness:0}
   If 
-\begin{equation*}
+\begin{myequation*}
   \unambenv{\tenv}
-\end{equation*}
+\end{myequation*}
   and
-\begin{equation*}
+\begin{myequation*}
   \unambig{}{\rulet}
-\end{equation*}
+\end{myequation*}
   and
-\begin{equation*}
+\begin{myequation*}
   \dres{\tenv}{\rulet}{E}
-\end{equation*}
+\end{myequation*}
   then
-\begin{equation*}
+\begin{myequation*}
   \adres{\tenv}{\rulet}{E}
-\end{equation*}
+\end{myequation*}
 \end{lemma}
 \end{minipage}
 }}
 
 \begin{proof}
   From the third hypothesis it follows that 
-\begin{equation*}
+\begin{myequation*}
 \drres{\tyvars{\tenv}}{\tenv}{\rulet}{E}
-\end{equation*}
+\end{myequation*}
   Hence, by Lemma~\ref{lemma:acompleteness:1} and rule \rref{Alg-R-Main} the desired conclusion follows
-\begin{equation*}
+\begin{myequation*}
 \adres{\tenv}{\rulet}{E}
-\end{equation*}
+\end{myequation*}
 \end{proof}
 
 %###############################################################################
@@ -2088,21 +2088,21 @@ completeness of algorithmic matching.
 \begin{minipage}{0.95\columnwidth}
 \begin{lemma}\label{lemma:acompleteness:1}
   If 
-\begin{equation*}
+\begin{myequation*}
   \unambenv{\tenv}
-\end{equation*}
+\end{myequation*}
   and
-\begin{equation*}
+\begin{myequation*}
   \unambig{}{\rulet}
-\end{equation*}
+\end{myequation*}
   and
-\begin{equation*}
+\begin{myequation*}
   \drres{\bar\alpha}{\tenv}{\rulet}{E}
-\end{equation*}
+\end{myequation*}
   then
-\begin{equation*}
+\begin{myequation*}
   \adrres{\bar\alpha}{\tenv}{\rulet}{E}
-\end{equation*}
+\end{myequation*}
 \end{lemma}
 \end{minipage}
 }}
@@ -2121,17 +2121,17 @@ from Lemma~\ref{lemma:acompleteness:2}.
 \begin{minipage}{0.95\columnwidth}
 \begin{lemma}\label{lemma:acompleteness:2}
   If 
-\begin{equation*}
+\begin{myequation*}
   \unambenv{\tenv'}
-\end{equation*}
+\end{myequation*}
   and
-\begin{equation*}
+\begin{myequation*}
   \dlres{\bar\alpha}{\tenv}{\tenv'}{\rulet}{E}
-\end{equation*}
+\end{myequation*}
   then
-\begin{equation*}
+\begin{myequation*}
   \adlres{\bar\alpha}{\tenv}{\tenv'}{\rulet}{E}
-\end{equation*}
+\end{myequation*}
 \end{lemma}
 \end{minipage}
 }}
@@ -2148,13 +2148,13 @@ $\dlres{\bar\alpha}{\tenv}{\tenv',\envi{\rulet}{x}}{\type}{E[\bar{E}/\bar{x}]}$ 
 From the first hypothesis of the theorem, we derive that $\unambig{}{\rulet}$. From the rule's second
 hypothesis and Lemma~\ref{lemma:acompleteness:3}, with $\theta=\epsilon$ and
 $\alpha=\epsilon$, we have
-\begin{equation*}
+\begin{myequation*}
   \admres{\epsilon}{\tenv}{\rulet}{x}{\epsilon}{\type}{E'}{\ie{\bar\rulet}{\bar{x}}}
-\end{equation*}
+\end{myequation*}
 Then, using Lemma~\ref{lemma:acompleteness:1} and rule \rref{Alg-L-Match} we conclude
-\begin{equation*}
+\begin{myequation*}
   \adlres{\bar\alpha}{\tenv}{\tenv',\envi{\rulet}{x}}{\type}{E[\bar{E}/\bar{x}]}
-\end{equation*}
+\end{myequation*}
 
 %===============================================================================
 \item[\fbox{\rref{L-NoMatch}}]\quad
@@ -2163,24 +2163,24 @@ $\dlres{\bar\alpha}{\tenv}{\tenv',\envi{\rulet}{x}}{\type}{E'}$ \ \\
 %===============================================================================
 
   From the rule's second hypothesis and the induction hypothesis we have
-\begin{equation*}
+\begin{myequation*}
   \adlres{\bar\alpha}{\tenv}{\tenv'}{\type}{E'}
 %  \bar{\alpha};\tenv;\tenv' \alg \type~{\leadsto E'}
-\end{equation*}
+\end{myequation*}
 From the rule's first hypothesis, there are no $\theta$, $\Sigma_1$ and $E_1$ such that
 $\dom{(\theta)\subseteq\bar\alpha}$ and
-\begin{equation*}
+\begin{myequation*}
   \dmres{\theta(\tenv)}{\theta(\rulet)}{x}{\Sigma_1}{\type}{E_1}
-\end{equation*}
+\end{myequation*}
 From the negation of Lemma~\ref{lemma:asoundness:3} and then the negation of
 Lemma~\ref{lemma:acompleteness:4}, we have:
-\begin{equation*}
+\begin{myequation*}
 \incoherent{\bar\alpha}{\tenv}{\rulet}{\type}
-\end{equation*}
+\end{myequation*}
   Hence with rule \rref{Alg-L-NoMatch} we conclude
-\begin{equation*}
+\begin{myequation*}
   \adlres{\bar\alpha}{\tenv}{\tenv',\envi{\rulet}{x}}{\type}{E'}
-\end{equation*}
+\end{myequation*}
 
 %===============================================================================
 \item[\fbox{\rref{L-Var}}]\quad
@@ -2189,15 +2189,15 @@ $\dlres{\bar\alpha}{\tenv}{\tenv',\relation{x}{\rulet}}{\type}{E}$ \ \\
 %===============================================================================
 
 From the rule's hypothesis and the induction hypothesis we obtain
-\begin{equation*}
+\begin{myequation*}
   \adlres{\bar\alpha}{\tenv}{\tenv'}{\type}{E}
 %  \bar{\alpha};\tenv;\tenv' \alg \type~{\leadsto E}
-\end{equation*}
+\end{myequation*}
 By rule \rref{Alg-L-Var} we conclude
-\begin{equation*}
+\begin{myequation*}
   \adlres{\bar\alpha}{\tenv}{\tenv',\relation{x}{\rulet}}{\type}{E}
 %  \bar{\alpha};\tenv;\tenv',x:\rulet \alg \type~{\leadsto E}
-\end{equation*}
+\end{myequation*}
 
 %===============================================================================
 \item[\fbox{\rref{L-TyVar}}]\quad
@@ -2206,15 +2206,15 @@ $\dlres{\bar\alpha}{\tenv}{\tenv',\alpha}{\type}{E}$\ \\
 %===============================================================================
 
 From the rule's hypothesis and the induction hypothesis we obtain
-\begin{equation*}
+\begin{myequation*}
 \adlres{\bar\alpha}{\tenv}{\tenv'}{\type}{E}
 % \bar{\alpha};\tenv;\tenv' \alg \type~{\leadsto E}
-\end{equation*}
+\end{myequation*}
 By rule \rref{Alg-L-TyVar} we conclude
-\begin{equation*}
+\begin{myequation*}
   \adlres{\bar\alpha}{\tenv}{\tenv',\alpha}{\type}{E}
 %  \bar{\alpha};\tenv;\tenv',\alpha \alg \type~{\leadsto E}
-\end{equation*}
+\end{myequation*}
 \end{description}
 \end{proof}
 
@@ -2224,26 +2224,26 @@ By rule \rref{Alg-L-TyVar} we conclude
 \begin{minipage}{0.95\columnwidth}
 \begin{lemma}\label{lemma:acompleteness:3}
   If 
-\begin{equation*}
+\begin{myequation*}
 \dmres{\theta(\tenv)}{\theta(\rulet)}{\etrans{\theta}(E)}{\type}{E'}{\Sigma'}
-\end{equation*}
+\end{myequation*}
   and
-\begin{equation*}
+\begin{myequation*}
   \unambig{\bar\alpha}{\rulet}
-\end{equation*}
+\end{myequation*}
   and
-\begin{equation*}
+\begin{myequation*}
   \dom{(\theta)}\subseteq\bar\alpha
-\end{equation*}
+\end{myequation*}
   and
-\begin{equation*}
+\begin{myequation*}
   \forall \alpha \in \bar{\alpha}, \forall \beta \in \ftv{\type}, \quad \before{\beta}{\alpha}
-\end{equation*}
+\end{myequation*}
   then, for all $\Sigma$,
-\begin{equation*}
+\begin{myequation*}
 %\forall \Sigma, \exists \theta', \quad
   \admres{\bar\alpha}{\tenv}{\rulet}{E}{\Sigma}{\type}{E'}{\theta(\Sigma),\Sigma'}
-\end{equation*}
+\end{myequation*}
 \end{lemma}
 \end{minipage}
 }}
@@ -2260,13 +2260,13 @@ $\dmres{\theta(\tenv)}{\theta(\type')}{\etrans{\theta}(E)}{\type}{E'}{\epsilon}$
 From the second hypothesis of the theorem, we have that $\bar\alpha\subseteq\ftv{\type'}$. By
 using this, together with the third and fourth hypotheses of the theorem and the side condition
 that $\type = \theta(\type')$, in Assumption~\ref{axiom:mgu_property:2}, we get
-\begin{equation*}
+\begin{myequation*}
   \theta = \mgu{\type}{\type'}
-\end{equation*}
+\end{myequation*}
 Trivially, from rule \rref{Alg-M-Simp} we have
-\begin{equation*}
+\begin{myequation*}
   \admres{\bar\alpha}{\tenv}{\type'}{E}{\Sigma}{\type}{\etrans{\theta}(E)}{\theta(\Sigma)}
-\end{equation*}
+\end{myequation*}
 
 %===============================================================================
 \item[\fbox{\rref{M-IApp}}]\quad
@@ -2274,18 +2274,18 @@ $\dmres{\theta(\tenv)}{\theta(\rulet_1\To\rulet_2)}{\etrans{\theta}(E)}{\type}{E
 %===============================================================================
 
   From the hypothesis of the rule and the induction hypothesis, we have that
-\begin{equation*}
+\begin{myequation*}
 \forall\Sigma,\quad \admres{\bar\alpha}{\tenv,\envi{\rulet_1}{x}}{\rulet_2}{\mmapp{E}{x}}{\Sigma}{\type}{E'}{\theta(\Sigma),\Sigma'}
-\end{equation*}
+\end{myequation*}
 Then, by choosing $\Sigma = \Sigma'',\ie{\rulet_1}{x}$ with any $\Sigma''$, the above can be refined to
-\begin{equation*}
+\begin{myequation*}
 \forall \Sigma'',\quad\admres{\bar\alpha}{\tenv,\envi{\rulet_1}{x}}{\rulet_2}{\mmapp{E}{x}}{\Sigma'',\ie{\rulet_1}{x}}{\type}{E'}{\theta(\Sigma'',\ie{\rulet_1}{x}),\Sigma'}
-\end{equation*}
+\end{myequation*}
   By rule \rref{Alg-M-IApp} we may then conclude
-\begin{equation*}
+\begin{myequation*}
 \forall\Sigma'',\quad\admres{\bar\alpha}{\tenv}{\rulet_1\To\rulet_2}{E}{\Sigma''}{\type}{E'}{\theta(\Sigma''),\ie{\theta(\rulet_1)}{x},\Sigma'}
 % \bar{\alpha};\tenv;\rulet_1 \iarrow \rulet_2 \leadsto E; \Sigma \alg \type \leadsto |\theta_2|(E'); \theta_2(\Sigma',\rulet_1 \leadsto x, \Sigma)
-\end{equation*}
+\end{myequation*}
 
 %===============================================================================
 \item[\fbox{\rref{M-TApp}}]\quad
@@ -2293,9 +2293,9 @@ $\dmres{\theta(\tenv)}{\theta(\tall{\alpha}{\rulet})}{\etrans{\theta}(E)}{\type}
 %===============================================================================
 
 From the definition of substitution and the premise of the rule, we have
-\begin{equation*}
+\begin{myequation*}
   \dmres{\theta(\tenv)}{\theta(\rulet)[\suty/\alpha]}{\etrans{\theta}(\mmapp{E}{\etrans{\suty}})}{\type}{E'}{\Sigma'}
-\end{equation*}
+\end{myequation*}
 
 The Barendregt convention allows us to asses that $\alpha\notin\theta(\tenv)$. Thus, we can
 consider $\theta'=[\suty/\alpha]\cdot\theta$, for which it follows that
@@ -2308,22 +2308,22 @@ $\dom{(\theta')}\subseteq\bar\alpha,\alpha$. From the definition of substitution
 Also, since $\alpha$ does not appear free in $\etrans{\theta}(E)$, the substitution
 $[\suty/\alpha]$ does not affect it.
 The premise of the rule can, then, be rewritten as
-\begin{equation*}
+\begin{myequation*}
   \dmres{\theta'(\tenv,\alpha)}{\theta'(\rulet)}{\etrans{\theta'}(\mmapp{E}{\alpha})}{\type}{E'}{\Sigma'}
-\end{equation*}
+\end{myequation*}
 From the second hypothesis of the theorem, we have that
-\begin{equation*}
+\begin{myequation*}
   \unambig{\bar\alpha,\alpha}{\rulet}
-\end{equation*}
+\end{myequation*}
 and since $\alpha$ is fresh, it holds that for any $\beta\in\ftv{\type}$,
 $\before{\beta}{\alpha}$. We can now use the induction hypothesis, to obtain
-\begin{equation*}
+\begin{myequation*}
   \admres{\bar\alpha,\alpha}{\tenv}{\rulet}{\mmapp{E}{\alpha}}{\Sigma}{\type}{E'}{\theta'(\Sigma),\Sigma'}
-,\end{equation*}
+,\end{myequation*}
 Hence, it follows from rule \rref{Alg-M-TApp} that
-\begin{equation*}
+\begin{myequation*}
 \admres{\bar\alpha}{\tenv}{\tall{\alpha}{\rulet}}{E}{\Sigma}{\type}{E'}{\theta'(\Sigma),\Sigma'}
-\end{equation*}
+\end{myequation*}
 \end{description}
 \end{proof}
 
@@ -2333,17 +2333,17 @@ Hence, it follows from rule \rref{Alg-M-TApp} that
 \begin{minipage}{0.95\columnwidth}
 \begin{lemma}\label{lemma:acompleteness:7}
   If 
-\begin{equation*}
+\begin{myequation*}
 \dmres{\theta_1(\tenv)}{\theta_1(\rulet)}{E}{\theta_1(\type)}{E'}{\Sigma'}
-\end{equation*}
+\end{myequation*}
   and
-\begin{equation*}
+\begin{myequation*}
   \dom{(\theta_1)}\subseteq\bar\alpha
-\end{equation*}
+\end{myequation*}
   then
-\begin{equation*}
+\begin{myequation*}
   \coherent{\bar\alpha}{\tenv}{\rulet}{\type}
-\end{equation*}
+\end{myequation*}
 \end{lemma}
 \end{minipage}
 }}
@@ -2359,13 +2359,13 @@ $\dmres{\theta_1(\tenv)}{\theta_1(\type')}{E}{\theta_1(\type)}{E}{\epsilon}$ \qu
 
 By Assumption~\ref{axiom:mgu_property:3} applied on the second hypothesis of the theorem
 and the side condition that $\theta_1(\type) = \theta_1(\type')$, we get
-\begin{equation*}
+\begin{myequation*}
   \theta_1\sqsubseteq\mgu{\type}{\type'}
-\end{equation*}
+\end{myequation*}
 Trivially, from rule \rref{Sta-Simp} we have
-\begin{equation*}
+\begin{myequation*}
   \coherent{\bar\alpha}{\tenv}{\type'}{\type}
-\end{equation*}
+\end{myequation*}
 
 %===============================================================================
 \item[\fbox{\rref{M-IApp}}]\quad
@@ -2373,17 +2373,17 @@ $\dmres{\theta_1(\tenv)}{\theta_1(\rulet_1\To\rulet_2)}{E}{\theta_1(\type)}{E'}{
 %===============================================================================
 
   From the hypothesis of the rule and the induction hypothesis, we have that
-\begin{equation*}
+\begin{myequation*}
 \coherent{\bar{\alpha}}{\tenv,\envi{\rulet_1}{x}}{\rulet_2}{\type}
-\end{equation*}
+\end{myequation*}
 We can strengthen this---which we use without proof---to obtain:
-\begin{equation*}
+\begin{myequation*}
 \coherent{\bar{\alpha}}{\tenv}{\rulet_2}{\type}
-\end{equation*}
+\end{myequation*}
 Then, by rule~\rref{Sta-IApp} we conclude
-\begin{equation*}
+\begin{myequation*}
 \coherent{\bar{\alpha}}{\tenv}{\rulet_1 \To \rulet_2}{\type}
-\end{equation*}
+\end{myequation*}
 
 %===============================================================================
 \item[\fbox{\rref{M-TApp}}]\quad
@@ -2391,30 +2391,30 @@ $\dmres{\theta_1(\tenv)}{\theta_1(\tall{\alpha}{\rulet})}{E}{\theta_1(\type)}{E'
 %===============================================================================
 
 From the definition of substitution and the premise of the rule, we have
-\begin{equation*}
+\begin{myequation*}
   \dmres{\theta_1(\tenv)}{\theta_1(\rulet)[\suty/\alpha]}{\mmapp{E}{\etrans{\suty}}}{\theta_1(\type)}{E'}{\Sigma'}
-\end{equation*}
+\end{myequation*}
 The Barendregt convention allows us to asses that $\alpha\notin\theta_1(\tenv)$. Thus, we can
 consider $\theta'=[\suty/\alpha]\cdot\theta_1$, for which it follows that
 $\dom{(\theta')}\subseteq\bar\alpha,\alpha$. From the definition of substitution,
-\begin{equation*}
+\begin{myequation*}
   \theta'(\rulet) = \theta_1(\rulet)[\suty/\alpha]\quad\text{and}\quad
   \theta'(\tenv,\alpha) = \theta_1(\tenv)
-\end{equation*}
+\end{myequation*}
 In addition, since $\alpha$ does not appear free in the type $\theta_1(\type)$,
 it follows that the substitution $[\suty/\alpha]$ does not affect it.
 The premise of the rule can, then, be rewritten as
-\begin{equation*}
+\begin{myequation*}
   \dmres{\theta'(\tenv,\alpha)}{\theta'(\rulet)}{\mmapp{E}{\suty}}{\theta'(\type)}{E'}{\Sigma'}
-\end{equation*}
+\end{myequation*}
 From the induction hypothesis, we have that
-\begin{equation*}
+\begin{myequation*}
   \coherent{\bar\alpha,\alpha}{\tenv,\alpha}{\rulet}{\type}
-,\end{equation*}
+,\end{myequation*}
 Hence, it follows from rule \rref{Sta-TApp} that
-\begin{equation*}
+\begin{myequation*}
   \coherent{\bar\alpha}{\tenv}{\forall \alpha.\rulet}{\type}
-\end{equation*}
+\end{myequation*}
 \end{description}
 \end{proof}
 
@@ -2424,13 +2424,13 @@ Hence, it follows from rule \rref{Sta-TApp} that
 \begin{minipage}{0.95\columnwidth}
 \begin{lemma}\label{lemma:acompleteness:4}
   If 
-\begin{equation*}
+\begin{myequation*}
   \coherent{\bar\alpha}{\tenv}{\rulet}{\type}
-\end{equation*}
+\end{myequation*}
   then for all $E, \Sigma$ there exist $E', \Sigma'$ such that
-\begin{equation*}
+\begin{myequation*}
   \admres{\bar\alpha}{\tenv}{\rulet}{E}{\Sigma}{\type}{E'}{\Sigma'}
-\end{equation*}
+\end{myequation*}
 \end{lemma}
 \end{minipage}
 }}
@@ -2451,25 +2451,25 @@ Hence, it follows from rule \rref{Sta-TApp} that
 %     $\vdashr{\bar{\alpha}}{\env}{\rho_1 \iarrow \rho_2}{\lambda\relation{x}{||\rho_1||}.E}$ \ \\
 % %= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = 
 % From rule \mylabel{R-IAbs} and the induction hypothesis, it follows that
-% \begin{equation*}
+% \begin{myequation*}
 % \vdashr{\bar{\alpha}}{\theta(\env,\rho_1\leadsto x)}{\theta(\rho_2)}{\theta(E)}
-% \end{equation*}
+% \end{myequation*}
 % Hence, using rule \mylabel{R-IAbs}, we conclude
-% \begin{equation*}
+% \begin{myequation*}
 % \vdashr{\bar{\alpha}}{\theta(\env)}{\theta(\rho_1\iarrow\rho_2)}{\theta(\lambda\relation{x}{||\rho_1||}.E)}
-% \end{equation*}
+% \end{myequation*}
 % %= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = 
 % \item[\texttt{(R-TAbs)}] \quad
 %     $\vdashr{\bar{\alpha}}{\env}{\forall \alpha. \rho}{\Lambda\alpha.E}$ \ \\
 % %= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = 
 % From rule \mylabel{R-TAbs} and the induction hypothesis, it follows that
-% \begin{equation*}
+% \begin{myequation*}
 % \vdashr{\bar{\alpha},\alpha}{\theta(\env)}{\theta(\rho)}{\theta(E)}
-% \end{equation*}
+% \end{myequation*}
 % Hence, using rule \mylabel{R-TAbs}, we conclude
-% \begin{equation*}
+% \begin{myequation*}
 % \vdashr{\bar{\alpha}}{\theta(\env)}{\theta(\forall \alpha. \rho)}{\theta(\Lambda\alpha.E)}
-% \end{equation*}
+% \end{myequation*}
 % %= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = 
 % \item[\texttt{(R-Simp)}] \quad
 %     $\vdashr{\bar{\alpha}}{\env}{\tau}{E}$ \ \\
@@ -2477,30 +2477,30 @@ Hence, it follows from rule \rref{Sta-TApp} that
 % We distinguish two cases. Firstly, we assume
 % that $\theta(\tau)$ yields the simple type $\tau'$.
 % Then, it follows from rule \mylabel{R-Simp} and Lemma~\ref{} (TODO) that
-% \begin{equation*}
+% \begin{myequation*}
 % \elookup{\theta(\env)}{\theta(\tau)} = \theta(\rho)~\leadsto x
-% \end{equation*}
+% \end{myequation*}
 % Similarly, it follows from rule \mylabel{R-Simp} and Lemma~\ref{} (TODO) that
-% \begin{equation*}
+% \begin{myequation*}
 % \bar{\alpha};\theta(\env); \theta(\rho)~\leadsto x
 %    \turns_\downarrow \theta(\type)~\leadsto \theta(E)
-% \end{equation*}
+% \end{myequation*}
 % Hence, using rule \mylabel{R-Simp} we conclude
-% \begin{equation*}
+% \begin{myequation*}
 % \vdashr{\bar{\alpha}}{\theta(\env)}{\theta(\tau)}{\theta(E)}
-% \end{equation*}
+% \end{myequation*}
 % 
 % Secondly, we assume that $\theta(\tau) = \forall \bar{\beta}.\tau'$.
 % This happens only if $\tau = \alpha$.
 % In this case, we can show:
-% \begin{equation*}
+% \begin{myequation*}
 % \vdashr{\bar{\alpha}}{\theta(\env)}{\theta(\tau)}{E'} \quad \wedge \quad E' \equiv_{\alpha,H} \theta(E)
-% \end{equation*}
+% \end{myequation*}
 % if we take $E' = \Lambda\bar{\beta}.\theta(E)\,\bar{\beta}$
 % by repeated application of rule \mylabel{R-TAbs} and showing that
-% \begin{equation*}
+% \begin{myequation*}
 % \vdashr{\bar{\alpha},\bar{\beta}}{\theta(\env)}{\tau'}{\theta(E)\,\bar{\beta}}
-% \end{equation*}
+% \end{myequation*}
 % 
 % %   \item $\theta(\tau) = \tau'$
 % %   \item $\theta(\tau) = \forall \bar{\alpha'}.\tau'$
@@ -2524,41 +2524,41 @@ Hence, it follows from rule \rref{Sta-TApp} that
 %     $\rho_1 \iarrow \rho_2 \lhd \tau$ \ \\
 % %= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = 
 % From rule \mylabel{M-IApp} and the induction hypothesis it follows that:
-% \begin{equation*}
+% \begin{myequation*}
 % \theta(\rho_2) \lhd \head{\theta(\tau)}
-% \end{equation*}
+% \end{myequation*}
 % Then it follows from rule \mylabel{M-IApp} that:
-% \begin{equation*}
+% \begin{myequation*}
 % \theta(\rho_1) \iarrow \theta(\rho_2) \lhd \head{\theta(\tau)}
-% \end{equation*}
+% \end{myequation*}
 % Hence, because $\theta(\rho_1) \iarrow \theta(\rho_2) = \theta(\rho_1 \iarrow \rho_2)$.
 % we conclude:
-% \begin{equation*}
+% \begin{myequation*}
 % \theta(\rho_1 \iarrow \rho_2) \lhd \head{\theta(\tau)}
-% \end{equation*}
+% \end{myequation*}
 % 
 % %= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = 
 % \item[\texttt{(M-TApp)}] \quad
 %     $\forall \alpha. \rho \lhd \tau$ \ \\
 % %= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = 
 % From rule \mylabel{M-TApp} and the induction hypothesis it follows that:
-% \begin{equation*}
+% \begin{myequation*}
 % \theta(\rho[\suty'/\alpha']) \lhd \head{\theta(\tau)}
-% \end{equation*}
+% \end{myequation*}
 % We can commute the two substitutions as follows because their
 % domains are disjoint:
-% \begin{equation*}
+% \begin{myequation*}
 % \theta(\rho)[\theta(\suty')/\alpha'] \lhd \head{\theta(\tau)}
-% \end{equation*}
+% \end{myequation*}
 % Then, by rule \mylabel{M-TApp}, we get:
-% \begin{equation*}
+% \begin{myequation*}
 % \forall \alpha. \theta(\rho) \lhd \head{\theta(\tau)}
-% \end{equation*}
+% \end{myequation*}
 % Finally, because $\forall \alpha. \theta(\rho) = \theta(\forall \alpha. \rho)$,
 % we conclude:
-% \begin{equation*}
+% \begin{myequation*}
 % \theta(\forall \alpha. \rho) \lhd \head{\theta(\tau)}
-% \end{equation*}
+% \end{myequation*}
 % 
 % %= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = 
 % \item[\texttt{(M-Simp)}] \quad
@@ -2568,24 +2568,24 @@ Hence, it follows from rule \rref{Sta-TApp} that
 % Firstly, we consider the case where $\tau = \rho_1 \arrow \rho_2$.
 % Then, $\theta(\tau) = \head{\theta(\tau)}$ by rule \mylabel{M-Simp}
 % we trivially have:
-% \begin{equation*}
+% \begin{myequation*}
 % \theta(\tau) \lhd \head{\theta(\tau)}
-% \end{equation*}
+% \end{myequation*}
 % 
 % Secondly, we consider the case where $\tau = \alpha' \neq \alpha$.
 % Then, $\head(\theta(\tau)) = \head{\tau} = \tau$ and by rule 
 % \mylabel{M-Simp} we trivally have:
-% \begin{equation*}
+% \begin{myequation*}
 % \theta(\tau) \lhd \head{\theta(\tau)}
-% \end{equation*}
+% \end{myequation*}
 % 
 % Thirdly, we consider the case where $\tau = \alpha$. Then $\theta(\tau) =
 % \suty$.  We have that $\suty$ is of the general form $\forall
 % \bar{\beta}.\tau'$. Hence, $\head{\theta(\tau)} = \tau'$.
 % Then we can establish the desired goal:
-% \begin{equation*}
+% \begin{myequation*}
 % \forall \bar{\beta}.\tau' \lhd \tau'
-% \end{equation*}
+% \end{myequation*}
 % by repeated application of rule \mylabel{M-TApp}
 % choosing substitutions of the form $[\beta/\beta]$
 % and the trivial base case $\tau' \lhd \tau'$ shown by rule
@@ -2612,57 +2612,57 @@ Hence, it follows from rule \rref{Sta-TApp} that
 %     $\elookup{(\env,\rho \leadsto x)}{\type} = \rho \leadsto x$ \ \\
 % %= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = 
 % From rule \mylabel{L-Head} it follows that
-% \begin{equation*}
+% \begin{myequation*}
 % \rho \lhd \tau
-% \end{equation*}
+% \end{myequation*}
 % Hence, from Lemma~\ref{lemma:substitution:lhd}, we know that:
-% \begin{equation*}
+% \begin{myequation*}
 % \theta(\rho) \lhd \head{\theta(\type)}
-% \end{equation*}
+% \end{myequation*}
 % Thus we obtain with rule \mylabel{L-Head}:
-% \begin{equation*}
+% \begin{myequation*}
 % \elookup{(\theta(\env),\theta(\rho) \leadsto x)}{\head{\theta(\type)}} = \theta(\rho) \leadsto x
-% \end{equation*}
+% \end{myequation*}
 % As $(\theta(\env),\theta(\rho) \leadsto x) = \theta(\env,\rho \leadsto x)$,
 % this yields the desired result:
-% \begin{equation*}
+% \begin{myequation*}
 % \elookup{\theta(\env,\rho \leadsto x)}{\head{\theta(\type)}} = \theta(\rho) \leadsto x
-% \end{equation*}
+% \end{myequation*}
 % 
 % %= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = 
 % \item[\texttt{(L-Tail)}] \quad
 %     $\elookup{(\env,\rho_1 \leadsto x)}{\type} = \rho_2 \leadsto y$ \ \\
 % %= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = 
 % From rule \mylabel{L-Tail} and the induction hypothesis it follows that
-% \begin{equation*}
+% \begin{myequation*}
 % \elookup{\theta(\env)}{\head{\theta(\type)}} = \theta(\rho_2) \leadsto y
-% \end{equation*}
+% \end{myequation*}
 % 
 % Also from rule \mylabel{L-Tail} we have
-% \begin{equation*}
+% \begin{myequation*}
 % \forall \theta': 
 % 	\theta'(\rulet_1) \mathop{\not\!\!\lhd} \head{\theta'(\type)}
-% \end{equation*}
+% \end{myequation*}
 % As a consequence this also holds for every choice $\theta' = \theta'' \cdot \theta$.
-% \begin{equation*}
+% \begin{myequation*}
 % \forall \theta'': 
 % 	\theta''(\theta(\rulet_1)) \mathop{\not\!\!\lhd} \head{\theta''(\theta(\type))}
-% \end{equation*}
+% \end{myequation*}
 % Now we apply the property that $\mathrm{hd} \cdot \theta'' = \mathrm{hd} \cdot \theta'' \cdot \mathrm{hd}$:
-% \begin{equation*}
+% \begin{myequation*}
 % \forall \theta'': 
 % 	\theta''(\theta(\rulet_1)) \mathop{\not\!\!\lhd} \head{\theta''(\head{\theta(\type)})}
-% \end{equation*}
+% \end{myequation*}
 % We now have all the necessary ingredients to apply rule \mylabel{L-Tail}
 % and to conclude:
-% \begin{equation*}
+% \begin{myequation*}
 % \elookup{(\theta(\env),\theta(\rho_1) \leadsto x)}{\head{\theta(\type)}} = \theta(\rho_2) \leadsto y
-% \end{equation*}
+% \end{myequation*}
 % Finally, as $(\theta(\env),\theta(\rho_1) \leadsto x) = \theta(\env, \rho_1
 % \leadsto x)$, we obtain the desired result:
-% \begin{equation*}
+% \begin{myequation*}
 % \elookup{\theta(\env,\rho_1 \leadsto x)}{\head{\theta(\type)}} = \theta(\rho_2) \leadsto y
-% \end{equation*}
+% \end{myequation*}
 % 
 % \end{description}
 % \end{proof}
