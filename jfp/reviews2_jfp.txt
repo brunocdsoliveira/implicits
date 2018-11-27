@@ -115,6 +115,7 @@ proposed to write some text.
 > few times?
 
 TODO: Test the hyper-references?
+The uploaded hyper references absolutely do not work.
 
 > l.76: "stability of substitutions" should be "stability [of
 > resolution] _under_ substitution" or better yet "stability of
