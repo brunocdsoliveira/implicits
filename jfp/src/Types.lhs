@@ -356,12 +356,15 @@ versus
 \end{array}
 \end{equation*}%
 While these are two different proofs, they use the information in the context
-$\tenv$ in essentially the same way. Hence, unlike the nondeterminism in the
-previous example at the end of Section~\ref{s:resolution} where the context provides two
+$\tenv$ in essentially the same way. They are \(\beta\)-equivalent and infer System F
+expressions that are also semantically equivalent.
+Hence, unlike the nondeterminism in the
+previous example at the end of Section~\ref{s:resolution}, where the context provides two
 ways of resolving the query, this form of nondeterminism
-serves no purpose.
+serves no purpose. 
 We will see that focusing provides a straitjacket that eliminates the gratuitous nondeterminism
-and allows only the first and more direct of these two proofs. 
+and allows only the first and more direct of these two proofs. In fact, it
+allows only derivations in \(\beta\)-reduced and \(\eta\)-expanded form.
 
 % More generally, without loss of
 % expressivity focusing only allows proofs whose elaboration is in
@@ -478,7 +481,7 @@ expresses the base case
 where the axiom is identical to the goal and there are no new goals.
 
 This type-directed formulation of entailment
-greatly reduces the number of proofs for a given goal.
+reduces the number of proofs for a given goal.
 %\footnote{Without loss of expressive power. See for example~\cite{FrankFocusing}.} 
 For instance, for the example above there is only one proof:
 \begin{equation*}

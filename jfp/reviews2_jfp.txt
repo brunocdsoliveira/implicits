@@ -347,9 +347,9 @@ TODO?
 > 
 -- Klara ??
 => Change to "reduces"
-The phrase "greatly reduces" is used to explain/emphasize that the process is
-still not deterministic, even after applying the focusing technique.
-The next sentece (which belongs to the next section) states exactly this.
+=> Indeed, the focusing approach only allows derivations in beta-reduced,
+\eta-expanded form.
+FIXED
 
 
 > l.726: "thus avoid source of ambiguity" --> "avoid this source ..."
