@@ -1299,7 +1299,7 @@ FIXED
 >   If something non-standard is happening, please explain it. 
 >   Keeping the score of type variables is not that difficult.
 
--- Klara ??
+Added reference to Miller's mixed-prefix unification.
 
 > 
 > 944: The most general unifier.
@@ -1320,8 +1320,14 @@ Minor. -- Klara
 > 
 >   I don't think so. 
 >   What you think is a problem does not seem to be one.
-> 
-> 
+ 
+I do not think the that the reviewer acknowledges here that we are solving
+two different problems with the same algorithm, one where we need to compute
+the most general unifier and one where we check whether there is a unifier.
+
+Moreover, we are going for a compact description that does not introduce fresh
+variables, rather than for an efficient one.
+ 
 > 951: "only \tau' contains unification variables"
 > 
 >   Can you say why?

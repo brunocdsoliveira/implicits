@@ -1645,7 +1645,8 @@ a key component of the two algorithmic changes explained above.
 
 Figure~\ref{fig:mgu} provides its definition, which is a hybrid between
 standard first-order unification~\cite{martellimonatanari} and 
-polymorphic type instantiation~\cite{dunfield}. The
+polymorphic type instantiation~\cite{dunfield} that is a restricted
+form of Miller's mixed-prefix unification~\cite{Miller}. The
 domain restriction $\bar{\alpha}$ denotes which type variables are to be
 treated as unification variables; all other type variables are to be treated as
 constants. The returned substitution is a unifier of $\rulet_1$ and $\rulet_2$,
