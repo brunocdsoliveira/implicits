@@ -157,7 +157,9 @@ specification (not the Haskell choice)
 would be to allow any matching instance to be used, but 
 this choice would lead to incoherence, since |trans 3| could 
 then both evaluate to |3| or |4|. Instead, for overlapping instances, 
-the GHC documentation\footnote{\url{http://ghc.readthedocs.io/en/8.0.1/glasgow_exts.html##overlapping-instances}} makes a different choice and 
+the GHC documentation~\cite{overlapping_instances}
+%\footnote{\url{http://ghc.readthedocs.io/en/8.0.1/glasgow_exts.html##overlapping-instances}}
+makes a different choice and 
 declares that the \emph{most specific instance} should be chosen. 
 For the expression |trans 3|, the most specific is |Trans Int| 
 and the expression evaluates to |4|. 
@@ -193,7 +195,9 @@ the program.
 However Haskell also supports one additional extension, called \texttt{IncoherentInstances}, 
 for allowing a more general kind of overlapping instances. With
 \texttt{IncoherentInstances} activated, Haskell accepts the |incoherent| definition. 
-The (informal) language specification\footnote{\url{http://ghc.readthedocs.io/en/8.0.1/glasgow_exts.html##overlapping-instances}} for \texttt{IncoherentInstances}
+The (informal) language specification~\cite{overlapping_instances}
+%\footnote{\url{http://ghc.readthedocs.io/en/8.0.1/glasgow_exts.html##overlapping-instances}}
+for \texttt{IncoherentInstances}
  essentially says that in such a situation any matching instance could be picked. 
 Thus either of the two instances above can be picked, resulting in different 
 evaluation results for the expression. Thus, as the name indicates, the 
@@ -280,7 +284,7 @@ descending order), and then break the ordering invariant by
 
 Although global uniqueness is, in principle, a property that should hold in
 Haskell programs, Haskell implementations actually violate this property in
-various circumstances.\footnote{\url{http://stackoverflow.com/questions/12735274/breaking-data-set-integrity-without-generalizednewtypederiving}}
+various circumstances\footnote{\url{http://stackoverflow.com/questions/12735274/breaking-data-set-integrity-without-generalizednewtypederiving}}.
 In fact, it is acknowledged that providing a global uniqueness check is quite 
 challenging for Haskell implementations.\footnote{\url{https://mail.haskell.org/pipermail/haskell-cafe/2012-October/103887.html}}
 

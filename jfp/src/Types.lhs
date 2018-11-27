@@ -231,7 +231,7 @@ is explained next.
 \\ \\
   \myrule {AR-TApp}
           {\ares{\tenv}{\forall \alpha. \rulet}{E} 
-          %  \quad\quad \wfty{\tenv}{\suty}
+%           \quad\quad \wfty{\tenv}{\suty}
           }
           {\ares{\tenv}{\rulet[\suty/\alpha]}{E~||\suty||}}
 \quad
@@ -405,8 +405,9 @@ and allows only the first and more direct of these two proofs.
 
 \\ \\
   \myrule {FM-TApp}
-          {% \wfty{\tenv}{\suty} \\\\
-           \fmres{\tenv}{\rulet[\suty/\alpha]}{E\,||\suty||}{\type}{E'}{\Sigma}
+          {\fmres{\tenv}{\rulet[\suty/\alpha]}{E\,||\suty||}{\type}{E'}{\Sigma}
+%	  \\
+%	   \wfty{\tenv}{\suty}
           }
           {\fmres{\tenv}{\forall \alpha.\rulet}{E}{\type}{E'}{\Sigma}}
 \\ \\
@@ -1053,8 +1054,8 @@ variables $\bar{\alpha},\bar{\alpha}'$ and the type environment after substituti
          {\dmres{\tenv}{\rulet_1 \iarrow \rulet_2}{E}{\type}{E'}{\rulet_1~\gbox{\leadsto x}, \Sigma}} \\ \\ 
   \myrule{M-TApp}
          {\dmres{\tenv}{\rulet[\suty/\alpha]}{E\,||\suty||}{\type}{E'}{\Sigma}
-          % \quad\quad\quad
-          % \wfty{\tenv}{\suty}
+          \quad\quad\quad
+          \wfty{\tenv}{\suty}
          }
          {\dmres{\tenv}{\forall \alpha. \rulet}{E}{\type}{E'}{\Sigma}} \\ \\ \\
 %---------------------------------------------------------------------%
@@ -1644,7 +1645,8 @@ a key component of the two algorithmic changes explained above.
 
 Figure~\ref{fig:mgu} provides its definition, which is a hybrid between
 standard first-order unification~\cite{martellimonatanari} and 
-polymorphic type instantiation~\cite{dunfield}. The
+polymorphic type instantiation~\cite{dunfield} that is a restricted
+form of Miller's mixed-prefix unification~\cite{Miller}. The
 domain restriction $\bar{\alpha}$ denotes which type variables are to be
 treated as unification variables; all other type variables are to be treated as
 constants. The returned substitution is a unifier of $\rulet_1$ and $\rulet_2$,

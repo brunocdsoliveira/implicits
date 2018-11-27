@@ -115,6 +115,7 @@ proposed to write some text.
 > few times?
 
 TODO: Test the hyper-references?
+The uploaded hyper references absolutely do not work.
 
 > l.76: "stability of substitutions" should be "stability [of
 > resolution] _under_ substitution" or better yet "stability of
@@ -152,6 +153,7 @@ FIXED: Was more precise and mentioned "stability of type substitutions"
 > in the bibliography.
 
 TODO?
+FIXED
 
 > l.221: "Functions show and read..." --> "The functions show and read"
 
@@ -188,6 +190,7 @@ FIXED
 > on in the paper.)
 
 TODO?: Convert to proper citations?
+FIXED
 
 > l.281--284: "With Trans α => α -> α resolution is applied
 > lazily. (...)" I appreciate the clarification (thanks to which I now
@@ -343,6 +346,11 @@ TODO?
 > the paper.
 > 
 -- Klara ??
+=> Change to "reduces"
+The phrase "greatly reduces" is used to explain/emphasize that the process is
+still not deterministic, even after applying the focusing technique.
+The next sentece (which belongs to the next section) states exactly this.
+
 
 > l.726: "thus avoid source of ambiguity" --> "avoid this source ..."
 
@@ -402,6 +410,7 @@ FIXED
 > footnote 13, p.38: please make this a bibliographic reference.
 
 TODO: use bibtex @misc entry
+FIXED
  
 > l.1126: "Section A.8 proves partial completeness" in what sense is
 > this completeness "partial" w.r.t. to deterministic resolution? Maybe
@@ -1328,7 +1337,7 @@ FIXED
 >   If something non-standard is happening, please explain it. 
 >   Keeping the score of type variables is not that difficult.
 
--- Klara ??
+Added reference to Miller's mixed-prefix unification.
 
 > 
 > 944: The most general unifier.
@@ -1349,8 +1358,14 @@ Minor. -- Klara
 > 
 >   I don't think so. 
 >   What you think is a problem does not seem to be one.
-> 
-> 
+ 
+I do not think the that the reviewer acknowledges here that we are solving
+two different problems with the same algorithm, one where we need to compute
+the most general unifier and one where we check whether there is a unifier.
+
+Moreover, we are going for a compact description that does not introduce fresh
+variables, rather than for an efficient one.
+ 
 > 951: "only \tau' contains unification variables"
 > 
 >   Can you say why?
