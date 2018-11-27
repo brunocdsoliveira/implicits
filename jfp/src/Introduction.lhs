@@ -187,7 +187,9 @@ uniqueness is desired, that can be modeled by the subset of
 \name without local declarations. In fact, based on the resolution
 algorithm of an early version 
 of \name, GHC has been recently extended with \emph{quantified class
-  constraints}~\cite{haskell2017b}\footnote{\url{https://ghc.haskell.org/trac/ghc/wiki/QuantifiedConstraints}}. Quantified class constraints enable
+  constraints}~\cite{haskell2017b,GHCwiki}.
+%\footnote{\url{https://ghc.haskell.org/trac/ghc/wiki/QuantifiedConstraints}}.
+Quantified class constraints enable
 higher-order rules in a setting with global scoping.
  
 
