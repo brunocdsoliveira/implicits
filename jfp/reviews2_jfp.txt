@@ -915,7 +915,10 @@ TODO?
 TODO?: Is there any good justification to disallow it?
 
 Personaly I think that imposing an arbitrary restriction simply
-because we did not find an application is worse than allowing the feature.
+because we did not find an application is worse than allowing the
+feature.
+
+One possibility is to actually write up about this feature in the paper.
 
 > ** Prototype
 > 
@@ -924,11 +927,15 @@ because we did not find an application is worse than allowing the feature.
 > the URL, which when copied does turn the underscore into a space, but this
 > might be a problem with the PDF post-processing---to be checked with the
 > editor.)
-> 
+
+TODO: Fix the typo!
+
 > However, the prototype does not compile out of the box with Haskell version
 > 8.4.3.  It might be a compatibility problem, but the README.md of the
 > distribution does not contain any version number.
-> 
+
+TODO: Improve docs.
+
 > The prototype distribution does not contain serious examples, which I found
 > surprising. How do you know that you approach will scale up in practice? 
 > 
@@ -959,12 +966,15 @@ because we did not find an application is worse than allowing the feature.
 > Since |/-_term Int => Int, I assume that |/-_term Ord Int => Eq Int either.  
 > Then, how do you encore the instance  hierarchies of Haskell?
 > Please explain. 
-> 
+>
 > Notice that Figure 10 only describes termination for core COCHIS,
 > i.e. without only arrows and double arrows for type constructors.  How do
 > you defined || Int || or || list (\rho) || ? (I guessed, but I should not
 > have to.)
-> 
+
+
+TODO? Improve the explanation in the paper?
+
 > ** Stability under substitution. 
 > 
 > Stability is in fact the combination of two notions. 
@@ -988,7 +998,9 @@ because we did not find an application is worse than allowing the feature.
 >   
 > You may want to distinguish these two flavors and then define stability as
 > the combination of both.
-> 
+
+TODO?
+
 > ** Stability judgment. 
 > 
 > The notion of stability is a key notion, but its specification and
@@ -1008,19 +1020,25 @@ because we did not find an application is worse than allowing the feature.
 > while the corresponding judgment in System D is call stabled (.).  I
 > understand the way it works, but this is not obvious at first, and would
 > certainly deserve a better explanation.
-> 
+
+TODO? Improve explanation.
+
 > ** First-class polymorphism. 
 > 
 > There is a subtle difference between (A) and (F) in the treatment of
 > first-class polymorphism, which you haven't explained. See (612).
-> 
+
+TODO?
+
 > ** Design space
 > 
 > There are many languages (with many options discussed) and many properties.
 > I think you should consider summarizing the design space in a table, whose
 > columns are the properties and each language _variant_ appears on a separate
 > line.
-> 
+
+TODO? Have a table?
+
 > 
 > ** On the uniqueness of COCHIS. 
 > 
@@ -1036,7 +1054,9 @@ because we did not find an application is worse than allowing the feature.
 >   space, which although not a novel technique in itself, hasn't been used
 >   before for implicit calculi.  Cochis does nothing new and interesting
 >   about coherence, as already mentioned.
->    
+
+TODO? Deemphasize coherence more?
+
 > ** LINEAR COMMENTS 
 > 
 > Thank you for adding line numbers, which makes the reviewer's life so much
@@ -1057,12 +1077,16 @@ because we did not find an application is worse than allowing the feature.
 >   as mentioned later on in the article.  It would help to find a qualifier
 >   when referring to "core Haskell" and use it consistently through the
 >   article. 
-> 
+
+TODO? Qualify better?
+
 >   Here, as well as line 57, Haskell means "core Haskell". But the reader
 >   only understands this on line 70 and on.
 > 
 > 86-89: You should inline (an excerpt of) Reynolds's notion of coherence.
-> 
+
+TODO? Reynolds coherence?
+
 > 115-117: 
 > 
 >   The logic of this statement is misleading.  The discussion above (109-114)
@@ -1076,11 +1100,15 @@ because we did not find an application is worse than allowing the feature.
 >   I am not sure this would still be true: For example, OCaml implicits have
 >   local scoping, overlapping instances, are coherent, and have dynamic
 >   stability (see the entry "Stability under substitution").
-> 
+
+TODO/ANSWER? Has anything been proved/formalized about OCaml implicits?
+
 >   It then sounds like first-class and higher-order rules are added here just
 >   to make COCHIS unique rather than as a statement that clarifies the
 >   discussion started in this paragraph.
-> 
+
+ANSWER: No. First-class and higher-order rules are a key feature of Cochis.
+
 > 116: "various other features such as"
 > 
 >   This is loose, hence the statement 
@@ -1089,7 +1117,9 @@ because we did not find an application is worse than allowing the feature.
 >      such as ..."
 >    
 >   is questionable. 
-> 
+
+TODO? Improve wording.
+
 > 142:  "a coherent, stable and type-safe" 
 > 
 >   Although there are sometimes variations on the combination of qualifiers,
