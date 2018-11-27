@@ -231,7 +231,7 @@ is explained next.
 \\ \\
   \myrule {AR-TApp}
           {\ares{\tenv}{\forall \alpha. \rulet}{E} 
-           \quad\quad \wfty{\tenv}{\suty}
+%           \quad\quad \wfty{\tenv}{\suty}
           }
           {\ares{\tenv}{\rulet[\suty/\alpha]}{E~||\suty||}}
 \quad
@@ -405,8 +405,9 @@ and allows only the first and more direct of these two proofs.
 
 \\ \\
   \myrule {FM-TApp}
-          {\fmres{\tenv}{\rulet[\suty/\alpha]}{E\,||\suty||}{\type}{E'}{\Sigma} \\
-	   \wfty{\tenv}{\suty}
+          {\fmres{\tenv}{\rulet[\suty/\alpha]}{E\,||\suty||}{\type}{E'}{\Sigma}
+%	  \\
+%	   \wfty{\tenv}{\suty}
           }
           {\fmres{\tenv}{\forall \alpha.\rulet}{E}{\type}{E'}{\Sigma}}
 \\ \\
