@@ -231,7 +231,7 @@ is explained next.
 \\ \\
   \myrule {AR-TApp}
           {\ares{\tenv}{\forall \alpha. \rulet}{E} 
-          %  \quad\quad \wfty{\tenv}{\suty}
+           \quad\quad \wfty{\tenv}{\suty}
           }
           {\ares{\tenv}{\rulet[\suty/\alpha]}{E~||\suty||}}
 \quad
@@ -405,8 +405,8 @@ and allows only the first and more direct of these two proofs.
 
 \\ \\
   \myrule {FM-TApp}
-          {% \wfty{\tenv}{\suty} \\\\
-           \fmres{\tenv}{\rulet[\suty/\alpha]}{E\,||\suty||}{\type}{E'}{\Sigma}
+          {\fmres{\tenv}{\rulet[\suty/\alpha]}{E\,||\suty||}{\type}{E'}{\Sigma} \\
+	   \wfty{\tenv}{\suty}
           }
           {\fmres{\tenv}{\forall \alpha.\rulet}{E}{\type}{E'}{\Sigma}}
 \\ \\
@@ -1053,8 +1053,8 @@ variables $\bar{\alpha},\bar{\alpha}'$ and the type environment after substituti
          {\dmres{\tenv}{\rulet_1 \iarrow \rulet_2}{E}{\type}{E'}{\rulet_1~\gbox{\leadsto x}, \Sigma}} \\ \\ 
   \myrule{M-TApp}
          {\dmres{\tenv}{\rulet[\suty/\alpha]}{E\,||\suty||}{\type}{E'}{\Sigma}
-          % \quad\quad\quad
-          % \wfty{\tenv}{\suty}
+          \quad\quad\quad
+          \wfty{\tenv}{\suty}
          }
          {\dmres{\tenv}{\forall \alpha. \rulet}{E}{\type}{E'}{\Sigma}} \\ \\ \\
 %---------------------------------------------------------------------%

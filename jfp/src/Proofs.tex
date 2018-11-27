@@ -1636,7 +1636,8 @@ a substitution that indeed unifies its two input types.\\
 \end{myequation*}
   and
 \begin{myequation*}
-  \dom{(\theta)} \subseteq \bar{\alpha}
+  %\dom{(\theta)} \subseteq \bar{\alpha}
+  \validsubst{\bar\alpha}{\tenv}{\theta}
 \end{myequation*}
 
 \end{lemma}
@@ -1662,7 +1663,8 @@ Assumption~\ref{axiom:mgu_property:3} states that $\mgu{\type}{\type'}$ is the m
 \end{myequation*}
   and
 \begin{myequation*}
-  \dom{(\theta)} \subseteq \bar{\alpha}
+  %  \dom{(\theta)} \subseteq \bar{\alpha}
+  \validsubst{\bar\alpha}{\tenv}{\theta}
 \end{myequation*}
   then
 %\begin{myequation*}
@@ -1692,7 +1694,8 @@ Assumption~\ref{axiom:mgu_property:3} states that $\mgu{\type}{\type'}$ is the m
 \end{myequation*}
   and
 \begin{myequation*}
-  \dom{(\theta)} \subseteq \bar{\alpha}
+  %\dom{(\theta)} \subseteq \bar{\alpha}
+  \validsubst{\bar\alpha}{\tenv}{\theta}
 \end{myequation*}
   and
 \begin{myequation*}
@@ -1835,6 +1838,8 @@ From the rule's first hypothesis and Lemma~\ref{lemma:asoundness:3} we have
 \begin{myequation*}
 \dmres{\tenv}{\rulet}{E}{\type}{E'}{\ie{\ruleset}{\bar{x}}}
 \end{myequation*}
+where \(\theta = \varepsilon\), as the only possibility such that
+\(\validsubst{\varepsilon}{\tenv}{\theta}\).
 Then, using Lemma~\ref{lemma:asoundness:1} and rule \rref{L-Match} we conclude
 \begin{myequation*}
 \dlres{\bar\alpha}{\tenv}{\tenv',\envi{\rulet}{x}}{\type}{E[\bar{E}/\bar{x}]}
@@ -1851,22 +1856,15 @@ $\adlres{\bar\alpha}{\tenv}{\tenv',\envi{\rulet}{x}}{\type}{E'}$\ \\
   \dlres{\bar\alpha}{\tenv}{\tenv'}{\type}{E'}
 %  \bar{\alpha};\tenv;\tenv' \ivturns \type~{\leadsto E'}
 \end{myequation*}
-From the rule's first premise and the negation of Lemma~\ref{lemma:acompleteness:7}, we have:
-%\begin{myequation*}
-%\not\exists E, \Sigma:
-%\admres{\bar\alpha}{\tenv}{\rulet}{x}{\epsilon}{\type}{E}{\Sigma}
-%\end{myequation*}
-%or equivaltenly,
-%\begin{myequation*}
-%\not\exists \theta, E, \Sigma:
-%\admres{\bar\alpha}{\tenv}{\rulet}{x}{\epsilon}{\type}{\etrans{\theta}(E)}{\theta(\Sigma)}
-%\end{myequation*}
-%From the negation of Lemma~\ref{lemma:acompleteness:3} we thus have
+From the rule's first premise and the negation of Lemma~\ref{lemma:acompleteness:7}, there are
+no substitution, \(\theta\), expression, \(E\), and set of goals, \(\Sigma\), such that
+both judgments below hold.
 \begin{myequation*}
-\not\exists \theta, E, \Sigma, \dom(\theta) \subseteq \bar{\alpha}:
+\validsubst{\bar\alpha}{\tenv}{\theta}~~~~\text{and}~~~~
+%\dom(\theta) \subseteq \bar{\alpha}:
 \dmres{\theta(\tenv)}{\theta(\rulet)}{x}{\theta(\type)}{E}{\Sigma}
 \end{myequation*}
-  Hence with rule \rref{L-NoMatch} we conclude
+  Hence, with rule \rref{L-NoMatch} we conclude
 \begin{myequation*}
    \dlres{\bar\alpha}{\tenv}{\tenv',\envi{\rulet}{x}}{\type}{E'}
 %  \bar{\alpha};\tenv;\tenv',\rulet \leadsto x \ivturns \type~{\leadsto E'}
@@ -1908,8 +1906,9 @@ By rule \rref{L-TyVar} we conclude
 \end{description}
 \end{proof}
 
-We assume that the judgment is decorated with an additional argument, the substitution
-for the $\bar{\alpha}$ type variables.
+%We assume that the judgment is decorated with an additional output argument, the
+%substitution for the $\bar{\alpha}$ type variables. This argument is actually computed when
+%rule~\rref{Alg-M-Simp} is reached and then it is propagated through the rest of the rules.
 
 %###############################################################################
 {\centering
@@ -1918,13 +1917,15 @@ for the $\bar{\alpha}$ type variables.
 \begin{lemma}\label{lemma:asoundness:3}
   If 
 \begin{myequation*}
-\admress{\bar\alpha}{\tenv}{\rulet}{E}{\Sigma}{\type}{E'}{\Sigma'}{\theta}
+%\admress{\bar\alpha}{\tenv}{\rulet}{E}{\Sigma}{\type}{E'}{\Sigma'}{\theta}
+\admres{\bar\alpha}{\tenv}{\rulet}{E}{\Sigma}{\type}{E'}{\Sigma'}
+\end{myequation*}
+  then, there is a substitution \(\theta\) such that
+\begin{myequation*}
+  %  \dom{(\theta)} \subseteq \bar{\alpha}
+\validsubst{\bar\alpha}{\tenv}{\theta}
 \end{myequation*}
   and
-\begin{myequation*}
-  \dom{(\theta)} \subseteq \bar{\alpha}
-\end{myequation*}
-  then,
 \begin{myequation*}
 \dmres{\theta(\tenv)}{\theta(\rulet)}{\etrans\theta(E)}{\theta(\type)}{E'}{\Sigma''}
 \end{myequation*}
@@ -1942,11 +1943,15 @@ The proof proceeds by induction on the derivation of the first hypothesis.
 \setlength{\itemsep}{1em}
 %===============================================================================
 \item[\fbox{\rref{Alg-M-Simp}}]\quad
-$\admress{\bar\alpha}{\tenv}{\type'}{E}{\Sigma}{\type}{\etrans\theta(E)}{\theta(\Sigma)}{\theta}$\ \\
+$\admres{\bar\alpha}{\tenv}{\type'}{E}{\Sigma}{\type}{\etrans\theta(E)}{\theta(\Sigma)}$\
+with \(\theta = \mgu{\type}{\type'}\)
+\\
+
 %===============================================================================
 
-From the hypothesis of the rule and Lemma~\ref{lemma:mgu_property:1} it follows that
-$\theta(\type') = \theta(\type)$. Hence, with rule~\rref{M-Simp}, we obtain the goal judgment.
+From the hypothesis of the rule and Lemma~\ref{lemma:mgu_property:1}, it follows that
+\(\validsubst{\bar\alpha}{\tenv}{\theta}\) and $\theta(\type') = \theta(\type)$. The latter allows us to use
+rule~\rref{M-Simp}, with which we obtain the goal judgment.
 \begin{myequation*}
   \dmres{\theta(\tenv)}{\theta(\type')}{\etrans\theta{E}}{\theta(\type')}{\etrans\theta{E}}{\epsilon}
 \end{myequation*}
@@ -1954,15 +1959,25 @@ $\theta(\type') = \theta(\type)$. Hence, with rule~\rref{M-Simp}, we obtain the 
 
 %===============================================================================
 \item[\fbox{\rref{Alg-M-IApp}}]\quad
-$\admress{\bar\alpha}{\tenv}{\rulet_1\To\rulet_2}{E}{\Sigma}{\type}{E'}{\Sigma'}{\theta}$\ \\
+%$\admress{\bar\alpha}{\tenv}{\rulet_1\To\rulet_2}{E}{\Sigma}{\type}{E'}{\Sigma'}{\theta}$\ \\
+\(\admres{\bar\alpha}{\tenv}{\rulet_1\To\rulet_2}{E}{\Sigma}{\type}{E'}{\Sigma'}\)\ \\
 %===============================================================================
 
-  From the premise of the rule, the induction hypothesis and the definition of substitution,
-we have that
+From the premise of the rule, the induction hypothesis and the definition of substitution,
+there is a substitution \(\theta\) such that
+\begin{myequation*}
+  \validsubst{\bar\alpha}{\tenv,\envi{\rulet}{x}}{\theta}
+\end{myequation*}
+and
 \begin{myequation*}
   \dmres{\theta(\tenv),\envi{\theta(\rulet_1)}{x}}{\theta(\rulet_2)}{\etrans\theta(\mmapp{E}{x})}{\theta(\type)}{E'}{\Sigma''}
 \end{myequation*}
-where $\Sigma' = \theta(\Sigma,\ie{\rulet_1}{x}),\Sigma''$. By rule \rref{M-IApp} we may then conclude
+where $\Sigma' = \theta(\Sigma,\ie{\rulet_1}{x}),\Sigma''$.
+From the first result, because \(\theta\) regards only type variable substitutions, it is easy to deduce
+\begin{myequation*}
+  \validsubst{\bar\alpha}{\tenv}{\theta}
+\end{myequation*}
+By rule \rref{M-IApp}, applied on the second result of the induction hypothesis, we may conclude
 \begin{myequation*}
 \dmres{\theta(\tenv)}{\theta(\rulet_1\To\rulet_2)}{\etrans\theta(E)}{\theta(\type)}{E'}{\theta(\ie{\rulet_1}{x}),\Sigma''}
 \end{myequation*}
@@ -1970,17 +1985,31 @@ Trivially, the last condition of the theorem holds, since $\Sigma' = \theta(\Sig
 
 %===============================================================================
 \item[\fbox{\rref{Alg-M-TApp}}]\quad
-$\admress{\bar\alpha}{\tenv}{\tall{\alpha}{\rulet}}{E}{\Sigma}{\type}{E'}{\Sigma'}{\theta}$\ \\
+%$\admress{\bar\alpha}{\tenv}{\tall{\alpha}{\rulet}}{E}{\Sigma}{\type}{E'}{\Sigma'}{[\suty/\alpha]\cdot \theta}$\ \\
+\(\admres{\bar\alpha}{\tenv}{\tall{\alpha}{\rulet}}{E}{\Sigma}{\type}{E'}{\Sigma'}\)\ \\
 %===============================================================================
 
-  Then it follows from the rule's premise and from the induction hypothesis that
+From the premise of the rule and the induction hypothesis, there is a substitution, \(\theta\), such that
 \begin{myequation*}
-\dmres{\theta(\tenv)}{\theta(\rulet)}{\etrans\theta(\mmapp{E}{\alpha})}{\theta(\type)}{E'}{\Sigma''}
+  \validsubst{\bar\alpha,\alpha}{\tenv,\alpha}{\theta}
 \end{myequation*}
-where $\Sigma' = \theta(\Sigma),\Sigma''$.
-  Hence, it follows from rule \rref{M-TApp} that
+and
 \begin{myequation*}
-  \dmres{\theta(\tenv)}{\theta(\tall{\alpha}{\rulet})}{\etrans\theta(E)}{\theta(\type)}{E'}{\Sigma''}
+\dmres{\theta(\tenv,\alpha)}{\theta(\rulet)}{\etrans\theta(\mmapp{E}{\alpha})}{\theta(\type)}{E'}{\Sigma''}
+\end{myequation*}
+where $\Sigma' = \theta(\Sigma),\Sigma''$.\\
+
+By case analysis on the first result, it follows that \(\theta = [\suty/\alpha]\cdot\theta'\),
+where \(\wfty{\tenv}{\suty}\) and \(\validsubst{\bar\alpha}{\tenv}{\theta'}\). Note that
+\(\alpha\notin\ftv{\type}\). Therefore, the deterministic matching judgment above can be
+refined to
+\begin{myequation*}
+\dmres{\theta'(\tenv)}{\theta'(\rulet[[\suty/\alpha]])}{\etrans\theta'(\mmapp{E}{\etrans{\suty}})}{\theta'(\type)}{E'}{\Sigma''}
+\end{myequation*}
+Hence, it follows from rule \rref{M-TApp} and the type well-formedness judgment for \(\suty\)
+that
+\begin{myequation*}
+  \dmres{\theta'(\tenv)}{\theta'(\tall{\alpha}{\rulet})}{\etrans\theta'(E)}{\theta'(\type)}{E'}{\Sigma''}
 \end{myequation*}
 \end{description}
 \end{proof}
@@ -2168,7 +2197,8 @@ $\dlres{\bar\alpha}{\tenv}{\tenv',\envi{\rulet}{x}}{\type}{E'}$ \ \\
 %  \bar{\alpha};\tenv;\tenv' \alg \type~{\leadsto E'}
 \end{myequation*}
 From the rule's first hypothesis, there are no $\theta$, $\Sigma_1$ and $E_1$ such that
-$\dom{(\theta)\subseteq\bar\alpha}$ and
+%$\dom{(\theta)\subseteq\bar\alpha}$ and
+\(\validsubst{\bar\alpha}{\tenv}{\theta}\) and
 \begin{myequation*}
   \dmres{\theta(\tenv)}{\theta(\rulet)}{x}{\Sigma_1}{\type}{E_1}
 \end{myequation*}
@@ -2338,7 +2368,8 @@ Hence, it follows from rule \rref{Alg-M-TApp} that
 \end{myequation*}
   and
 \begin{myequation*}
-  \dom{(\theta_1)}\subseteq\bar\alpha
+  %\dom{(\theta_1)}\subseteq\bar\alpha
+  \validsubst{\bar\alpha}{\tenv}{\theta_1}
 \end{myequation*}
   then
 \begin{myequation*}
@@ -2390,17 +2421,23 @@ Then, by rule~\rref{Sta-IApp} we conclude
 $\dmres{\theta_1(\tenv)}{\theta_1(\tall{\alpha}{\rulet})}{E}{\theta_1(\type)}{E'}{\Sigma'}$\ \\
 %===============================================================================
 
-From the definition of substitution and the premise of the rule, we have
+From the definition of substitution and the first premise of the rule, we have
 \begin{myequation*}
   \dmres{\theta_1(\tenv)}{\theta_1(\rulet)[\suty/\alpha]}{\mmapp{E}{\etrans{\suty}}}{\theta_1(\type)}{E'}{\Sigma'}
 \end{myequation*}
-The Barendregt convention allows us to asses that $\alpha\notin\theta_1(\tenv)$. Thus, we can
-consider $\theta'=[\suty/\alpha]\cdot\theta_1$, for which it follows that
-$\dom{(\theta')}\subseteq\bar\alpha,\alpha$. From the definition of substitution,
+
+The Barendregt convention allows us to assess that \(\alpha\notin\dom{(\theta_1)}\). Thus, we
+can consider $\theta'=[\suty/\alpha]\cdot\theta_1$. By instantiating rule \rref{S-Cons} with the
+theorem's second hypothesis and the second premise of rule \rref{M-TApp}, we have
+\begin{myequation*}
+  \validsubst{\bar\alpha,\alpha}{\tenv,\alpha}{\theta'}
+\end{myequation*}
+where, from the definition of substitution,
 \begin{myequation*}
   \theta'(\rulet) = \theta_1(\rulet)[\suty/\alpha]\quad\text{and}\quad
   \theta'(\tenv,\alpha) = \theta_1(\tenv)
 \end{myequation*}
+
 In addition, since $\alpha$ does not appear free in the type $\theta_1(\type)$,
 it follows that the substitution $[\suty/\alpha]$ does not affect it.
 The premise of the rule can, then, be rewritten as
