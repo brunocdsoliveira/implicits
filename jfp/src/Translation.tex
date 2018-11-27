@@ -156,12 +156,13 @@ Assume that $\unambig{}{\rulet}$ and $\forall ?\rulet_i\in\tenv$, $\unambig{}{\r
      \dres{\tenv}{\rulet}{E_2} \quad\Rightarrow\quad 
      \fctx{\etrans{\tenv}}{E_1}{E_2}{\ttrans[\rulet]} \]
 \end{corollary}
-Here the contextual equivalence judgment $\fctx{\tenv}{E_1}{E_2}{T}$ captures
+Here, the well-studied~\cite{contextual_equivalence} contextual equivalence judgment $\fctx{\tenv}{E_1}{E_2}{T}$ captures
 that $E_1$ and $E_2$ behave the same in any well-typed program context. We do
-not give the formal definition here\footnote{A definition can be found at \url{https://www.seas.harvard.edu/courses/cs252/2017fa/lectures/lec02-contextual-equiv.pdf}} as it is not required to prove the
+not give the formal definition here as it is not required to prove the
+%\footnote{A definition can be found at \url{https://www.seas.harvard.edu/courses/cs252/2017fa/lectures/lec02-contextual-equiv.pdf}} 
 corollary; we only need to know that it is an equivalence relation, and, more
 specifically, that it is reflexive, i.e., any well-typed System~F term is
-contextually equivalent to itself. 
+contextually equivalent to itself.
 % \bruno{Should we not mention that contextual equivalence for System F
 %   is well-studied, thus interested readers can consult the definition
 %   in other works?}
