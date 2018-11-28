@@ -1959,6 +1959,9 @@ there is an infinite path from the root in the tree, that denotes an infinite
 sequence of matching rule type applications. To show that there cannot be such an
 infinite path, we use a norm $\tnorm$ (defined at the bottom of Figure~\ref{fig:termination})
 that maps the head of every goal $\rulet$ to a natural number, its size.
+While types like \(\tyint\) and \(\tybool\) are not formally part of our calculus, we assume
+that their size is 1. Similarly, the size of type constructor applications like \(List~\rho\)
+is \(1 + \tnorm[\rho]\).
 
 If we can show that this size strictly decreases from any parent goal to its
 children, then we know that, because the order on the natural numbers is
@@ -1997,8 +2000,7 @@ Declaratively, we can formulate this stability under substitution as:
 
 Consider for instance the type
 $\forall a. (a \arrow a) \iarrow (a \arrow \tyint \arrow \tyint)$.
-In the presernce of ground types, we set their size to be equal to that of a
-type variable, namely 1. In this example,
+In this example,
 the head's size 5 is strictly greater than the context
 constraint's size 3. Yet, if we instantiate $\alpha$ to
 $(\tyint \arrow \tyint \arrow \tyint)$, 
