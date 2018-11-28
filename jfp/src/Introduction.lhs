@@ -216,7 +216,7 @@ to a standard technique for proof search in logic called
 \emph{focusing}~\cite{focusing,Miller91b,Liang:2009}. However, unlike
 focused proof search, which is still essentially non-deterministic,
 \name's resolution employs additional techniques to be entirely
-deterministic and coherent.  In particular, unlike focused proof
+deterministic and thus obviously coherent.  In particular, unlike focused proof
 search, our resolution uses a stack discipline to prioritize implicits,
 and removes any recursive resolutions from matching decisions. Moreover,
 further restrictions are needed to obtain stability.
@@ -251,9 +251,9 @@ In summary, our contributions are as follows:
    We establish key meta-theoretic properties of our system:
    \begin{itemize}
    \item The elaboration is type-preserving.
-   \item Resolution is deterministic and thus coherent.
-   \item Resolution is stable under type substitution, as is elaboration under
-         reduction of type application. 
+   \item Resolution is deterministic and thus obviously coherent.
+   \item Resolution is stable under type substitution, and type-directed elaboration is preserved
+         by reduction of type application. 
    \item Our algorithm is sound and complete with respect to its declarative specification.
    \end{itemize}
    The proofs are available in the appendix and at \url{https://bitbucket.org/KlaraMar/cochiscoq} 
