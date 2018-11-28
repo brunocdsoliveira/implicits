@@ -96,8 +96,7 @@
 > substitution, reasoning about programs remains "a subtle matter in the
 > presence of implicits".
 
-TODO: Are we going to address this in the paper or not? Philip
-proposed to write some text.
+FIXED: Added Philip's paragraph.
 
 > Finally, Section 2 has been expanded and improved to clarify some
 > technical issues, in particular subsections 2.2 and 2.3 now give a
