@@ -122,7 +122,7 @@ The uploaded hyper references absolutely do not work.
 > resolution under _type_ substitution/instantiation" (resolution is not
 > stable under term substitution, as explained above).
 
-TODO: Change name?
+FIXED: Changed to "stability of type substitutions"
 
 > l.106: "the lack of important properties such as stability makes
 > reasoning about the semantics of programs harder, and can prevent
@@ -139,7 +139,8 @@ TODO: Change name?
 >     optimizations).  After resolution/elaboration to System F,
 >     inlining is unproblematic.
 
-TODO: Address those?
+TODO? Related to Philip's paragraph. Fixing that should address this
+point to some extent.
 
 > footnote 1 (p. 4): "It makes no sense to talk about stability in a
 > simply typed calculus, ...", again this only holds for stability under
@@ -152,7 +153,6 @@ FIXED: Was more precise and mentioned "stability of type substitutions"
 > would be less distracting if it were added to the corresponding entry
 > in the bibliography.
 
-TODO?
 FIXED
 
 > l.221: "Functions show and read..." --> "The functions show and read"
@@ -189,7 +189,6 @@ FIXED
 > documentation and cite it. (The same goes for similar footnotes later
 > on in the paper.)
 
-TODO?: Convert to proper citations?
 FIXED
 
 > l.281--284: "With Trans α => α -> α resolution is applied
@@ -660,6 +659,7 @@ TODO: Better documentation? Fix this?
 > also be misleading for someone having a first quick look at the paper.
 
 TODO? Ok this is a big presentational complain. Should we address it?
+Tom wants to rephrase abstract and intro.
 
 > *** COCHIS in practice
 > 
@@ -688,7 +688,7 @@ TODO? Ok this is a big presentational complain. Should we address it?
 > much the prototype has been strained.  If available, any information on
 > practical experience would actually be welcome.
 
-TODO? Shall we address this more?
+IGNORE
 
 > COCHIS is explicitly typed, and does not say anything about the use of
 > implicits in a language with type inference, such as Haskell.  In such a
@@ -793,8 +793,7 @@ TODO? Shall we address this more?
 > implicits in COCHIS could be performed similarly with in a language with just
 > the let-implicit construct. 
 
-TODO? Should we have a discussion on the design choice of
-implicit abstractions?
+IGNORE
 
 > *** Local scoping, first-class implicits, and higher-order rules
 > 
@@ -823,7 +822,7 @@ is. See for example the paragraph on higher-order rules in the Overview.
 > implicits becomes first-class only as soon as let-implicits are allowing in
 > any context, in particular under type abstractions.  
 
-TODO? Still the topic of let vs IA
+IGNORE
 
 > As for high-order rules, I still do not know what it exactly means.
 > 
@@ -902,9 +901,7 @@ TODO? Anything to be done here?
 > applications, which is unusual in systems with implicits (although there are
 > few of them). As a consequence, this allows (A) to infer arbitrary
 > lambda-terms, which I think deserve a specific discussion.
-
-TODO?
-
+>
 > In particular, this allows inferring terms in an empty context, such as
 > 
 >         0 |- ?(All A, B. A => B => A) ~> /\A. \x:A.\y:B.x
@@ -1008,7 +1005,7 @@ TODO? Improve the explanation in the paper?
 > You may want to distinguish these two flavors and then define stability as
 > the combination of both.
 
-TODO?
+FIXED: We now state "stability of type substitutions" (static stability)
 
 > ** Stability judgment. 
 > 
@@ -1064,7 +1061,7 @@ TODO? Have a table?
 >   before for implicit calculi.  Cochis does nothing new and interesting
 >   about coherence, as already mentioned.
 
-TODO? Deemphasize coherence more?
+TODO: Tom will change the intro/abstract.
 
 > ** LINEAR COMMENTS 
 > 
@@ -1078,7 +1075,9 @@ TODO? Deemphasize coherence more?
 >   remaining occurrences, 15 of which are "IP mechanisms".  Even, if you
 >   decide not to inline it, you at least avoid this abbreviation in the
 >   abstract and paragraph titles.
-> 
+
+IGNORE
+
 > 
 > 48 : "Haskell's type classes"
 > 
@@ -1094,7 +1093,7 @@ TODO? Qualify better?
 > 
 > 86-89: You should inline (an excerpt of) Reynolds's notion of coherence.
 
-TODO? Reynolds coherence?
+FIXED: Expanded explanation
 
 > 115-117: 
 > 
@@ -1127,7 +1126,7 @@ ANSWER: No. First-class and higher-order rules are a key feature of Cochis.
 >    
 >   is questionable. 
 
-TODO? Improve wording.
+FIXED Deleted "various ..."
 
 > 142:  "a coherent, stable and type-safe" 
 > 
@@ -1141,7 +1140,9 @@ TODO? Improve wording.
 >   You should probably split into two sentences but also explain what you
 >   mean by "elaboration under reduction". (Elaboration is static, reduction is
 >   dynamic, so what is elaboration under reduction?)
-> 
+
+TODO: Tom, can you look at this one and find a better term?
+
 > 414:  "Although"
 >   
 >   This sentence surprised me: "Although A and B, not C" suggests that C

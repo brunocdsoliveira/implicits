@@ -966,7 +966,7 @@ matchings. Technically speaking the key property that $\ourlang$ guarantees
 is \emph{stability of resolution} (see also Section~\ref{sec:trans}).
 \begin{comment}
 \begin{lemma}[Stability]
-Resolution is stable under substitution.
+Resolution is stable under type substitution.
 \[
 \tenv,\alpha,\tenv' \ivturns \rulet \leadsto E \enskip\wedge\enskip \tenv \vdash \sigma
 \enskip\Rightarrow\enskip 

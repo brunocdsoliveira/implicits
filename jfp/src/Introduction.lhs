@@ -104,7 +104,7 @@ coherence in the presence of overlapping instances.
 % presence of overlapping instances. 
 Another important property
 that is broken in the presence of overlapping instances 
-(if special care is not taken) is the so-called \emph{stability} of (type)
+(if special care is not taken) is the so-called \emph{stability} of type
 substitutions. The issue is that 
 the behaviour of resolution for an expression |e| can change if |e| 
 gets a more specific type, leading to a different evaluation result. 
@@ -120,12 +120,21 @@ and after instantiation of type variables.
 As an orthogonal remark, in the Haskell community, the term coherence
 is often colloquially used to encompass several different properties,
 including global uniqueness, stability and the original coherence
-definition by Reynolds~\cite{Reynolds91coherence}. However it is
+definition by Reynolds~\cite{Reynolds91coherence}.
+In the context 
+of an elaboration semantics (which the standard semantics style for IP 
+mechanisms), the definition of coherence that follows from
+Reynolds one is that \emph{all possible elaborations for a program possess the
+same meaning}. However such a definition of coherence is narrower than
+the colloquial term usually used in the Haskell community.
+It is
 important to note that the three properties are distinct. For example
 global uniqueness implies coherence, but not the converse.
 Furthermore it is also possible to have coherence, but not stability.
 In this paper we will use coherence in Reynolds' sense, and be precise 
 about the different properties under discussion.
+
+
 
 An alternative school of thought in the design of IP mechanisms favours \emph{flexibility}. For example, 
 Scala's implicits and Agda's instance arguments do not impose all of
@@ -166,7 +175,7 @@ come at the cost of those properties. Proponents of flexible IP
 mechanisms argue that flexibility is more important, and that
 uniqueness of instances goes against modularity. 
 As far as we are aware there are no current designs that support local scoping,
-overlapping instances and various other features, such as first-class and
+overlapping instances and first-class and
 higher-order rules, while at the same time also ensuring both coherence and
 stability.
 %%The current
