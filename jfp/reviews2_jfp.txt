@@ -658,8 +658,7 @@ TODO: Better documentation? Fix this?
 > 1326-1327, 1332-1340, 1436-1438.  This probably deserves the paper and could
 > also be misleading for someone having a first quick look at the paper.
 
-TODO? Ok this is a big presentational complain. Should we address it?
-Tom wants to rephrase abstract and intro.
+FIXED: small tweaks of abstract and intro to mention determinism more clearly
 
 > *** COCHIS in practice
 > 
@@ -1061,7 +1060,7 @@ TODO? Have a table?
 >   before for implicit calculi.  Cochis does nothing new and interesting
 >   about coherence, as already mentioned.
 
-TODO: Tom will change the intro/abstract.
+FIXED
 
 > ** LINEAR COMMENTS 
 > 
@@ -1141,7 +1140,7 @@ FIXED Deleted "various ..."
 >   mean by "elaboration under reduction". (Elaboration is static, reduction is
 >   dynamic, so what is elaboration under reduction?)
 
-TODO: Tom, can you look at this one and find a better term?
+FIXED
 
 > 414:  "Although"
 >   
