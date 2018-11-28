@@ -133,7 +133,7 @@ Should the above code type-check or not? In GHC
 Haskell the answer is no.  Even though there is no ambiguity in this program---
 resolution only succeeds with the first type class instance---
 the program is nevertheless rejected. The reason is that Haskell's resolution only checks whether
-the instance heads match. As there two equality specific
+the instance heads match. As there are two equality specific
 matching heads |C [a]|, the program is rejected.
 
 
@@ -148,13 +148,13 @@ resolution:
 
 \item {\bf Reasoning:} When reasoning about Haskell code that involves
 type classes, programmers have to understand which type class instance is used.
-This involves performing the resolution algorithm manually. The
+This involves performing the resolution algorithm mentaly. The
 fact that only instance heads are needed to determine whether an instance is
 committed to, makes this much easier than performing a full backtracking
 process.
 
 \item {\bf Performance:} If backtracking is allowed, 
-type-checking times programs could grow exponentially due to
+type-checking times of programs could grow exponentially due to
 backtracking. Thus, by disallowing backtracking, GHC eliminates a potential
 source of significant performance degradation in type-checking.
 
@@ -189,8 +189,7 @@ respect to Figure~\ref{fig:resolutionf}.
 % However there are still some hurdles to be overcome in order to design a coherent and stable
 % algorithm with backtracking. 
 Yet, the specification in Figure~\ref{fig:resolutionf} does not guarantee
-stability. So additional restrictions would be needed to prevent unstable
-resolution.  
+stability or coherence. So additional restrictions would be needed to have both properties.  
 
 % In our work we have opted for an algorithm that follows some of the practical
 % considerations that were discussed before in the Haskell community. The nearly
@@ -218,8 +217,7 @@ If type classes are supplying proofs and it does not matter which proof is found
 coherence is not relevant, and the objection about the difficulty of reasoning is
 also not relevant. 
 Moreover, in theorem proving the expressiveness of search is often more important than
-having a very fast search method, and thus worse performance is also not a big
-drawback.
+having a very fast search method, and thus worse performance is more tolerable.
 
 \subsection{Superclasses}
 

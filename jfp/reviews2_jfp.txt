@@ -113,8 +113,10 @@ FIXED: Added Philip's paragraph.
 > different PDF viewers). Maybe you need to recompile your TeX sources a
 > few times?
 
-TODO: Test the hyper-references?
+TODO? 
 The uploaded hyper references absolutely do not work.
+
+Need to talk to editors!
 
 > l.76: "stability of substitutions" should be "stability [of
 > resolution] _under_ substitution" or better yet "stability of
@@ -138,8 +140,8 @@ FIXED: Changed to "stability of type substitutions"
 >     optimizations).  After resolution/elaboration to System F,
 >     inlining is unproblematic.
 
-TODO? Related to Philip's paragraph. Fixing that should address this
-point to some extent.
+ANSWER: We added Philip's paragraphm, which should at least
+partly solve this.
 
 > footnote 1 (p. 4): "It makes no sense to talk about stability in a
 > simply typed calculus, ...", again this only holds for stability under
@@ -226,9 +228,7 @@ FIXED
 > this sentence.  In what sense does the language specification provide
 > more information than an actual compiler implementation?
 
-TODO?: a language spec can be non-deterministic, whereas a
-language implementation is (usually) deterministic. I.e. it should
-implement one of the behaviours of the spec.
+FIXED: Added more explanation
 
 > footnotes 6 and 7 (p.9): these should go into the bibliography and be
 > referenced as citations.
@@ -275,7 +275,7 @@ FIXED
 > program equivalence and preservation of well-typedness can be tricky
 > even when resolution is stable under type substitution.
 
-TODO: Address this?
+ANSWER: Related to Philip's comment?
 
 > l.506: "We cannot illustrate such with COCHIS" --> "illustrate this"
 > or "illustrate such use cases"
@@ -313,7 +313,7 @@ FIXED
 >    they interlinked?  Are coherence and stability preserved w.r.t. the
 >    surface language?
 
-TODO?
+IGNORE
 
 > l.584: "While this poses no threat to type soundness, ...", I suspect
 > you are confusing "type soundness" with "type preservation" here. Type
@@ -450,7 +450,7 @@ FIXED
 > no more intuitive to me than locally scoped resolution _with_
 > backtracking.
 
-TODO?
+IGNORE
 
 > l.1238: the paragraph mentions OCaml's modular implicits as a
 > potential alternative, but not Scala's.  Given that COCHIS has been
@@ -459,8 +459,9 @@ TODO?
 > Scala employs.  It might be nice to include this here (or in Section
 > 7.2).
 
-TODO? Probably not. Scala's resolution is actually fairly ad-hoc.
-We could potentially say something about Simplicity, I guess.
+IGNORE Scala's resolution is actually fairly ad-hoc.
+We could potentially say something about Simplicity, I guess, but
+that's probably not necessary.
 
 > l.1287: It might be worth mentioning that the environment $\Gamma$
 > given in this example would not pass the termination checker because
@@ -916,13 +917,7 @@ TODO? Anything to be done here?
 > 
 > Hence, do you have a good justification for allowing this? 
 
-TODO?: Is there any good justification to disallow it?
-
-Personaly I think that imposing an arbitrary restriction simply
-because we did not find an application is worse than allowing the
-feature.
-
-One possibility is to actually write up about this feature in the paper.
+FIXED: Wrote a small paragraph about this feature in the paper.
 
 > ** Prototype
 > 
@@ -1041,7 +1036,7 @@ TODO?
 > columns are the properties and each language _variant_ appears on a separate
 > line.
 
-TODO? Have a table?
+IGNORE: No time.
 
 > 
 > ** On the uniqueness of COCHIS. 
@@ -1084,7 +1079,7 @@ IGNORE
 >   when referring to "core Haskell" and use it consistently through the
 >   article. 
 
-TODO? Qualify better?
+IGNORE
 
 >   Here, as well as line 57, Haskell means "core Haskell". But the reader
 >   only understands this on line 70 and on.
@@ -1485,27 +1480,39 @@ FIXED
 >   Besides, this is an orthogonal debate.  And there is no need to present
 >   this as a justification not to consider impredicative polymorphism. The
 >   truth is more in the two preceding paragraphs.
-> 
+
+IGNORE
+
 > 1166-1168: 
 > 
 >   COCHIS is also presented as a way to complete/improve HASKELL, which has
 >   extensions with first-class polymorphism. This seems a contradiction.
-> 
+
+IGNORE
+
 > 1190: Committed Choice
 > 
 >   This is a key feature of COCHIS, whose design depends on this. 
 >   This could be more clearly stated and emphasized. 
-> 
+
+IGNORE
+
 > 1207: there [<=are] two equality
-> 
+
+FIXED
+
 > 1215: manually
 > 
 >   Do you mean "mentally"? 
-> 
+
+FIXED
+
 > 1218: type-checking times programs
 > 
 >   Something is wrong here.
-> 
+
+FIXED
+
 > 1219: GHC
 > 
 >   Why GHC here and not COCHIS? 
@@ -1515,29 +1522,41 @@ FIXED
 >    - Worst case, do you have any result? 
 >    - In practice, since you have an implementation. 
 >      Did you try in on large examples? 
-> 
+
+IGNORE
+
 > 1236: 
 > 
 >   I am surprised here to see stability as the main problem. Wouldn't 
 >   coherence be also lost, which seems to be even worst than the lack of
 >   stability. 
-> 
+
+FIXED
+
 > 1254: "worse performance is also not a big drawback"
 > 
 >   I agree with the general idea, but this is perhaps too strong (some users
 >   would certainly disagree). I suggest something weaker, such as 
 >   "worse performance is more tolerable".
-> 
+
+FIXED
+
 > 1287: then <- the
-> 
+
+INGORE: Don't think there is a typo here.
+
 > 1289: in \Gamma should be in~\Gamma.  
-> 
+
+IGNORE
+
 > 1291-1295: 
 > 
 >   This seems a severe drawback, which should be discussed earlier in the
 >   core of the paper and not just a small paragraph in the concluding
->   remarks. 
-> 
+>  remarks. 
+
+IGNORE
+
 > 1296-1306:
 > 
 >   This mechanism (described in 1299-1301) reminds me of _saturation_
@@ -1575,7 +1594,10 @@ FIXED
 > 
 >   Hence "Superclasses with Committed Choice" does not seem to be a working
 >   proposal by itself.
-> 
+
+TODO: Tom I think you wrote this part. Indeed the "super" appears out
+of nowhere. I think this needs to be fixed.
+
 > 1320:  "is more relaxed than Haskell's"
 > 
 >   Although I agree with the text that follows, I don't think it is accurate 
@@ -1591,7 +1613,9 @@ FIXED
 > 
 >   Yes, you give a formal statement, but in your deterministic setting, this is
 >   an overkill.
-> 
+
+IGNORE?
+
 > 1332-1340: 
 > 
 >   Yes, indeed.  The problem is that COCHIS is built around being
@@ -1601,11 +1625,15 @@ FIXED
 >   key.  However, since you did not tackle the problem of coherence, this
 >   discourse feels like describing a wishful proposal that would be
 >   non-derterministic but that is not yours.
-> 
+
+IGNORE: Tom already weakened the tone in intro/abstract.
+
 > 1366: 
 > 
 >   The feature "higher-order rules" has not been clearly defined.
-> 
+
+IGNORE: We explain it in overview.
+
 > 1377(+7): [strangely lines are not numbered in this paragraph]
 > 
 >   I don't see any significant different between n-ary arguments and unary
@@ -1615,6 +1643,9 @@ FIXED
 > 
 >   Besides, I don't understand the example (last line before 1378), because
 >   it does not involve multiple arguments.
+
+IGNORE
+
 > 
 > 1405-1411: 
 > 
@@ -1623,23 +1654,33 @@ FIXED
 >   between modules applications. I.e. it could tell that the module signature
 >   of Eq Int is equal to the sub-structure Eq Int that can be access in Ord
 >   Int.  
-> 
+
+IGNORE: No need to provide such detail.
+
 > 1436-1438: 
 > 
 >   This is again misleading, suggesting that COCHIS takes care of coherence
 >   in a non trivial way. (See 1100.)
-> 
+
+IGNORE
+
 > 1477: "[To<-? The] former cannot"
-> 
+
+IGNORE: Don't see a problem
+
 > 1507-1510: 
 > 
 >   OCaml implicits can do the same and allow the encoding of associated
 >   types. 
-> 
+
+IGNORE? 
+
 > 1517: 
 > 
 >   You could perhaps also mention saturation (see 1296-1306).
-> 
+
+TODO: Mention saturation?
+
 > 1530: "Genus's solution"
 > 
 >   Perhaps it is also relevant to point to OCaml implicits. 

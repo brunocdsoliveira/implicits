@@ -252,7 +252,10 @@ actually observable from a compiler implementation like GHC: we can
 observe that |bad 3| and |trans 3| behave differently. In contrast
 (in)coherence is not really observable from a compiler implementation:
 we need a language specification to understand whether there is
-incoherence or not.
+incoherence or not. More concretely, with a single compiler implementation 
+we can only observe the result of one possible elaboration of a program, but 
+we cannot observe all the other possible elaborations allowed by the specification
+for that program. Therefore we cannot observe incoherence.
 
 The \texttt{IncoherentInstances} extension is understood to be highly problematic 
 among Haskell programmers, since it can break both stability and coherence. 
@@ -748,6 +751,19 @@ types where they occur as recursive resolvents of polymorphic rules. We cannot
 illustrate this with \name as, to keep its definition small, it is not equipped with higher-kinded types. The
 interested reader can find examples in the work of Bottu et al.~\shortcite{haskell2017b}.
 
+\paragraph{Type-Directed Synthesis of Simple Programs} One interesting feature 
+of \name is that it can synthesize simple programs of a given type. This feature can potentialy be 
+useful when there is at most one possible implementation of a program. For example 
+a variant of the polymorphic identity function could be synthesized with the following 
+query:
+
+> query (forall a. a => a)
+
+We have not yet explored the usefulness of this feature for practical programming in depth,
+but this seems to be related to programming with typed holes~\cite{agda}. Perhaps such 
+a feature (or some extension of it) can be useful to automatically synthesize 
+implementations for typed holes.
+
 
 %~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 \paragraph{Combining Higher-Order and Polymorphic Rules} 
@@ -856,7 +872,7 @@ allowing export of a function from a module that mentions a type class if the mo
 a local instance of that type class~\cite{?}.\bruno{TODO: Find reference?}\bruno{Also I am 
 not entirely happy about the paragraph. I think we need to qualify reduction here, we are probably talking 
 about full reduction (applying reduction at arbitrary points in the program), 
-because with call-by-value or call-by-name reduction there is no issue at all.}
+because with call-by-value or call-by-name reduction there is no issue at all..}
 
 %~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 \subsubsection{Encoding Simple Type Classes in $\ourlang$}\label{subsec:encoding}
