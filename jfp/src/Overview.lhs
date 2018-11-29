@@ -854,14 +854,16 @@ returns $2$ and not $1$:
 
 \paragraph{Care with reduction}
 
-Observe that some care is required with reduction. Consider the following program.
+Observe that some care is required with the inlining |let|-bindings and other refactorings
+that perform variable substitutions.
+Consider for instance the following program.
 
 > implicit 1: Int  in
 >    let x = ?Int     in
 >      implicit 2: Int  in
 >        x
 
-Naively,  one might expect it to reduce to the following. 
+One might inline |x| and obtain the following.
 
 > implicit 1: Int  in
 >   implicit 2: Int  in
@@ -869,12 +871,10 @@ Naively,  one might expect it to reduce to the following.
 
 But this would change its meaning: the first program returns 1, while the second returns 2.
 The solution is to never consider a term as a candidate for substitution until all of its implicits
-have been resolved. This is similar to restrictions encountered elsewhere, for instance not
-allowing export of a function from a module that mentions a type class if the module introduces
-a local instance of that type class~\cite{?}.\bruno{TODO: Find reference?}\bruno{Also I am 
-not entirely happy about the paragraph. I think we need to qualify reduction here, we are probably talking 
-about full reduction (applying reduction at arbitrary points in the program), 
-because with call-by-value or call-by-name reduction there is no issue at all..}
+have been resolved. 
+% This is similar to restrictions encountered elsewhere, for instance not
+% allowing export of a function from a module that mentions a type class if the module introduces
+% a local instance of that type class~\cite{?}.
 
 %~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 \subsubsection{Encoding Simple Type Classes in $\ourlang$}\label{subsec:encoding}
