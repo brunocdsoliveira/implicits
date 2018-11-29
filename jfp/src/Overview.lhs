@@ -984,7 +984,7 @@ depends on whether |b| is instantiated to |Int| or not.
 One might consider to force the matter by picking the lexically
 nearest implicit that matches all possible instantiations of the query, e.g.,
 |forall a. a -> a| in the example. While this poses no threat to type
-soundness, this approach is nevertheless undesirable for two reasons.
+safety, this approach is nevertheless undesirable for two reasons.
 Firstly, it makes the behaviour of programs harder to predict, and, secondly,
 the behaviour of programs is not \emph{stable under inlining}. Consider
 the call |bad Int 3|, which would yield the result |3|. If instead we inline
