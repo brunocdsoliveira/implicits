@@ -946,6 +946,9 @@ TODO: Improve docs.
 > Figure 10 is precise and formal, but I did not find any use of the judgment
 > in other rules. That is, where is this judgment plugged into the other
 > systems (A, F, or D)?
+
+We do explain where to pose the termination condition.
+
 > 
 > From my understanding searching for ?(Int => (Int => Int) => Int) should
 > fail because of the termination condition.
