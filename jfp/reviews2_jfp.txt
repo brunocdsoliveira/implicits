@@ -326,7 +326,7 @@ IGNORE
 > yet this paragraph suggests otherwise, namely that resolution in
 > COCHIS is stable under both reduction and inlining.
 
-TODO?
+changed to type safety
  
 > l.676: "We will see that focusing (...) eliminates the gratuitous
 > nondeterminism" and l.703, "This type-directed formulation of
@@ -841,6 +841,8 @@ IGNORE
 > probably be emphasized.
 
 TODO?
+IGNORE: The dependencies seem obvious based on how the systems are introduced
+in the text, each being defined relative to the previous one.
 
 > In particular, there may be somewhat surprising consequences of the
 > first-choice commitment, that can only be understood in (F).  For example,
@@ -892,8 +894,8 @@ TODO?
 > in (F).  
 
 TODO? Anything to be done here?
-
-> 
+IGNORE: I don't see what we should do.
+ 
 > *** Implicit abstractions (IA)
 > 
 > Elaboration in System (A) allows inferring implicit abstractions as well as
@@ -927,7 +929,7 @@ FIXED: Wrote a small paragraph about this feature in the paper.
 > might be a problem with the PDF post-processing---to be checked with the
 > editor.)
 
-TODO: Fix the typo!
+IGNORE: this must be a Manuscript Central problem
 
 > However, the prototype does not compile out of the box with Haskell version
 > 8.4.3.  It might be a compatibility problem, but the README.md of the
