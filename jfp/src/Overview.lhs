@@ -285,7 +285,7 @@ same program two sets using two different orderings (say ascending and
 descending order), and then break the ordering invariant by
 |union|-ing those two sets.
 
-Although global uniqueness is, in principle, a property that should hold in
+However, although global uniqueness is, in principle, a property that should hold in
 Haskell programs, Haskell implementations actually violate this property in
 various circumstances~\cite{stackoverflow_question}.
 %\footnote{\url{http://stackoverflow.com/questions/12735274/breaking-data-set-integrity-without-generalizednewtypederiving}}.
