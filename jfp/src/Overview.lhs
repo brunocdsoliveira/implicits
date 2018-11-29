@@ -287,9 +287,11 @@ descending order), and then break the ordering invariant by
 
 Although global uniqueness is, in principle, a property that should hold in
 Haskell programs, Haskell implementations actually violate this property in
-various circumstances\footnote{\url{http://stackoverflow.com/questions/12735274/breaking-data-set-integrity-without-generalizednewtypederiving}}.
+various circumstances~\cite{stackoverflow_question}.
+%\footnote{\url{http://stackoverflow.com/questions/12735274/breaking-data-set-integrity-without-generalizednewtypederiving}}.
 In fact, it is acknowledged that providing a global uniqueness check is quite 
-challenging for Haskell implementations.\footnote{\url{https://mail.haskell.org/pipermail/haskell-cafe/2012-October/103887.html}}
+challenging for Haskell implementations~\cite{HaskellCafe}.
+%\footnote{\url{https://mail.haskell.org/pipermail/haskell-cafe/2012-October/103887.html}}
 
 %-------------------------------------------------------------------------------
 \subsection{Scala Implicits and Stability}
