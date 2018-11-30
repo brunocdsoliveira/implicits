@@ -872,6 +872,26 @@ One might inline |x| and obtain the following.
 But this would change its meaning: the first program returns 1, while the second returns 2.
 The solution is to never consider a term as a candidate for substitution until all of its implicits
 have been resolved. 
+
+Note that this situation is similar to what happens with regular 
+let bindings. For example, two analogous programs with let bindings 
+are:
+
+> let x = 1  in
+>    let y = x     in
+>      let x = 2  in
+>        y
+
+\noindent and 
+
+> let x = 1  in
+>   let x = 2  in
+>     x
+
+The two programs also have different meanings, since inlining 
+|y| blindly changes the variable |x| being bound. Consequentely 
+this changes the meaning of the program.
+
 % This is similar to restrictions encountered elsewhere, for instance not
 % allowing export of a function from a module that mentions a type class if the module introduces
 % a local instance of that type class~\cite{?}.
