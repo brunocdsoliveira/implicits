@@ -852,45 +852,45 @@ returns $2$ and not $1$:
 \]
 %endif
 
-\paragraph{Care with reduction}
+\paragraph{Care with Reduction}
 
-Observe that some care is required with the inlining |let|-bindings and other refactorings
+Observe that some care is required with the inlining of |let|-bindings and other refactorings
 that perform variable substitutions.
 Consider for instance the following program.
 
-> implicit 1: Int  in
+> implicit 1  in
 >    let x = ?Int     in
->      implicit 2: Int  in
+>      implicit 2  in
 >        x
 
 One might inline |x| and obtain the following.
 
-> implicit 1: Int  in
->   implicit 2: Int  in
+> implicit 1  in
+>   implicit 2  in
 >     ?Int
 
 But this would change its meaning: the first program returns 1, while the second returns 2.
 The solution is to never consider a term as a candidate for substitution until all of its implicits
 have been resolved. 
 
-Note that this situation is similar to what happens with regular 
-let bindings. For example, two analogous programs with let bindings 
-are:
+This situation is not much different from that of regular |let|-bindings. For
+example, if we naively inline |x| in the following program:
 
 > let x = 1  in
 >    let y = x     in
 >      let x = 2  in
 >        y
 
-\noindent and 
+\noindent we get
 
 > let x = 1  in
 >   let x = 2  in
 >     x
 
-The two programs also have different meanings, since inlining 
-|y| blindly changes the variable |x| being bound. Consequentely 
-this changes the meaning of the program.
+The second program clearly has a different meaning, since the variable
+|x| is now captured by the second binder rather than the first. While
+this problem can be remedied by renaming the second binder's variable, there is no analogous
+solution for implicits.
 
 % This is similar to restrictions encountered elsewhere, for instance not
 % allowing export of a function from a module that mentions a type class if the module introduces
