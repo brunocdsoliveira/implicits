@@ -139,7 +139,7 @@ matching heads |C [a]|, the program is rejected.
 
 Although this Haskell design choice is not very well documented in the research
 literature, the reason for not allowing backtracking is folklore among Haskell
-programmers and can be found in various informal discussions.\footnote{\url{https://mail.haskell.org/pipermail/haskell-cafe/2006-September/018500.html},\\ \url{https://www.reddit.com/r/haskell/comments/3afi3t/the_constraint_trick_for_instances/cscb33j/?st=jjcz7zeh&sh=1e5f3c8b}, \\ \url{https://github.com/Gertjan423/ghc-proposals/blob/quantified-constraints/proposals/0000-quantified-constraints.rst##overlap}
+programmers and can be found in various informal discussions.\footnote{\url{https://mail.haskell.org/pipermail/haskell-cafe/2006-September/018500.html},\\ \url{https://www.reddit.com/r/haskell/comments/3afi3t/the_constraint_trick_for_instances/cscb33j/?st=jjcz7zeh&sh=1e5f3c8b}, \\ \url{https://github.com/Gertjan423/ghc-proposals/blob/quantified-constraints/proposals/0000-quantified-constraints.rst\#overlap}
 }  In
 essence there are two arguments for not allowing backtracking during
 resolution:
@@ -148,7 +148,7 @@ resolution:
 
 \item {\bf Reasoning:} When reasoning about Haskell code that involves
 type classes, programmers have to understand which type class instance is used.
-This involves performing the resolution algorithm mentaly. The
+This involves performing the resolution algorithm mentally. The
 fact that only instance heads are needed to determine whether an instance is
 committed to, makes this much easier than performing a full backtracking
 process.
@@ -299,8 +299,8 @@ code of the one |Eq Int| instance).
 %- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 \paragraph{A First Attempt at Encoding Superclasses}
 We can try to encode the previous Haskell definitions in the \name 
-environment $\tenv = |?(forall a. Ord a => Eq a)|, |?(Eq Int)|, |?(Ord Int)|$, whose
-implicit entries capture the superclass relation and the two instances\footnote{Note that the proposed encoding does
+environment $\tenv = \envi{|(forall a. Ord a => Eq a)|}{|super|}, \envi{|(Eq Int)|}{|x|}, \\ \envi{|(Ord Int)|}{y}$, whose
+implicit entries capture the superclass relation---|super| is a function that extracts the |Eq| dictionary out of an |Ord| dictionary--- and the two instances\footnote{Note that the proposed encoding does
 not satisfy our termination conditions, but we ignore this aspect since there are other more pressing issues with the encoding.}.
 With respect to \name, the query |?(Eq Int)| resolves deterministically by picking the second entry in $\tenv$.
 Hence, \name's explicit ordering of implicits avoids Haskell's non-determinism.
@@ -313,7 +313,7 @@ Hence, \name's explicit ordering of implicits avoids Haskell's non-determinism.
 While the ordering is beneficial for determinism, fewer queries may succeed due to
 an unsuitable order of implicits.
 For example, suppose that we have instead the environment
-$\tenv = |?(Eq Int)|, |?(forall a. Ord a => Eq a)|$, then resolving
+$\tenv = \envi{|(Eq Int)|}{|x|}, \envi{|(forall a. Ord a => Eq a)|}{|super|}$, then resolving
 |?(Eq Int)| fails
 because the first entry matches and its requirement |Ord Int| cannot be satisfied. In this case the committed
 choice semantics prevents reaching the second entry, which would resolve |Eq Int| directly.
@@ -341,7 +341,7 @@ the presence of superclasses without unnecessarily rejecting queries. Yet, this
 is no longer the case for the recent extension with \emph{quantified class
 constraints}~\cite{haskell2017b}.  Like \name, quantified class constraints allow nested
 implications in type class instance contexts and as superclasses. The committed choice
-approach does not work with the latter. GHC's has decided to retain its committed
+approach does not work with the latter. GHC has decided to retain its committed
 choice approach and to reject queries that would require backtracking to
 explore the superclass relations.
 

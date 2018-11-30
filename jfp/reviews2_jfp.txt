@@ -233,7 +233,7 @@ FIXED: Added more explanation
 > footnotes 6 and 7 (p.9): these should go into the bibliography and be
 > referenced as citations.
 
-TODO: Move to citations?
+FIXED
 
 > l.420: there is a spurious space between $f$ and $(x)$ in the function
 > application $f(x)$.
@@ -407,7 +407,6 @@ FIXED
 
 > footnote 13, p.38: please make this a bibliographic reference.
 
-TODO: use bibtex @misc entry
 FIXED
  
 > l.1126: "Section A.8 proves partial completeness" in what sense is
@@ -840,7 +839,6 @@ IGNORE
 > the user must also understand (F) in order to understand (D).  This should
 > probably be emphasized.
 
-TODO?
 IGNORE: The dependencies seem obvious based on how the systems are introduced
 in the text, each being defined relative to the previous one.
 
@@ -893,7 +891,6 @@ in the text, each being defined relative to the previous one.
 > understood by first-choice commitment in (A), but by fist-choice commitment
 > in (F).  
 
-TODO? Anything to be done here?
 IGNORE: I don't see what we should do.
  
 > *** Implicit abstractions (IA)
@@ -976,8 +973,7 @@ We do explain where to pose the termination condition.
 > you defined || Int || or || list (\rho) || ? (I guessed, but I should not
 > have to.)
 
-
-TODO? Improve the explanation in the paper?
+FIXED/IGNORE
 
 > ** Stability under substitution. 
 > 
@@ -1032,7 +1028,7 @@ TODO? Improve explanation.
 > There is a subtle difference between (A) and (F) in the treatment of
 > first-class polymorphism, which you haven't explained. See (612).
 
-TODO?
+IGNORE see 612
 
 > ** Design space
 > 
@@ -1600,8 +1596,8 @@ IGNORE
 >   Hence "Superclasses with Committed Choice" does not seem to be a working
 >   proposal by itself.
 
-TODO: Tom I think you wrote this part. Indeed the "super" appears out
-of nowhere. I think this needs to be fixed.
+FIXED: super is not a keyword, it's just the name of the function that takes
+the Eq dictionary out of the Ord dictionary. This has now been clarified.
 
 > 1320:  "is more relaxed than Haskell's"
 > 
