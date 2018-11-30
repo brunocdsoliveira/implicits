@@ -874,7 +874,7 @@ The solution is to never consider a term as a candidate for substitution until a
 have been resolved. 
 
 This situation is not much different from that of regular |let|-bindings. For
-example, if we naively inline |x| in the following program:
+example, if we naively inline |y| in the following program:
 
 > let x = 1  in
 >    let y = x     in
