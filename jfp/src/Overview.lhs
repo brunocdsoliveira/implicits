@@ -75,7 +75,7 @@ Type classes are an implicit
 programming mechanism because implementations of type class operations 
 are automatically \emph{computed} from the set of instances during the 
 resolution process. 
-For instance, a call to |sort| only type checks if a suitable type class instance can be
+For example, a call to |sort| only type checks if a suitable type class instance can be
 found. Other than that, the caller does not need to worry about the
 type class context, as shown in the following interaction with a
 Haskell interpreter: 
@@ -161,18 +161,18 @@ the GHC documentation~\cite{overlapping_instances}
 %\footnote{\url{http://ghc.readthedocs.io/en/8.0.1/glasgow_exts.html##overlapping-instances}}
 makes a different choice and 
 declares that the \emph{most specific instance} should be chosen. 
-For the expression |trans 3|, the most specific is |Trans Int| 
+For the expression |trans 3|, the most specific instance is |Trans Int| 
 and the expression evaluates to |4|. 
 
 For the particular program |trans 3|, the Haskell specification manages to avoid 
 incoherence by using the 
 most specific instance, which ensures an unambiguous semantics. 
-Thus Haskell preserves coherence in the presence of a certain kind of overlapping instances, 
+Thus, Haskell preserves coherence in the presence of a certain kind of overlapping instances, 
 but there are other problematic overlapping instances that threaten the coherence property.
 
 %~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
 \paragraph{Incoherent Instances}
-With overlapping instances it is not always the case that a most specific 
+With overlapping instances, it is not always the case that a most specific 
 instance exists. Consider the following type class and instance declarations:
 
 > class C a b where 
@@ -192,17 +192,16 @@ instance exists. Consider the following type class and instance declarations:
 In this case, even with the overlapping instances extension activated, Haskell rejects 
 the program. 
 
-However Haskell also supports one additional extension, called \texttt{IncoherentInstances}, 
+However, Haskell also supports an additional extension, called \texttt{IncoherentInstances}, 
 for allowing a more general kind of overlapping instances. With
 \texttt{IncoherentInstances} activated, Haskell accepts the |incoherent| definition. 
 The (informal) language specification~\cite{overlapping_instances}
 %\footnote{\url{http://ghc.readthedocs.io/en/8.0.1/glasgow_exts.html##overlapping-instances}}
 for \texttt{IncoherentInstances}
  essentially says that in such a situation any matching instance could be picked. 
-Thus either of the two instances above can be picked, resulting in different 
+Thus, either of the two instances above can be picked, producing different 
 evaluation results for the expression. Thus, as the name indicates, the 
 expression |incoherent| leads to incoherence.
-
 
 \begin{comment}
 The overlapping declarations can be incoherent 
@@ -217,7 +216,7 @@ Haskell assigns a meaning to overlapping instances when they are permitted.
 \subsection{Stability in Type Classes}
 
 Another important property that is closely related to coherence is \emph{stability}. 
-Informally stability ensures that instantiation of type variables does not affect resolution. 
+Informally, stability ensures that instantiation of type variables does not affect resolution. 
 Unfortunately overlapping instances threaten this property. 
 Consider the following declaration, that uses the |trans| method from the type 
 class |Trans| and the two instances declared previously:
@@ -255,7 +254,7 @@ we need a language specification to understand whether there is
 incoherence or not. More concretely, with a single compiler implementation 
 we can only observe the result of one possible elaboration of a program, but 
 we cannot observe all the other possible elaborations allowed by the specification
-for that program. Therefore we cannot observe incoherence.
+for that program. Therefore, we cannot observe incoherence.
 
 The \texttt{IncoherentInstances} extension is understood to be highly problematic 
 among Haskell programmers, since it can break both stability and coherence. 
@@ -298,11 +297,13 @@ challenging for Haskell implementations~\cite{HaskellCafe}.
 
 Scala implicits~\cite{implicits} are an interesting alternative IP
 design. Unlike type classes, implicits are locally scoped.
-Consequently Scala does not have the global uniqueness
+Consequently, Scala does not have the global uniqueness
 property, since different ``instances'' may exist for
-the same type in different scopes. Another interesting difference
-between implicits and type classes is that values of any type can be
-used as implicit parameters, and there are no special constructs analogous
+the same type in different scopes. Another important difference
+between implicits and type classes is that %values of any type can be
+implicit parameters can be of any type,
+%used as implicit parameters,
+and there are no special constructs analogous
 to type class or instance declarations. Instead, implicits are modelled
 with ordinary types. They can be abstracted over and do not suffer
 from the second-class nature of type classes. These features mean that 
@@ -348,7 +349,7 @@ possible to pass the implicit argument explicitly, if desired.
 however, present |cmp| using \emph{context bounds}: 
 an alternative way to declare functions with constraints (or implicit arguments), supported in Scala. Context bounds are a simple syntactic sugar built 
 on top of implicit parameters.
-Using context bounds, the |cmp| definition can be rewritten 
+With context bounds, the |cmp| definition is rewritten 
 into:
 
 %{
@@ -514,18 +515,17 @@ Interestingly the expression in line~(6), which is accepted in Haskell, is actua
 in line~(5) (which is accepted in Scala).
 In the expression in line~(6) the Scala compiler does detect two possible instances for |Int => Int|,
 but does not select the most specific one. In this case the call in line~(6) is considered 
-ambiguous because Scala accounts for other factors, when deciding where there is ambiguity 
-or not~\cite{implicits,odersky17implicits}.
+ambiguous because Scala accounts for other factors, when deciding whether there is ambiguity~\cite{implicits,odersky17implicits}.
 %%The reason for this is that 
 %%Scala uses a tie-breaker rule for disambiguating instances. Scala attributes
 %%1 point to a rule in the following situations: a) a rule is in a deeper scope than the other rule; 
 %%b) a rule has a more specific type than another rule~\footnote{There are other rules, 
 %%but they can be ignored for this example}. In this case there's a draw, since the 
 %%definition of |trans| gets one point from being in a de, and the rule |trans|  
-Rejecting line~(6) has another unfortunate consequence. Not only is the
-semantics not preserved under unfolding, but typing is not preserved either: i.e. 
+Rejecting line~(6) has another unfortunate effect. Not only is the
+semantics not preserved under unfolding, but typing is not either: i.e. 
 going from line~(5) to line~(6) using a simple unfolding step makes the program ill-typed!
-Clearly preserving desirable properties such as stability and type preservation is 
+Clearly, satisfying desirable properties such as stability and type preservation is 
 a subtle matter in the presence of implicits and deserves careful study. 
 
 %-------------------------------------------------------------------------------
@@ -579,7 +579,7 @@ $\ourlang$ is a query. Queries allow values to be fetched by type, not by name.
  
 the query |query Int| looks up a value of type |Int| in the implicit
 environment, to serve as an actual argument. Note that queries in $\ourlang$
-play exactly the same role as the operator |?| in Scala. 
+play the same role as the operator |?| in Scala. 
 
 
 %%Function \texttt{inc} is applied to an argument (we call ``implicit
@@ -931,7 +931,7 @@ can be declared as:
 < type Show a = {show : a -> String}
 < type Read a = {read : String -> a}
 
-Similarly to the Scala encoding we define a |cmp| function, 
+Similarly to the Scala encoding we define a |cmp| function
 that makes the argument of type |Ord a| implicit: 
 
 %{
@@ -941,7 +941,6 @@ that makes the argument of type |Ord a| implicit:
 < let cmp : forall a . Ord a => a -> a -> Bool = (? : Ord a).le in
 
 %}
-
 Here the query is annotated with a type |Ord a| triggering the 
 resolution of a value of that type. Once that value is computed, the 
 field |le| can be extracted from it. 
@@ -967,7 +966,7 @@ Given a |sort| function:
 
 < let sort : forall a . Ord a => List a -> List a = ... 
 
-\noindent it now is possible to use |implicit| to introduce 
+\noindent we can now use |implicit| to introduce 
 the ``instances'' into the implicit scope and have the |Ord (List Int)|
 argument of the call |sort [(3,'a'), (2,'c'), (3,'b')]| automatically inferred:
 
