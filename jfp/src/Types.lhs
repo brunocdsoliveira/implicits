@@ -278,15 +278,15 @@ consider that under the environment
 \]
 there are two different derivations for resolving
 $\aresp{\Gamma_0}{\tyint}$:
-\begin{equation*}
+\begin{myequation*}
 \begin{array}{c}
 \myexruleL{AR-IVar}
    {?\tyint \in \Gamma_0}
    {\aresp{\Gamma_0}{\tyint}}
 \end{array}
-\end{equation*}%%
+\end{myequation*}%%
 and
-\begin{equation*}
+\begin{myequation*}
 \begin{array}{c}
 \myexruleL{AR-IApp}
    {\myexruleL{AR-IVar} 
@@ -298,7 +298,7 @@ and
    }
    {\aresp{\Gamma_0}{\tyint}}
 \end{array}
-\end{equation*}%%
+\end{myequation*}%%
 This example illustrates the first issue; in particular the inference rules
 \rref{AR-IVar} and \rref{AR-IApp} overlap as both can be used to conclude
 $\aresp{\Gamma_0}{\tyint}$. It also shows the second issue as there are two
@@ -532,16 +532,17 @@ nondeterminism, consider two ways resolving $\aresp{\tenv_1}{\tyint \iarrow \tyi
 against the environment $\tenv_1 = ?(\forall \alpha.\alpha \iarrow \alpha)$:\footnote{
 For the sake of compactness the example uses the ambiguous definition of resolution.
  Similarly problematic examples can be created for the focusing-based definition.}
-\begin{equation*}
+\begin{myequation*}
 \myexruleL{AR-TApp}
   {\myexruleL{AR-IVar}
     {?(\forall \alpha.\alpha \iarrow \alpha) \in \tenv_1}
     {\aresp{\tenv_1}{\forall \alpha. \alpha \iarrow \alpha}}
   }
   {\aresp{\tenv_1}{\tyint \iarrow \tyint}}
-\end{equation*}%
+\end{myequation*}%
 and
-\begin{equation*}
+\begin{myequation*}
+\hspace*{1cm}
 \myexruleL{AR-TApp}
   {\myexruleL{AR-IApp} 
     { \myexruleL{AR-TApp}
@@ -559,7 +560,7 @@ and
     {\aresp{\tenv_1}{\forall \beta. \beta \iarrow \beta}}
   }
   {\aresp{\tenv_1}{\tyint \iarrow \tyint}}
-\end{equation*}%
+\end{myequation*}%
 The first proof only involves the instantiation of 
 $\alpha$ with $\tyint$. Yet, the second proof contains an impredicative
 instantiation of $\alpha$ with $\forall \beta. \beta \iarrow \beta$.
