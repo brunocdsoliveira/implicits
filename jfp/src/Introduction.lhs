@@ -41,15 +41,15 @@ both goals.
 
 A concrete case where this issue manifests itself is in the design of
 \emph{Implicit Programming} (IP) mechanisms.
-Implicit programming denotes a class of language mechanisms,
+Implicit programming denotes a class of language mechanisms
 which infer values by using type information. Examples of IP
 mechanisms include Haskell's type classes~\cite{adhoc}, C++'s
 concepts~\cite{concepts}, JavaGI's generalized interfaces~\cite{javagi}, Coq's type
 classes~\cite{coqclasses}, Scala's
 implicits~\cite{scala}, Agda's \emph{instance arguments}~\cite{instanceargs}, Rust's \emph{traits}~\cite{rust}, and OCaml's \emph{modular implicits}~\cite{DBLP:journals/corr/WhiteBY15}. IP can also be viewed as a form of
 (type-directed) program synthesis~\cite{Manna:1980:DAP:357084.357090}. The programming is said to
-be \emph{implicit} because expressions (e.g., those for function
-parameters) can be omitted by the programmer. Instead the necessary values are
+be \emph{implicit}, because expressions (e.g., function arguments) %(e.g., those for function parameters)
+can be omitted by the programmer. Instead the necessary values are
 provided automatically via a \emph{type-directed resolution} process. 
 These implicit values are either fetched by type from the current (implicit)
 environment or constructed by type-directed rules.
@@ -76,10 +76,10 @@ program.
 While both coherence and global uniqueness of instances are preserved in Haskell,
 this comes at a cost. Since the first implementations of type classes,
 Haskell imposes several restrictions to guarantee those properties. 
-Various past work has pointed out limitations of type classes~\cite{named_instance,systemct,implicit_explicit,modular,Garcia:2007extended,implicits,chain,oliveira12implicit}. 
-In particular type classes allow at most one instance per type (or severely 
-restrict overlapping instances) to exist in a program. This means  
-that all instances must be visible globally, and local scoping of
+Various past work has indicated limitations of type classes~\cite{named_instance,systemct,implicit_explicit,modular,Garcia:2007extended,implicits,chain,oliveira12implicit}. 
+In particular, type classes allow at most one instance per type (or severely 
+restrict overlapping instances) to exist in a program. That is, %%This means that
+all instances must be visible globally and local scoping of
 instances is not allowed. 
 This form of global scoping goes against 
 modularity. Other restrictions of type classes are 
@@ -170,13 +170,13 @@ The design of IP mechanisms has led to heated
 debate~\cite{show-stopping,uniqueness,kmett} about the
 pros and cons of each school of thought: ease of reasoning versus
 flexibility. Proponents of the Haskell school of thought argue that
-having coherence, stability and uniqueness of instances is extremely desirable, and flexibility should not
+coherence, stability and uniqueness of instances are extremely desirable, and flexibility should not
 come at the cost of those properties. Proponents of flexible IP
 mechanisms argue that flexibility is more important, and that
 uniqueness of instances goes against modularity. 
 As far as we are aware there are no current designs that support local scoping,
 overlapping instances and first-class and
-higher-order rules, while at the same time also ensuring both coherence and
+higher-order rules, while at the same time ensuring both coherence and
 stability.
 %%The current
 %%state-of-affairs seems to indicate that both goals are at odds with
