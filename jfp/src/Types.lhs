@@ -593,27 +593,28 @@ However, instantiation with the non-monotype $\tybool \To \tyint$ also yields a 
 for the sake of conciseness, we have abbreviated $\tybool$ and $\tyint$ to $B$ and $I$ respectively.
 {\renewcommand{\tyint}{I}
  \renewcommand{\tybool}{B}
-\begin{equation*}
+\begin{myequation*}
+\hspace*{1,5cm}
 \myexruleL{AR-IApp}
   { \myexruleL{AR-IApp} 
       { \myexruleL{AR-TApp}
           { \myexruleT{AR-IVar}
-              { ?(\forall \alpha. (\alpha \to \alpha) \To \alpha) \in \tenv_2 }
-              { \aresp{\tenv_2}{\forall \alpha. (\alpha \to \alpha) \To \alpha} }
+              { ?(\forall\alpha.(\alpha{\to}\alpha){\To} \alpha) {\in} \tenv_2 }
+              { \aresp{\tenv_2}{\forall\alpha.(\alpha{\to} \alpha) {\To} \alpha} }
           }
-          { \aresp{\tenv_2}{((\tybool \To \tyint) \to (\tybool \To \tyint)) \To (\tybool \To \tyint)} } \quad
+          { \aresp{\tenv_2}{((\tybool {\To} \tyint) {\to} (\tybool {\To} \tyint)) {\To} (\tybool {\To} \tyint)} } \quad
         \myexruleT{AR-IVar}
-          { ?((\tybool \To \tyint) \to (\tybool \To \tyint)) \in \tenv_2 }
-          { \aresp{\tenv_2}{(\tybool \To \tyint) \to (\tybool \To \tyint)}}
+          { ?((\tybool {\To} \tyint) {\to} (\tybool {\To} \tyint)) {\in} \tenv_2 }
+          { \aresp{\tenv_2}{(\tybool {\To} \tyint) {\to} (\tybool {\To} \tyint)}}
       }
-      { \aresp{\tenv_2}{\tybool \To \tyint} } 
+      { \aresp{\tenv_2}{\tybool {\To} \tyint} } 
     \quad
     \myexruleT{AR-IVar}
-      { ?\tybool \in \tenv_2 }
+      { ?\tybool {\in} \tenv_2 }
       { \aresp{\tenv_2}{\tybool} }
   }
   { \aresp{\tenv_2}{\tyint} }
-\end{equation*}
+\end{myequation*}
 }%
 By restricting ourselves to instantiation with monotypes, we disallow the
 second derivation and thus avoid this source of ambiguity.
