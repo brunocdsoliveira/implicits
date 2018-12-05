@@ -519,9 +519,9 @@ instantiation has pre-emptively avoided a further source of nondeterminism.
 
 We have restricted $\ourlang$ to predicative instantiation, i.e., type
 variables can only be instantiated with monotypes $\suty$. Impredicativity is a
-well-known source of nondeterminism in other settings like type inference
-for the polymorphic $\lambda$-calculus~\cite{boehm85,pfenning93}. It would
-cause similar problems for $\ourlang$, in the rules ~\rref{AR-TApp} and
+known source of nondeterminism in other settings like type inference
+for the polymorphic $\lambda$-calculus~\cite{boehm85,pfenning93}. It 
+causes similar problems for $\ourlang$, in the rules ~\rref{AR-TApp} and
 \rref{FM-TApp} for ambiguous and focusing resolution that choose an
 instantiation of a type variable.
 
@@ -589,9 +589,10 @@ a monotype, namely with $\tyint$:
       { \aresp{\tenv_2}{\tyint \to \tyint} }
   }
   { \aresp{\tenv_2}{\tyint} }
-\end{equation*}%
+\end{equation*}
 However, instantiation with the non-monotype $\tybool \To \tyint$ also yields a derivation;
 for the sake of conciseness, we have abbreviated $\tybool$ and $\tyint$ to $B$ and $I$ respectively.
+
 {\renewcommand{\tyint}{I}
  \renewcommand{\tybool}{B}
 \begin{myequation*}
@@ -599,7 +600,7 @@ for the sake of conciseness, we have abbreviated $\tybool$ and $\tyint$ to $B$ a
 \myexruleL{AR-IApp}
   { \myexruleL{AR-IApp} 
       { \myexruleL{AR-TApp}
-          { \myexruleT{AR-IVar}
+          { \myexruleL{AR-IVar}
               { ?(\forall\alpha.(\alpha{\to}\alpha){\To} \alpha) {\in} \tenv_2 }
               { \aresp{\tenv_2}{\forall\alpha.(\alpha{\to} \alpha) {\To} \alpha} }
           }
@@ -685,7 +686,7 @@ choice of $\alpha$ is ambiguous when matching against the simple type $\tystr
 guess the wrong instantiation $\suty$ for $\alpha$, then it may not be possible
 to recursively resolve $(\tystr \arrow \alpha)[\suty/\alpha]$ or $(\alpha \arrow
 \tystr)[\suty/\alpha]$, while with a lucky guess both can be resolved.
-Secondly, for different choices of $\suty$ the types $(\tystr \arrow
+Secondly, for different choices of $\suty$, $(\tystr \arrow
 \alpha)[\suty/\alpha]$ and $(\alpha \arrow \tystr)[\suty/\alpha]$ can be resolved
 in completely different ways.
 
@@ -741,7 +742,7 @@ accumulates the bound type variables $\bar{\alpha}$ before the
 head. Rule \rref{UA-IAbs} skips over any contexts
 on the way to the head, but also recursively requires that these contexts are
 unambiguous. The latter is necessary because rule \rref{FR-Simp} resolves those contexts
-recursively when $\rulet$ matches the resolvent; as recursive resolvents they then add
+recursively when $\rulet$ matches the resolvent; as recursive resolvents they add
 their contexts to the implicit environment in rule \rref{FR-IAbs}. 
 
 Finally, the unambiguity condition is imposed on the queried type $\rulet$
@@ -752,8 +753,8 @@ Note that the definition rules out harmless ambiguity, such as that in the type
 $\forall \alpha. \tyint$. When we match the head of this type $\tyint$ with the
 simple type $\tyint$, the matching succeeds without actually determining how
 the type variable $\alpha$ should be instantiated. Here the ambiguity is
-harmless, because it does not affect the semantics. Yet, for the sake of
-simplicity of the metatheory, we have opted to not differentiate between harmless and harmful
+harmless, because it does not affect the semantics. Yet, to keep the meta-theory simple,
+we have opted to not differentiate between harmless and harmful
 ambiguity.
 
 
@@ -781,6 +782,7 @@ $\tenv$ and $\tenv'$ are identical.
 \eda
 The (still preliminary) definition of the judgment itself is syntax-directed with respect to the
 type environment $\tenv'$:
+
 \bda{c}
 %- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -%
 \hfill \myruleform{\lres{\tenv}{\tenv'}{\type}{E}} \hfill \llap{\it Lookup}\\ \\
@@ -949,7 +951,7 @@ with the judgment $\validsubst{\bar{\alpha}}{\tenv}{\theta}$.
 % {\bda{llrl}
 %     \text{Substitutions}     & \theta & ::=  & \epsilon \mid [\rulet/\alpha] \cdot \theta
 %   \eda }
-Rule~\rref{S-Empty} states that the empty substitution $\epsilon$ is
+Rule \rref{S-Empty} covers the base case and states that the empty substitution $\epsilon$ is
 trivially valid. Rule~\rref{S-Cons} covers the inductive case
 $[\suty/\alpha] \cdot \theta$. It says that the single variable substitution
 $[\suty/\alpha]$ is valid if $\alpha$ appears in the sequence of substitutable type

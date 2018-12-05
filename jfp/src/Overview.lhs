@@ -186,6 +186,7 @@ instance exists. Consider the following type class and instance declarations:
 
 \noindent If we write the following program 
 
+> incoherent :: Bool
 > incoherent = m True False -- rejected without IncoherentInstances extension
 
 \noindent then there is no most specific instance: both instances are equally specific.
